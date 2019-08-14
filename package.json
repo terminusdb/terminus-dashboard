@@ -1,0 +1,25 @@
+{
+  "name": "terminus-javascript-sdk",
+  "version": "0.1.0",
+  "description": "Terminus DB Javascript Client and SDK",
+  "main": "WOQLClient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terminusdb/terminus-javascript-sdk.git"
+  },
+  "keywords": [
+    "Terminus",
+    "WOQL",
+    "Driver",
+    "DB"
+  ],
+  "author": "kevin@datachemist.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/terminusdb/terminus-javascript-sdk/issues"
+  },
+  "homepage": "https://github.com/terminusdb/terminus-javascript-sdk#readme"
+}
