@@ -1,0 +1,65 @@
+function WOQLResultsViewer(wresult, options){
+	this.result = wresult;
+	this.options = options;
+}
+
+WOQLResultsViewer.prototype.showTable = function(){
+	if(this.options && typeof this.options.show_table != "undefined") return this.options.show_table;
+	return true;
+} 
+
+
+WOQLResultsViewer.prototype.getDOM = function(){
+	if(this.result.hasBindings() && this.showTable()){
+		return this.getTableDOM(this.result.bindings);
+	}
+	else {
+		console.log("no bindings for query");
+	}
+}
+
+WOQLResultsViewer.prototype.orderColumns = function(sample){
+	var ordered = [];
+	for(var h in sample){
+		if(ordered.indexOf(h) == -1){
+			ordered.unshift(h);
+		}
+	}
+	return ordered;
+}
+
+
+WOQLResultsViewer.prototype.getTableDOM = function(bindings){
+	var tab = document.createElement("table");
+	var thead = document.createElement("thead");
+	var thr = document.createElement("tr");
+	var ordered_headings = this.orderColumns(bindings[0]);
+	for(var i = 0; i<ordered_headings.length; i++){
+		var th = document.createElement("th");
+		th.appendChild(document.createTextNode(ordered_headings[i]));
+		thr.appendChild(th);
+	}
+	thead.appendChild(thr);
+	tab.appendChild(thead);
+	var tbody = document.createElement("tbody");
+	for(var i = 0; i<bindings.length; i++){
+		var tr = document.createElement("tr");
+		for(var j = 0; j<ordered_headings.length; j++){
+			var td = document.createElement("td");
+			if(typeof bindings[i][ordered_headings[j]] == "object"){
+				var lab = (bindings[i][ordered_headings[j]].data ? bindings[i][ordered_headings[j]].data : "Object?");
+				td.appendChild(document.createTextNode(lab));
+			}
+			else if(typeof bindings[i][ordered_headings[j]] == "string"){
+				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
+				if(lab == "unknown") lab = "";
+				td.appendChild(document.createTextNode(lab));
+			}
+			tr.appendChild(td);
+		}
+		tbody.appendChild(tr);
+	}
+	tab.appendChild(tbody);
+	return tab;	
+}
+
