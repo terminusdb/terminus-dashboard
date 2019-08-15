@@ -62,17 +62,12 @@ WOQLClient.prototype.createDatabase = function(dburl, details, key){
 	else if(details && details["@id"] && !this.setDB(details["@id"], details["@context"])){
         return Promise.reject(new URIError(this.getInvalidURIMessage(details["@id"], "Create Database")));
 	}
-	dburl = this.server + this.dbid;
-	details = this.makeDatabaseDocumentConsistentWithURL(details, dburl);
+	details = this.makeDocumentConsistentWithURL(details, this.dbURL());
 	if(key) {
 		details.key = key;
 	}
 	var self = this;
-	return this.dispatch(dburl, "create_database", details)
-	.then(function(response){
-		self.addDBToConnection(response);
-		return response;		
-	});
+	return this.dispatch(this.dbURL(), "create_database", details);
 }
 
 /**
@@ -86,9 +81,8 @@ WOQLClient.prototype.deleteDatabase = function(dburl, opts){
 	if(dburl && !this.setDB(dburl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(dburl, "Delete Database")));
 	}
-	dburl = this.server + this.dbid;
 	var self = this;
-	return this.dispatch(dburl, "delete_database", opts).
+	return this.dispatch(this.dbURL(), "delete_database", opts).
 	then(function(response){
 		self.removeDBFromConnection();
 		return response;
@@ -108,8 +102,7 @@ WOQLClient.prototype.getSchema = function(schurl, opts){
 	if(schurl && this.setSchemaURL(schurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(schurl, "Get Schema")));
 	}
-	schurl = this.server + this.dbid + "/schema";
-	return this.dispatch(schurl, "get_schema", opts);
+	return this.dispatch(this.schemaURL(), "get_schema", opts);
 }
 
 /**
@@ -126,9 +119,8 @@ WOQLClient.prototype.updateSchema = function(schurl, doc, opts){
 	if(schurl && this.setSchemaURL(schurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(schurl, "Update Schema")));
 	}
-	schurl = this.server + this.dbid + "/schema";
 	doc = this.addOptionsToDocument(doc, opts);
-	return this.dispatch(schurl, "update_schema", doc);
+	return this.dispatch(this.schemaURL(), "update_schema", doc);
 }
 
 /**
@@ -149,9 +141,8 @@ WOQLClient.prototype.createDocument = function(docurl, doc, opts){
 	else if(doc && doc["@id"] && !this.setDocument(doc["@id"], doc["@context"])){
         return Promise.reject(new URIError(this.getInvalidURIMessage(doc["@id"], "Create Document")));
 	}
-	docurl = this.server + this.dbid + "/document/" + (this.docid ? this.docid : "");
 	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(docurl, doc), opts);
-	return this.dispatch(docurl, "create_document", doc);
+	return this.dispatch(this.docURL(), "create_document", doc);
 }
 
 /**
@@ -168,8 +159,7 @@ WOQLClient.prototype.getDocument = function(docurl, opts){
 	if(docurl && (!this.setDocument(docurl) || !this.docid)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(docurl, "Get Document")));
 	}
-	docurl = this.server + this.dbid + "/document/" + this.docid;
-	return this.dispatch(docurl, "get_document", opts);
+	return this.dispatch(this.docURL(), "get_document", opts);
 }
 
 /**
@@ -189,9 +179,8 @@ WOQLClient.prototype.updateDocument = function(docurl, doc, opts){
 	else if(doc && doc["@id"] && !this.setDocument(details["@id"], details["@context"])){
         return Promise.reject(new URIError(this.getInvalidURIMessage(doc["@id"], "Update Document")));
 	}
-	docurl = this.server + this.dbid + "/document/" + this.docid;
 	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(docurl, doc), opts);
-	return this.dispatch(docurl, "update_document", doc);
+	return this.dispatch(this.docURL(), "update_document", doc);
 }
 
 /**
@@ -207,8 +196,7 @@ WOQLClient.prototype.deleteDocument = function(docurl, opts){
 	if(docurl && (!this.setDocument(docurl) || !this.docid)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(docurl, "Delete Document")));
 	}
-	docurl = this.server + this.dbid + "/document/" + this.docid;
-	return this.dispatch(docurl, "delete_document", opts);
+	return this.dispatch(this.docURL(), "delete_document", opts);
 }
 
 /**
@@ -224,9 +212,8 @@ WOQLClient.prototype.select = function(qurl, woql, opts){
 	if(qurl && this.setQueryURL(qurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(qurl, "Select")));
 	}
-	qurl = this.server + this.dbid + "/woql";
 	woql = this.addOptionsToWOQL(woql, opts);
-	return this.dispatch(qurl, "woql_select", woql);
+	return this.dispatch(this.queryURL(), "woql_select", woql);
 }
 
 /**
@@ -242,9 +229,8 @@ WOQLClient.prototype.update = function(qurl, woql, opts){
 	if(qurl && this.setQueryURL(qurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(qurl, "Update")));
 	}
-	qurl = this.server + this.dbid + "/woql";
 	woql = this.addOptionsToWOQL(woql, opts);
-	return this.dispatch(qurl, "woql_update", woql);
+	return this.dispatch(this.queryURL(), "woql_update", woql);
 }
 
 /**
@@ -260,11 +246,17 @@ WOQLClient.prototype.getClassFrame = function(cfurl, cls, opts){
 	if(cfurl && this.setClassFrameURL(cfurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(cfurl, "Get Class Frame")));
 	}
-	cfurl = this.server + this.dbid + "/frame";
 	if(!opts) opts = {};
 	opts["class"] = cls;
-	return this.dispatch(cfurl, "class_frame", opts);
+	return this.dispatch(this.frameURL(), "class_frame", opts);
 }
+
+//simple functions for generating the correct urls from current client state
+WOQLClient.prototype.dbURL = function(){ return this.server + this.dbid }
+WOQLClient.prototype.schemaURL = function(){ return this.server + this.dbid + "/schema"; }
+WOQLClient.prototype.queryURL = function(){ return this.server + this.dbid + "/woql"; }
+WOQLClient.prototype.frameURL = function(){ return this.server + this.dbid + "/frame"; }
+WOQLClient.prototype.docURL = function(){ return this.server + this.dbid + "/document/" + (this.docid ? this.docid : ""); }
 
 /*
  * Utility functions for setting and parsing urls and determining the current server, database and document
@@ -294,6 +286,7 @@ WOQLClient.prototype.setSchemaURL = function(input_str, context){
 		if(parser.server()) this.server = parser.server(); 
 		this.dbid = parser.dbid();
 		this.docid = false;
+		return true;
 	}
 	return false;
 }
@@ -304,6 +297,7 @@ WOQLClient.prototype.setDocument = function(input_str, context){
 		if(parser.server()) this.server = parser.server(); 
 		if(parser.dbid()) this.dbid = parser.dbid();
 		if(parser.docid()) this.docid = parser.docid();
+		return true;
 	}
 	return false;
 }
@@ -314,6 +308,7 @@ WOQLClient.prototype.setQueryURL = function(input_str, context){
 		if(parser.server()) this.server = parser.server(); 
 		this.dbid = parser.dbid();
 		this.docid = false;
+		return true;
 	}	
 	return false;
 }
@@ -324,6 +319,7 @@ WOQLClient.prototype.setClassFrameURL = function(input_str, context){
 		if(parser.server()) this.server = parser.server(); 
 		this.dbid = parser.dbid();
 		this.docid = false;
+		return true;
 	}	
 	return false;
 }
@@ -345,18 +341,84 @@ WOQLClient.prototype.setConnectionCapabilities = function(curl, capabilities){
 	if(typeof this.connection[curl] == "undefined"){
 		this.connection[curl] = {};
 	}
-	this.connection[curl]['capabilities'] = capabilities;
+	for(var pred in capabilities){
+		if(pred == "terminus:authority" && capabilities[pred]){
+			let auths = (capabilities[pred].length ? capabilities[pred] : [capabilities[pred]]);
+			for(var i = 0; i<auths.length; i++){
+				let scope = auths[i]['terminus:authority_scope'];
+				let actions = auths[i]['terminus:action'];
+				if(!scope.length) scope = [scope];
+				for(var j = 0; j<scope.length; j++){
+					let nrec = scope[j];
+					if(typeof this.connection[curl][nrec["@id"]] == "undefined"){
+						this.connection[curl][nrec["@id"]] = nrec;
+						this.connection[curl][nrec["@id"]]['terminus:authority'] = [];
+					}
+					for(var h = 0; h<actions.length; h++){
+						if(this.connection[curl][nrec["@id"]]['terminus:authority'].indexOf(actions[h]["@id"]) == -1){
+							this.connection[curl][nrec["@id"]]['terminus:authority'].push(actions[h]["@id"]);
+						}
+					}
+				}
+			}
+		}
+		else {
+			this.connection[curl][pred] = capabilities[pred];
+		}
+	}
+}
+
+WOQLClient.prototype.getDBRecord = function(dbid, srvr){
+	var url = (srvr ? srvr : this.server);
+	dbid = (dbid ? dbid: this.dbid);
+	if(typeof this.connection[url]["doc:"+dbid] != "undefined") return this.connection[url]["doc:"+dbid];
+	return this.connection[url][dbid];
+}
+
+WOQLClient.prototype.getServerRecord = function(srvr){
+	var url = (srvr ? srvr : this.server);
+	for(var oid in this.connection[url]){
+		if(this.connection[url][oid]["@type"] == "terminus:Server"){
+			return this.connection[url][oid];
+		}
+	}
+	return false;
+}
+
+WOQLClient.prototype.getServerDBRecords = function(srvr){
+	var url = (srvr ? srvr : this.server);
+	var dbrecs = {};
+	for(var oid in this.connection[url]){
+		if(this.connection[url][oid]["@type"] == "terminus:Database"){
+			dbrecs[oid] = this.connection[url][oid];
+		}
+	}
+	return dbrecs;
+}
+
+WOQLClient.prototype.removeDBFromConnection = function(dbid, srvr){
+	dbid = (dbid ? dbid : this.dbid);
+	var url = (srvr ? srvr : this.server);
+	delete(this.connection[url][dbid]); 
+	delete(this.connection[url]["doc:"+dbid]); 	
+	this.dbid = false;
 }
 
 WOQLClient.prototype.addDBToConnection = function(createdb_response, dbid){
-	dbid = (dbid ? dbid : this.dbid);
-	this.connection[this.server][dbid] = createdb_response;
-}
-
-WOQLClient.prototype.removeDBFromConnection = function(dbid){
-	dbid = (dbid ? dbid : this.dbid);
-	delete(this.connection[this.server][dbid]); 
-	this.dbid = false;
+	alert("add " + dbid);
+	/*dbid = (dbid ? dbid : this.dbid);
+	var auths = this.connection[this.server]['capabilities']['terminus:authority'];
+	if(auths && !auths.length) auths = [auths];
+	for(var i = 0; i<auths.length; i++){
+		var scope = auths[i]['terminus:authority_scope'];
+		if(scope && !scope.length) scope = [scope];
+		for(var j = 0; j<scope.length; j++){
+			if(scope[j]["@type"] == "terminus:Database" && scope[j]["@id"] == "doc:"+dbid){
+				
+			}
+		}
+	}
+	[dbid] = createdb_response;*/
 }
 
 /*
@@ -383,11 +445,6 @@ WOQLClient.prototype.addKeyToPayload = function(payload){
 	}
 	return payload;
 } 
-
-WOQLClient.prototype.makeDatabaseDocumentConsistentWithURL = function(doc, dburl){
-	doc["terminus:id"] = { "@type": "xsd:anyURI", "@value": dburl };
-	return doc;
-}
 
 WOQLClient.prototype.makeDocumentConsistentWithURL = function(doc, dburl){
 	doc["@id"] = dburl;
@@ -498,7 +555,9 @@ WOQLClient.prototype.includeKey = function(){
  * Functions for packaging up arguments for sending to server API and dispatching them as Promises
  */
 WOQLClient.prototype.URIEncodePayload = function(pl){
+	if(typeof pl == "string") return encodeURIComponent(pl);
 	var str = "";
+	
 	var first = true;
 	for(var k in pl){
 		if(!first){
@@ -540,9 +599,10 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	if(this.includeKey()){
 		payload = this.addKeyToPayload(payload);
 	}
+	alert(JSON.stringify(payload));
 	let api = {
         mode: 'cors', // no-cors, cors, *same-origin
-        credentials: 'include', // include, *same-origin, omit
+        //credentials: 'include', // include, *same-origin, omit
         redirect: 'follow', // manual, *follow, error
         referrer: 'client', // no-referrer, *client
     };
@@ -562,14 +622,15 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 		api.headers = { 'Content-Type': 'application/json'},
         api.body = JSON.stringify(payload); // body data type must match "Content-Type" header
 	}
+	var self = this;
 	return fetch(url, api).then(function(response) {
 		if(response.ok) {
 			if(api.method == "DELETE" || (payload && payload.responseType  && payload.responseType == "text")) return response.text();
 			return response.json();
 		}
 		else {
-			this.error = this.parseAPIError(response);
-            return Promise.reject(new Error(this.getAPIErrorMessage(url, api, this.error)));
+			self.error = self.parseAPIError(response);
+            return Promise.reject(new Error(self.getAPIErrorMessage(url, api, self.error)));
 		}
 	});
 }
@@ -630,7 +691,7 @@ TerminusIDParser.prototype.parseDBID = function(str){
 	return this.db;
 }
 
-TerminusIDParser.prototype.parseDocument = function(str){
+TerminusIDParser.prototype.parseDocumentURL = function(str){
 	str = (str ? str : this.contents);
 	if(this.context && this.validPrefixedURL(str, context)){
 		str = this.expandPrefixed(str, context);		
@@ -671,6 +732,12 @@ TerminusIDParser.prototype.parseQueryURL  = function(str){
 	}
 	return this.parseDBID(str);
 }
+
+TerminusIDParser.prototype.stripOptionalPath = function(str, bit){
+	if(str.indexOf("/"+bit) != -1) str = str.substring(0, str.indexOf("/"+bit));
+	return str;
+}
+
 
 TerminusIDParser.prototype.parseClassFrameURL = function(str){
 	str = (str ? str : this.contents);

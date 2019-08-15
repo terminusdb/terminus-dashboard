@@ -29,10 +29,10 @@ function getFunctionSignature(which){
     spec: "WOQLClient.createDatabase(database_id, options)",
     result: "HTTP 200 on success, 409 for already existing database, otherwise error code",
     args: {database_url : 'url'},
-    options: { title: "" }
+    options: { title: "", description: "" }
   };
   sigs.delete = {
-      spec: "WOQLClient.deleteDatabase(options)",
+      spec: "WOQLClient.deleteDatabase(id)",
       result: "HTTP 200 on success, otherwise error code",
   };
   sigs.getSchema = {
