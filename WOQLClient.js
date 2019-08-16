@@ -613,10 +613,6 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	if(this.includeKey()){
 		payload = this.addKeyToPayload(payload);
 	}
-<<<<<<< HEAD
-	//alert(JSON.stringify(payload));
-=======
->>>>>>> c044a8f1fb85a96385431bf2b6043d6fa2f85581
 	let api = {
         mode: 'cors', // no-cors, cors, *same-origin
         redirect: 'follow', // manual, *follow, error
@@ -644,7 +640,7 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	var self = this;
 	return fetch(url, api).then(function(response) {
 		if(response.ok) {
-			if(opts.explorer) return response;
+			if(payload.explorer) return response;
 			else{
 				if(api.method == "DELETE" || (payload && payload.responseType  && payload.responseType == "text")) return response.text();
 				return response.json();
