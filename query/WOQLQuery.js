@@ -2,22 +2,12 @@ function WOQLQuery(client, options){
 	this.client = client;
 	this.options = options;
 	this.prefixes = {};
-	if(client.platformEndpoint()){
-		var dburl = client.dbURL("platform") ;
-		this.prefixes['s'] = dburl + "/ontology/main#";
-		this.prefixes['g'] = client.server.substring(0, client.server.lastIndexOf("platform/"));
-		this.prefixes['doc'] = dburl + "/candidate/";
-		this.prefixes['dg'] = dburl + "/graph/main/";
-		this.prefixes['db'] = dburl + "/";
-	}
-	else {
-		this.prefixes['s'] = client.schemaURL() + "#";
-		this.prefixes['dg'] = client.dbURL() + "/schema";
-		this.prefixes['doc'] = client.docURL() + "/";
-		this.prefixes['db'] = client.dbURL() + "/";
-		this.prefixes['g'] = client.serverURL();
-	}
-	if(this.prefixes['g'].charAt(this.prefixes['g'].length-1) != "/") this.prefixes['g'] += "/";
+	this.prefixes['s'] = client.schemaURL() + "#";
+	this.prefixes['doc'] = client.docURL() + "/";
+	//this.prefixes['dg'] = client.graphURL() + "/";
+	this.prefixes['db'] = client.dbURL() + "/";
+	this.prefixes['g'] = client.server;
+	if(client.server.charAt(client.server.length-1) != "/") this.prefixes['g'] += "/";
 	for(var pref in FrameHelper.standard_urls){
 		this.prefixes[pref] = FrameHelper.standard_urls[pref];
 	}

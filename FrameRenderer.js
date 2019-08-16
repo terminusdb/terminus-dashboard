@@ -706,7 +706,7 @@ PropertyRenderer.prototype.buildValueRenderers = function(){
  	if(this.cframe && this.cframe.isData()){
  		var dataframes = this.getDataFramesToRender();
  		if(dataframes.length == 0){
- 			alert(this.predicate + " empty dataframes");
+ 			alert(this.predicate);
  		}
  		var vals = [];
  		for(var i = this.values.length; i<dataframes.length; i++){
@@ -783,7 +783,7 @@ PropertyRenderer.prototype.extract = function(){
  			}
  		}
  		if(this.cframe.isClassChoice()){
- 			//alert("class frame anomaly " + JSON.stringify(extr));
+ 			alert("class frame anomaly " + JSON.stringify(extr));
  		}
  		return extr;
  	}

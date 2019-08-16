@@ -379,9 +379,10 @@ TerminusServerController.prototype.getAsDOM = function(){
 	var self = this;
 	if(this.ui && this.ui.server()){
 		var scd = document.createElement("span");
-		scd.setAttribute("class", "server-connection");
+		//scd.setAttribute("class", "server-connection");
+    scd.setAttribute("class", "terminus-module-head-server-connection");
 		var lab = document.createElement("span");
-		lab.setAttribute("class", "server-label");
+		lab.setAttribute("class", "terminus-server-label");
 		lab.appendChild(document.createTextNode("Server"));
 		scd.appendChild(lab);
 		scd.appendChild(this.getServerLabelDOM());
@@ -391,7 +392,8 @@ TerminusServerController.prototype.getAsDOM = function(){
 		rsc.appendChild(scd);
 		if(this.ui.showControl("change-server")){
 			var csbut = document.createElement("button");
-			csbut.setAttribute("class", "reg-contol-button change-server-button")
+			//csbut.setAttribute("class", "reg-contol-button change-server-button")
+      csbut.setAttribute("class", "terminus-btn")
 			csbut.appendChild(document.createTextNode("Change Server"));
 			csbut.addEventListener("click", function(){
 				self.showLoader();
@@ -401,7 +403,8 @@ TerminusServerController.prototype.getAsDOM = function(){
 		}
 		if(this.ui.showControl("create-db")){
 			var crbut = document.createElement("button");
-			crbut.setAttribute("class", "reg-contol-button create-db-button")
+			//crbut.setAttribute("class", "reg-contol-button create-db-button")
+      crbut.setAttribute("class", "terminus-btn")
 			crbut.appendChild(document.createTextNode("Create New Database"));
 			crbut.addEventListener("click", function(){
 				self.showCreateDB();
@@ -421,7 +424,7 @@ TerminusServerController.prototype.getServerLabelDOM = function(){
 	var desc = (srec && srec['rdfs:comment'] && srec['rdfs:comment']["@value"] ? srec['rdfs:comment']["@value"] : "");
 	desc += " Server URL: "+ this.ui.server();
 	var val = document.createElement("span");
-	val.setAttribute("class", "server-value");
+	val.setAttribute("class", "terminus-module-head-server-value");
 	val.setAttribute("title", desc);
 	val.appendChild(document.createTextNode(lab));
 	return val;
@@ -929,27 +932,28 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 			self.ui.redraw();
 		}
 	}
-	scd.setAttribute("class", "db-list");
+  scd.setAttribute("class","terminus-table");
+  //scd.setAttribute("class", "db-list");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var th1 = document.createElement("th");
 	th1.appendChild(document.createTextNode("ID"));
-	th1.setAttribute("class", "db-id");
+	//th1.setAttribute("class", "db-id");
 	var th2 = document.createElement("th");
 	th2.appendChild(document.createTextNode("Title"));
-	th2.setAttribute("class", "db-title");
+	//th2.setAttribute("class", "db-title");
 	var th3 = document.createElement("th");
 	th3.appendChild(document.createTextNode("Description"));
-	th3.setAttribute("class", "db-description");
+	//th3.setAttribute("class", "db-description");
 	var th4 = document.createElement("th");
-	th4.setAttribute("class", "db-size");
+	//th4.setAttribute("class", "db-size");
 	th4.appendChild(document.createTextNode("Size"));
 	var th5 = document.createElement("th");
-	th5.setAttribute("class", "db-created");
+	//th5.setAttribute("class", "db-created");
 	th5.appendChild(document.createTextNode("Created"));
 	var th6 = document.createElement("th");
 	th6.appendChild(document.createTextNode("Delete"));
-	th6.setAttribute("class", "db-delete");
+	//th6.setAttribute("class", "db-delete");
 	thr.appendChild(th1);
 	thr.appendChild(th2);
 	thr.appendChild(th3);
@@ -966,26 +970,26 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		var tr = document.createElement("tr");
 		var td1 = document.createElement("td");
 		td1.appendChild(document.createTextNode(dbid));
-		td1.setAttribute("class", "db-id");
+		//td1.setAttribute("class", "db-id");
 		td1.addEventListener("click", setDB(dbid));
 		var td2 = document.createElement("td");
-		td2.setAttribute("class", "db-title");
+		//td2.setAttribute("class", "db-title");
 		td2.addEventListener("click", setDB(dbid));
 		var txt = (dbrec && dbrec['rdfs:label'] && dbrec['rdfs:label']['@value'] ? dbrec['rdfs:label']['@value'] : "");
 		td2.appendChild(document.createTextNode(txt));
 		var td3 = document.createElement("td");
 		td3.addEventListener("click", setDB(dbid));
-		td3.setAttribute("class", "db-description");
+		//td3.setAttribute("class", "db-description");
 		var txt = (dbrec && dbrec['rdfs:comment'] && dbrec['rdfs:comment']['@value'] ? dbrec['rdfs:comment']['@value'] : "");
 		td3.appendChild(document.createTextNode(txt));
 		var td4 = document.createElement("td");
 		td4.addEventListener("click", setDB(dbid));
-		td4.setAttribute("class", "db-size");
+		//td4.setAttribute("class", "db-size");
 		var txt = (dbrec && dbrec['terminus:size'] && dbrec['terminus:size']['@value'] ? dbrec['terminus:size']['@value'] : "");
 		td4.appendChild(document.createTextNode(txt));
 		var td5 = document.createElement("td");
 		td5.addEventListener("click", setDB(dbid));
-		td5.setAttribute("class", "db-created");
+		//td5.setAttribute("class", "db-created");
 		var txt = (dbrec && dbrec['terminus:last_updated'] && dbrec['terminus:last_updated']['@value'] ? dbrec['terminus:last_updated']['@value'] : "");
 		td5.appendChild(document.createTextNode(txt));
 		var td6 = document.createElement("td");

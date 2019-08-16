@@ -369,9 +369,9 @@ function showHttpResult(response, action, currForm){
     hdres.appendChild(txt);
     currForm.appendChild(hdres);
 
-    $.getScript("assets/js/prettify.js", function(){
+    /*$.getScript("assets/js/prettify.js", function(){
       prettyPrint() ;
-    });
+    });*/
 
     return response.text()
     .then(function(response){
