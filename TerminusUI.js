@@ -1369,12 +1369,27 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 	if(this.mode == "edit"){
 		var ipval = document.createElement("textarea");
 		ipval.setAttribute("class", "schema-edit");
-		ipval.innerHTML = this.schema.contents;
+		if(typeof(this.schema) == "string"){
+			ipval.innerHTML = this.schema;
+		}
+		else if(typeof (this.schema) == "object") {
+			ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
+		}
 	}
 	else {
 		var ipval = document.createElement("pre");
-		ipval.setAttribute("class", "schema-edit");
-		ipval.innerHTML = this.schema.contents;
+		ipval.setAttribute("class", "schema-view");
+		if(typeof(this.schema) == "string"){
+			var txt = this.schema.replace(/&/g, "&amp;")
+	         .replace(/</g, "&lt;")
+	         .replace(/>/g, "&gt;")
+	         .replace(/"/g, "&quot;")
+	         .replace(/'/g, "&#039;");
+			ipval.innerHTML = txt;
+		}
+		else if(typeof (this.schema) == "object") {
+			ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
+		}
 	}
 	if(this.mode == "edit"){
 		var opt = document.createElement("button");
