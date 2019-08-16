@@ -1,5 +1,5 @@
 /**
- * @file Javascript WOQL client object 
+ * @file Javascript WOQL client object
  * @license Apache Version 2
  * @summary Simple Javascript Client for accessing the Terminus DB API
  */
@@ -23,8 +23,8 @@ function WOQLClient(params){
  * Connect to a Terminus server at the given URI with an API key
  * Stores the terminus:ServerCapability document returned in the connection register
  * which stores, the url, key, capabilities, and database meta-data for the connected server
- * 
- * If the curl argument is false or null, the this.server will be used if present, or the promise will be rejected. 
+ *
+ * If the curl argument is false or null, the this.server will be used if present, or the promise will be rejected.
  */
 WOQLClient.prototype.connect = function(curl, key){
 	curl = (curl ? curl : this.server);
@@ -47,13 +47,13 @@ WOQLClient.prototype.connect = function(curl, key){
 
 /**
  * Create a Terminus Database by posting a terminus:Database document to the Terminus API
- * 
+ *
  * The dburl argument can be 1) a valid URL of a terminus database or 2) a valid Terminus database id or 3) can be omitted
- * 		in case 2) the current server will be used, 
+ * 		in case 2) the current server will be used,
  * 		in case 3) the database id will be set from the @id field of the terminuse:Database document.
- * 
+ *
  * The second (details) argument contains a terminus:Database document with a mandatory rdfs:label field and an optional rdfs:comment field.
- * The third (key) argument contains an optional API key 
+ * The third (key) argument contains an optional API key
  */
 WOQLClient.prototype.createDatabase = function(dburl, details, key){
 	if(dburl && !this.setDB(dburl)){
@@ -71,8 +71,8 @@ WOQLClient.prototype.createDatabase = function(dburl, details, key){
 }
 
 /**
- * Deletes a Database 
- * 
+ * Deletes a Database
+ *
  * The first (dburl) argument can 1) a valid URL of a terminus database or 2) a valid database id or 3) ommitted
  * 		in case 2) the current server will be used, and in case 3) the current server and database will be used
  * The second argument (opts) is an options json - no options are currently supported for this function
@@ -86,15 +86,15 @@ WOQLClient.prototype.deleteDatabase = function(dburl, opts){
 	then(function(response){
 		self.removeDBFromConnection();
 		return response;
-	});	
+	});
 }
 
 /**
  * Retrieves the schema of the specified database
- * 
- * The first (schurl) argument can be 1) a valid URL of a terminus database or 2) a valid database id or 3) omitted, 
+ *
+ * The first (schurl) argument can be 1) a valid URL of a terminus database or 2) a valid database id or 3) omitted,
  * 		in case 2) the current server will be used, and in case 3) the current server and database will be used
- * the second argument (opts) is an options json - 
+ * the second argument (opts) is an options json -
  * 		opts.format is optional and defines which format is requested (*json / turtle)
  * 		opts.key is an optional API key
  */
@@ -107,11 +107,11 @@ WOQLClient.prototype.getSchema = function(schurl, opts){
 
 /**
  * Updates the Schema of the specified database
- * 
- * The first (schurl) argument can be 1) a valid URL of a terminus database or 2) a valid database id or 3) omitted, 
+ *
+ * The first (schurl) argument can be 1) a valid URL of a terminus database or 2) a valid database id or 3) omitted,
  * 		in case 2) the current server will be used, and in case 3) the current server and database will be used
  * The second argument (doc) is a valid owl ontology in json-ld or turtle format
- * the third argument (opts) is an options json - 
+ * the third argument (opts) is an options json -
  * 		opts.format is used to specify which format is being used (*json / turtle)
  * 		opts.key is an optional API key
  */
@@ -125,13 +125,13 @@ WOQLClient.prototype.updateSchema = function(schurl, doc, opts){
 
 /**
  * Creates a new document in the specified database
- * 
- * The first (docurl) argument can be 
- * 1) a valid URL of a terminus database (an id will be randomly assigned) or 
- * 2) a valid URL or of a terminus document (the document will be given the passed URL) or 
- * 3) a valid terminus document id (the current server and database will be used) 
+ *
+ * The first (docurl) argument can be
+ * 1) a valid URL of a terminus database (an id will be randomly assigned) or
+ * 2) a valid URL or of a terminus document (the document will be given the passed URL) or
+ * 3) a valid terminus document id (the current server and database will be used)
  * 4) can be ommitted (the URL will be taken from the document if present)
- * The second argument (doc) is a valid document in json-ld 
+ * The second argument (doc) is a valid document in json-ld
  * the third argument (opts) is an options json - opts.key is an optional API key
  */
 WOQLClient.prototype.createDocument = function(docurl, doc, opts){
@@ -147,13 +147,13 @@ WOQLClient.prototype.createDocument = function(docurl, doc, opts){
 
 /**
  * Retrieves a document from the specified database
- * 
- * The first (docurl) argument can be 
- * 1) a valid URL of a terminus document or 
- * 2) a valid ID of a terminus document in the current database 
- * the second argument (opts) is an options json - 
+ *
+ * The first (docurl) argument can be
+ * 1) a valid URL of a terminus document or
+ * 2) a valid ID of a terminus document in the current database
+ * the second argument (opts) is an options json -
  * 		opts.key is an optional API key
- * 		opts.shape is frame | *document 
+ * 		opts.shape is frame | *document
  */
 WOQLClient.prototype.getDocument = function(docurl, opts){
 	if(docurl && (!this.setDocument(docurl) || !this.docid)){
@@ -164,9 +164,9 @@ WOQLClient.prototype.getDocument = function(docurl, opts){
 
 /**
  * Updates a document in the specified database with a new version
- * 
- * The first (docurl) argument can be 
- * 1) a valid URL of a terminus document or 
+ *
+ * The first (docurl) argument can be
+ * 1) a valid URL of a terminus document or
  * 2) a valid ID of a terminus document in the current database or
  * 3) ommitted in which case the id will be taken from the document @id field
  * the second argument (doc) is a document in json-ld format
@@ -185,11 +185,11 @@ WOQLClient.prototype.updateDocument = function(docurl, doc, opts){
 
 /**
  * Deletes a document from the specified database
- * 
- * The first (docurl) argument can be 
- * 1) a valid URL of a terminus document or 
- * 2) a valid ID of a terminus document in the current database 
- * 3) omitted - the current document will be used 
+ *
+ * The first (docurl) argument can be
+ * 1) a valid URL of a terminus document or
+ * 2) a valid ID of a terminus document in the current database
+ * 3) omitted - the current document will be used
  * the second argument (opts) is an options json - opts.key is an optional API key
  */
 WOQLClient.prototype.deleteDocument = function(docurl, opts){
@@ -201,10 +201,10 @@ WOQLClient.prototype.deleteDocument = function(docurl, opts){
 
 /**
  * Executes a read-only WOQL query on the specified database and returns the results
- * 
- * The first (qurl) argument can be 
- * 1) a valid URL of a terminus database or 
- * 2) omitted - the current database will be used 
+ *
+ * The first (qurl) argument can be
+ * 1) a valid URL of a terminus database or
+ * 2) omitted - the current database will be used
  * the second argument (woql) is a woql select statement encoded as a string
  * the third argument (opts) is an options json - opts.key is an optional API key
  */
@@ -218,10 +218,10 @@ WOQLClient.prototype.select = function(qurl, woql, opts){
 
 /**
  * Executes a WOQL query on the specified database which updates the state and returns the results
- * 
- * The first (qurl) argument can be 
- * 1) a valid URL of a terminus database or 
- * 2) omitted - the current database will be used 
+ *
+ * The first (qurl) argument can be
+ * 1) a valid URL of a terminus database or
+ * 2) omitted - the current database will be used
  * the second argument (woql) is a woql select statement encoded as a string
  * the third argument (opts) is an options json - opts.key is an optional API key
  */
@@ -235,10 +235,10 @@ WOQLClient.prototype.update = function(qurl, woql, opts){
 
 /**
  * Retrieves a WOQL query on the specified database which updates the state and returns the results
- * 
- * The first (cfurl) argument can be 
- * 1) a valid URL of a terminus database or 
- * 2) omitted - the current database will be used 
+ *
+ * The first (cfurl) argument can be
+ * 1) a valid URL of a terminus database or
+ * 2) omitted - the current database will be used
  * the second argument (cls) is the URL / ID of a document class that exists in the database schema
  * the third argument (opts) is an options json - opts.key is an optional API key
  */
@@ -267,13 +267,13 @@ WOQLClient.prototype.setServer = function(input_str, context){
 		this.server = parser.server();
 		return true;
 	}
-	return false;	
+	return false;
 }
 
 WOQLClient.prototype.setDB = function(input_str, context){
 	let parser = new TerminusIDParser(input_str, context);
 	if(parser.parseDBID()){
-		if(parser.server()) this.server = parser.server(); 
+		if(parser.server()) this.server = parser.server();
 		this.dbid = parser.dbid();
 		return true;
 	}
@@ -283,7 +283,7 @@ WOQLClient.prototype.setDB = function(input_str, context){
 WOQLClient.prototype.setSchemaURL = function(input_str, context){
 	let parser = new TerminusIDParser(input_str, context);
 	if(parser.parseSchemaURL()){
-		if(parser.server()) this.server = parser.server(); 
+		if(parser.server()) this.server = parser.server();
 		this.dbid = parser.dbid();
 		this.docid = false;
 		return true;
@@ -294,7 +294,7 @@ WOQLClient.prototype.setSchemaURL = function(input_str, context){
 WOQLClient.prototype.setDocument = function(input_str, context){
 	let parser = new TerminusIDParser(input_str, context);
 	if(parser.parseDocumentURL()){
-		if(parser.server()) this.server = parser.server(); 
+		if(parser.server()) this.server = parser.server();
 		if(parser.dbid()) this.dbid = parser.dbid();
 		if(parser.docid()) this.docid = parser.docid();
 		return true;
@@ -305,22 +305,22 @@ WOQLClient.prototype.setDocument = function(input_str, context){
 WOQLClient.prototype.setQueryURL = function(input_str, context){
 	let parser = new TerminusIDParser(input_str, context);
 	if(parser.parseQueryURL()){
-		if(parser.server()) this.server = parser.server(); 
+		if(parser.server()) this.server = parser.server();
 		this.dbid = parser.dbid();
 		this.docid = false;
 		return true;
-	}	
+	}
 	return false;
 }
 
 WOQLClient.prototype.setClassFrameURL = function(input_str, context){
 	let parser = new TerminusIDParser(input_str, context);
 	if(parser.parseClassFrameURL()){
-		if(parser.server()) this.server = parser.server(); 
+		if(parser.server()) this.server = parser.server();
 		this.dbid = parser.dbid();
 		this.docid = false;
 		return true;
-	}	
+	}
 	return false;
 }
 
@@ -399,13 +399,13 @@ WOQLClient.prototype.getServerDBRecords = function(srvr){
 WOQLClient.prototype.removeDBFromConnection = function(dbid, srvr){
 	dbid = (dbid ? dbid : this.dbid);
 	var url = (srvr ? srvr : this.server);
-	delete(this.connection[url][dbid]); 
-	delete(this.connection[url]["doc:"+dbid]); 	
+	delete(this.connection[url][dbid]);
+	delete(this.connection[url]["doc:"+dbid]);
 	this.dbid = false;
 }
 
 WOQLClient.prototype.addDBToConnection = function(createdb_response, dbid){
-	alert("add " + dbid);
+	//alert("add " + dbid);
 	/*dbid = (dbid ? dbid : this.dbid);
 	var auths = this.connection[this.server]['capabilities']['terminus:authority'];
 	if(auths && !auths.length) auths = [auths];
@@ -414,7 +414,7 @@ WOQLClient.prototype.addDBToConnection = function(createdb_response, dbid){
 		if(scope && !scope.length) scope = [scope];
 		for(var j = 0; j<scope.length; j++){
 			if(scope[j]["@type"] == "terminus:Database" && scope[j]["@id"] == "doc:"+dbid){
-				
+
 			}
 		}
 	}
@@ -441,10 +441,10 @@ WOQLClient.prototype.addKeyToPayload = function(payload){
 	}
 	else if(this.connection[this.server] && this.connection[this.server].key ){
 		if(!payload) payload = {};
-		payload["terminus:user_key"] = this.connection[this.server].key; 			
+		payload["terminus:user_key"] = this.connection[this.server].key;
 	}
 	return payload;
-} 
+}
 
 WOQLClient.prototype.makeDocumentConsistentWithURL = function(doc, dburl){
 	doc["@id"] = dburl;
@@ -530,7 +530,7 @@ WOQLClient.prototype.actionCovered = function(action, actions, scope, context){
 					return true;
 				}
 			}
-		}	
+		}
 	}
 	return false;
 }
@@ -557,7 +557,7 @@ WOQLClient.prototype.includeKey = function(){
 WOQLClient.prototype.URIEncodePayload = function(pl){
 	if(typeof pl == "string") return encodeURIComponent(pl);
 	var str = "";
-	
+
 	var first = true;
 	for(var k in pl){
 		if(!first){
@@ -571,11 +571,11 @@ WOQLClient.prototype.URIEncodePayload = function(pl){
 					str += "&";
 				}
 				fobj = false;
-				str += encodeURIComponent(k + '[' + key + ']') + "=" + encodeURIComponent(pl[k][key]);				
-			}	
+				str += encodeURIComponent(k + '[' + key + ']') + "=" + encodeURIComponent(pl[k][key]);
+			}
 		}
 		else {
-			str += encodeURIComponent(k) + "=" + encodeURIComponent(pl[k]);		
+			str += encodeURIComponent(k) + "=" + encodeURIComponent(pl[k]);
 		}
 	}
 	return str;
@@ -599,7 +599,7 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	if(this.includeKey()){
 		payload = this.addKeyToPayload(payload);
 	}
-	alert(JSON.stringify(payload));
+	//alert(JSON.stringify(payload));
 	let api = {
         mode: 'cors', // no-cors, cors, *same-origin
         //credentials: 'include', // include, *same-origin, omit
@@ -608,25 +608,28 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
     };
 	//read only API calls - use GET
 	if(action == "connect" || action == "get_schema" || action == "class_frame" || action == "woql_select" || action == "get_document"){
-		api.method = 'GET'; 
+		api.method = 'GET';
 		url += "?" + this.URIEncodePayload(payload);
 	}
 	//delete API calls
 	else if(action == "delete_database" || action == "delete_document"){
-		api.method = 'DELETE'; 
+		api.method = 'DELETE';
 		api.cache = 'no-cache'; // *default, no-cache, reload, force-cache, only-if-cached
 	}
 	else if(action == "create_database", "update_schema", "create_document", "update_document", "woql_update"){
 		api.method = 'POST';
-		api.cache = 'no-cache'; 
+		api.cache = 'no-cache';
 		api.headers = { 'Content-Type': 'application/json'},
         api.body = JSON.stringify(payload); // body data type must match "Content-Type" header
 	}
 	var self = this;
 	return fetch(url, api).then(function(response) {
 		if(response.ok) {
-			if(api.method == "DELETE" || (payload && payload.responseType  && payload.responseType == "text")) return response.text();
-			return response.json();
+			if(opts.explorer) return response;
+			else{
+				if(api.method == "DELETE" || (payload && payload.responseType  && payload.responseType == "text")) return response.text();
+				return response.json();
+			}
 		}
 		else {
 			self.error = self.parseAPIError(response);
@@ -636,7 +639,7 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 }
 
 /*
- * Helper class for parsing and decomposing Terminus URLs / dealing with prefixed URLs 
+ * Helper class for parsing and decomposing Terminus URLs / dealing with prefixed URLs
  */
 function TerminusIDParser(input_str, context){
 	this.contents = input_str.trim();
@@ -648,15 +651,15 @@ function TerminusIDParser(input_str, context){
 
 TerminusIDParser.prototype.server = function(){
 	return this.server_url;
-} 
+}
 
 TerminusIDParser.prototype.dbid = function(){
 	return this.db;
-} 
+}
 
 TerminusIDParser.prototype.docid = function(){
 	return this.doc;
-} 
+}
 
 TerminusIDParser.prototype.parseServerURL = function(str){
 	str = (str ? str : this.contents);
@@ -675,18 +678,18 @@ TerminusIDParser.prototype.parseServerURL = function(str){
 TerminusIDParser.prototype.parseDBID = function(str){
 	str = (str ? str : this.contents);
 	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);		
+		str = this.expandPrefixed(str, context);
 	}
 	if(this.validURL(str)){
 		if(str.lastIndexOf("/") == str.length-1) str = str.substring(0, str.length-1);		//trim trailing slash
 		let surl = str.substring(0, str.lastIndexOf("/"));
 		let dbid = str.substring(str.lastIndexOf("/") + 1);
 		if(this.parseServerURL(surl)){
-			this.db = dbid; 
-		}		
+			this.db = dbid;
+		}
 	}
 	else if(this.validIDString(str)){
-		this.db = str;		
+		this.db = str;
 	}
 	return this.db;
 }
@@ -694,7 +697,7 @@ TerminusIDParser.prototype.parseDBID = function(str){
 TerminusIDParser.prototype.parseDocumentURL = function(str){
 	str = (str ? str : this.contents);
 	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);		
+		str = this.expandPrefixed(str, context);
 	}
 	if(this.validURL(str)){
 		if(str.lastIndexOf("/document/") != -1) {
@@ -752,12 +755,12 @@ TerminusIDParser.prototype.parseClassFrameURL = function(str){
 
 TerminusIDParser.prototype.validURL = function(str){
 	var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-	    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+	    'localhost|((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
 	    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
 	    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
 	    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
 	    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-	return pattern.test(str);	
+	return pattern.test(str);
 }
 
 TerminusIDParser.prototype.validPrefixedURL = function(str, context){
@@ -775,5 +778,5 @@ TerminusIDParser.prototype.validIDString = function(str){
 
 TerminusIDParser.prototype.expandPrefixed = function(str, context){
 	let parts = str.split(":");
-	return context[parts[0]] + parts[1];	
+	return context[parts[0]] + parts[1];
 }

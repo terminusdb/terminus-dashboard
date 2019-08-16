@@ -1,8 +1,8 @@
 /**
  * Terminus UI object
- * Contains a client, a set of controls and a viewer - 
+ * Contains a client, a set of controls and a viewer -
  * passes requests to the client and viewer from the controls
- * 
+ *
  * @param opts
  * @returns
  */
@@ -36,7 +36,7 @@ TerminusUI.prototype.removeDB = function(db, url){
 }
 
 TerminusUI.prototype.getDBRecord = function(db, url){
-	return this.client.getDBRecord(db, url);	
+	return this.client.getDBRecord(db, url);
 }
 
 TerminusUI.prototype.connect = function(opts){
@@ -47,7 +47,7 @@ TerminusUI.prototype.connect = function(opts){
 	var key = ((opts && opts.key) ? opts.key : false);
 	this.showBusy("Connecting to server at " + url);
 	return this.client.connect(url, key)
-	.then( function(response) { 
+	.then( function(response) {
 		self.clearBusy();
 		if(opts && opts.db && typeof response[opts.db] != "undefined"){
 			self.client.dbid = opts.db;
@@ -72,9 +72,9 @@ TerminusUI.prototype.connect = function(opts){
 		}
 		self.redraw();
 	})
-	.catch(function(err) { 
+	.catch(function(err) {
 		self.redraw(err);
-	});	
+	});
 }
 
 TerminusUI.prototype.server = function(){
@@ -118,15 +118,15 @@ TerminusUI.prototype.load = function(url, key){
 	if(url && url.indexOf("/document/") != -1){
 		url = url.substring(0, url.indexOf("/document/"));
 		args.document = url.substring(url.indexOf("/document/")+10);
-	}	
+	}
 	else if(url && url.indexOf("/schema") != -1){
 		url = url.substring(0, url.indexOf("/schema"));
 		args.schema = {};
-	}	
+	}
 	else if(url && url.indexOf("/query") != -1){
 		url = url.substring(0, url.indexOf("/query"));
 		args.query = url.substring(url.indexOf("/query")+7);
-	}	
+	}
 	args.server = url;
 	if(key) args.key = key;
 	return this.connect(args);
@@ -215,8 +215,8 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 				self.showBusy("Updating database with new schema");
 				return self.client.updateSchema(false, response);
 			})
-			.then(function(response){ 
-				self.clearBusy(); 
+			.then(function(response){
+				self.clearBusy();
 				return response;
 			});
 		}
@@ -243,7 +243,7 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 TerminusUI.prototype.generateNewDatabaseDocument = function(dets){
 	var doc = {
 		"@context" : {
-			rdfs: "http://www.w3.org/2000/01/rdf-schema#",	
+			rdfs: "http://www.w3.org/2000/01/rdf-schema#",
 			terminus: "https://datachemist.net/ontology/terminus#"
 		},
 		"@type": "terminus:Database"
@@ -271,7 +271,7 @@ TerminusUI.prototype.showMessage = function(msg){
 };
 
 TerminusUI.prototype.showBusy = function(msg){
-	this.showMessage(msg);	
+	this.showMessage(msg);
 	return this.viewer.busy(msg);
 };
 
@@ -327,7 +327,7 @@ TerminusUI.prototype.getControlsDOM = function(){
 	var ctrlsdom = document.createElement("span");
 	ctrlsdom.setAttribute("class", "ui-controls");
 	for(var i = 0; i<this.controls.length; i++){
-		var cdom = this.controls[i].getAsDOM(); 
+		var cdom = this.controls[i].getAsDOM();
 		if(cdom){
 			ctrlsdom.appendChild(cdom);
 		}
@@ -382,9 +382,9 @@ TerminusServerController.prototype.getAsDOM = function(){
 		scd.setAttribute("class", "server-connection");
 		var lab = document.createElement("span");
 		lab.setAttribute("class", "server-label");
-		lab.appendChild(document.createTextNode("Server"));		
-		scd.appendChild(lab);		
-		scd.appendChild(this.getServerLabelDOM());		
+		lab.appendChild(document.createTextNode("Server"));
+		scd.appendChild(lab);
+		scd.appendChild(this.getServerLabelDOM());
 		scd.addEventListener("click", function(){
 			self.showServer();
 		})
@@ -423,7 +423,7 @@ TerminusServerController.prototype.getServerLabelDOM = function(){
 	var val = document.createElement("span");
 	val.setAttribute("class", "server-value");
 	val.setAttribute("title", desc);
-	val.appendChild(document.createTextNode(lab));		
+	val.appendChild(document.createTextNode(lab));
 	return val;
 }
 
@@ -431,7 +431,7 @@ TerminusServerController.prototype.getServerLabelDOM = function(){
 
 
 /*
- * Generates events related to DB context 
+ * Generates events related to DB context
  * view document etc
  */
  function TerminusDBController(ui){
@@ -480,14 +480,14 @@ TerminusDBController.prototype.getAsDOM = function(){
 		scd.setAttribute("class", "db-connection");
 		var lab = document.createElement("span");
 		lab.setAttribute("class", "db-label");
-		lab.appendChild(document.createTextNode("DB"));		
+		lab.appendChild(document.createTextNode("DB"));
 		var val = document.createElement("span");
 		val.setAttribute("class", "db-value");
 		var dbrec = this.ui.client.getDBRecord();
 		var nm = (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
-		val.appendChild(document.createTextNode(nm));		
-		scd.appendChild(lab);		
-		scd.appendChild(val);		
+		val.appendChild(document.createTextNode(nm));
+		scd.appendChild(lab);
+		scd.appendChild(val);
 		scd.addEventListener("click", function(){
 			self.showDB();
 		})
@@ -578,10 +578,10 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 				jQuery(nbut).hide();
 				jQuery(sdom).show();
 				jQuery(nlab).text("Choose by ID");
-			}				
+			}
 		})
 		scd.appendChild(sdom);
-		scd.prepend(nlab);		
+		scd.prepend(nlab);
 	}
 	return scd;
 };
@@ -646,7 +646,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 			else {
 				scd.appendChild(ccDOM);
 				FrameHelper.removeChildren(nlab);
-				nlab.appendChild(document.createTextNode("Text Input"));				
+				nlab.appendChild(document.createTextNode("Text Input"));
 				which = "select";
 			}
 		})
@@ -667,7 +667,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 TerminusContentViewer.prototype.addNewPage = function(page){
 	var pid = FrameHelper.genBNID();
 	page.pageid = pid;
-	this.pages[pid] = page; 
+	this.pages[pid] = page;
 	this.currentPage = pid;
 }
 
@@ -766,11 +766,11 @@ TerminusContentViewer.prototype.getAsDOM = function(page){
 		var pagedom = document.createElement("span");
 		var phdercls = "content-viewer-page content-viewer-page-" + pid;
 		var sel = (this.currentPage !== false && this.currentPage == pid);
-		if(sel)	phdercls += " content-viewer-current-page"; 
+		if(sel)	phdercls += " content-viewer-current-page";
 		else {
 			var f = function(x){
 				return function(){
-					self.makeActivePage(x);	
+					self.makeActivePage(x);
 				}
 			}
 			pagedom.addEventListener("click", f(pid));
@@ -869,7 +869,7 @@ TerminusServerViewer.prototype.getPageDOM = function(selected){
 				self.ui.viewer.showLoadURLPage();
 				self.ui.redraw();
 			})
-			scd.appendChild(csbut);			
+			scd.appendChild(csbut);
 		}
 		if(this.ui.showView("create-db")){
 			var crbut = document.createElement("button");
@@ -890,7 +890,7 @@ TerminusServerViewer.prototype.getPageDOM = function(selected){
 		}
 		if(this.ui.showView("dblist")){
 			scd.appendChild(this.getDBListDOM());
-		}	
+		}
 		pd.appendChild(scd);
 	}
 	else {
@@ -923,7 +923,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	var scd = document.createElement("table");
 	var self = this;
 	var setDB = function(y){
-		return function(){	
+		return function(){
 			self.ui.client.dbid = y;
 			self.page.showDBMainPage();
 			self.ui.redraw();
@@ -997,7 +997,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 			//function to fix y
 			var delDB = function(y){ return function(){self.ui.deleteDatabase(y);}};
 			delbut.addEventListener("click", delDB(dbid));
-			td6.appendChild(delbut);		
+			td6.appendChild(delbut);
 		}
 		tr.appendChild(td1);
 		tr.appendChild(td2);
@@ -1191,10 +1191,10 @@ TerminusQueryViewer.prototype.init = function(q){
 	})
 	.catch(function(e){
 		console.error(e);
-	});	
+	});
 }
 
- 
+
 TerminusQueryViewer.prototype.getLabelDOM = function(selected){
 	return document.createTextNode("Query");
 }
@@ -1232,11 +1232,11 @@ TerminusQueryViewer.prototype.getPageDOM = function(q){
 	qbut.addEventListener("click", function(){
 		self.query(qip.value, qres);
 	})
-	
+
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
 	nqbut.addEventListener("click", function(){
-		qip.value = self.wquery.getClassMetaDataQuery(); 
+		qip.value = self.wquery.getClassMetaDataQuery();
 		self.query(qip.value, qres);
 	})
 
@@ -1250,22 +1250,22 @@ TerminusQueryViewer.prototype.getPageDOM = function(q){
 	var ebut = document.createElement("button");
 	ebut.appendChild(document.createTextNode("Show All Schema Elements"));
 	ebut.addEventListener("click", function(){
-		qip.value = self.wquery.getElementMetaDataQuery(); 
+		qip.value = self.wquery.getElementMetaDataQuery();
 		self.query(qip.value, qres);
 	})
 	var dbut = document.createElement("button");
 	dbut.appendChild(document.createTextNode("Show All Documents"));
 	dbut.addEventListener("click", function(){
-		qip.value = self.wquery.getDocumentQuery(); 
+		qip.value = self.wquery.getDocumentQuery();
 		self.query(qip.value, qres);
 	})
 	var pbut = document.createElement("button");
 	pbut.appendChild(document.createTextNode("Show All Data"));
 	pbut.addEventListener("click", function(){
-		qip.value = self.wquery.getEverythingQuery(); 
+		qip.value = self.wquery.getEverythingQuery();
 		self.query(qip.value, qres);
 	})
-		
+
 	qbox.appendChild(qbut);
 	qbox.appendChild(nqbut);
 	qbox.appendChild(ebut);
@@ -1322,7 +1322,7 @@ TerminusSchemaViewer.prototype.refreshPage = function(){
 	var urlb = this.getURLLoadButton();
 	if(urlb) this.pagedom.appendChild(urlb);
 	if(this.schema){
-		this.pagedom.appendChild(this.getSchemaViewDOM());		
+		this.pagedom.appendChild(this.getSchemaViewDOM());
 	}
 }
 
@@ -1378,7 +1378,7 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 	}
 	if(this.mode == "edit"){
 		var opt = document.createElement("button");
-		opt.appendChild(document.createTextNode("Save"));	
+		opt.appendChild(document.createTextNode("Save"));
 		opt.setAttribute("class", "schema-save");
 		opt.addEventListener("click", function(){
 			self.updateSchema(ipval.value);
@@ -1401,7 +1401,7 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 			self.mode = "edit";
 			self.refreshPage();
 		});
-		scd.appendChild(opt);		
+		scd.appendChild(opt);
 	}
 	sv.appendChild(scd);
 	var scb = document.createElement("span");
@@ -1445,7 +1445,7 @@ TerminusSchemaViewer.prototype.getLoadFromURLDOM = function(){
 	var cancbut = document.createElement("button");
 	cancbut.setAttribute("class", "cancel-schema-load");
 	cancbut.appendChild(document.createTextNode("Cancel"));
-	
+
 	var self = this;
 	loadbut.addEventListener("click", function(){
 		self.load(ip.value, key.value);
@@ -1531,7 +1531,7 @@ TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 		self.setLabel();
 		self.refreshPage();
 		if(self.load_schema){
-			return self.loadDocumentSchema(self.document.cls).then(function(){ self.refreshPage()}).catch(function(e){console.error(e)});			
+			return self.loadDocumentSchema(self.document.cls).then(function(){ self.refreshPage()}).catch(function(e){console.error(e)});
 		}
 		return response;
 	})
@@ -1547,7 +1547,7 @@ TerminusDocumentViewer.prototype.loadDocumentSchema = function(cls){
 	return this.ui.client.getClassFrame(false, cls)
 	.then(function(response){
 		self.loadSchemaFrames(response, cls);
-		self.refreshPage();		
+		self.refreshPage();
 	});
 }
 
@@ -1562,7 +1562,7 @@ TerminusDocumentViewer.prototype.deleteDocument = function(URL){
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-	});	
+	});
 }
 
 TerminusDocumentViewer.prototype.createDocument = function(id){
@@ -1578,7 +1578,7 @@ TerminusDocumentViewer.prototype.createDocument = function(id){
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-	});	
+	});
 }
 
 TerminusDocumentViewer.prototype.updateDocument = function(){
@@ -1594,7 +1594,7 @@ TerminusDocumentViewer.prototype.updateDocument = function(){
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-	});	
+	});
 }
 
 TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
@@ -1604,7 +1604,7 @@ TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
 			if(dataframes && dataframes.length && dataframes[0] && dataframes[0].domain){
 				cls = dataframes[0].domain;
 			}
-		}		
+		}
 	}
 	if(cls){
 		if(!this.document){
@@ -1675,7 +1675,7 @@ TerminusDocumentViewer.prototype.setLabel = function(){
 			var lab = dfs[i].get();
 			if(lab) {
 				this.labdom.appendChild(document.createTextNode(lab));
-			} 
+			}
 		}
 	}
 }
@@ -1689,7 +1689,7 @@ TerminusDocumentViewer.prototype.getLabelDOM = function(){
 
 TerminusDocumentViewer.prototype.refreshPage = function(){
 	if(this.pagedom){
-		FrameHelper.removeChildren(this.pagedom); 
+		FrameHelper.removeChildren(this.pagedom);
 		var rends = this.render();
 		if(rends){
 			this.pagedom.appendChild(rends);
@@ -1705,4 +1705,3 @@ TerminusDocumentViewer.prototype.getPageDOM = function(){
 	}
 	return this.pagedom;
 }
-
