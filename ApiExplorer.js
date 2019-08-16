@@ -413,23 +413,23 @@ ApiExplorer.prototype.prettifyConnectExplorer = function(body){
 ApiExplorer.prototype.prettifyServerForm = function(){
   // form
   var form = document.createElement('form');
-  form.setAttribute('class', 'form-horizontal row-fluid');
+  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
   var fd = document.createElement('div');
-  fd.setAttribute('class', 'control-group');
+  fd.setAttribute('class', 'terminus-control-group');
   form.appendChild(fd);
   var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'control-label');
+  inpLabel.setAttribute('class', 'terminus-control-label');
   inpLabel.setAttribute('for', 'basicinput');
   inpLabel.innerHTML = 'Url:';
   fd.appendChild(inpLabel);
   var cd = document.createElement('div');
-  cd.setAttribute('class', 'controls');
+  cd.setAttribute('class', 'terminus-controls');
   fd.appendChild(cd);
   var inpId = document.createElement('input');
   inpId.setAttribute('type', 'text');
   inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'span8');
+  inpId.setAttribute('class', 'span8 terminus-input-text');
   inpId.setAttribute('placeholder', 'URL : server_url');
   if(this.val) inpId.value = this.val;
   cd.appendChild(inpId);
@@ -438,20 +438,20 @@ ApiExplorer.prototype.prettifyServerForm = function(){
   cd.appendChild(icon);
 
   var fd = document.createElement('div');
-  fd.setAttribute('class', 'control-group');
+  fd.setAttribute('class', 'terminus-control-group');
   form.appendChild(fd);
   var keyLabel = document.createElement('label');
-  keyLabel.setAttribute('class', 'control-label');
+  keyLabel.setAttribute('class', 'terminus-control-label');
   keyLabel.setAttribute('for', 'basicinput');
   keyLabel.innerHTML = 'Key:';
   fd.appendChild(keyLabel);
   var cd = document.createElement('div');
-  cd.setAttribute('class', 'controls');
+  cd.setAttribute('class', 'terminus-controls');
   fd.appendChild(cd);
   var key = document.createElement('input');
   key.setAttribute('type', 'text');
   key.setAttribute('id', 'basicinput');
-  key.setAttribute('class', 'span8');
+  key.setAttribute('class', 'span8 terminus-input-text');
   key.setAttribute('placeholder', 'Key : key');
   if(this.val) key.value = this.val;
   cd.appendChild(key);
@@ -576,23 +576,23 @@ ApiExplorer.prototype.prettifyDatabaseExplorer = function(cont){
 ApiExplorer.prototype.prettifyDBForm = function(mode){
   // form
   var form = document.createElement('form');
-  form.setAttribute('class', 'form-horizontal row-fluid');
+  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
   var fd = document.createElement('div');
-  fd.setAttribute('class', 'control-group');
+  fd.setAttribute('class', 'terminus-control-group');
   form.appendChild(fd);
   var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'control-label');
+  inpLabel.setAttribute('class', 'terminus-control-label');
   inpLabel.setAttribute('for', 'basicinput');
   inpLabel.innerHTML = 'Url:';
   fd.appendChild(inpLabel);
   var cd = document.createElement('div');
-  cd.setAttribute('class', 'controls');
+  cd.setAttribute('class', 'terminus-controls');
   fd.appendChild(cd);
   var inpId = document.createElement('input');
   inpId.setAttribute('type', 'text');
   inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'span8');
+  inpId.setAttribute('class', 'span8 terminus-input-text');
   inpId.setAttribute('placeholder', 'URL : server/database_id');
   if(this.val) inpId.value = this.val;
   cd.appendChild(inpId);
@@ -602,20 +602,20 @@ ApiExplorer.prototype.prettifyDBForm = function(mode){
 
   if(mode == 'create'){
     var fd = document.createElement('div');
-    fd.setAttribute('class', 'control-group');
+    fd.setAttribute('class', 'terminus-control-group');
     form.appendChild(fd);
     var inpLabel = document.createElement('label');
-    inpLabel.setAttribute('class', 'control-label');
+    inpLabel.setAttribute('class', 'terminus-control-label');
     inpLabel.setAttribute('for', 'basicinput');
     inpLabel.innerHTML = 'Title:';
     fd.appendChild(inpLabel);
     var cd = document.createElement('div');
-    cd.setAttribute('class', 'controls');
+    cd.setAttribute('class', 'terminus-controls');
     fd.appendChild(cd);
     var inpTit = document.createElement('input');
     inpTit.setAttribute('type', 'text');
     inpTit.setAttribute('id', 'basicinput');
-    inpTit.setAttribute('class', 'span8');
+    inpTit.setAttribute('class', 'span8 terminus-input-text');
     inpTit.setAttribute('placeholder', 'database title');
     cd.appendChild(inpTit);
     var icon = document.createElement('i');
@@ -624,20 +624,20 @@ ApiExplorer.prototype.prettifyDBForm = function(mode){
   } // if(mode == 'create')
 
   var fd = document.createElement('div');
-  fd.setAttribute('class', 'control-group');
+  fd.setAttribute('class', 'terminus-control-group');
   form.appendChild(fd);
   var keyLabel = document.createElement('label');
-  keyLabel.setAttribute('class', 'control-label');
+  keyLabel.setAttribute('class', 'terminus-control-label');
   keyLabel.setAttribute('for', 'basicinput');
   keyLabel.innerHTML = 'Key:';
   fd.appendChild(keyLabel);
   var cd = document.createElement('div');
-  cd.setAttribute('class', 'controls');
+  cd.setAttribute('class', 'terminus-controls');
   fd.appendChild(cd);
   var inpKey = document.createElement('input');
   inpKey.setAttribute('type', 'text');
   inpKey.setAttribute('id', 'basicinput');
-  inpKey.setAttribute('class', 'span8');
+  inpKey.setAttribute('class', 'span8 terminus-input-text');
   inpKey.setAttribute('placeholder', 'key');
   cd.appendChild(inpKey);
 
@@ -703,23 +703,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
   body.appendChild(br);
 
   var form = document.createElement('form');
-  form.setAttribute('class', 'form-horizontal row-fluid');
+  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
   var fd = document.createElement('div');
-  fd.setAttribute('class', 'control-group');
+  fd.setAttribute('class', 'terminus-control-group');
   form.appendChild(fd);
   var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'control-label');
+  inpLabel.setAttribute('class', 'terminus-control-label');
   inpLabel.setAttribute('for', 'basicinput');
   inpLabel.innerHTML = 'Url:';
   fd.appendChild(inpLabel);
   var cd = document.createElement('div');
-  cd.setAttribute('class', 'controls');
+  cd.setAttribute('class', 'terminus-controls');
   fd.appendChild(cd);
   var inpId = document.createElement('input');
   inpId.setAttribute('type', 'text');
   inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'span8');
+  inpId.setAttribute('class', 'span8 terminus-input-text');
   inpId.setAttribute('placeholder', 'URL : server/database_id');
   if (this.value) inpId.value = this.val;
   cd.appendChild(inpId);
@@ -729,15 +729,15 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
   fd.appendChild(cd);
 
   var fd = document.createElement('div');
-  fd.setAttribute('class', 'control-group');
+  fd.setAttribute('class', 'terminus-control-group');
   form.appendChild(fd);
   var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'control-label');
+  inpLabel.setAttribute('class', 'terminus-control-label');
   inpLabel.setAttribute('for', 'basicinput');
   inpLabel.innerHTML = 'Query:';
   fd.appendChild(inpLabel);
   var cd = document.createElement('div');
-  cd.setAttribute('class', 'controls');
+  cd.setAttribute('class', 'terminus-controls');
   fd.appendChild(cd);
   var txtar = document.createElement('textarea');
   if(this.value) txtar.value = this.val;
@@ -808,23 +808,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
      case 'getSchema':
        // form to input schema url
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Url:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpId = document.createElement('input');
        inpId.setAttribute('type', 'text');
        inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8');
+       inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id');
        cd.appendChild(inpId);
        var icon = document.createElement('i');
@@ -840,23 +840,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
      case 'updateSchema':
        // form to input schema url
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Url:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpId = document.createElement('input');
        inpId.setAttribute('type', 'text');
        inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8');
+       inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id');
        cd.appendChild(inpId);
        var icon = document.createElement('i');
@@ -870,18 +870,18 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 
        // text area
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Schema:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var txtar = document.createElement('textarea');
        cd.appendChild(txtar);
@@ -914,23 +914,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
      case 'viewDocument':
        // form
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Url:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpId = document.createElement('input');
        inpId.setAttribute('type', 'text');
        inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8');
+       inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
        var icon = document.createElement('i');
@@ -947,23 +947,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
      case 'deleteDocument':
        // form
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Url:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpId = document.createElement('input');
        inpId.setAttribute('type', 'text');
        inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8');
+       inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
        var icon = document.createElement('i');
@@ -979,23 +979,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
      case 'createDocument':
        // form to input schema url
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Url:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpId = document.createElement('input');
        inpId.setAttribute('type', 'text');
        inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8');
+       inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
        var icon = document.createElement('i');
@@ -1009,18 +1009,18 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 
        // text area
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Document:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var txtar = document.createElement('textarea');
        cd.appendChild(txtar);
@@ -1056,23 +1056,23 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
      case 'updateDocument':
        // form to input schema url
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Url:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpId = document.createElement('input');
        inpId.setAttribute('type', 'text');
        inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8');
+       inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
        var icon = document.createElement('i');
@@ -1086,18 +1086,18 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 
        // text area
        var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'form-horizontal row-fluid');
+       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
        var fd = document.createElement('div');
-       fd.setAttribute('class', 'control-group');
+       fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'control-label');
+       inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
        inpLabel.innerHTML = 'Document:';
        fd.appendChild(inpLabel);
        var cd = document.createElement('div');
-       cd.setAttribute('class', 'controls');
+       cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var txtar = document.createElement('textarea');
        cd.appendChild(txtar);
@@ -1139,7 +1139,7 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 ApiExplorer.prototype.prettifyApiForm = function(action, input){
   // form
   var form = document.createElement('form');
-  form.setAttribute('class', 'form-horizontal row-fluid');
+  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
   var button = document.createElement('button');
   button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
@@ -1268,18 +1268,7 @@ ApiExplorer.prototype.prettifySignature = function(action){
   var txt = document.createTextNode(sig.spec);
   var pre = document.createElement('pre');
   pre.setAttribute('class', 'terminus-api-signature-pre');
-  var code = document.createElement('code');
-  code.setAttribute('class', 'prettyprint terminus-api-signature-pre');
-  code.appendChild(txt);
-  var txt =  document.createTextNode(sig.descr);
-  code.appendChild(txt);
-  var txt = document.createTextNode(sig.result);
-  code.appendChild(txt);
-  pre.appendChild(code);
-  var br = document.createElement('BR');
-  pre.appendChild(br);
-  var br = document.createElement('BR');
-  pre.appendChild(br);
+  pre.appendChild(txt);
   var txt =  document.createTextNode(sig.descr);
   pre.appendChild(txt);
   var br = document.createElement('BR');

@@ -316,6 +316,7 @@ function prettifyResponse(currForm, action, data){
     break;
   }
   var textarea = document.createElement('textarea');
+  textarea.setAttribute('class', 'terminus-textarea');
   //var decodedTxt = jQuery(textarea).html(data).text();
   textarea.value = data;
   rd.appendChild(textarea);
@@ -363,8 +364,7 @@ function showHttpResult(response, action, currForm){
 
     // http header result
     var hdres = document.createElement('pre');
-    hdres.setAttribute('class', 'prettyprint');
-    hdres.setAttribute('style', 'font-size: 18px;padding: 15px;');
+    hdres.setAttribute('class', 'prettyprint terminus-api-signature-pre');
     var txt = document.createTextNode(retHttpHeaders);
     hdres.appendChild(txt);
     currForm.appendChild(hdres);
