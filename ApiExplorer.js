@@ -51,7 +51,7 @@ ApiExplorer.prototype.prettifyApiExplorer = function(){
   // list view of apis
   // connect to server api
   var ul = document.createElement('ul');
-  ul.setAttribute('class','widget terminus-widget-menu styled');
+  ul.setAttribute('class',' terminus-widget-menu' );
   var li = document.createElement('li');
   li.setAttribute('class', 'active terminus-pointer');
   var self = this;
@@ -73,7 +73,7 @@ ApiExplorer.prototype.prettifyApiExplorer = function(){
 
   // database api
   var ul = document.createElement('ul');
-  ul.setAttribute('class','widget terminus-widget-menu styled');
+  ul.setAttribute('class',' terminus-widget-menu');
   var li = document.createElement('li');
   li.setAttribute('class', 'active terminus-pointer');
   var self = this;
@@ -167,10 +167,10 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
 
   // list view of Databse tools
   var ul = document.createElement('ul');
-  ul.setAttribute('class','ul-horizontal');
+  ul.setAttribute('class','terminus-ul-horizontal');
   //view document
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
@@ -189,7 +189,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
 
   //create document
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
@@ -208,7 +208,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
 
   //update document
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
     var dom = self.prettifyShowApiDom('updateDocument', body);
@@ -227,7 +227,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
 
   //delete document
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
     var dom = self.prettifyShowApiDom('deleteDocument', body);
@@ -258,10 +258,10 @@ ApiExplorer.prototype.prettifyQueryApi  = function(cont){
 
   // list view of Databse tools
   var ul = document.createElement('ul');
-  ul.setAttribute('class','ul-horizontal');
+  ul.setAttribute('class','terminus-ul-horizontal');
   //woql select
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
@@ -279,7 +279,7 @@ ApiExplorer.prototype.prettifyQueryApi  = function(cont){
 
   //update select
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
@@ -298,7 +298,7 @@ ApiExplorer.prototype.prettifyQueryApi  = function(cont){
 
   //mapping
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
     var dom = self.prettifyQueryApiDom('lookup', body);
@@ -330,10 +330,10 @@ ApiExplorer.prototype.prettifySchemaApi = function(cont){
 
   // list view of Databse tools
   var ul = document.createElement('ul');
-  ul.setAttribute('class','ul-horizontal');
+  ul.setAttribute('class','terminus-ul-horizontal');
   //get schema
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
@@ -352,7 +352,7 @@ ApiExplorer.prototype.prettifySchemaApi = function(cont){
 
   //update schema
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
     var dom = self.prettifyShowApiDom('updateSchema', body);
@@ -492,10 +492,10 @@ ApiExplorer.prototype.prettifyDatabaseExplorer = function(cont){
 
   // list view of Databse tools
   var ul = document.createElement('ul');
-  ul.setAttribute('class','ul-horizontal');
+  ul.setAttribute('class','terminus-ul-horizontal');
   //create db
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
@@ -514,7 +514,7 @@ ApiExplorer.prototype.prettifyDatabaseExplorer = function(cont){
 
   //delete db
   var li = document.createElement('li');
-  li.setAttribute('class', 'li-horizontal terminus-pointer');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   li.addEventListener("click", function(){
     FrameHelper.removeChildren(body);
     var dom = self.prettifyDatabaseDom('delete', body);

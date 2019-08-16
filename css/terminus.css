@@ -1,0 +1,111 @@
+/* ----- terminus widget menu ----- */
+.terminus-widget-menu {
+	background: #333;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	overflow: hidden
+}
+
+.terminus-widget-menu a {
+	color: #fff;
+	font-size:large;
+	display: block;
+	line-height: 20px;
+	padding: 15px;
+	text-decoration: none!important
+}
+.terminus-widget-menu .terminus-menu-icon {
+	margin-right: 10px;
+	padding-right:10px;
+	color: #fff;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+.terminus-widget-menu .label {
+	background: #888;
+	-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.4) inset;
+	-moz-box-shadow: 0 0 2px rgba(0,0,0,0.4) inset;
+	box-shadow: 0 0 2px rgba(0,0,0,0.4) inset;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	line-height: 20px;
+	padding: 0 5px
+}
+.terminus-widget-menu>li+li {
+	border-top: 1px solid #555
+}
+.terminus-widget-menu>li>a {
+	background-color: #2d2b32;
+	color: #fff;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+.terminus-widget-menu>li>a .icon-chevron-up {
+	display: block
+}
+.terminus-widget-menu>li>a .icon-chevron-down {
+	display: none
+}
+.terminus-widget-menu>li>a.collapsed .icon-chevron-up {
+	display: none
+}
+.terminus-widget-menu>li>a.collapsed .icon-chevron-down {
+	display: block
+}
+.terminus-widget-menu>li>a:hover {
+	background-color: #D3D3D3;
+	color: black;
+}
+.terminus-widget-menu>li>a:hover .menu-icon {
+  color:#fff;
+}
+.terminus-widget-menu>li ul li {
+	background: whitesmoke;
+	border-top: 1px solid whitesmoke;
+}
+.terminus-widget-menu>li ul li+li {
+	border-top: 0
+}
+.terminus-widget-menu>li ul li a {
+	padding: 10px 15px 10px 30px
+}
+.terminus-widget-menu>li ul li a:hover {
+	-webkit-box-shadow: 0 1px 0 #fafafa inset;
+	-moz-box-shadow: 0 1px 0 #fafafa inset;
+	padding: 9px 15px 9px 30px
+}
+
+/* ----- terminus horizontal sub menus ----- */
+.terminus-ul-horizontal{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+}
+.terminus-li-horizontal {
+  float: left;
+}
+.terminus-li-horizontal a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 16px;
+  text-decoration: none;
+  font-size: 18px;
+}
+.terminus-li-horizontal a:hover {
+  background-color: #111111;
+}
+.terminus-sub-menu-icon{
+	padding-right: 10px;
+}
+
+/* ----- pointer cursor ----- */
+.terminus-pointer{
+	cursor:pointer;
+}
