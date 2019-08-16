@@ -4,12 +4,14 @@
 		<meta charset=utf-8 />
 		<title>Terminus DB Javascript Client User Interface</title>
 		<script src="WOQLClient.js"></script>
+		<script src="ApiExplorer.js"></script>
 		<script src="FrameHelper.js"></script>
 		<script src="ObjectFrame.js"></script>
 		<script src="FrameRenderer.js"></script>
 		<script src="HTMLViewer.js"></script>
 		<script src="HTMLElementViewers.js"></script>
 		<script src="TerminusUI.js"></script>
+		<script src="UIconfig.json"></script>
 		<script src="query/WOQLQuery.js"></script>
 		<script src="query/WOQLResult.js"></script>
 		<script src="query/WOQLResultsViewer.js"></script>
@@ -17,22 +19,33 @@
 	</head>
 		
 <BODY>
-	<div class="sdk-viewer">
-		<table style="width: 100%">
-		<tr><td id='control-panel'></td>
-		<td class='main-page' style="width: 100%;">
-			<div id='user-messages'></div>
-		   	<div id='content-viewer'></div>
-		</div></td></tr>
+	<div class="terminus-client-ui">
+		<div class='terminus-client-header'></div>
+		<table class="terminus-client-table-layout" style="width: 100%">
+			<tr>
+				<td id='terminus-control-panel'>
+					<div class="terminus-application-controls">
+						<div class="terminus-application-header terminus-client-header">Terminus Client</div>
+						<div class="terminus-application-control terminus-client-body" id="terminus-control-panel"></div>
+						<div class="terminus-application-header terminus-explorer-header">Terminus API Explorer</div>
+						<div class="terminus-application-control terminus-expolrer-body" id="terminus-explorer"></div>
+					</div>
+				</td>
+				<td class='terminus-main-window' style="width: 100%;">
+					<div class='terminus-user-messages' id='terminus-user-messages'></div>
+				   	<div class='terminus-main-content' id='terminus-content-viewer'></div>
+				</td>
+			</tr>
 		</table>
-		<div class='sdk-footer'></div>
+		<div class='terminus-client-footer'></div>
 	</div>	
 	<script>
 		var terminator = new TerminusUI();
 		var pconfig = {server: "http://localhost/dcog/platform", key: "root"};
-		pconfig.controller = document.getElementById("control-panel");
-		pconfig.messages = document.getElementById("user-messages");
-		pconfig.viewer = document.getElementById("content-viewer");
+		pconfig.controller = document.getElementById("terminus-control-panel");
+		pconfig.messages = document.getElementById("terminus-user-messages");
+		pconfig.explorer = document.getElementById("terminus-explorer");
+		pconfig.viewer = document.getElementById("terminus-content-viewer");
 		terminator.draw(pconfig);
 	</script>
 </BODY>
