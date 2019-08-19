@@ -253,6 +253,31 @@ WOQLClient.prototype.getClassFrame = function(cfurl, cls, opts){
 	return this.dispatch(this.frameURL(), "class_frame", opts);
 }
 
+WOQLClient.prototype.platformEndpoint = function(){
+	if(this.server.lastIndexOf("/platform/") == (this.server.length-10)){
+		return true;
+	}
+	return false;
+}
+
+//simple functions for generating the correct API urls from current client state
+WOQLClient.prototype.serverURL = function(){ return this.server; }
+WOQLClient.prototype.dbURL = function(call){ //url swizzling to talk to platform using server/dbid/platform/ pattern..
+	if(this.platformEndpoint() && (!call || call != "create")) {
+		return this.server.substring(0, this.server.lastIndexOf("/platform/")) + "/" + this.dbid + "/platform";
+	}
+	else if(this.platformEndpoint() && call == "platform"){
+		return this.server.substring(0, this.server.lastIndexOf("/platform/")) + "/" + this.dbid ;
+	}
+	return this.server + this.dbid; 
+}
+WOQLClient.prototype.schemaURL = function(){ return this.dbURL() + "/schema"; }
+WOQLClient.prototype.queryURL = function(){ return this.dbURL() + "/woql"; }
+WOQLClient.prototype.frameURL = function(){ return this.dbURL() + "/frame"; }
+WOQLClient.prototype.docURL = function(){ return this.dbURL() + "/document/" + (this.docid ? this.docid : ""); }
+
+
+
 /*
  * Utility functions for setting and parsing urls and determining the current server, database and document
  */
@@ -596,7 +621,7 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	//alert(JSON.stringify(payload));
 	let api = {
         mode: 'cors', // no-cors, cors, *same-origin
-        //credentials: 'include', // include, *same-origin, omit
+        credentials: 'include', // include, *same-origin, omit
         redirect: 'follow', // manual, *follow, error
         referrer: 'client', // no-referrer, *client
     };
