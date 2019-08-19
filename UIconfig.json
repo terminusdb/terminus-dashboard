@@ -1,6 +1,6 @@
 let TerminusConfig = {
 	controls: [
-		"server", "db", "change-server", "class_frame",	"import_schema", "create_database", "delete_database",
+		"server", "db", "api_explorer", "change-server", "class_frame",	"import_schema", "create_database", "delete_database",
 		"create_document", "schema_format", "get_document", "get_schema", "update_schema", "woql_select"
 	],
 	document: {
@@ -18,8 +18,8 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://localhost/dcog/platform/", db: "docs", schema: "true"},
-	
+	location: {server: "http://localhost/platform/"},
+
 	css: "basic",
 	plugins: ["font-awesome"]
 };

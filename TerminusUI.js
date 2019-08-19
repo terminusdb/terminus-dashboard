@@ -1,6 +1,6 @@
 /**
  * Terminus UI object
- * 
+ *
  * Traffic control of messages going between different Terminus UI pages and features
  *
  * @param opts - options array
@@ -13,15 +13,15 @@ function TerminusUI(opts){
 }
 
 /*
- * Client connects to specified server and specified part 
- * opts is a json with the following fields: 
+ * Client connects to specified server and specified part
+ * opts is a json with the following fields:
  * server: mandatory URL of the server to connect to
  * key: optional client API key
  * dbid: id of the database to connect to
  * schema: if set, the UI will load the schema page after connecting
  * query: if set, the query will be sent to the server and the results will be loaded on the query page
  * document: if set, the document page corresponding to this document will be loaded after connecting
- * 
+ *
  * (note: schema, query, document are mutually exclusive and must also have a dbid set)
  */
 TerminusUI.prototype.connect = function(opts){
@@ -43,6 +43,9 @@ TerminusUI.prototype.connect = function(opts){
 			else if(opts.query && self.showView("woql_select")){
 				self.showQueryPage(opts.query);
 			}
+      else if(opts.explorer && self.showView("api_explorer")){
+				self.showExplorer(opts.explorer);
+			}
 			else {
 				self.showDBMainPage();
 			}
@@ -60,15 +63,15 @@ TerminusUI.prototype.connect = function(opts){
 
 /**
  * Sends a request to create a new database to the server and interprets the response
- * 
- * dbdets is a json object with the following fields: 
+ *
+ * dbdets is a json object with the following fields:
  * id: the id of the new database (alphanumeric, no spaces, url friendly) mandatory
  * title: the text name of the new database for tables, etc. mandatory
  * description: text description of the database (optional)
  * key: a API client key for server auth
  * schema: the url of another Terminus DB from which to import schema
- * instance: the url of another Terminus DB from which to import data 
- * 
+ * instance: the url of another Terminus DB from which to import data
+ *
  */
 TerminusUI.prototype.createDatabase = function(dbdets){
 	var self = this;
@@ -104,10 +107,10 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 			if(crec = self.client.getDBRecord(dbid)){
 				self.client.dbid = dbid;
 				self.viewer.showDBMainPage();
-				self.showMessage("Successfully Created Database " + dbid);				
+				self.showMessage("Successfully Created Database " + dbid);
 			}
 			else {
-		        return Promise.reject(new Error(self.getCrashString("createDatabase", "Failed to retrieve record of created database " + dbid)));	
+		        return Promise.reject(new Error(self.getCrashString("createDatabase", "Failed to retrieve record of created database " + dbid)));
 			}
 		})
 	})
@@ -173,7 +176,7 @@ TerminusUI.prototype.generateNewDatabaseDocument = function(dets){
 
 TerminusUI.prototype.getBadArguments = function(fname, str){
 	return "Bad arguments to " + fname + ": " + str;
-}        
+}
 
 TerminusUI.prototype.getCrashString = function(fname, str){
 	return "Results from " + fname + " indicate the possibility of a system failure " + str;
@@ -212,10 +215,10 @@ TerminusUI.prototype.getConnectionEndpoint = function(url){
 		return url.substring(0, url.lastIndexOf("/document"));
 	}
 	if(url && url.lastIndexOf("/frame") != -1){
-		return url.substring(0, url.lastIndexOf("/frame"));		
+		return url.substring(0, url.lastIndexOf("/frame"));
 	}
 	if(url && url.lastIndexOf("/woql") != -1){
-		return url.substring(0, url.lastIndexOf("/woql"));		
+		return url.substring(0, url.lastIndexOf("/woql"));
 	}
 	return url;
 }
@@ -322,6 +325,10 @@ TerminusUI.prototype.setControllerDOM = function(dom){
 	this.controller = dom;
 }
 
+TerminusUI.prototype.setExplorerDOM = function(dom){
+	this.explorer = dom;
+}
+
 TerminusUI.prototype.setPluginsDOM = function(dom){
 	this.plugins = dom;
 }
@@ -333,10 +340,14 @@ TerminusUI.prototype.setViewerDOM = function(dom){
 TerminusUI.prototype.draw = function(comps, slocation){
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
+  if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
 	if(this.controller){
 		this.drawControls();
+	}
+  if(this.explorer){
+		this.drawExplorer();
 	}
 	if(this.plugins){
 		this.drawPlugins();
@@ -358,6 +369,10 @@ TerminusUI.prototype.redraw = function(msg){
 	if(this.controller){
 		FrameHelper.removeChildren(this.controller);
 		this.drawControls();
+	}
+  if(this.explorer){
+		FrameHelper.removeChildren(this.explorer);
+		this.drawExplorer();
 	}
 	if(this.viewer){
 		this.redrawMainPage();
@@ -383,6 +398,16 @@ TerminusUI.prototype.drawControls = function(){
 	}
 }
 
+TerminusUI.prototype.drawExplorer = function(){
+  if(this.explorer){
+    if(this.showControl("api_explorer")){
+       var exp = new ApiExplorer(this);
+       ae = exp.getAsDOM();
+       this.explorer.appendChild(ae);
+    }
+  } // api_explorer
+}
+
 TerminusUI.prototype.loadControls = function(){
 	if(this.showControl('server')){
 		var sc = new TerminusServerController(this);
@@ -391,7 +416,7 @@ TerminusUI.prototype.loadControls = function(){
 		}
 		if(this.db() && this.showControl("db")){
 			var sc = new TerminusDBController(this);
-			if(sc) this.controls.push(sc);			
+			if(sc) this.controls.push(sc);
 		}
 	}
 }
@@ -415,7 +440,7 @@ TerminusUI.prototype.showView = function(el){
 }
 
 TerminusUI.prototype.pseudoCapability = function(el){
-	var pseuds = ["server", "db", "change-server", "import_schema", "schema_format"];
+	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "schema_format"];
 	if(pseuds.indexOf(el) == -1) return false;
 	return true;
 }
@@ -452,9 +477,9 @@ TerminusUI.prototype.setOptions = function(opts){
 		this.schema_options = opts.schema;
 	}
 	if(opts.css){
-		this.loadCSS(opts.css);		
+		this.loadCSS(opts.css);
 	}
-	this.enabled_plugins = (opts.plugins ? opts.plugins :  this.DefaultPlugins());	
+	this.enabled_plugins = (opts.plugins ? opts.plugins :  this.DefaultPlugins());
 	this.loadControls();
 }
 
@@ -551,7 +576,7 @@ TerminusUI.prototype.loadCSS = function(css){
 	}
 	if(css){
 		cssurl = "css/" + css + ".css";
-		FrameHelper.loadDynamicCSS(cssfid, cssurl);		
+		FrameHelper.loadDynamicCSS(cssfid, cssurl);
 	}
 }
 
@@ -559,7 +584,7 @@ TerminusUI.prototype.getDocViewerOptions = function(){
 	if(this.document_options && this.document_options['view']){
 		return this.document_options['view'];
 	}
-	return false; 
+	return false;
 }
 
 TerminusUI.prototype.getDocCreatorOptions = function(){
@@ -572,4 +597,3 @@ TerminusUI.prototype.getDocCreatorOptions = function(){
 TerminusUI.prototype.getClassFrameOptions = function(){
 	return this.viewdoc_options;
 }
-
