@@ -126,7 +126,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var wq = new WOQLQuery(this.ui.client, {});
 	//var filter = wq.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
 	var filter = "not(" + wq.getAbstractQueryPattern("Class") + ")";
-	
+
 	var termcc = new TerminusClassChooser(this.ui, filter);
 	termcc.empty_choice = "Create Document of Type";
 	termcc.change = function(new_class){
@@ -299,4 +299,3 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	scd.appendChild(butfield);
 	return scd;
 }
-

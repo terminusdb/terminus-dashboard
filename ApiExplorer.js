@@ -23,11 +23,10 @@
    return aec;
  }
 
+// delete this 
  ApiExplorer.prototype.draw = function(opts){
    if(opts && opts.nav)  this.prettifyApiNav(opts.nav, opts.viewer);
    if(opts && opts.viewer)  this.prettifyApiExplorer('connect', opts.viewer);
-
-
    //return apiDom.appendChild(this.prettifyApiExplorer());
  } // draw()
 

@@ -405,7 +405,7 @@ TerminusUI.prototype.drawExplorer = function(){
        ae = exp.getAsDOM();
        this.explorer.appendChild(ae);
     }
-  } // api_explorer
+  } 
 }
 
 TerminusUI.prototype.loadControls = function(){
