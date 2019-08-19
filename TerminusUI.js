@@ -484,7 +484,7 @@ TerminusUI.prototype.setOptions = function(opts){
 }
 
 TerminusUI.prototype.drawPlugins = function(){
-	var allplugs = this.getSupportedPlugins();
+	var allplugs = {};//= this.getSupportedPlugins();
 	this.plugins.appendChild(document.createTextNode("Plugins: "));
 	for(var plug in allplugs){
 		var oneplug = allplugs[plug];
@@ -547,25 +547,6 @@ TerminusUI.prototype.togglePlugin = function(plugid){
 
 
 //TerminusUI.prototype.loadPlugins = function(opts){}
-
-TerminusUI.prototype.getSupportedPlugins = function(){
-	var splugs = {
-		"font-awesome" : { label : "Font Awesome", version: "3.0.1" },
-		"bootstrap" : { label : "Bootstrap Styles", version: "3.0.1" },
-		"jquery" : { label : "Jquery", version: "5.0.1" },
-		"datatables" : { label : "Datatables", version: "5.0.1", requires: ['jquery'] },
-		"select2" : { label : "Select 2", version: "5.0.1", requires: ['jquery'] },
-		"gmaps" : { label : "Google Maps", version: "5.0.1"},
-		"openlayers" : { label : "Open Layers", version: "5.0.1"},
-		"d3" : { label : "D3 Graphics", version: "5.0.1"}
-	};
-	return splugs;
-};
-
-TerminusUI.prototype.getDefaultPlugins = function(){
-	var defplugs = [];
-	return defplugs;
-}
 
 
 TerminusUI.prototype.loadCSS = function(css){
