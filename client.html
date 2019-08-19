@@ -4,11 +4,9 @@
 		<meta charset=utf-8 />
 		<title>Terminus DB Javascript Client User Interface</title>
 		<script src="WOQLClient.js"></script>
-		<script src="ApiExplorer.js"></script>
 		<script src="FrameHelper.js"></script>
 		<script src="ObjectFrame.js"></script>
 		<script src="TerminusUI.js"></script>
-		<script src="UIconfig.json"></script>
 		<script src="query/WOQLQuery.js"></script>
 		<script src="query/WOQLResult.js"></script>
 		<script src="query/WOQLResultsViewer.js"></script>
@@ -68,12 +66,19 @@
 				   	<div class='terminus-main-content' id='terminus-content-viewer'></div>
 				</td>
 			</tr>
+	<div class="sdk-viewer">
+		<table style="width: 100%">
+		<tr><td id='control-panel'></td>
+		<td class='main-page' style="width: 100%;">
+			<div id='user-messages'></div>
+		   	<div id='content-viewer'></div>
+		</div></td></tr>
 		</table>
-		<div class='terminus-client-footer'></div>
+		<div class='sdk-footer'></div>
 	</div>	
 	<script>
 		var terminator = new TerminusUI(TerminusConfig);
-		var pconfig = {};//server: "http://localhost/dcog/platform", key: "root"};
+		var pconfig = {};//server: "http://195.201.12.87:6363/", key: "root"};
 		pconfig.controller = document.getElementById("terminus-control-panel");
 		pconfig.messages = document.getElementById("terminus-user-messages");
 		pconfig.plugins = document.getElementById("terminus-plugin-loader");
@@ -85,6 +90,11 @@
 		cssloader.addEventListener("change", function(){
 			terminator.loadCSS(this.value);
 		});
+		var terminator = new TerminusUI();
+		pconfig.controller = document.getElementById("control-panel");
+		pconfig.messages = document.getElementById("user-messages");
+		pconfig.viewer = document.getElementById("content-viewer");
+		terminator.draw(pconfig);
 	</script>
 </BODY>
 </html>

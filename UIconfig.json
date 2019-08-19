@@ -1,0 +1,25 @@
+let TerminusConfig = {
+	controls: [
+		"server", "db", "change-server", "class_frame",	"import_schema", "create_database", "delete_database",
+		"create_document", "schema_format", "get_document", "get_schema", "update_schema", "woql_select"
+	],
+	document: {
+		view: {
+			label: "My document view",
+			load_schema: true, //should we load the document schema or just use the document frame
+			editor: true,
+			facet: "page",
+			mode: "view",
+			viewer: "html",
+			hide_disabled_buttons: true,
+			rules: [{
+				match: { type: "property"},
+				mode: "edit"
+			}]
+		}
+	},
+	location: {server: "http://localhost/dcog/platform/", db: "docs", schema: "true"},
+	
+	css: "basic",
+	plugins: ["font-awesome"]
+};

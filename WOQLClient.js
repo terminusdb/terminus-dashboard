@@ -8,7 +8,8 @@ function WOQLClient(params){
 	this.server = (params && params.server ? params.server : false);
 	this.dbid = (params && params.server && params.db ? params.db : false);
 	this.docid = (params && params.document && params.document ? params.document : false);
-	this.connection = {};	//internal connection registry
+	//internal connection registry
+	this.connection = {};
 	if(this.server && params.key){
 		this.setClientKey(this.server, params.key);
 	}
@@ -28,15 +29,20 @@ function WOQLClient(params){
  * If the curl argument is false or null, the this.server will be used if present, or the promise will be rejected.
  */
 WOQLClient.prototype.connect = function(curl, key){
-	if(curl && !this.setServer(curl)){
+	curl = (curl ? curl : this.server);
+	if(!this.setServer(curl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(curl, "connect")));
 	}
+	if(curl.lastIndexOf('/') != curl.length-1){
+		curl += "/";
+	}
 	if(key) {
-		this.setClientKey(this.serverURL(), key);
+		this.setClientKey(curl, key);
 	}
 	var self = this;
-	return this.dispatch(this.serverURL(), "connect").then(function(response){
-		self.setConnectionCapabilities(self.serverURL(), response);
+	return this.dispatch(curl, "connect").then(function(response){
+		self.setConnectionCapabilities(curl, response);
+		self.server = curl;
 		return response;
 	});
 }
@@ -59,13 +65,15 @@ WOQLClient.prototype.createDatabase = function(dburl, details, key){
         return Promise.reject(new URIError(this.getInvalidURIMessage(details["@id"], "Create Database")));
 	}
 	details = this.makeDocumentConsistentWithURL(details, this.dbURL());
-	opts = {}
 	if(key) {
-		opts.key = key;
+		details.key = key;
 	}
-	doc = this.addOptionsToDocument(details, opts);
 	var self = this;
+<<<<<<< HEAD
 	return this.dispatch(this.dbURL("create"), "create_database", doc);
+=======
+	return this.dispatch(this.dbURL(), "create_database", details);
+>>>>>>> 55747cfa40e49da10066b1811b5e0ab23a1984f5
 }
 
 /**
@@ -210,9 +218,8 @@ WOQLClient.prototype.select = function(qurl, woql, opts){
 	if(qurl && this.setQueryURL(qurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(qurl, "Select")));
 	}
-	var q = {"query": woql};
-	q = this.addOptionsToWOQL(q, opts);
-	return this.dispatch(this.queryURL(), "woql_select", q);
+	woql = this.addOptionsToWOQL(woql, opts);
+	return this.dispatch(this.queryURL(), "woql_select", woql);
 }
 
 /**
@@ -250,6 +257,81 @@ WOQLClient.prototype.getClassFrame = function(cfurl, cls, opts){
 	return this.dispatch(this.frameURL(), "class_frame", opts);
 }
 
+<<<<<<< HEAD
+=======
+//simple functions for generating the correct urls from current client state
+WOQLClient.prototype.dbURL = function(){ return this.server + this.dbid }
+WOQLClient.prototype.schemaURL = function(){ return this.server + this.dbid + "/schema"; }
+WOQLClient.prototype.queryURL = function(){ return this.server + this.dbid + "/woql"; }
+WOQLClient.prototype.frameURL = function(){ return this.server + this.dbid + "/frame"; }
+WOQLClient.prototype.docURL = function(){ return this.server + this.dbid + "/document/" + (this.docid ? this.docid : ""); }
+
+/*
+ * Utility functions for setting and parsing urls and determining the current server, database and document
+ */
+WOQLClient.prototype.setServer = function(input_str, context){
+	let parser = new TerminusIDParser(input_str, context);
+	if(parser.parseServerURL()){
+		this.server = parser.server();
+		return true;
+	}
+	return false;
+}
+
+WOQLClient.prototype.setDB = function(input_str, context){
+	let parser = new TerminusIDParser(input_str, context);
+	if(parser.parseDBID()){
+		if(parser.server()) this.server = parser.server();
+		this.dbid = parser.dbid();
+		return true;
+	}
+	return false;
+}
+
+WOQLClient.prototype.setSchemaURL = function(input_str, context){
+	let parser = new TerminusIDParser(input_str, context);
+	if(parser.parseSchemaURL()){
+		if(parser.server()) this.server = parser.server();
+		this.dbid = parser.dbid();
+		this.docid = false;
+		return true;
+	}
+	return false;
+}
+
+WOQLClient.prototype.setDocument = function(input_str, context){
+	let parser = new TerminusIDParser(input_str, context);
+	if(parser.parseDocumentURL()){
+		if(parser.server()) this.server = parser.server();
+		if(parser.dbid()) this.dbid = parser.dbid();
+		if(parser.docid()) this.docid = parser.docid();
+		return true;
+	}
+	return false;
+}
+
+WOQLClient.prototype.setQueryURL = function(input_str, context){
+	let parser = new TerminusIDParser(input_str, context);
+	if(parser.parseQueryURL()){
+		if(parser.server()) this.server = parser.server();
+		this.dbid = parser.dbid();
+		this.docid = false;
+		return true;
+	}
+	return false;
+}
+
+WOQLClient.prototype.setClassFrameURL = function(input_str, context){
+	let parser = new TerminusIDParser(input_str, context);
+	if(parser.parseClassFrameURL()){
+		if(parser.server()) this.server = parser.server();
+		this.dbid = parser.dbid();
+		this.docid = false;
+		return true;
+	}
+	return false;
+}
+>>>>>>> 55747cfa40e49da10066b1811b5e0ab23a1984f5
 
 /*
  * Utility functions for changing the state of connections with Terminus servers
@@ -383,12 +465,8 @@ WOQLClient.prototype.addOptionsToWOQL = function(woql, opts){
 }
 
 WOQLClient.prototype.addOptionsToDocument = function(doc, opts){
-	var pdoc = {"terminus:document" : doc};
-	pdoc["@context"] = doc['@context'];
-	delete(pdoc["terminus:document"]['@context']);
-	pdoc["@type"] = "terminus:APIUpdate";
-	if(opts && opts.key){ pdoc.key = opts.key };
-	return pdoc;
+	if(opts && opts.key){ doc.key = doc.key };
+	return doc;
 }
 
 WOQLClient.prototype.addKeyToPayload = function(payload){
@@ -552,13 +630,6 @@ WOQLClient.prototype.getInvalidURIMessage = function(url, call){
 	return str;
 }
 
-WOQLClient.prototype.platformEndpoint = function(){
-	if(this.server.lastIndexOf("/platform/") == (this.server.length-10)){
-		return true;
-	}
-	return false;
-}
-
 WOQLClient.prototype.serverConnected = function(){
 	return (typeof this.connection[this.server] != "undefined");
 }
@@ -619,14 +690,13 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	if(this.includeKey()){
 		payload = this.addKeyToPayload(payload);
 	}
+	//alert(JSON.stringify(payload));
 	let api = {
         mode: 'cors', // no-cors, cors, *same-origin
+        //credentials: 'include', // include, *same-origin, omit
         redirect: 'follow', // manual, *follow, error
         referrer: 'client', // no-referrer, *client
     };
-	if(this.platformEndpoint()){
-        api.credentials = 'include'; // include, *same-origin, omit
-	}
 	//read only API calls - use GET
 	if(action == "connect" || action == "get_schema" || action == "class_frame" || action == "woql_select" || action == "get_document"){
 		api.method = 'GET';
@@ -646,7 +716,11 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	var self = this;
 	return fetch(url, api).then(function(response) {
 		if(response.ok) {
+<<<<<<< HEAD
 			if(payload && payload.explorer) return response;
+=======
+			if(opts.explorer) return response;
+>>>>>>> 55747cfa40e49da10066b1811b5e0ab23a1984f5
 			else{
 				if(api.method == "DELETE" || (payload && payload.responseType  && payload.responseType == "text")) return response.text();
 				return response.json();
