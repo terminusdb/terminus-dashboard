@@ -23,12 +23,12 @@
    return aec;
  }
 
-// delete this 
- ApiExplorer.prototype.draw = function(opts){
+// delete this
+ /*ApiExplorer.prototype.draw = function(opts){
    if(opts && opts.nav)  this.prettifyApiNav(opts.nav, opts.viewer);
    if(opts && opts.viewer)  this.prettifyApiExplorer('connect', opts.viewer);
    //return apiDom.appendChild(this.prettifyApiExplorer());
- } // draw()
+ } // draw() */
 
 // prettifys api nav bar
 ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
@@ -512,7 +512,7 @@ ApiExplorer.prototype.prettifyServerForm = function(){
     opts = {};
     var input = gatherips();
     opts.explorer = true;
-    self.client.connect(input.url, input.key)
+    self.client.connect(input.url, input.key, opts)
     .then(function(response){
       FrameHelper.removeChildren(resd);
       //var currForm = buttonSelf.parentNode;

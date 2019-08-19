@@ -405,7 +405,7 @@ TerminusUI.prototype.drawExplorer = function(){
        ae = exp.getAsDOM();
        this.explorer.appendChild(ae);
     }
-  } 
+  }
 }
 
 TerminusUI.prototype.loadControls = function(){
@@ -515,7 +515,7 @@ TerminusUI.prototype.getPluginDOM = function(plugid, obj, checked){
 	if(checked && checked == "checked") cbox.checked = true;
 	if(checked && checked == "disabled") cbox.disabled = true;
 	var clab = document.createElement("label");
-	clab.setAttribute("class", "terminus-plugin-label");
+	clab.setAttribute("class", "terminus-plugin-label terminus-plugin-label-full-css terminus-btn");
 	clab.setAttribute("for", cbox.id);
 	clab.appendChild(document.createTextNode(obj.label));
 	cl.appendChild(clab);
