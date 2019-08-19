@@ -9,18 +9,6 @@
  * @returns
  */
 function ObjectRenderer(obj, parent, options){
-	if(options && options.features){
-		this.features = options.features;
-	}
-	else {
-		this.features = ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"];
-	}
-	if(options && options.controls){
-		this.controls = options.controls;
-	}
-	else {
-		this.controls = ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"];
-	}
 	this.objframe = obj;
 	this.parent = parent;
 	this.options = this.setOptions(options);
@@ -29,8 +17,11 @@ function ObjectRenderer(obj, parent, options){
 	this.newProperties = [];
 }
 
+//options has to include mode, viewer, facet, controls, features, hide_disabled_controls
 
 ObjectRenderer.prototype.setOptions = function(options){
+	var rendconf = new RendererConfigurationMatcher(options);
+	rendconf.setObjectRenderingConfiguration(this);
 	options = (options ? options : {});
 	if(options.mode) this.mode = options.mode;
 	else {
@@ -55,6 +46,19 @@ ObjectRenderer.prototype.setOptions = function(options){
 		for(var facet in options.facets){
 			this.facets[facet] = options.facets[facet];
 		}
+	}
+	this.loadConfigurationFromOptions(options);
+	if(options && options.features){
+		this.features = options.features;
+	}
+	else {
+		this.features = ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"];
+	}
+	if(options && options.controls){
+		this.controls = options.controls;
+	}
+	else {
+		this.controls = ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"];
 	}
 	return options;
 }
@@ -1509,5 +1513,96 @@ ValueRenderer.prototype.getViewerForDataValue = function(){
 ValueRenderer.prototype.redraw = function(){
 	this.viewer.clear();
 	this.render(this.viewer);
+}
+
+function RendererConfigurationMatcher(options){
+	this.options = options;
+}
+
+
+RendererConfigurationMatcher.prototype.setElementRenderingConfiguration = function(el, compiled_options){
+	//all renderers need: 1. mode, 2. features, 3. controls, 4. viewer, 4. 
+	//facet: "page",
+	//mode: "view",
+	//viewer: "html",
+	//hide_disabled_buttons: true,
+	//features: ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"],
+	//controls: ["mode"],
+	//label: "View Document",
+	//header html viewer
+	//body html viewer
+	//filter
+	//sort
+	//
+	//editor: true
+	//load_schema: false, //should we load the document schema or just use the document frame
+	//all renderers must be in either a) view or b) edit mode
+	if(compiled_options && compiled_options.mode){
+		this.mode = compiled_options.mode;
+	}
+	else {
+		if(el.parent && el.parent.mode) this.mode = el.parent.mode;
+		else this.mode = "view";
+	}
+	if(compiled_options && compiled_options.view){
+		this.view = compiled_options.view;
+	}
+	else {
+		if(el.parent && el.parent.view) this.view = el.parent.view;
+		else this.view = "full";
+	}
+	if(compiled_options && compiled_options.facets){
+		this.facets = compiled_options.facets;
+	}
+	else {
+		//default facets...
+		//if(el.parent && el.parent.facets) this.facets = el.parent.facets;
+		//else this.view = "full";
+	}
+	if(compiled_options && compiled_options.facet){
+		this.view = compiled_options.view;
+	}
+	else {
+		if(el.parent && el.parent.view) this.view = el.parent.view;
+		else this.view = "full";
+	}
+	if(compiled_options && compiled_options.facet){
+		this.facet = compiled_options.facet;
+	}
+	else {
+		//if(el.parent && el.parent.view) this.view = el.parent.view;
+		//else this.view = "full";
+	}
+	
+	//all renderers must be associated with a 
+	//el.mode = 
+	//rules: [{
+	//	match: { type: "property"},
+	//	mode: "edit"
+	//}]
+}
+/*
+if(options.view) this.view = options.view;
+else {
+	this.view = (this.parent && this.parent.view ? this.parent.view : "full");
+	options.view = this.view;
+}
+if(options.facet) this.facet = options.facet;
+else this.facet = this.getDefaultFacet();
+this.hide_disabled_controls = (options && options.hide_disabled_controls ? options.hide_disabled_controls : true);
+this.facets = {
+	label: 	["facet", "status", "label"],
+	summary: ["facet", "satus", "label", "type", "summary", "status", "facet"],
+	line: ["facet", "label", "comment", "id", "type", "body", "status", "facet"],
+	page: ["facet", "label", "comment", "id", "control", "type", "body", "status", "facet", "view", "viewer"].concat(this.controls)
+}
+if(options && options.facets){
+	for(var facet in options.facets){
+		this.facets[facet] = options.facets[facet];
+	}
+}
+*/
+RendererConfigurationMatcher.prototype.setObjectRenderingConfiguration = function(obj){
+	
 }
 

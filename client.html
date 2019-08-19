@@ -67,15 +67,7 @@
 				   	<div class='terminus-main-content' id='terminus-content-viewer'></div>
 				</td>
 			</tr>
-	<div class="sdk-viewer">
-		<table style="width: 100%">
-		<tr><td id='control-panel'></td>
-		<td class='main-page' style="width: 100%;">
-			<div id='user-messages'></div>
-		   	<div id='content-viewer'></div>
-		</td></tr>
-		</table>
-		<div class='sdk-footer'></div>
+		</table>	
 	</div>	
 	<script>
 		var terminator = new TerminusUI(TerminusConfig);
@@ -83,7 +75,7 @@
 		pconfig.controller = document.getElementById("terminus-control-panel");
 		pconfig.messages = document.getElementById("terminus-user-messages");
 		pconfig.plugins = document.getElementById("terminus-plugin-loader");
-		//pconfig.explorer = document.getElementById("terminus-explorer");
+		pconfig.explorer = document.getElementById("terminus-explorer");
 		pconfig.viewer = document.getElementById("terminus-content-viewer");
 		var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
 		terminator.draw(pconfig, nlocation);
