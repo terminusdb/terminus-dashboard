@@ -1,4 +1,10 @@
-/* ----- terminus widget menu ----- */
+table.terminus-client-table-layout {
+	border: 1px solid red;
+}
+.terminus-frame-infobox {
+	border: 2px solid green;
+}
+ /* ----- terminus widget menu ----- */
 .terminus-widget-menu {
 	background: #333;
 	-webkit-border-radius: 3px;

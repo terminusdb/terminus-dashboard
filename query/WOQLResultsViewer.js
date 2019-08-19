@@ -31,6 +31,7 @@ WOQLResultsViewer.prototype.orderColumns = function(sample){
 
 WOQLResultsViewer.prototype.getTableDOM = function(bindings){
 	var tab = document.createElement("table");
+	tab.setAttribute("class", "terminus-query-results-table");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var ordered_headings = this.orderColumns(bindings[0]);

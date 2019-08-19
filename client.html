@@ -7,31 +7,63 @@
 		<script src="ApiExplorer.js"></script>
 		<script src="FrameHelper.js"></script>
 		<script src="ObjectFrame.js"></script>
-		<script src="FrameRenderer.js"></script>
-		<script src="HTMLViewer.js"></script>
-		<script src="HTMLElementViewers.js"></script>
 		<script src="TerminusUI.js"></script>
 		<script src="UIconfig.json"></script>
 		<script src="query/WOQLQuery.js"></script>
 		<script src="query/WOQLResult.js"></script>
 		<script src="query/WOQLResultsViewer.js"></script>
-		<link href="css/client.css" rel="stylesheet" type="text/css">	
+		<script src="client/FrameRenderer.js"></script>
+		<script src="client/ObjectViewer.js"></script>
+		<script src="client/PropertyViewer.js"></script>
+		<script src="client/DataViewer.js"></script>
+		<script src="client/HTMLFrameHelper.js"></script>
+		<script src="client/RenderingMap.js"></script>
+		<script src="client/TerminusClassChooser.js"></script>
+		<script src="client/TerminusDocument.js"></script>
+		<script src="client/TerminusDB.js"></script>
+		<script src="client/TerminusQuery.js"></script>
+		<script src="client/TerminusSchema.js"></script>
+		<script src="client/TerminusServer.js"></script>
+		<script src="client/TerminusURL.js"></script>
+		<script src="client/viewers/Boolean.js"></script>
+		<script src="client/viewers/Choice.js"></script>
+		<script src="client/viewers/Coordinate.js"></script>
+		<script src="client/viewers/Date.js"></script>
+		<script src="client/viewers/Entity.js"></script>
+		<script src="client/viewers/Image.js"></script>
+		<script src="client/viewers/Link.js"></script>
+		<script src="client/viewers/Number.js"></script>
+		<script src="client/viewers/Range.js"></script>
+		<script src="client/viewers/SanitizedHTML.js"></script>
+		
 	</head>
 		
 <BODY>
 	<div class="terminus-client-ui">
-		<div class='terminus-client-header'></div>
+		<div class='terminus-client-header'>
+			<span class="terminus-header-tab">Terminus Client</span>
+			<span class="terminus-header-tab">Terminus API Explorer</span>
+			<span class="terminus-header-tab">
+				<select id="terminus-css-loader">
+					<option value="">No CSS</option>
+					<option value="basic">Basic CSS</option>
+					<option value="full">Full CSS</option>				
+				</select>
+			</span>
+			<span class="terminus-header-tab" id="terminus-plugin-loader">
+			</span>
+		</div>
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr>
-				<td id='terminus-control-panel'>
-					<div class="terminus-application-controls">
-						<div class="terminus-application-header terminus-client-header">Terminus Client</div>
-						<div class="terminus-application-control terminus-client-body" id="terminus-control-panel"></div>
-						<div class="terminus-application-header terminus-explorer-header">Terminus API Explorer</div>
-						<div class="terminus-application-control terminus-expolrer-body" id="terminus-explorer"></div>
-					</div>
+				<td class='terminus-control-panel' style='vertical-align: top;'>
+					<table class="terminus-application-controls">
+						<tr><th class="terminus-application-header terminus-client-header">Terminus Client</th></tr>
+						<tr><td class="terminus-application-control terminus-client-body" id="terminus-control-panel"></td></tr>
+						<tr><th class="terminus-application-header terminus-explorer-header">Terminus API Explorer</th></tr>
+						<tr><td class="terminus-application-control terminus-expolrer-body" id="terminus-explorer">here goes stuff</td></tr>
+					</table>
 				</td>
-				<td class='terminus-main-window' style="width: 100%;">
+				<td class='terminus-main-window' style="width: 100%; vertical-align: top;">
 					<div class='terminus-user-messages' id='terminus-user-messages'></div>
 				   	<div class='terminus-main-content' id='terminus-content-viewer'></div>
 				</td>
@@ -40,13 +72,19 @@
 		<div class='terminus-client-footer'></div>
 	</div>	
 	<script>
-		var terminator = new TerminusUI();
-		var pconfig = {server: "http://localhost/dcog/platform", key: "root"};
+		var terminator = new TerminusUI(TerminusConfig);
+		var pconfig = {};//server: "http://localhost/dcog/platform", key: "root"};
 		pconfig.controller = document.getElementById("terminus-control-panel");
 		pconfig.messages = document.getElementById("terminus-user-messages");
-		pconfig.explorer = document.getElementById("terminus-explorer");
+		pconfig.plugins = document.getElementById("terminus-plugin-loader");
+		//pconfig.explorer = document.getElementById("terminus-explorer");
 		pconfig.viewer = document.getElementById("terminus-content-viewer");
-		terminator.draw(pconfig);
+		var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
+		terminator.draw(pconfig, nlocation);
+		var cssloader = document.getElementById("terminus-css-loader");
+		cssloader.addEventListener("change", function(){
+			terminator.loadCSS(this.value);
+		});
 	</script>
 </BODY>
 </html>

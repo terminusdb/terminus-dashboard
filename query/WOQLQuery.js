@@ -3,12 +3,12 @@ function WOQLQuery(client, options){
 	this.options = options;
 	this.prefixes = {};
 	if(client.platformEndpoint()){
-		var dburl = client.dbURL("platform") ;
-		this.prefixes['s'] = dburl + "/ontology/main#";
-		this.prefixes['g'] = client.server.substring(0, client.server.lastIndexOf("platform/"));
-		this.prefixes['doc'] = dburl + "/candidate/";
-		this.prefixes['dg'] = dburl + "/graph/main/";
-		this.prefixes['db'] = dburl + "/";
+		var colid = client.server.substring(0, client.server.lastIndexOf("platform")) + client.dbid;
+		this.prefixes['s'] = colid + "/ontology/main#";
+		this.prefixes['g'] = client.serverURL();
+		this.prefixes['db'] = colid + "/";
+		this.prefixes['doc'] = colid + "/candidate/";
+		this.prefixes['dg'] = colid + "/graph/main/";
 	}
 	else {
 		this.prefixes['s'] = client.schemaURL() + "#";
@@ -17,7 +17,6 @@ function WOQLQuery(client, options){
 		this.prefixes['db'] = client.dbURL() + "/";
 		this.prefixes['g'] = client.serverURL();
 	}
-	if(this.prefixes['g'].charAt(this.prefixes['g'].length-1) != "/") this.prefixes['g'] += "/";
 	for(var pref in FrameHelper.standard_urls){
 		this.prefixes[pref] = FrameHelper.standard_urls[pref];
 	}
