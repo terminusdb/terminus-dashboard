@@ -353,26 +353,6 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	};
 }
 
-TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
-	var self = this;
-	var sv = document.createElement("span");
-	var scd = document.createElement("span");
-	scd.setAttribute("class", "schema-view-header");
-	if(this.mode == "edit"){
-		var ipval = document.createElement("textarea");
-		ipval.setAttribute("class", "schema-edit");
-		ipval.innerHTML = this.schema.contents;
-	}
-	else {
-		var ipval = document.createElement("pre");
-		ipval.setAttribute("class", "schema-edit");
-		ipval.innerHTML = this.schema.contents;
-	}
-	if(this.viewer){
-		return this.redrawMainPage();
-	}
-}
-
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();
 	if(this.controller){

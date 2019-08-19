@@ -4,6 +4,7 @@
 		<meta charset=utf-8 />
 		<title>Terminus DB Javascript Client User Interface</title>
 		<script src="WOQLClient.js"></script>
+		<script src="UIconfig.json"></script>
 		<script src="FrameHelper.js"></script>
 		<script src="ObjectFrame.js"></script>
 		<script src="TerminusUI.js"></script>
@@ -72,7 +73,7 @@
 		<td class='main-page' style="width: 100%;">
 			<div id='user-messages'></div>
 		   	<div id='content-viewer'></div>
-		</div></td></tr>
+		</td></tr>
 		</table>
 		<div class='sdk-footer'></div>
 	</div>	
@@ -90,11 +91,6 @@
 		cssloader.addEventListener("change", function(){
 			terminator.loadCSS(this.value);
 		});
-		var terminator = new TerminusUI();
-		pconfig.controller = document.getElementById("control-panel");
-		pconfig.messages = document.getElementById("user-messages");
-		pconfig.viewer = document.getElementById("content-viewer");
-		terminator.draw(pconfig);
 	</script>
 </BODY>
 </html>

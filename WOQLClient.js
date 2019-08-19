@@ -253,25 +253,9 @@ WOQLClient.prototype.getClassFrame = function(cfurl, cls, opts){
 	return this.dispatch(this.frameURL(), "class_frame", opts);
 }
 
-//simple functions for generating the correct API urls from current client state
-WOQLClient.prototype.serverURL = function(){ return this.server; }
-WOQLClient.prototype.dbURL = function(call){ //url swizzling to talk to platform using server/dbid/platform/ pattern..
-	if(this.platformEndpoint() && (!call || call != "create")) {
-		return this.server.substring(0, this.server.lastIndexOf("/platform/")) + "/" + this.dbid + "/platform";
-	}
-	else if(this.platformEndpoint() && call == "platform"){
-		return this.server.substring(0, this.server.lastIndexOf("/platform/")) + "/" + this.dbid ;
-	}
-	return this.server + this.dbid; 
-}
-WOQLClient.prototype.schemaURL = function(){ return this.dbURL() + "/schema"; }
-WOQLClient.prototype.queryURL = function(){ return this.dbURL() + "/woql"; }
-WOQLClient.prototype.frameURL = function(){ return this.dbURL() + "/frame"; }
-WOQLClient.prototype.docURL = function(){ return this.dbURL() + "/document/" + (this.docid ? this.docid : ""); }
-
 /*
-* Utility functions for setting and parsing urls and determining the current server, database and document
-*/
+ * Utility functions for setting and parsing urls and determining the current server, database and document
+ */
 WOQLClient.prototype.setServer = function(input_str, context){
 	let parser = new TerminusIDParser(input_str, context);
 	if(parser.parseServerURL()){
@@ -333,6 +317,158 @@ WOQLClient.prototype.setClassFrameURL = function(input_str, context){
 		return true;
 	}
 	return false;
+}
+/*
+ * Utility functions for changing the state of connections with Terminus servers
+ */
+WOQLClient.prototype.setClientKey = function(curl, key){
+	if(typeof this.connection[curl] == "undefined"){
+		this.connection[curl] = {};
+	}
+	key = key.trim();
+	if(key){
+		this.connection[curl]['key'] = key;
+	}
+}
+
+/*
+ * Creates an entry in the connection registry for the server and all the databases that the client has access to
+ * maps the input authorties to a per-db array for internal storage and easy access control checks
+ * {doc:dbid => {terminus:authority => [terminus:woql_select, terminus:create_document, auth3, ...]}}
+ */
+WOQLClient.prototype.setConnectionCapabilities = function(curl, capabilities){
+	if(typeof this.connection[curl] == "undefined"){
+		this.connection[curl] = {};
+	}
+	for(var pred in capabilities){
+		if(pred == "terminus:authority" && capabilities[pred]){
+			let auths = (capabilities[pred].length ? capabilities[pred] : [capabilities[pred]]);
+			for(var i = 0; i<auths.length; i++){
+				let scope = auths[i]['terminus:authority_scope'];
+				let actions = auths[i]['terminus:action'];
+				if(!scope.length) scope = [scope];
+				for(var j = 0; j<scope.length; j++){
+					let nrec = scope[j];
+					if(typeof this.connection[curl][nrec["@id"]] == "undefined"){
+						this.connection[curl][nrec["@id"]] = nrec;
+						this.connection[curl][nrec["@id"]]['terminus:authority'] = [];
+					}
+					for(var h = 0; h<actions.length; h++){
+						if(this.connection[curl][nrec["@id"]]['terminus:authority'].indexOf(actions[h]["@id"]) == -1){
+							this.connection[curl][nrec["@id"]]['terminus:authority'].push(actions[h]["@id"]);
+						}
+					}
+				}
+			}
+		}
+		else {
+			this.connection[curl][pred] = capabilities[pred];
+		}
+	}
+}
+
+WOQLClient.prototype.getServerRecord = function(srvr){
+	var url = (srvr ? srvr : this.server);
+	for(var oid in this.connection[url]){
+		if(this.connection[url][oid]["@type"] == "terminus:Server"){
+			return this.connection[url][oid];
+		}
+	}
+	return false;
+}
+
+WOQLClient.prototype.getServerDBRecords = function(srvr){
+	var url = (srvr ? srvr : this.server);
+	var dbrecs = {};
+	for(var oid in this.connection[url]){
+		if(this.connection[url][oid]["@type"] == "terminus:Database"){
+			dbrecs[oid] = this.connection[url][oid];
+		}
+	}
+	return dbrecs;
+}
+
+WOQLClient.prototype.getDBRecord = function(dbid, srvr){
+	var url = (srvr ? srvr : this.server);
+	dbid = (dbid ? dbid: this.dbid);
+	if(typeof this.connection[url] != "object"){
+		return false;
+	}
+	if(typeof this.connection[url][dbid] != "undefined") return this.connection[url][dbid];
+	dbid = this.dbCapabilityID(dbid);
+	if(typeof this.connection[url][dbid] != "undefined") return this.connection[url][dbid];
+}
+
+/*
+ * Functions for checking capabilities by the client before making API calls
+ */
+WOQLClient.prototype.capabilitiesPermit = function(action, dbid, server){
+	if(!this.connectionMode() || this.client_checks_capabilities !== true || action == "connect"){
+		return true;
+	}
+	server = (server ? server : this.server);
+	dbid = (dbid ? dbid : this.dbid);
+	if(action == "create_database"){
+		rec = this.getServerRecord(server);
+	}
+	else {
+		rec = this.getDBRecord(dbid);
+	}
+	if(rec){
+		auths = rec['terminus:authority'];
+		if(auths && auths.indexOf("terminus:"+action) !== -1) return true;
+	}
+	else {
+		alert("problem with " + action + server + dbid);
+	}
+	this.error = this.accessDenied(action, dbid, server);
+	return false;
+}
+
+/* 
+ * removes a database record from the connection registry (after deletion, for example) 
+ */
+WOQLClient.prototype.removeDBFromConnection = function(dbid, srvr){
+	if(dbid && this.dbid && this.dbid == dbid) this.dbid = false;
+	dbid = (dbid ? dbid : this.dbid);
+	var url = (srvr ? srvr : this.server);
+	delete(this.connection[url][dbid]);
+	dbid = this.dbCapabilityID(dbid);
+	delete(this.connection[url][dbid]);
+}
+
+WOQLClient.prototype.dbCapabilityID = function(dbid, context){
+	return "doc:" + dbid;
+}
+
+/*
+ * Utility functions for adding standard fields to API arguments
+ */
+WOQLClient.prototype.addOptionsToWOQL = function(woql, opts){
+	if(opts && opts.key){ woql.key = opts.key };
+	return woql;
+}
+
+WOQLClient.prototype.addOptionsToDocument = function(doc, opts){
+	if(opts && opts.key){ doc.key = doc.key };
+	return doc;
+}
+
+WOQLClient.prototype.addKeyToPayload = function(payload){
+	if(payload && payload.key){
+		payload["terminus:user_key"] = payload.key;
+		delete(payload["key"]);
+	}
+	else if(this.connection[this.server] && this.connection[this.server].key ){
+		if(!payload) payload = {};
+		payload["terminus:user_key"] = this.connection[this.server].key;
+	}
+	return payload;
+}
+
+WOQLClient.prototype.makeDocumentConsistentWithURL = function(doc, dburl){
+	doc["@id"] = dburl;
+	return doc;
 }
 
 /*
