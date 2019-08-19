@@ -18,8 +18,8 @@ let TerminusConfig = {
 			}]
 		}
 	},
+	location: {server: "http://195.201.12.87:6363/", key: "root"},
 	location: {server: "http://localhost/platform/"},
-
 	css: "basic",
 	plugins: ["font-awesome"]
 };
