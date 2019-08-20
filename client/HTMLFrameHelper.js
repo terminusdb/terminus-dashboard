@@ -17,7 +17,7 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 		});
 	}
 	dpropDOM.appendChild(button);
-	return dpropDOM;	
+	return dpropDOM;
 }
 
 
@@ -29,12 +29,12 @@ HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback
 		if(typeof options[i] == "object"){
 			opt.value = options[i].value;
 			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(FrameHelper.labelFromURL(options[i].value)));
-			opt.appendChild(label);			
+			opt.appendChild(label);
 		}
 		else {
 			opt.value = options[i];
 			label = FrameHelper.labelFromURL(opt.value);
-			opt.appendChild(document.createTextNode(label));			
+			opt.appendChild(document.createTextNode(label));
 		}
 		if(selected == opt.value){
 			opt.setAttribute("selected", "selected");
@@ -78,7 +78,7 @@ HTMLFrameHelper.goToName = function(s, p, i){
 			var prop = FrameHelper.getShorthand(p);
 			if(!prop ) prop = p;
 			var bits = prop.split(":");
-			if(bits.length > 1) prop = bits[1];		
+			if(bits.length > 1) prop = bits[1];
 			htmlid += "_" + prop;
 			if(i){
 				htmlid += "_" + i;
@@ -105,7 +105,7 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 	lspacer.appendChild(document.createTextNode(" "));
 	infoDOM.appendChild(lspacer);
 	var lval = document.createElement("span");
-	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
+	lval.setAttribute("class", " terminus-frame-infobox-value" + "terminus-" +type + "-value");
 	if(input){
 		input.value = value;
 		lval.appendChild(input);

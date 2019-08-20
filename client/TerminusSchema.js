@@ -43,28 +43,28 @@ TerminusSchemaViewer.prototype.loadSchema = function(){
 TerminusSchemaViewer.prototype.resetControlDOM = function(){
 	FrameHelper.removeChildren(this.controldom);
 	if(this.mode == "edit"){
-		this.controldom.appendChild(this.getSchemaSaveButtons());					
+		this.controldom.appendChild(this.getSchemaSaveButtons());
 	}
 	else if(this.mode == "import"){
-		this.controldom.appendChild(this.getSchemaImportActionButtons());							
+		this.controldom.appendChild(this.getSchemaImportActionButtons());
 	}
 	else if(this.mode == "class_frame"){
 		if(this.ui.showControl("get_schema")){
-			this.controldom.appendChild(this.getShowSchemaButton());			
+			this.controldom.appendChild(this.getShowSchemaButton());
 		}
 		if(this.ui.showControl("class_frame")){
 			this.controldom.appendChild(this.getClassFrameChooser());
 		}
 	}
 	else if(this.mode == "view"){
-		if(this.ui.showControl("schema_format")){
-			this.controldom.appendChild(this.getFormatChoices());
-		}
 		if(this.ui.showControl("import_schema")){
 			this.controldom.appendChild(this.getImportButton());
 		}
 		if(this.ui.showControl("update_schema")){
-			this.controldom.appendChild(this.getSchemaEditButton());			
+			this.controldom.appendChild(this.getSchemaEditButton());
+		}
+		if(this.ui.showControl("schema_format")){
+			this.controldom.appendChild(this.getFormatChoices());
 		}
 		if(this.ui.showControl("class_frame")){
 			this.controldom.appendChild(this.getClassFrameChooser());
@@ -74,7 +74,7 @@ TerminusSchemaViewer.prototype.resetControlDOM = function(){
 
 TerminusSchemaViewer.prototype.getFormatChoices = function(){
 	var fc = document.createElement("select");
-	fc.setAttribute("class", "terminus-form-select terminus-schema-format");
+	fc.setAttribute("class", "terminus-form-select terminus-schema-format terminus-type-select");
 	var tc = document.createElement("option");
 	tc.setAttribute("class", "terminus-schema-turtle");
 	tc.value = "turtle";
@@ -107,13 +107,13 @@ TerminusSchemaViewer.prototype.refreshMainPage = function(){
 		this.pagedom.appendChild(this.getSchemaViewDOM());
 	}
 	else if(this.mode == "edit"){
-		this.pagedom.appendChild(this.getSchemaEditDOM());		
+		this.pagedom.appendChild(this.getSchemaEditDOM());
 	}
 	else if(this.mode == "import"){
-		this.pagedom.appendChild(this.getSchemaImportDOM());				
+		this.pagedom.appendChild(this.getSchemaImportDOM());
 	}
 	else if(this.mode == "class_frame"){
-		this.pagedom.appendChild(this.getClassFrameDOM());						
+		this.pagedom.appendChild(this.getClassFrameDOM());
 	}
 }
 
@@ -131,7 +131,7 @@ TerminusSchemaViewer.prototype.getSchemaImportActionButtons = function(){
 	ssb.appendChild(this.getCancelButton());
 	ssb.appendChild(this.getImportPreviewButton());
 	ssb.appendChild(this.getImportSaveButton());
-	return ssb;	
+	return ssb;
 }
 
 TerminusSchemaViewer.prototype.getShowSchemaButton = function(){
@@ -196,7 +196,7 @@ TerminusSchemaViewer.prototype.getImportButton = function(){
 TerminusSchemaViewer.prototype.getSchemaButton = function(label, action, func){
 	var opt = document.createElement("button");
 	opt.appendChild(document.createTextNode(label));
-	opt.setAttribute("class", "terminus-control-button terminus-schema-" + action);
+	opt.setAttribute("class", "terminus-btn terminus-control-button terminus-schema-" + action);
 	opt.addEventListener("click", func);
 	return opt;
 }
@@ -205,8 +205,8 @@ TerminusSchemaViewer.prototype.getSchemaButton = function(label, action, func){
  * Updates schema, then fetches updated version and updates the page with it
  */
 TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
-	var self = this;
 	this.ui.showBusy("Updating Database Schema");
+	var self = this;
 	return this.ui.client.updateSchema(false, text, opts)
 	.then(function(response){
 		self.ui.showBusy("Retrieving updated schema");
@@ -225,8 +225,8 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 }
 
 /*
- * Imports a schema from the passed url 
- * mode: replace | append 
+ * Imports a schema from the passed url
+ * mode: replace | append
  */
 TerminusSchemaViewer.prototype.load  = function(url, key, mode){
 	var self = this;
@@ -309,7 +309,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	var np = document.createElement("div");
 	np.setAttribute("class", "terminus-schema-page terminus-schema-edit-page");
 	var ipval = document.createElement("textarea");
-	ipval.setAttribute("class", "terminus-schema-edit");
+	ipval.setAttribute("class", "terminus-schema-edit terminus-schem-textarea");
 	ipval.setAttribute("width", "100%");
 	ipval.setAttribute("style", "min-width: 400px; min-height: 400px;");
 	if(typeof(this.schema) == "string"){
@@ -327,7 +327,7 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 	var np = document.createElement("div");
 	np.setAttribute("class", "terminus-schema-page terminus-schema-view-page");
 	var ipval = document.createElement("pre");
-	ipval.setAttribute("class", "terminus-schema-view");
+	ipval.setAttribute("class", "terminus-schema-view terminus-scheme-pre");
 	if(typeof(this.schema) == "string"){
 		var txt = this.schema.replace(/&/g, "&amp;")
          .replace(/</g, "&lt;")
@@ -367,7 +367,7 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	klab.appendChild(document.createTextNode("Import Mode"))
 	var modes = document.createElement("select");
 	modes.setAttribute("class", "terminus-form-select");
-	
+
 	var overwrite = document.createElement("option");
 	overwrite.value = "replace";
 	overwrite.appendChild(document.createTextNode("Replace Mode"))
@@ -394,7 +394,7 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	var self = this;
 	this.doImport = function(){
 		if(ip.value){
-			self.load(ip.value, key.value, modes.value);		
+			self.load(ip.value, key.value, modes.value);
 		}
 	}
 	return scd;

@@ -241,12 +241,12 @@ function getInfoAlertDom(type, label, msg){
   ald.appendChild(str);
   var txt = document.createTextNode(msg);
   ald.appendChild(txt);
-  var button = document.createElement('button');
+  /*var button = document.createElement('button');
   button.setAttribute('class','close');
   button.setAttribute('data-dismiss','alert');
   button.setAttribute('type', 'button');
   button.innerHTML = 'x';
-  ald.appendChild(button);
+  ald.appendChild(button);*/
   return ald;
 } // getInfoAlertDom()
 

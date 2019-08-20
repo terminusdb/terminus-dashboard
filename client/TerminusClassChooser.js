@@ -1,4 +1,4 @@
-/* 
+/*
  * Utility class which runs a query against the schema and presents the returned classes as a drop-down / class filter list
  */
 
@@ -24,7 +24,7 @@ TerminusClassChooser.prototype.getAsDOM = function(){
 	var ccdom = document.createElement("span");
 	ccdom.setAttribute("class", "terminus-class-chooser");
 	var ccsel = document.createElement("select");
-	ccsel.setAttribute("class", "terminus-class-select");
+	ccsel.setAttribute("class", "terminus-class-select terminus-type-select");
 	var self = this;
 	ccsel.addEventListener("change", function(){
 		if(this.value != this.choice){
@@ -44,7 +44,7 @@ TerminusClassChooser.prototype.getAsDOM = function(){
 		}
 	});
 	return ccdom;
-} 
+}
 
 TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 	var choices = [];
@@ -68,11 +68,10 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 					lab = FrameHelper.labelFromURL(clist.bindings[i].Class);
 				}
 				if(lab.data) lab = lab.data;
-				opt.appendChild(document.createTextNode(lab));		
+				opt.appendChild(document.createTextNode(lab));
 				choices.push(opt);
 			}
 		}
 	}
 	return choices;
 }
-

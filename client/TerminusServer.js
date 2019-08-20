@@ -17,17 +17,19 @@ TerminusServerController.prototype.getAsDOM = function(){
 		var scd = document.createElement("div");
 		scd.setAttribute("class", "terminus-server-connection");
 		var lab = document.createElement("span");
-		lab.setAttribute("class", "terminus-server-label");
+		lab.setAttribute("class", "terminus-control-panel-label");
 		lab.appendChild(document.createTextNode("Server "));
 		scd.appendChild(lab);
 		scd.appendChild(this.getServerLabelDOM());
 		rsc.appendChild(scd);
+    var nav = document.createElement('div');
+    nav.setAttribute('class', 'span3');
+    var ul = document.createElement('ul');
+    ul.setAttribute('class',' terminus-widget-menu' );
+    nav.appendChild(ul);
+    rsc.appendChild(nav);
     // change server
 		if(this.ui.showControl("change-server")){
-      var nav = document.createElement('div');
-      nav.setAttribute('class', 'span3');
-      var ul = document.createElement('ul');
-      ul.setAttribute('class',' terminus-widget-menu' );
       var li = document.createElement('li');
       li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
       var self = this;
@@ -43,15 +45,9 @@ TerminusServerController.prototype.getAsDOM = function(){
       a.appendChild(txt);
       li.appendChild(a);
       var icon = document.createElement('i');
-      nav.appendChild(ul);
-			rsc.appendChild(nav);
 		}
     // view databases
 		if(this.ui.showControl("db")){
-      var nav = document.createElement('div');
-      nav.setAttribute('class', 'span3');
-      var ul = document.createElement('ul');
-      ul.setAttribute('class',' terminus-widget-menu' );
       var li = document.createElement('li');
       li.setAttribute("class", "terminus-control-button terminus-server-connection active terminus-pointer");
       var self = this;
@@ -70,14 +66,8 @@ TerminusServerController.prototype.getAsDOM = function(){
       a.appendChild(txt);
       li.appendChild(a);
       var icon = document.createElement('i');
-      nav.appendChild(ul);
-			rsc.appendChild(nav);
 		}
 		if(this.ui.showControl("create_database")){
-      var nav = document.createElement('div');
-      nav.setAttribute('class', 'span3');
-      var ul = document.createElement('ul');
-      ul.setAttribute('class',' terminus-widget-menu' );
       var li = document.createElement('li');
       li.setAttribute("class", "terminus-control-button terminus-create-db-button active terminus-pointer");
       var self = this;
@@ -96,8 +86,6 @@ TerminusServerController.prototype.getAsDOM = function(){
       a.appendChild(txt);
       li.appendChild(a);
       var icon = document.createElement('i');
-      nav.appendChild(ul);
-			rsc.appendChild(nav);
 		}
 	}
 	return rsc;
