@@ -4,62 +4,62 @@ function TerminusPluginManager(){
 	this.loading = [];
 	this.precluded = [];
 	this.plugins = {};
-	this.plugins["font-awesome"] = { 
+	this.plugins["font-awesome"] = {
 		label: "Font Awesome",
-		css: ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css"]			
+		css: ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css"]
 	};
-	this.plugins["quill"] = { 
+	this.plugins["quill"] = {
 		label: "Quill",
 		js: ["https://cdn.quilljs.com/1.3.6/quill.min.js"],
 		css: ["https://cdn.quilljs.com/1.3.6/quill.snow.css"],
 		plugin: "quill.terminus.js",
 	};
-	this.plugins["codemirror"] = { 
+	this.plugins["codemirror"] = {
 		label : "Code Mirror",
 		js: ["https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.js",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/xml/xml.js", 
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/xml/xml.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/css/css.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/turtle/turtle.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/javascript/javascript.js",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/anyword-hint.js", 
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/anyword-hint.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js"],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css"
 		]
 	};
-	this.plugins["jquery"] = { 
-		label: "jQuery", 
+	this.plugins["jquery"] = {
+		label: "jQuery",
 		js: "https://code.jquery.com/jquery-2.2.4.min.js"
 	};
-	this.plugins["datatables"] = { 
-		label: "Data Tables", 
+	this.plugins["datatables"] = {
+		label: "Data Tables",
 		js: "https://code.jquery.com/jquery-2.2.4.min.js",
-		requires: ['jquery'] 
+		requires: ['jquery']
 	};
-	this.plugins["prettify"] = { 
-		label: "Prettify", 
+	this.plugins["prettify"] = {
+		label: "Prettify",
 		js: ["https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"],
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css"],
-		requires: ['jquery'] 
+		requires: ['jquery']
 	};
-	this.plugins["gmaps"] = { 
-		label: "Google Maps", 
+	this.plugins["gmaps"] = {
+		label: "Google Maps",
 		js: "https://maps.googleapis.com/maps/api/js",
-		plugin: "gmaps.terminus.js",		
-		requires: ['jquery'] 
+		plugin: "gmaps.terminus.js",
+		requires: ['jquery']
 	};
-	this.plugins["d3"] = { 
-		label: "d3", 
+	this.plugins["d3"] = {
+		label: "d3",
 		js: "https://code.jquery.com/jquery-2.2.4.min.js",
-		requires: ['jquery'] 
+		requires: ['jquery']
 	};
-	this.plugins["select2"] = { 
-		label: "Select 2", 
+	this.plugins["select2"] = {
+		label: "Select 2",
 		js: ["https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"],
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css"],
 		plugin: "select2.terminus.js",
-		requires: ['jquery'] 
+		requires: ['jquery']
 	};
 	this.plugins["jsoneditor"] = {
 		label: "JSON Editor",
@@ -67,18 +67,18 @@ function TerminusPluginManager(){
 		css: ["plugins/libs/jsoneditor.min.css"],
 		plugin: "jsoneditor.terminus.js"
 	};
-	this.plugins["bootstrap"] = {
+	/*this.plugins["bootstrap"] = {
 		label: "Bootstrap",
 		js: ["https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"],
-		css: ["https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css", 
+		css: ["https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css"]
 	};
 	this.plugins["flot"] = {
 		label: "Flot",
-		js: ["https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js", 
+		js: ["https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.resize.min.js"],
 		requires: ["jquery"]
-	};
+	};*/
 }
 
 TerminusPluginManager.prototype.setPluginOptions = function(opts){
@@ -97,7 +97,7 @@ TerminusPluginManager.prototype.init = function(opts, then){
 	if(toload.length){
 		this.loadPlugins(toload, then);
 	}
-	else if(then){ 
+	else if(then){
 		then();
 	}
 }
@@ -107,8 +107,8 @@ TerminusPluginManager.prototype.calculateRequiredInitPlugins = function(opts){
 		var pins = [];
 		for(var pid in opts){
 			if(opts[pid] && pins.indexOf(pid) == -1){
-				if(typeof opts[pid] != "object" 
-				|| typeof opts[pid].loaded == "undefined" 
+				if(typeof opts[pid] != "object"
+				|| typeof opts[pid].loaded == "undefined"
 				|| opts[pid].loaded != false) pins.push[pid]
 			}
 		}
@@ -172,7 +172,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 			case "font-awesome": {}
 			case "datatables": {
 				 if(typeof jQuery != "undefined" && ! jQuery.isFunction( jQuery.fn.dataTable)) return false;
-				 return true;				
+				 return true;
 			}
 			case "select2": {
 				 if(typeof jQuery != "undefined" && ! jQuery.isFunction( jQuery.fn.select2 )) return false;
@@ -240,7 +240,7 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 		ticker--;
 	};
 	if(scripts.length == 0){
-		this.loaded.push(plugin);		
+		this.loaded.push(plugin);
 	}
 	else {
 		this.loading.push(plugin);
@@ -295,16 +295,16 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 		cbox.disabled = true;
 	}
 	else if(this.loaded.indexOf(plugid) != -1){
-		cbox.checked = true;		
-	}	
+		cbox.checked = true;
+	}
 	else if(this.loading.indexOf(plugid) != -1){
-		cbox.checked = true;		
-	}	
+		cbox.checked = true;
+	}
 	else if(this.disabled(plugid, obj)){
-		cbox.disabled = true;		
-	}	
+		cbox.disabled = true;
+	}
 	var clab = document.createElement("label");
-	clab.setAttribute("class", "terminus-plugin-label terminus-plugin-label-full-css terminus-btn");
+	clab.setAttribute("class", "terminus-plugin-label terminus-plugin-label-full-css");
 	clab.setAttribute("for", cbox.id);
 	clab.appendChild(document.createTextNode(obj.label));
 	cl.appendChild(clab);
