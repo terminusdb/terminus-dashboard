@@ -1225,6 +1225,9 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	font-size: 16px;
 	padding: 10px*/
 }
+.terminus-expolrer-hide{
+	display: none;
+}
 .terminus-table-header-full-css{
 	color: #767676;
 	background-color: #f6f6f6;
@@ -1237,6 +1240,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	padding: 10px;
 	color: black;
 	min-width: 189px;
+	cursor: pointer;
 }
 .terminus-application-controls{
  margin-top: 20px

@@ -42,9 +42,9 @@
 <BODY>
 	<div class="terminus-client-ui">
 		<div class='terminus-client-header'>
-			<span class="terminus-header-tab terminus-module-head-tab terminus-pointer" onClick="toggleHeaders('client')">
+			<span class="terminus-header-tab terminus-module-head-tab">
 				Terminus Client</span>
-			<span class="terminus-header-tab terminus-module-head-tab terminus-pointer" onClick="toggleHeaders('explorer')">
+			<span class="terminus-header-tab terminus-module-head-tab">
 				Terminus API Explorer</span>
 			<span class="terminus-header-tab terminus-module-head-tab">
 				<select id="terminus-css-loader">
@@ -60,12 +60,12 @@
 			<tr>
 				<td class='terminus-control-panel' style='vertical-align: top;'>
 					<table class="terminus-application-controls">
-						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css">
-								Terminus Client</th></tr>
+						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
+							onClick="toggleHeaders('client')"> Terminus Client</th></tr>
 						<tr><td class="terminus-application-control terminus-client-body" id="terminus-control-panel"></td></tr>
-						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css">
-								Terminus API Explorer</th></tr>
-						<tr><td class="terminus-application-control terminus-expolrer-body" id="terminus-explorer"></td></tr>
+						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
+							onClick="toggleHeaders('explorer')">Terminus API Explorer</th></tr>
+						<tr><td class="terminus-application-control terminus-expolrer-body terminus-expolrer-hide" id="terminus-explorer"></td></tr>
 					</table>
 				</td>
 				<td class='terminus-main-window terminus-main-window-full-css' style="width: 100%; vertical-align: top;">
@@ -98,16 +98,6 @@
 		cssloader.addEventListener("change", function(){
 			terminator.loadCSS(this.value);
 		});
-		/*function toggleHeaders(mode){
-			switch(mode){
-				case 'client':
-					document.getElementById("terminus-explorer").hide();
-				break;
-				case 'explorer':
-				  document.getElementById("terminus-control-panel").hide();
-				break;
-			}// switch (mode)
-		}*/
 	</script>
 </BODY>
 </html>
