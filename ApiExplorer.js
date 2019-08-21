@@ -41,15 +41,18 @@ ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
    var ul = document.createElement('ul');
    ul.setAttribute('class',' terminus-widget-menu' );
    var li = document.createElement('li');
-   li.setAttribute('class', 'active terminus-pointer');
+   li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
+
    var self = this;
    li.addEventListener("click", function(){
      self.prettifyApiExplorer('connect', viewer);
    })
    ul.appendChild(li);
    var a = document.createElement('a');
+   a.setAttribute("href", "#");
    var icon = document.createElement('i');
    icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+   a.setAttribute("href", "#");
    a.appendChild(icon);
    var txt = document.createTextNode('Connect Api');
    a.appendChild(txt);
@@ -61,13 +64,14 @@ ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
    var ul = document.createElement('ul');
    ul.setAttribute('class',' terminus-widget-menu');
    var li = document.createElement('li');
-   li.setAttribute('class', 'active terminus-pointer');
+   li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
    var self = this;
    li.addEventListener("click", function(){
      self.prettifyApiExplorer('create', viewer);
    })
    ul.appendChild(li);
    var a = document.createElement('a');
+   a.setAttribute("href", "#");
    var icon = document.createElement('i');
    icon.setAttribute('class', 'terminus-menu-icon fa fa-database');
    a.appendChild(icon);
@@ -79,13 +83,14 @@ ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
 
    // schema
    var li = document.createElement('li');
-   li.setAttribute('class', 'active terminus-pointer');
+   li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
    var self = this;
    li.addEventListener("click", function(){
      self.prettifyApiExplorer('schema', viewer);
    })
    ul.appendChild(li);
    var a = document.createElement('a');
+   a.setAttribute("href", "#");
    var icon = document.createElement('i');
    icon.setAttribute('class', 'terminus-menu-icon fa fa-cog');
    a.appendChild(icon);
@@ -97,12 +102,13 @@ ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
 
    // documents
    var li = document.createElement('li');
-   li.setAttribute('class', 'active terminus-pointer');
+   li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
    li.addEventListener("click", function(){
      self.prettifyApiExplorer('document', viewer);
    })
    ul.appendChild(li);
    var a = document.createElement('a');
+   a.setAttribute("href", "#");
    var icon = document.createElement('i');
    icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
    a.appendChild(icon);
@@ -114,12 +120,13 @@ ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
 
    // query
    var li = document.createElement('li');
-   li.setAttribute('class', 'active terminus-pointer');
+   li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
    li.addEventListener("click", function(){
      self.prettifyApiExplorer('query', viewer);
    })
    ul.appendChild(li);
    var a = document.createElement('a');
+   a.setAttribute("href", "#");
    var icon = document.createElement('i');
    icon.setAttribute('class', 'terminus-menu-icon fa fa-search');
    a.appendChild(icon);
@@ -140,7 +147,7 @@ ApiExplorer.prototype.prettifyApiExplorer = function(view, viewer){
 
   // wrapper
   var wrap = document.createElement('div');
-  wrap.setAttribute('class', 'terminus-wrapper terminus-wrapper-height');
+  //wrap.setAttribute('class', 'terminus-wrapper terminus-wrapper-height');
   viewer.appendChild(wrap);
   var cont = document.createElement('div');
   cont.setAttribute('class', 'container-fluid');
@@ -168,7 +175,7 @@ ApiExplorer.prototype.prettifyApiExplorer = function(view, viewer){
 
   // body
   var cont = document.createElement('div');
-  cont.setAttribute('class', 'terminus-module-body');
+  //cont.setAttribute('class', 'terminus-module-body');
 
   var self = this;
   switch(view){
@@ -216,6 +223,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
     cont.appendChild(dom);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-eye');
   a.appendChild(icon);
@@ -235,6 +243,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
     cont.appendChild(dom);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-plus');
   a.appendChild(icon);
@@ -254,6 +263,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
   })
   //ul.appendChild(li);
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-arrow-up');
   a.appendChild(icon);
@@ -272,6 +282,7 @@ ApiExplorer.prototype.prettifyDocumentApi = function(cont){
     cont.appendChild(dom);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-trash-alt');
   a.appendChild(icon);
@@ -305,6 +316,7 @@ ApiExplorer.prototype.prettifyQueryApi  = function(cont){
     var dom = self.prettifyQueryApiDom('select', body);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-mouse-pointer');
   a.appendChild(icon);
@@ -324,6 +336,7 @@ ApiExplorer.prototype.prettifyQueryApi  = function(cont){
     cont.appendChild(dom);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-arrow-up');
   a.appendChild(icon);
@@ -343,6 +356,7 @@ ApiExplorer.prototype.prettifyQueryApi  = function(cont){
   })
   //ul.appendChild(li);
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-random');
   a.appendChild(icon);
@@ -378,6 +392,7 @@ ApiExplorer.prototype.prettifySchemaApi = function(cont){
     cont.appendChild(dom);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-eye');
   a.appendChild(icon);
@@ -397,6 +412,7 @@ ApiExplorer.prototype.prettifySchemaApi = function(cont){
   })
   //ul.appendChild(li);
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-arrow-up');
   a.appendChild(icon);
@@ -540,6 +556,7 @@ ApiExplorer.prototype.prettifyDatabaseExplorer = function(cont){
     cont.appendChild(dom);
   })
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-plus');
   a.appendChild(icon);
@@ -559,6 +576,7 @@ ApiExplorer.prototype.prettifyDatabaseExplorer = function(cont){
   })
   //ul.appendChild(li);
   var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
   icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-trash-alt');
   a.appendChild(icon);

@@ -21,9 +21,9 @@ div.terminus-object-properties {
 }
 
 
-div.terminus-object-frame select, 
+div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
-	padding: 6px 4px;	
+	padding: 6px 4px;
 }
 
 div.terminus-object-frame select {
@@ -36,7 +36,7 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 	margin: 0 4px;
 }
 
-div.terminus-object-frame input, 
+div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
 }
@@ -108,13 +108,13 @@ div.terminus-control-buttons {
 	margin-right: 6px;
 }
 
-.terminus-db-controller, 
+.terminus-db-controller,
 .terminus-server-controller {
 	min-width: 320px;
 	padding-top: 10px;
 }
 
-.terminus-db-controller div, 
+.terminus-db-controller div,
 .terminus-server-controller div {
 	margin-top: 6px;
 	margin-bottom: 6px;
@@ -137,23 +137,23 @@ div.terminus-control-buttons {
 	padding-right: 6px;
 }
 
-div.terminus-object-frame button, 
+div.terminus-object-frame button,
 .terminus-control-button {
 	margin: 4px;
 	padding: 6px 8px;
 	background-color: #eee;
 	border: 1px solid #48f;
+	list-style: none;
 }
 div.terminus-object-frame button:hover,
-.terminus-control-button:hover {
-	cursor: pointer; 
+.terminus-control-button:hover{
+	cursor: pointer;
 	background-color: #48f;
 	color: white;
-	
 }
 
 div.terminus-object-frame {}
 
-div.terminus-property-frame {
-	margin-bottom: 10px;	
+div.terminus-property-frame{
+	margin-bottom: 10px;
 }

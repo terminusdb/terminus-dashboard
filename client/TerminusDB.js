@@ -17,61 +17,116 @@ TerminusDBController.prototype.getAsDOM = function(){
 		var scd = document.createElement("div");
 		scd.setAttribute("class", "terminus-field terminus-db-connection");
 		var lab = document.createElement("span");
-		lab.setAttribute("class", "terminus-label terminus-db-label");
+		lab.setAttribute("class", "terminus-label terminus-db-label terminus-control-panel-label");
 		lab.appendChild(document.createTextNode("DB "));
 		var val = document.createElement("span");
-		val.setAttribute("class", "terminus-value terminus-db-value");
+		val.setAttribute("class", "terminus-value terminus-db-value terminus-control-panel-value");
 		var dbrec = this.ui.client.getDBRecord();
 		var nm = (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 		val.appendChild(document.createTextNode(nm));
 		scd.appendChild(lab);
 		scd.appendChild(val);
 		dbc.appendChild(scd);
+		var nav = document.createElement('div');
+		nav.setAttribute('class', 'span3');
+		dbc.appendChild(nav);
+		var ul = document.createElement('ul');
+		ul.setAttribute('class',' terminus-widget-menu' );
+		nav.appendChild(ul);
 		if(this.ui.showControl("db")){
-			var nscd = document.createElement("button");
-			nscd.setAttribute("class", "terminus-control-button terminus-db-home");
-			nscd.appendChild(document.createTextNode("Database Home"));
-			nscd.addEventListener("click", function(){
-				self.ui.showDBMainPage();
-			});
-			dbc.appendChild(nscd);
+      var li = document.createElement('li');
+      li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
+      var self = this;
+      li.addEventListener("click", function(){
+        self.ui.showDBMainPage();
+      })
+      ul.appendChild(li);
+      var a = document.createElement('a');
+      var icon = document.createElement('i');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      a.appendChild(icon);
+      var txt = document.createTextNode('Database Home');
+      a.appendChild(txt);
+      li.appendChild(a);
+      var icon = document.createElement('i');
 		}
 		if(this.ui.showControl("delete_database")){
-			var dbut = document.createElement("button");
-			dbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
-			dbut.appendChild(document.createTextNode("Delete Database"));
-			dbut.addEventListener("click", function(){
-				self.ui.deleteDatabase();
-			})
-			dbc.appendChild(dbut);
+			var li = document.createElement('li');
+      li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
+      var self = this;
+      li.addEventListener("click", function(){
+        self.ui.deleteDatabase();
+      })
+      ul.appendChild(li);
+      var a = document.createElement('a');
+      var icon = document.createElement('i');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      a.appendChild(icon);
+      var txt = document.createTextNode('Delete Database');
+      a.appendChild(txt);
+      li.appendChild(a);
+      var icon = document.createElement('i');
 		}
 		if(this.ui.showControl("woql_select")){
-			var qbut = document.createElement("button");
-			qbut.setAttribute("class", "terminus-control-button terminus-query-button");
-			qbut.appendChild(document.createTextNode("Query"));
-			qbut.addEventListener("click", function(){
-				self.ui.showQueryPage();
-			})
-			dbc.appendChild(qbut);
+			var li = document.createElement('li');
+      li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
+      var self = this;
+      li.addEventListener("click", function(){
+        self.ui.showQueryPage();
+      })
+      ul.appendChild(li);
+      var a = document.createElement('a');
+      var icon = document.createElement('i');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      a.appendChild(icon);
+      var txt = document.createTextNode('Query');
+      a.appendChild(txt);
+      li.appendChild(a);
+      var icon = document.createElement('i');
 		}
 		if(this.ui.showControl("get_schema")){
-			var scbut = document.createElement("button");
-			scbut.setAttribute("class", "terminus-control-button terminus-schema-button");
-			scbut.appendChild(document.createTextNode("Schema"));
-			scbut.addEventListener("click", function(){
-				self.ui.showSchemaPage();
-			})
-			dbc.appendChild(scbut);
+			var li = document.createElement('li');
+      li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
+      var self = this;
+      li.addEventListener("click", function(){
+        self.ui.showSchemaPage();
+      })
+      ul.appendChild(li);
+      var a = document.createElement('a');
+      var icon = document.createElement('i');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      a.appendChild(icon);
+      var txt = document.createTextNode('Schema');
+      a.appendChild(txt);
+      li.appendChild(a);
+      var icon = document.createElement('i');
 		}
-		var docdom = document.createElement("div");
-		docdom.setAttribute("class", "terminus-document-control");
+		var li = document.createElement('li');
+		li.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-doc-li active terminus-pointer");
+		ul.appendChild(li);
+		var a = document.createElement('a');
+		var icon = document.createElement('i');
+		icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+		a.appendChild(icon);
+		var txt = document.createTextNode('Documents');
+		a.appendChild(txt);
+		li.appendChild(a);
+		var icon = document.createElement('i');
+		if(this.ui.showControl("get_document")){
+			li.appendChild(this.getDocumentChooserDOM());
+		}
+		if(this.ui.showControl("create_document")){
+			li.appendChild(this.getDocumentCreatorDOM());
+		}
+	/*	var docdom = document.createElement("div");
+		docdom.setAttribute("class", "terminus-document-control terminus-btn");
 		if(this.ui.showControl("get_document")){
 			docdom.appendChild(this.getDocumentChooserDOM());
 		}
 		if(this.ui.showControl("create_document")){
 			docdom.appendChild(this.getDocumentCreatorDOM());
 		}
-		dbc.appendChild(docdom);
+		dbc.appendChild(docdom); */
 	}
 	return dbc;
 }
@@ -79,15 +134,15 @@ TerminusDBController.prototype.getAsDOM = function(){
 TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	var self = this;
 	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-document-chooser");
+	scd.setAttribute("class", "terminus-document-chooser terminus-form-horizontal terminus-control-group");
 	var lab = document.createElement("span");
-	lab.setAttribute("class", "terminus-document-chooser-label");
+	lab.setAttribute("class", "terminus-document-chooser-label terminus-control-label terminus-control-label-padding");
 	lab.appendChild(document.createTextNode("ID "));
 	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser");
+	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document ID");
 	var nbut = document.createElement("button");
-	nbut.setAttribute('class', "terminus-control-button terminus-document-button")
+	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-doc-btn")
 	nbut.appendChild(document.createTextNode("View Document"));
 	nbut.addEventListener("click", function(){
 		if(dcip.value) self.ui.showDocument(dcip.value);
@@ -104,15 +159,15 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var self = this;
 	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-document-creator");
+	scd.setAttribute("class", "terminus-document-creator terminus-form-horizontal terminus-control-group");
 	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-creator");
+	dcip.setAttribute("class", "terminus-form-value terminus-document-creator terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document Type");
 	var nbut = document.createElement("button");
 	var lab = document.createElement("span");
-	lab.setAttribute("class", "document-creator-label");
+	lab.setAttribute("class", "document-creator-label terminus-control-label terminus-control-label-padding");
 	lab.appendChild(document.createTextNode("Type "));
-	nbut.setAttribute('class', "terminus-control-button create-document-button")
+	nbut.setAttribute('class', "terminus-control-button create-document-button terminus-doc-btn")
 	nbut.appendChild(document.createTextNode("Create Document"));
 	nbut.addEventListener("click", function(){
 		if(dcip.value) self.ui.showCreateDocument(dcip.value);
@@ -138,7 +193,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var tcdom = termcc.getAsDOM();
 	var nlab = document.createElement("a");
 	nlab.setAttribute("href", "#");
-	nlab.setAttribute("class", "document-which-chooser");
+	nlab.setAttribute("class", "document-which-chooser document-chooser-a");
 	nlab.appendChild(document.createTextNode("Text Input"));
 	var nlabs = document.createElement("div");
 	nlabs.appendChild(nlab);

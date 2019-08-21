@@ -33,10 +33,10 @@ HTMLObjectViewer.prototype.getObjectDOM = function(){
 	var orientation = this.renderer.getContentOrientation();
 	var pcls = "terminus-object-frame-" + orientation;
 	if(orientation == "page"){
-		var sp = document.createElement("div");			
+		var sp = document.createElement("div");
 	}
-	else { 
-		var sp = document.createElement("span");			
+	else {
+		var sp = document.createElement("span");
 	}
 	var css = "terminus-object-frame " + pcls + (this.renderer.parent ? "" : " terminus-root-frame") + " terminus-object-frame-" + this.renderer.mode;
 	sp.setAttribute("class", css);
@@ -49,10 +49,10 @@ HTMLObjectViewer.prototype.getObjectBodyDOM = function(){
 	var orientation = this.renderer.getContentOrientation();
 	var pcls = "terminus-object-properties-" + orientation;
 	if(orientation == "page"){
-		var vholder = document.createElement("div");			
+		var vholder = document.createElement("div");
 	}
-	else { 
-		var vholder = document.createElement("span");			
+	else {
+		var vholder = document.createElement("span");
 	}
     vholder.setAttribute('class', 'terminus-object-properties ' + pcls);
     for(var prop in this.properties){
@@ -99,7 +99,7 @@ HTMLObjectViewer.prototype.clear = function(){
  * Removes the object from the dom
  */
 HTMLObjectViewer.prototype.remove = function(){
-	this.renderedDOM.parentNode.removeChild(this.renderedDOM);	
+	this.renderedDOM.parentNode.removeChild(this.renderedDOM);
 }
 
 HTMLObjectViewer.prototype.goTo = function(subj, property){
@@ -118,7 +118,7 @@ HTMLObjectViewer.prototype.getObjectIDMarker = function(renderer){
 	if(bits.length > 1) sh = bits[1];
 	idm.setAttribute("name", sh);
 	return idm;
-}	
+}
 
 function HTMLObjectHeaderViewer(){}
 
@@ -126,10 +126,10 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 	var orientation = renderer.getContentOrientation();
 	var pcls = "terminus-object-header-" + orientation;
 	if(orientation == "page"){
-		var objDOM = document.createElement("div");			
+		var objDOM = document.createElement("div");
 	}
-	else { 
-		var objDOM = document.createElement("span");			
+	else {
+		var objDOM = document.createElement("span");
 	}
 	objDOM.setAttribute("class", "terminus-object-header " + pcls);
 	if(renderer.showFeature("facet")){
@@ -146,7 +146,7 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("type")){
 		var typeDOM = this.getObjectTypeDOM(renderer);
-		if(typeDOM) objDOM.appendChild(typeDOM);		
+		if(typeDOM) objDOM.appendChild(typeDOM);
 	}
 	if(renderer.showFeature("status")){
 		var sumDOM = this.getObjectStatusDOM(renderer);
@@ -154,7 +154,7 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("view")){
 		var viewDOM = this.getViewPropertyDOM(renderer);
-		if(viewDOM) objDOM.appendChild(viewDOM);		
+		if(viewDOM) objDOM.appendChild(viewDOM);
 	}
 	if(renderer.showFeature("viewer")){
 		var hideDOM = this.getViewerSelectorDOM(renderer);
@@ -162,7 +162,7 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("add")){
 		var addDOM = this.getAddPropertyDOM(renderer);
-		if(addDOM) objDOM.appendChild(addDOM);		
+		if(addDOM) objDOM.appendChild(addDOM);
 	}
 	if(renderer.showFeature("control")){
 		var controlsDOM = this.getObjectControlsDOM(renderer);
@@ -205,7 +205,7 @@ HTMLObjectHeaderViewer.prototype.getObjectControlsDOM = function(renderer){
 	}
 	if(renderer.showFeature("show")){
 		var showDOM = this.getObjectShowDOM(renderer);
-		if(showDOM) controlsDOM.appendChild(showDOM);		
+		if(showDOM) controlsDOM.appendChild(showDOM);
 	}
 	if(renderer.showFeature("hide")){
 		var hideDOM = this.getObjectHideDOM(renderer);
@@ -374,18 +374,17 @@ HTMLObjectHeaderViewer.prototype.getObjectShowDOM = function(renderer){
 	var callback = function(){renderer.show()};
 	return HTMLFrameHelper.getActionControl("object", "show", "Show", callback);
 }
- 
+
 HTMLObjectHeaderViewer.prototype.getObjectUpdateDOM = function(renderer){
 	var dpropDOM = document.createElement("span");
 	dpropDOM.setAttribute("class", "terminus-object-update");
 	if(renderer.isNewDocument()){
-		var disabled = false;//(renderer.isUpdated() ? false : "No changes");		
+		var disabled = false;//(renderer.isUpdated() ? false : "No changes");
 	}
 	else {
 		var disabled = (renderer.isUpdated() ? false : "No changes");
 	}
 	var saveback = function(){renderer.save()};
-	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("object", "save", "Save", saveback, disabled));		
+	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("object", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
-

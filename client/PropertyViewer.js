@@ -1,5 +1,5 @@
 /**
- * Property Viewer 
+ * Property Viewer
  */
 function HTMLPropertyViewer(renderer){
 	this.renderer = renderer;
@@ -34,12 +34,14 @@ HTMLPropertyViewer.prototype.getPropertyDOM = function(){
 	var orientation = this.renderer.getContentOrientation();
 	var pcls = "terminus-property-frame-" + orientation;
 	if(orientation == "label"){
-		var sp = document.createElement("span");			
+		var sp = document.createElement("span");
 	}
-	else { 
-		var sp = document.createElement("div");			
+	else {
+		var sp = document.createElement("div");
 	}
-	sp.setAttribute("class", "terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
+	//terminus-property-frame-spacer
+
+	sp.setAttribute("class", " terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
 	sp.setAttribute('data-property', this.renderer.property());
 	return sp;
 }
@@ -48,10 +50,10 @@ HTMLPropertyViewer.prototype.getPropertyBodyDOM = function(){
 	var orientation = this.renderer.getContentOrientation();
 	var pcls = "terminus-property-values-" + orientation;
 	if(orientation == "page"){
-		var vholder = document.createElement("div");			
+		var vholder = document.createElement("div");
 	}
-	else { 
-		var vholder = document.createElement("span");			
+	else {
+		var vholder = document.createElement("span");
 	}
     vholder.setAttribute('class', 'terminus-property-values ' + pcls);
 	for(var i =0; i<this.values.length; i++){
@@ -61,7 +63,7 @@ HTMLPropertyViewer.prototype.getPropertyBodyDOM = function(){
 }
 
 HTMLPropertyViewer.prototype.addRenderedValue = function(renderedval){
-	this.values.push(renderedval);	
+	this.values.push(renderedval);
 }
 
 HTMLPropertyViewer.prototype.clear = function(){
@@ -74,7 +76,7 @@ HTMLPropertyViewer.prototype.clear = function(){
  * Removes the property from the dom
  */
 HTMLPropertyViewer.prototype.remove = function(){
-	this.propDOM.parentNode.removeChild(this.propDOM);	
+	this.propDOM.parentNode.removeChild(this.propDOM);
 }
 
 /**
@@ -132,10 +134,10 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	var orientation = renderer.getContentOrientation();
 	var pcls = "terminus-property-header-" + orientation;
 	if(orientation == "page"){
-		var objDOM = document.createElement("div");			
+		var objDOM = document.createElement("div");
 	}
-	else { 
-		var objDOM = document.createElement("span");			
+	else {
+		var objDOM = document.createElement("span");
 	}
 	objDOM.setAttribute("class", "terminus-property-header " + pcls);
 	var wrapper = document.createElement("span");
@@ -154,7 +156,7 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	else if(renderer.showFeature("status")){
 		var statDOM = this.getPropertyStatusDOM(renderer);
-		if(statDOM) wrapper.appendChild(statDOM);	
+		if(statDOM) wrapper.appendChild(statDOM);
 	}
 	if(renderer.showFeature("summary")){
 		var sumDOM = this.getPropertySummaryDOM(renderer);
@@ -168,7 +170,7 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("view")){
 		var viewDOM = this.getViewValueDOM(renderer);
-		if(viewDOM) prelude.appendChild(viewDOM);		
+		if(viewDOM) prelude.appendChild(viewDOM);
 	}
 	if(renderer.showFeature("id")){
 		var idDOM = this.getPropertyIDDOM(renderer);
@@ -176,7 +178,7 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("type")){
 		var typeDOM = this.getPropertyRangeDOM(renderer);
-		if(typeDOM) prelude.appendChild(typeDOM);		
+		if(typeDOM) prelude.appendChild(typeDOM);
 	}
 	if(renderer.showFeature("cardinality") && renderer.hasCardinalityRestriction()){
 		var hideDOM = this.getPropertyCardinalityDOM(renderer);
@@ -256,7 +258,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyCardinalityDOM = function(renderer
 	}
 	else if(restriction.max){
 		var lab = "<"+(restriction.max+1);
-		var help = "Maximum Cardinality: " + restriction.max;		
+		var help = "Maximum Cardinality: " + restriction.max;
 	}
 	else {
 		return false;
@@ -277,7 +279,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
 	}
 	if(renderer.showFeature("add") && !renderer.isClassChoice()){
 		var addDOM = this.getAddValueDOM(renderer);
-		if(addDOM) controlsDOM.appendChild(addDOM);		
+		if(addDOM) controlsDOM.appendChild(addDOM);
 	}
 	if(renderer.showFeature("reset")){
 		var rpropDOM = this.getPropertyResetDOM(renderer);
@@ -289,7 +291,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
 	}
 	if(renderer.showFeature("show")){
 		var showDOM = this.getPropertyShowDOM(renderer);
-		if(showDOM) controlsDOM.appendChild(showDOM);		
+		if(showDOM) controlsDOM.appendChild(showDOM);
 	}
 	if(renderer.showFeature("hide")){
 		var hideDOM = this.getPropertyHideDOM(renderer);
@@ -301,7 +303,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
 	}
 	if(renderer.showFeature("add") && renderer.isClassChoice()){
 		var addDOM = this.getAddValueDOM(renderer);
-		if(addDOM) controlsDOM.appendChild(addDOM);		
+		if(addDOM) controlsDOM.appendChild(addDOM);
 	}
 	return controlsDOM;
 }
@@ -375,7 +377,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyUpdateDOM = function(renderer){
 	dpropDOM.setAttribute("class", "terminus-property-update");
 	var disabled = (renderer.isUpdated() ? false : "No Change");
 	var saveback = function(){renderer.save()};
-	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("property", "save", "Save", saveback, disabled));		
+	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("property", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
 
@@ -400,10 +402,9 @@ HTMLPropertyHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
 HTMLPropertyHeaderViewer.prototype.showValue = function(renderer, index){
 	var htmlid = renderer.subject() + "->" + renderer.property() + "_" + index;
 	window.location = (""+window.location).replace(/#[A-Za-z0-9_]*$/,'') + "#" + htmlid;
-} 
-
-function HTMLDataViewer(renderer){
-	this.renderer = renderer;	
-	this.headerViewer = renderer.getValueHeaderViewer();
 }
 
+function HTMLDataViewer(renderer){
+	this.renderer = renderer;
+	this.headerViewer = renderer.getValueHeaderViewer();
+}

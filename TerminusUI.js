@@ -344,7 +344,7 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	if(this.controller){
 		this.drawControls();
 	}
-  if(this.explorer){
+    if(this.explorer){
 		this.drawExplorer();
 	}
 	if(this.plugins){
