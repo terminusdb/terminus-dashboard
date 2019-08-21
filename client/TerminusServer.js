@@ -60,7 +60,7 @@ TerminusServerController.prototype.getAsDOM = function(){
       ul.appendChild(li);
       var a = document.createElement('a');
       var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
       a.appendChild(icon);
       var txt = document.createTextNode('View Databases');
       a.appendChild(txt);
@@ -80,7 +80,7 @@ TerminusServerController.prototype.getAsDOM = function(){
       ul.appendChild(li);
       var a = document.createElement('a');
       var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
       a.appendChild(icon);
       var txt = document.createTextNode('Create New Database');
       a.appendChild(txt);

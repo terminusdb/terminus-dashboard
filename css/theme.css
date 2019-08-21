@@ -227,7 +227,7 @@ body [class^="icon-"], body [class*=" icon-"] {
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 4px;
 	font-size: 18px;
   box-sizing: border-box;
@@ -1225,7 +1225,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	font-size: 16px;
 	padding: 10px*/
 }
-.terminus-expolrer-hide{
+.terminus-explorer-hide{
 	display: none;
 }
 .terminus-table-header-full-css{

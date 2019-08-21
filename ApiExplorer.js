@@ -136,6 +136,8 @@ ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
    var icon = document.createElement('i');
    nav.appendChild(ul);
 
+   this.prettifyApiExplorer('connect', viewer);
+
    return navDom;
 } // prettifyApiNav()
 

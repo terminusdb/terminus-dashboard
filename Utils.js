@@ -383,7 +383,7 @@ function showHttpResult(response, action, currForm){
 } // showHttpResult()
 
 // toggle between client and api explorer
-function toggleHeaders(mode){
+function toggleHeaders(mode, body){
   switch(mode){
     case 'client':
       var cp = document.getElementById("terminus-control-panel");
@@ -396,6 +396,8 @@ function toggleHeaders(mode){
       cp.style.display = 'none';
       var te = document.getElementById("terminus-explorer");
       te.style.display = 'block';
+      var explorer = new ApiExplorer();
+      explorer.prettifyApiExplorer('connect', body);
     break;
   }// switch (mode)
 } // toggleHeaders()

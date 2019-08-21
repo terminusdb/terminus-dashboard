@@ -65,11 +65,14 @@
 				<td class='terminus-control-panel' style='vertical-align: top;'>
 					<table class="terminus-application-controls">
 						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
-							onClick="toggleHeaders('client')"> Terminus Client</th></tr>
+										id = "terminus-client-btn">
+							Terminus Client</th></tr>
 						<tr><td class="terminus-application-control terminus-client-body" id="terminus-control-panel"></td></tr>
 						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
-							onClick="toggleHeaders('explorer')">Terminus API Explorer</th></tr>
-						<tr><td class="terminus-application-control terminus-expolrer-body terminus-expolrer-hide" id="terminus-explorer"></td></tr>
+									  id = "terminus-explorer-btn">
+							Terminus API Explorer</th></tr>
+						<tr><td class="terminus-application-control terminus-expolrer-body terminus-explorer-hide"
+										id="terminus-explorer"></td></tr>
 					</table>
 				</td>
 				<td class='terminus-main-window terminus-main-window-full-css' style="width: 100%; vertical-align: top;">
@@ -78,30 +81,25 @@
 				</td>
 			</tr>
 	</table>
-	<!--<div class="sdk-viewer">
-		<table style="width: 100%">
-		<tr><td id='control-panel'></td>
-		<td class='main-page' style="width: 100%;">
-			<div id='user-messages'></div>
-		   	<div id='content-viewer'></div>
-		</td></tr>
-		</table>
-		<div class='sdk-footer'></div>
-	</div> -->
 	<script>
 		var terminator = new TerminusUI(TerminusConfig);
 		var pconfig = {};//server: "http://195.201.12.87:6363/", key: "root"};
+		pconfig.buttons 	 = {'client'   : document.getElementById("terminus-client-btn"),
+											 		'explorer' : document.getElementById("terminus-explorer-btn")}
 		pconfig.controller = document.getElementById("terminus-control-panel");
-		pconfig.messages = document.getElementById("terminus-user-messages");
-		pconfig.plugins = document.getElementById("terminus-plugin-loader");
-		pconfig.explorer = document.getElementById("terminus-explorer");
-		pconfig.viewer = document.getElementById("terminus-content-viewer");
+		pconfig.messages 	 = document.getElementById("terminus-user-messages");
+		pconfig.plugins 	 = document.getElementById("terminus-plugin-loader");
+		pconfig.explorer 	 = document.getElementById("terminus-explorer");
+		pconfig.viewer 		 = document.getElementById("terminus-content-viewer");
 		var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
 		terminator.draw(pconfig, nlocation);
 		var cssloader = document.getElementById("terminus-css-loader");
 		cssloader.addEventListener("change", function(){
 			terminator.piman.loadPageCSS(this.value);
 		});
+		function showPanel(mode){
+			toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
+		}
 	</script>
 </BODY>
 </html>
