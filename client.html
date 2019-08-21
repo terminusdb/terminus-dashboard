@@ -42,8 +42,10 @@
 <BODY>
 	<div class="terminus-client-ui">
 		<div class='terminus-client-header'>
-			<span class="terminus-header-tab terminus-module-head-tab">Terminus Client</span>
-			<span class="terminus-header-tab terminus-module-head-tab">Terminus API Explorer</span>
+			<span class="terminus-header-tab terminus-module-head-tab terminus-pointer" onClick="toggleHeaders('client')">
+				Terminus Client</span>
+			<span class="terminus-header-tab terminus-module-head-tab terminus-pointer" onClick="toggleHeaders('explorer')">
+				Terminus API Explorer</span>
 			<span class="terminus-header-tab terminus-module-head-tab">
 				<select id="terminus-css-loader">
 					<option value="">No CSS</option>
@@ -96,6 +98,16 @@
 		cssloader.addEventListener("change", function(){
 			terminator.loadCSS(this.value);
 		});
+		/*function toggleHeaders(mode){
+			switch(mode){
+				case 'client':
+					document.getElementById("terminus-explorer").hide();
+				break;
+				case 'explorer':
+				  document.getElementById("terminus-control-panel").hide();
+				break;
+			}// switch (mode)
+		}*/
 	</script>
 </BODY>
 </html>

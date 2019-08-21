@@ -315,22 +315,24 @@ function prettifyResponse(currForm, action, data){
       editable = 'noncursor'; // non editable
     break;
   }
+  
   var textarea = document.createElement('textarea');
-  textarea.setAttribute('class', 'terminus-textarea');
+  textarea.setAttribute('class', 'terminus-api-result-textarea');
   //var decodedTxt = jQuery(textarea).html(data).text();
   textarea.value = data;
   rd.appendChild(textarea);
-  var editor = codeMirrorFormat(textarea, mode, editable);
-  // refresh load
-  setTimeout(function() {
-      editor.refresh();
-  },1);
-  // save changes of code mirror editor
-  function updateTextArea() {
-    editor.save();
+  if(typeof(CodeMirror) != 'undefined'){
+    var editor = codeMirrorFormat(textarea, mode, editable);
+    // refresh load
+    setTimeout(function() {
+        editor.refresh();
+    },1);
+    // save changes of code mirror editor
+    function updateTextArea() {
+      editor.save();
+    }
+    editor.on('change', updateTextArea);
   }
-  editor.on('change', updateTextArea);
-
   var br = document.createElement('BR');
   rd.appendChild(br);
 

@@ -102,7 +102,7 @@ TerminusDBController.prototype.getAsDOM = function(){
       var icon = document.createElement('i');
 		}
 		var li = document.createElement('li');
-		li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer");
+		li.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-doc-li active terminus-pointer");
 		ul.appendChild(li);
 		var a = document.createElement('a');
 		var icon = document.createElement('i');
@@ -136,13 +136,13 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	var scd = document.createElement("div");
 	scd.setAttribute("class", "terminus-document-chooser terminus-form-horizontal terminus-control-group");
 	var lab = document.createElement("span");
-	lab.setAttribute("class", "terminus-document-chooser-label terminus-control-label");
+	lab.setAttribute("class", "terminus-document-chooser-label terminus-control-label terminus-control-label-padding");
 	lab.appendChild(document.createTextNode("ID "));
 	var dcip = document.createElement("input");
 	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document ID");
 	var nbut = document.createElement("button");
-	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-view-doc-btn")
+	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-doc-btn")
 	nbut.appendChild(document.createTextNode("View Document"));
 	nbut.addEventListener("click", function(){
 		if(dcip.value) self.ui.showDocument(dcip.value);
@@ -159,15 +159,15 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var self = this;
 	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-document-creator");
+	scd.setAttribute("class", "terminus-document-creator terminus-form-horizontal terminus-control-group");
 	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-creator");
+	dcip.setAttribute("class", "terminus-form-value terminus-document-creator terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document Type");
 	var nbut = document.createElement("button");
 	var lab = document.createElement("span");
-	lab.setAttribute("class", "document-creator-label");
+	lab.setAttribute("class", "document-creator-label terminus-control-label terminus-control-label-padding");
 	lab.appendChild(document.createTextNode("Type "));
-	nbut.setAttribute('class', "terminus-control-button create-document-button")
+	nbut.setAttribute('class', "terminus-control-button create-document-button terminus-doc-btn")
 	nbut.appendChild(document.createTextNode("Create Document"));
 	nbut.addEventListener("click", function(){
 		if(dcip.value) self.ui.showCreateDocument(dcip.value);
@@ -193,7 +193,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var tcdom = termcc.getAsDOM();
 	var nlab = document.createElement("a");
 	nlab.setAttribute("href", "#");
-	nlab.setAttribute("class", "document-which-chooser");
+	nlab.setAttribute("class", "document-which-chooser document-chooser-a");
 	nlab.appendChild(document.createTextNode("Text Input"));
 	var nlabs = document.createElement("div");
 	nlabs.appendChild(nlab);

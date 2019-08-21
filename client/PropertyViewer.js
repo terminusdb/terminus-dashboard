@@ -32,14 +32,16 @@ HTMLPropertyViewer.prototype.render = function(){
 
 HTMLPropertyViewer.prototype.getPropertyDOM = function(){
 	var orientation = this.renderer.getContentOrientation();
-	var pcls = "terminus-property-frame-spacer terminus-property-frame-" + orientation;
+	var pcls = "terminus-property-frame-" + orientation;
 	if(orientation == "label"){
 		var sp = document.createElement("span");
 	}
 	else {
 		var sp = document.createElement("div");
 	}
-	sp.setAttribute("class", "terminus-property-frame-spacer terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
+	//terminus-property-frame-spacer
+
+	sp.setAttribute("class", " terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
 	sp.setAttribute('data-property', this.renderer.property());
 	return sp;
 }

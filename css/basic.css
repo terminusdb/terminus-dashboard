@@ -146,15 +146,14 @@ div.terminus-object-frame button,
 	list-style: none;
 }
 div.terminus-object-frame button:hover,
-.terminus-control-button:hover {
+.terminus-control-button:hover{
 	cursor: pointer;
 	background-color: #48f;
 	color: white;
-
 }
 
 div.terminus-object-frame {}
 
-div.terminus-property-frame {
+div.terminus-property-frame{
 	margin-bottom: 10px;
 }

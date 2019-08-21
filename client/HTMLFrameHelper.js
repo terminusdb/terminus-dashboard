@@ -101,11 +101,11 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 		infoDOM.appendChild(linfo);
 	}
 	var lspacer = document.createElement("span");
-	lspacer.setAttribute("class", "terminus-frame-infobox-spacer" + "terminus-" +type + "-spacer");
+	lspacer.setAttribute("class", "terminus-frame-infobox-spacer " + "terminus-" +type + "-spacer");
 	lspacer.appendChild(document.createTextNode(" "));
 	infoDOM.appendChild(lspacer);
 	var lval = document.createElement("span");
-	lval.setAttribute("class", " terminus-frame-infobox-value" + "terminus-" +type + "-value");
+	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
 	if(input){
 		input.value = value;
 		lval.appendChild(input);

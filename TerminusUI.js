@@ -551,7 +551,7 @@ TerminusUI.prototype.togglePlugin = function(plugid){
 TerminusUI.prototype.getSupportedPlugins = function(){
 	var splugs = {
 		"font-awesome" : { label : "Font Awesome", version: "3.0.1" },
-		"bootstrap" : { label : "Bootstrap Styles", version: "3.0.1" },
+		/*"bootstrap" : { label : "Bootstrap Styles", version: "3.0.1" },*/
 		"jquery" : { label : "Jquery", version: "5.0.1" },
 		"datatables" : { label : "Datatables", version: "5.0.1", requires: ['jquery'] },
 		"select2" : { label : "Select 2", version: "5.0.1", requires: ['jquery'] },

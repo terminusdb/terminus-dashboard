@@ -172,7 +172,11 @@ TerminusSchemaViewer.prototype.getImportSaveButton = function(){
 }
 
 TerminusSchemaViewer.prototype.getSaveButton = function(){
-	return this.getSchemaButton("Save", "update_schema", this.updateSchema)
+	var self = this;
+	var func = function(){
+		self.updateSchema();
+	}
+	return this.getSchemaButton("Save", "update_schema", func)
 }
 
 TerminusSchemaViewer.prototype.getSchemaEditButton = function(){
@@ -309,7 +313,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	var np = document.createElement("div");
 	np.setAttribute("class", "terminus-schema-page terminus-schema-edit-page");
 	var ipval = document.createElement("textarea");
-	ipval.setAttribute("class", "terminus-schema-edit terminus-schem-textarea");
+	ipval.setAttribute("class", "terminus-schema-edit terminus-schema-textarea");
 	ipval.setAttribute("width", "100%");
 	ipval.setAttribute("style", "min-width: 400px; min-height: 400px;");
 	if(typeof(this.schema) == "string"){
