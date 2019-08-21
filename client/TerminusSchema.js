@@ -174,7 +174,11 @@ TerminusSchemaViewer.prototype.getImportSaveButton = function(){
 TerminusSchemaViewer.prototype.getSaveButton = function(){
 	var self = this;
 	var func = function(){
-		self.updateSchema();
+		var text = self.schema_edit_dom.value;
+		if(typeof(self.schema) == "object"){
+			text = JSON.parse(text);
+		}
+		self.updateSchema(text);
 	}
 	return this.getSchemaButton("Save", "update_schema", func)
 }
@@ -322,6 +326,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	else if(typeof (this.schema) == "object") {
 		ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
 	}
+	this.schema_edit_dom = ipval;
 	np.appendChild(ipval);
 	return np;
 }

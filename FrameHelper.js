@@ -60,6 +60,17 @@ FrameHelper.getShorthand = function(link){
 	return false;
 }
 
+FrameHelper.compareIDs = function(ida, idb){
+	if(ida == idb) return true;
+	if(this.unshorten(ida) == idb) return true;
+	if(this.unshorten(ida) == this.unshorten(idb)) return true;
+	var sha = this.getShorthand(ida);
+	var shb = this.getShorthand(idb);
+	if(sha && (sha == idb) || (sha == shb)) return true;
+	if(shb && shb == ida) return true;
+	return false;
+}
+
 FrameHelper.unshorten = function(url){
 	if(this.validURL(url)) return url;
 	var bits = url.split(":");
@@ -73,7 +84,7 @@ FrameHelper.unshorten = function(url){
 
 FrameHelper.validURL = function(str) {
 	var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    'localhost|((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string

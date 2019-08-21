@@ -210,7 +210,7 @@ WOQLClient.prototype.select = function(qurl, woql, opts){
 	if(qurl && this.setQueryURL(qurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(qurl, "Select")));
 	}
-	var q = {"query": woql};
+	var q = {"terminus:query": woql};
 	q = this.addOptionsToWOQL(q, opts);
 	return this.dispatch(this.queryURL(), "woql_select", q);
 }

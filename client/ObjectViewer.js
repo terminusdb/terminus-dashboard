@@ -40,7 +40,7 @@ HTMLObjectViewer.prototype.getObjectDOM = function(){
 	}
 	var css = "terminus-object-frame " + pcls + (this.renderer.parent ? "" : " terminus-root-frame") + " terminus-object-frame-" + this.renderer.mode;
 	sp.setAttribute("class", css);
-	sp.setAttribute("data-class", this.renderer.objtype());
+	sp.setAttribute("data-class", this.renderer.subjectClass());
 	sp.setAttribute("data-id", this.renderer.subject());
 	return sp;
 }
@@ -271,17 +271,17 @@ HTMLObjectHeaderViewer.prototype.getObjectTypeDOM = function(renderer){
 					renderer.changeClass(cls);
 				}
 			}
-			var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, renderer.objtype(), callback);
+			var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, renderer.subjectClass(), callback);
 			mpropDOM.appendChild(sel);
 			return mpropDOM;
 		}
 	}
-	var cm = renderer.getClassMeta(renderer.objtype());
-	var lab = renderer.objtype();
+	var cm = renderer.getClassMeta(renderer.subjectClass());
+	var lab = renderer.subjectClass();
 	var cmt = "All objects have types, identified by a unique URL";
 	if(cm){
 		lab = (cm.Label && cm.Label.data ? cm.Label.data : lab);
-		cmt = (cm.Comment && cm.Comment.data ? renderer.objtype() + " " + cm.Comment.data : cmt);
+		cmt = (cm.Comment && cm.Comment.data ? renderer.subjectClass() + " " + cm.Comment.data : cmt);
 	}
 	return HTMLFrameHelper.getInfoboxDOM("object-type", "Type", lab, cmt);
 }

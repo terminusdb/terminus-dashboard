@@ -13,8 +13,6 @@ function TerminusDocumentViewer(ui, action, options){
 }
 
 TerminusDocumentViewer.prototype.init = function(){
-	//FrameHelper.addURLPrefix("schema", this.server + "/" + this.db + "/ontology/main#");
-	//FrameHelper.addURLPrefix("document", this.server + "/" + this.db + "/candidate/");
 	var wq = new WOQLQuery(this.ui.client, this.options);
 	var woql = wq.getClassMetaDataQuery();
 	var self = this;
@@ -212,8 +210,8 @@ TerminusDocumentViewer.prototype.getBuiltInViewerOptions = function(){
 			features: ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"],
 			controls: ["mode"],
 			rules: [{
-				match: { type: "property"},
-				mode: "edit"
+				pattern: { type: "property"},
+				output: {mode: "edit"}
 			}]			
 		},
 		edit: {

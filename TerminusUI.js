@@ -43,7 +43,7 @@ TerminusUI.prototype.connect = function(opts){
 			else if(opts.query && self.showView("woql_select")){
 				self.showQueryPage(opts.query);
 			}
-      else if(opts.explorer && self.showView("api_explorer")){
+			else if(opts.explorer && self.showView("api_explorer")){
 				self.showExplorer(opts.explorer);
 			}
 			else {
@@ -144,8 +144,6 @@ TerminusUI.prototype.deleteDatabase = function(dbid){
 		self.showError(error);
 	});
 }
-
-//showDBMainPage
 
 /*
  * Transforms a details (id, title, description) array into  json-ld document
@@ -340,13 +338,13 @@ TerminusUI.prototype.setViewerDOM = function(dom){
 TerminusUI.prototype.draw = function(comps, slocation){
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
-  if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
+    if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
 	if(this.controller){
 		this.drawControls();
 	}
-  if(this.explorer){
+    if(this.explorer){
 		this.drawExplorer();
 	}
 	if(this.plugins){
@@ -370,7 +368,7 @@ TerminusUI.prototype.redraw = function(msg){
 		FrameHelper.removeChildren(this.controller);
 		this.drawControls();
 	}
-  if(this.explorer){
+    if(this.explorer){
 		FrameHelper.removeChildren(this.explorer);
 		this.drawExplorer();
 	}
@@ -380,20 +378,13 @@ TerminusUI.prototype.redraw = function(msg){
 	if(msg) this.showMessage(msg);
 };
 
-TerminusUI.prototype.redrawAfterSuccess = function(msg){
-	//this.redraw(msg);
-}
-
 TerminusUI.prototype.drawControls = function(){
 	this.controls = [];
 	this.loadControls();
 	for(var i = 0; i<this.controls.length; i++){
 		var ncontrol = this.controls[i];
-		if(ncontrol){
-			var nd = ncontrol.getAsDOM();
-			if(nd) {
-				this.controller.appendChild(nd);
-			}
+		if(ncontrol && (nd = ncontrol.getAsDOM())){
+			this.controller.appendChild(nd);
 		}
 	}
 }
@@ -439,17 +430,6 @@ TerminusUI.prototype.showView = function(el){
 	return false;
 }
 
-TerminusUI.prototype.pseudoCapability = function(el){
-	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "schema_format"];
-	if(pseuds.indexOf(el) == -1) return false;
-	return true;
-}
-
-
-TerminusUI.prototype.showResult = function(response){
-	alert("result");
-};
-
 TerminusUI.prototype.clearBusy = function(response){
 	this.clearMessages();
 	if(this.viewer && typeof this.viewer.busy == "function") this.viewer.busy(false);
@@ -466,9 +446,19 @@ TerminusUI.prototype.showBusy = function(msg){
 	if(this.viewer && typeof this.viewer.busy == "function") this.viewer.busy(msg);
 };
 
+TerminusUI.prototype.pseudoCapability = function(el){
+	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "schema_format"];
+	if(pseuds.indexOf(el) == -1) return false;
+	return true;
+}
 
 TerminusUI.prototype.setOptions = function(opts){
-	this.show_controls = opts && opts.controls ? opts.controls : ["server", "db", "change-server", "schema_format", "import_schema", "class_frame", "create_database", "create_document", "get_document", "update_schema", "get_schema", "woql_select"];
+	this.show_controls = opts && opts.controls ? opts.controls : 
+		["server", "db", "change-server", "schema_format", 
+			"import_schema", "class_frame", "create_database", 
+			"create_document", "get_document", "update_schema", 
+			"get_schema", "woql_select"
+		];
 	this.show_views = opts && opts.views ? opts.views : this.show_controls;
 	if(opts.document){
 		this.document_options = opts.document;
@@ -476,108 +466,20 @@ TerminusUI.prototype.setOptions = function(opts){
 	if(opts.schema){
 		this.schema_options = opts.schema;
 	}
-	if(opts.css){
-		this.loadCSS(opts.css);
+	this.piman = new TerminusPluginManager();
+	this.piman.init(opts.plugins);
+	if(opts.css && this.piman){
+		this.piman.loadPageCSS(opts.css);
 	}
-	this.enabled_plugins = (opts.plugins ? opts.plugins :  this.DefaultPlugins());
 	this.loadControls();
 }
 
 TerminusUI.prototype.drawPlugins = function(){
-	var allplugs = this.getSupportedPlugins();
-	this.plugins.appendChild(document.createTextNode("Plugins: "));
-	for(var plug in allplugs){
-		var oneplug = allplugs[plug];
-		var disabled = false;
-		if(oneplug.requires){
-			for(var i = 0; i<oneplug.requires.length; i++){
-				if(this.enabled_plugins.indexOf(oneplug.requires[i]) == -1){
-					disabled = "disabled";
-					continue;
-				}
-			}
-		}
-		if(this.enabled_plugins.indexOf(plug) !== -1 && !disabled){
-			this.plugins.appendChild(this.getPluginDOM(plug, oneplug, "checked"));
-		}
-		else {
-			this.plugins.appendChild(this.getPluginDOM(plug, oneplug, disabled));
-		}
+	if(!this.piman) {
+		console.log(new Error("No plugin manager initialised in UI object"));
+		return false;
 	}
-}
-
-TerminusUI.prototype.getPluginDOM = function(plugid, obj, checked){
-	var cl = document.createElement("span");
-	cl.setAttribute("class", "terminus-plugin-control");
-	var cbox = document.createElement("input");
-	cbox.id = "terminus-plugin-control-" + plugid;
-	cbox.type = "checkbox";
-	if(checked && checked == "checked") cbox.checked = true;
-	if(checked && checked == "disabled") cbox.disabled = true;
-	var clab = document.createElement("label");
-	clab.setAttribute("class", "terminus-plugin-label terminus-plugin-label-full-css");
-	clab.setAttribute("for", cbox.id);
-	clab.appendChild(document.createTextNode(obj.label));
-	cl.appendChild(clab);
-	cl.appendChild(cbox);
-	var self = this;
-	cbox.addEventListener("change", function(){
-		self.togglePlugin(plugid);
-	})
-	return cl;
-}
-
-TerminusUI.prototype.togglePlugin = function(plugid){
-	if(this.enabled_plugins.indexOf(plugid) == -1){
-		this.enabled_plugins.push(plugid);
-	}
-	else {
-		nplugs = [];
-		for(var i = 0; i<this.enabled_plugins.length; i++){
-			if(this.enabled_plugins[i] != plugid){
-				nplugs.push(this.enabled_plugins[i]);
-			}
-		}
-		this.enabled_plugins = nplugs;
-	}
-	FrameHelper.removeChildren(this.plugins);
-	this.redraw();
-	this.drawPlugins();
-}
-
-
-//TerminusUI.prototype.loadPlugins = function(opts){}
-
-TerminusUI.prototype.getSupportedPlugins = function(){
-	var splugs = {
-		"font-awesome" : { label : "Font Awesome", version: "3.0.1" },
-		/*"bootstrap" : { label : "Bootstrap Styles", version: "3.0.1" },*/
-		"jquery" : { label : "Jquery", version: "5.0.1" },
-		"datatables" : { label : "Datatables", version: "5.0.1", requires: ['jquery'] },
-		"select2" : { label : "Select 2", version: "5.0.1", requires: ['jquery'] },
-		"gmaps" : { label : "Google Maps", version: "5.0.1"},
-		"openlayers" : { label : "Open Layers", version: "5.0.1"},
-		"d3" : { label : "D3 Graphics", version: "5.0.1"}
-	};
-	return splugs;
-};
-
-TerminusUI.prototype.getDefaultPlugins = function(){
-	var defplugs = [];
-	return defplugs;
-}
-
-
-TerminusUI.prototype.loadCSS = function(css){
-	cssfid = "terminus_client_css";
-	var cssdom = document.getElementById(cssfid);
-	if(cssdom){
-		cssdom.parentNode.removeChild(cssdom);
-	}
-	if(css){
-		cssurl = "css/" + css + ".css";
-		FrameHelper.loadDynamicCSS(cssfid, cssurl);
-	}
+	this.plugins.appendChild(this.piman.getAsDOM(this));
 }
 
 TerminusUI.prototype.getDocViewerOptions = function(){
