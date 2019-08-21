@@ -100,7 +100,7 @@
 		terminator.draw(pconfig, nlocation);
 		var cssloader = document.getElementById("terminus-css-loader");
 		cssloader.addEventListener("change", function(){
-			terminator.loadCSS(this.value);
+			terminator.piman.loadPageCSS(this.value);
 		});
 		/*function toggleHeaders(mode){
 			switch(mode){
