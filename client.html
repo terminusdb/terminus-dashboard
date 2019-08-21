@@ -13,7 +13,9 @@
 		<script src="query/WOQLQuery.js"></script>
 		<script src="query/WOQLResult.js"></script>
 		<script src="query/WOQLResultsViewer.js"></script>
-		<script src="client/FrameRenderer.js"></script>
+		<script src="client/ObjectRenderer.js"></script>
+		<script src="client/PropertyRenderer.js"></script>
+		<script src="client/ValueRenderer.js"></script>
 		<script src="client/ObjectViewer.js"></script>
 		<script src="client/PropertyViewer.js"></script>
 		<script src="client/DataViewer.js"></script>
@@ -26,6 +28,7 @@
 		<script src="client/TerminusSchema.js"></script>
 		<script src="client/TerminusServer.js"></script>
 		<script src="client/TerminusURL.js"></script>
+		<script src="plugins/TerminusPlugin.js"></script>
 		<script src="client/viewers/Boolean.js"></script>
 		<script src="client/viewers/Choice.js"></script>
 		<script src="client/viewers/Coordinate.js"></script>
@@ -35,6 +38,7 @@
 		<script src="client/viewers/Link.js"></script>
 		<script src="client/viewers/Number.js"></script>
 		<script src="client/viewers/Range.js"></script>
+		<script src="client/viewers/String.js"></script>
 		<script src="client/viewers/SanitizedHTML.js"></script>
 
 	</head>
@@ -42,35 +46,46 @@
 <BODY>
 	<div class="terminus-client-ui">
 		<div class='terminus-client-header'>
-			<span class="terminus-header-tab">Terminus Client</span>
-			<span class="terminus-header-tab">Terminus API Explorer</span>
-			<span class="terminus-header-tab">
+			<span class="terminus-header-tab terminus-module-head-tab">Terminus Client</span>
+			<span class="terminus-header-tab terminus-module-head-tab">Terminus API Explorer</span>
+			<span class="terminus-header-tab terminus-module-head-tab">
 				<select id="terminus-css-loader">
 					<option value="">No CSS</option>
 					<option value="basic">Basic CSS</option>
-					<option value="full">Full CSS</option>
+					<option value="theme">Full CSS</option>
 				</select>
 			</span>
-			<span class="terminus-header-tab" id="terminus-plugin-loader">
+			<span class="terminus-header-tab terminus-module-head-tab" id="terminus-plugin-loader">
 			</span>
 		</div>
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr>
 				<td class='terminus-control-panel' style='vertical-align: top;'>
 					<table class="terminus-application-controls">
-						<tr><th class="terminus-application-header terminus-client-header">Terminus Client</th></tr>
+						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css">
+								Terminus Client</th></tr>
 						<tr><td class="terminus-application-control terminus-client-body" id="terminus-control-panel"></td></tr>
-						<tr><th class="terminus-application-header terminus-explorer-header">Terminus API Explorer</th></tr>
+						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css">
+								Terminus API Explorer</th></tr>
 						<tr><td class="terminus-application-control terminus-expolrer-body" id="terminus-explorer"></td></tr>
 					</table>
 				</td>
-				<td class='terminus-main-window' style="width: 100%; vertical-align: top;">
+				<td class='terminus-main-window terminus-main-window-full-css' style="width: 100%; vertical-align: top;">
 					<div class='terminus-user-messages' id='terminus-user-messages'></div>
 				   	<div class='terminus-main-content' id='terminus-content-viewer'></div>
 				</td>
 			</tr>
-		</table>	
-	</div>	
+	</table>
+	<!--<div class="sdk-viewer">
+		<table style="width: 100%">
+		<tr><td id='control-panel'></td>
+		<td class='main-page' style="width: 100%;">
+			<div id='user-messages'></div>
+		   	<div id='content-viewer'></div>
+		</td></tr>
+		</table>
+		<div class='sdk-footer'></div>
+	</div> -->
 	<script>
 		var terminator = new TerminusUI(TerminusConfig);
 		var pconfig = {};//server: "http://195.201.12.87:6363/", key: "root"};

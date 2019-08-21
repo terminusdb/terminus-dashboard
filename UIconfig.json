@@ -20,5 +20,11 @@ let TerminusConfig = {
 	},
 	location: {server: "http://195.201.12.87:6363/", key: "root"},
 	css: "basic",
-	plugins: ["font-awesome"]
+	plugins: {
+		"font-awesome": true,
+		gmaps: { 
+			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI", 
+			loaded: false
+		}
+	} 
 };

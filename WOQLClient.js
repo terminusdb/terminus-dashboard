@@ -27,7 +27,7 @@ function WOQLClient(params){
  *
  * If the curl argument is false or null, the this.server will be used if present, or the promise will be rejected.
  */
-WOQLClient.prototype.connect = function(curl, key){
+WOQLClient.prototype.connect = function(curl, key, opts){
 	if(curl && !this.setServer(curl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(curl, "connect")));
 	}
@@ -35,7 +35,7 @@ WOQLClient.prototype.connect = function(curl, key){
 		this.setClientKey(this.serverURL(), key);
 	}
 	var self = this;
-	return this.dispatch(this.serverURL(), "connect").then(function(response){
+	return this.dispatch(this.serverURL(), "connect", opts).then(function(response){
 		self.setConnectionCapabilities(self.serverURL(), response);
 		return response;
 	});
@@ -358,8 +358,8 @@ WOQLClient.prototype.capabilitiesPermit = function(action, dbid, server){
 	return false;
 }
 
-/* 
- * removes a database record from the connection registry (after deletion, for example) 
+/*
+ * removes a database record from the connection registry (after deletion, for example)
  */
 WOQLClient.prototype.removeDBFromConnection = function(dbid, srvr){
 	if(dbid && this.dbid && this.dbid == dbid) this.dbid = false;
@@ -417,7 +417,7 @@ WOQLClient.prototype.dbURL = function(call){ //url swizzling to talk to platform
 	else if(this.platformEndpoint() && call == "platform"){
 		return this.server.substring(0, this.server.lastIndexOf("/platform/")) + "/" + this.dbid ;
 	}
-	return this.server + this.dbid; 
+	return this.server + this.dbid;
 }
 WOQLClient.prototype.schemaURL = function(){ return this.dbURL() + "/schema"; }
 WOQLClient.prototype.queryURL = function(){ return this.dbURL() + "/woql"; }
@@ -500,7 +500,7 @@ WOQLClient.prototype.parseAPIError = function(response){
 	err.type = response.type;
 	if(response.body && typeof response.body == "object"){
 		try {
-			var msg = response.text();			
+			var msg = response.text();
 		}
 		catch(e){
 			try{

@@ -202,6 +202,8 @@ body [class^="icon-"], body [class*=" icon-"] {
   border-radius: 4px;
 	font-size: 18px;
   box-sizing: border-box;
+	width: 400px;
+	margin-left: 15px
 }
 .terminus-textarea {
   width: 100%;
@@ -212,6 +214,8 @@ body [class^="icon-"], body [class*=" icon-"] {
   border-radius: 4px;
   background-color: #f8f8f8;
   resize: none;
+	width: 400px;
+	margin-left: 15px
 }
 
 .module-login {
@@ -482,6 +486,7 @@ box-shadow: none;
 	border: 1px solid transparent;
 	white-space: nowrap;
 	padding: 4px 10px;
+	margin-left: 10px;
 	font-size: large;
 	line-height: 1.42857;
 	border-radius: 4px;
@@ -490,6 +495,28 @@ box-shadow: none;
 	-ms-user-select: none;
 	user-select: none
 }
+
+
+.terminus-delete-db-button {
+	display: inline-block;
+	margin-bottom: 0;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 4px 10px;
+	margin-left: 10px;
+	font-size: 14px;
+	line-height: 1.42857;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none
+}
+
 .terminus-btn.active:focus, .terminus-btn:active:focus, .terminus-btn:focus {
 	outline: thin dotted;
 	outline: 5px auto -webkit-focus-ring-color;
@@ -949,6 +976,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	width: 300px;
 	overflow: hidden
 }
 
@@ -1106,6 +1134,47 @@ text-decoration: none!important;
 	border-top-right-radius: 3px;
 	border-top-left-radius: 3px;
 }
+.terminus-full-css-margin-top{
+  margin-top: 30px;
+}
+.terminus-plugin-label-full-css{
+	color: #767676;
+	background-color: #f6f6f6;
+	border-color: #e9e9e9;
+	padding: 10px 15px;
+	border-bottom: 1px solid transparent;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	font-size: 16px;
+	padding: 10px
+}
+.terminus-table-header-full-css{
+	color: #767676;
+	background-color: #f6f6f6;
+	border-color: #e9e9e9;
+	padding: 10px 15px;
+	border-bottom: 1px solid transparent;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	font-size: 18px;
+	padding: 10px;
+	color: black;
+	min-width: 183px;
+}
+.terminus-application-controls{
+ margin-top: 20px
+}
+/* terminus module header for tab in full css style*/
+.terminus-module-head-tab {
+	color: #767676;
+	background-color: #f6f6f6;
+	border-color: #e9e9e9;
+	padding: 10px 15px;
+	border-bottom: 1px solid transparent;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	font-size: 18px;
+}
 .terminus-module-head h3 {
 	font-size: large;
 	line-height: 20px;
@@ -1136,9 +1205,24 @@ text-decoration: none!important;
   width: 60px;
 }
 
+.terminus-nav-body-span{
+	display: inline-inline-flex;
+}
+/* terminus main window on full css mode */
+.terminus-main-window-full-css{
+	width: 100%;
+  vertical-align: top;
+  padding: 20px 0px 0px 50px;
+}
+
 /* terminus module body */
 .terminus-module-body {
 	padding: 15px
+}
+.terminus-module-body-width {
+	margin-left: 10px;
+  width: 1200px;
+	display: inline-block
 }
 .terminus-module-body-white-bg{
 	background: #fff;

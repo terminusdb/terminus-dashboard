@@ -55,7 +55,7 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 		opt1.appendChild(document.createTextNode(this.empty_choice));
 		choices.push(opt1);
 	}
-	if(clist && clist.bindings){
+	if(clist.bindings){
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
 			if(clist.bindings[i].Class && added.indexOf(clist.bindings[i].Class) == -1){

@@ -1,15 +1,11 @@
-table.terminus-client-table-layout {
-	border: 1px solid red;
-}
-.terminus-frame-infobox {
-	border: 2px solid green;
-}
- /* ----- terminus widget menu ----- */
+/* ----- terminus widget menu ----- */
 .terminus-widget-menu {
 	background: #333;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	width: 100%;
+	display: inline-block;
 	overflow: hidden
 }
 
@@ -96,7 +92,7 @@ table.terminus-client-table-layout {
 .terminus-li-horizontal {
   float: left;
 }
-.terminus-li-horizontal a {
+.terminus-li-horizontal a{
   display: block;
   color: white;
   text-align: center;
@@ -163,7 +159,7 @@ table.terminus-client-table-layout {
   resize: none;
 }
 
-/* ----- signature pre ----- */
+/* ----- terminus signature pre ----- */
 .terminus-api-signature-pre{
   font-size:18px;
 	background : #f5f5f5;

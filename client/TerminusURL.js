@@ -11,9 +11,9 @@ TerminusURLLoader.prototype.getLabelDOM = function(){
 
 TerminusURLLoader.prototype.getFormFieldDOM = function(ip, fname, ltxt, pholder){
 	var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field terminus-field-"+fname);
+	sci.setAttribute("class", "terminus-form-horizontal terminus-control-group terminus-form-field terminus-field-"+fname);
 	var lab = document.createElement("span");
-	lab.setAttribute("class", "terminus-form-label terminus-form-field-label terminus-label-"+fname);
+	lab.setAttribute("class", "terminus-control-label terminus-form-label terminus-form-field-label terminus-label-"+fname);
 	lab.appendChild(document.createTextNode(ltxt))
 	ip.setAttribute("type", "text");
 	ip.setAttribute("placeholder", pholder);
@@ -30,18 +30,18 @@ TerminusURLLoader.prototype.getAsDOM = function(){
 	stit.appendChild(document.createTextNode("Connect To Terminus Server"));
 	scd.appendChild(stit);
 	this.url_input = document.createElement("input");
-	this.url_input.setAttribute("class", "terminus-form-value terminus-form-url terminus-form-field-input");
+	this.url_input.setAttribute("class", "terminus-form-value terminus-form-url terminus-form-field-input terminus-input-text");
 	if(this.val){
 		this.url_input.value = this.val;
-	}	
+	}
 	scd.appendChild(this.getFormFieldDOM(this.url_input, "connect", "URL", "Terminus DB URL"));
 	this.key_input = document.createElement("input");
-	this.key_input.setAttribute("class", "terminus-form-value terminus-value");
+	this.key_input.setAttribute("class", "terminus-form-value terminus-value terminus-input-text");
 	scd.appendChild(this.getFormFieldDOM(this.key_input, "connect", "Key", "Server API Key"));
 	var loadbuts = document.createElement("div");
 	loadbuts.setAttribute("class", "terminus-control-buttons");
 	var loadbut = document.createElement("button");
-	loadbut.setAttribute("class", "terminus-control-button terminus-url-load");
+	loadbut.setAttribute("class", "terminus-control-button terminus-url-load terminus-btn");
 	loadbut.appendChild(document.createTextNode("Connect"));
 	var self = this;
 	loadbut.addEventListener("click", function(){
