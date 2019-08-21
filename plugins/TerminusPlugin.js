@@ -30,11 +30,11 @@ function TerminusPluginManager(){
 	};
 	this.plugins["jquery"] = { 
 		label: "jQuery", 
-		js: "https://code.jquery.com/jquery-2.2.4.min.js"
+		js: ["https://code.jquery.com/jquery-2.2.4.min.js"]
 	};
 	this.plugins["datatables"] = { 
 		label: "Data Tables", 
-		js: "https://code.jquery.com/jquery-2.2.4.min.js",
+		js: ["https://code.jquery.com/jquery-2.2.4.min.js"],
 		requires: ['jquery'] 
 	};
 	this.plugins["prettify"] = { 
@@ -45,13 +45,13 @@ function TerminusPluginManager(){
 	};
 	this.plugins["gmaps"] = { 
 		label: "Google Maps", 
-		js: "https://maps.googleapis.com/maps/api/js",
+		js: ["https://maps.googleapis.com/maps/api/js"],
 		plugin: "gmaps.terminus.js",		
 		requires: ['jquery'] 
 	};
 	this.plugins["d3"] = { 
 		label: "d3", 
-		js: "https://code.jquery.com/jquery-2.2.4.min.js",
+		js: ["https://code.jquery.com/jquery-2.2.4.min.js"],
 		requires: ['jquery'] 
 	};
 	this.plugins["select2"] = { 
@@ -137,7 +137,6 @@ TerminusPluginManager.prototype.calculatePreloaded = function(){
 	}
 }
 
-
 TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check){
 	if(typeof this.plugins[plugin] == "object"){
 		var pluginmeta = this.plugins[plugin];
@@ -157,26 +156,29 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 				break;
 			}
 			case "quill": {
-				if(typeof Quill != "undefined") return false;
+				if(typeof Quill == "undefined") return false;
 				return true;
 				break;
 			}
 			case "jsoneditor": {
-				if(typeof JSONEditor != "undefined") return false;
+				if(typeof JSONEditor == "undefined") return false;
 				return true;
+				break;
 			}
 			case "codemirror": {
-				if(typeof CodeMirror != "undefined") return false;
+				if(typeof CodeMirror == "undefined") return false;
 				return true;
 			}
-			case "font-awesome": {}
+			case "font-awesome": {
+				return false;
+			}
 			case "datatables": {
-				 if(typeof jQuery != "undefined" && ! jQuery.isFunction( jQuery.fn.dataTable)) return false;
-				 return true;				
+				 if(typeof jQuery != "undefined" && jQuery.isFunction( jQuery.fn.dataTable)) return true;
+				 return false;				
 			}
 			case "select2": {
-				 if(typeof jQuery != "undefined" && ! jQuery.isFunction( jQuery.fn.select2 )) return false;
-				 return true;
+				 if(typeof jQuery != "undefined" && jQuery.isFunction( jQuery.fn.select2 )) return true;
+				 return false;
 			}
 			case "gmaps": {
 				if(typeof google == "undefined" || typeof google.maps == "undefined") return false;
@@ -318,16 +320,42 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 
 TerminusPluginManager.prototype.togglePlugin = function(plugid, ui){
 	if(this.loaded.indexOf(plugid) == -1){
-		//this.loaded.push(plugid);
-	}
-	else {
 		var then = function(){
 			ui.redraw();
 		}
 		this.loadPlugin(plugid, then);
 	}
+	else {
+		this.unloadPlugin(plugid);
+	}
 	FrameHelper.removeChildren(ui.plugins);
 	ui.drawPlugins();
+}
+
+TerminusPluginManager.prototype.unloadPlugin = function(plugid){
+	if(!this.plugins[plugid] || this.loaded.indexOf(plugid) == -1) {
+		console.log(new Error(plugid + " plugin unload request when it is not loaded"));
+		return false;
+	}
+	var pug = this.plugins[plugid];
+	var num = (pug.js) ? pug.js.length : 0;
+	if(pug.plugin) num++;
+	for(var i=0; i< num; i++){
+		var cssfid = plugid + "_js_" + i;
+		var cssdom = document.getElementById(cssfid);
+		if(cssdom){
+			cssdom.parentNode.removeChild(cssdom);
+		}			
+	}
+	num = (pug.css ? pug.css.length : 0);
+	for(var i=0; i< num; i++){
+		var cssfid = plugid + "_css_" + i;
+		var cssdom = document.getElementById(cssfid);
+		if(cssdom){
+			cssdom.parentNode.removeChild(cssdom);
+		}			
+	}
+	this.loaded.splice(this.loaded.indexOf(plugid), 1);
 }
 
 TerminusPluginManager.prototype.getAsDOM = function(ui){
