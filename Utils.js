@@ -315,7 +315,7 @@ function prettifyResponse(currForm, action, data){
       editable = 'noncursor'; // non editable
     break;
   }
-  
+
   var textarea = document.createElement('textarea');
   textarea.setAttribute('class', 'terminus-api-result-textarea');
   //var decodedTxt = jQuery(textarea).html(data).text();
@@ -381,3 +381,23 @@ function showHttpResult(response, action, currForm){
     })
 
 } // showHttpResult()
+
+// toggle between client and api explorer
+function toggleHeaders(mode, body){
+  switch(mode){
+    case 'client':
+      var cp = document.getElementById("terminus-control-panel");
+      cp.style.display = 'block';
+      var te = document.getElementById("terminus-explorer");
+      te.style.display = 'none';
+    break;
+    case 'explorer':
+      var cp = document.getElementById("terminus-control-panel");
+      cp.style.display = 'none';
+      var te = document.getElementById("terminus-explorer");
+      te.style.display = 'block';
+      var explorer = new ApiExplorer();
+      explorer.prettifyApiExplorer('connect', body);
+    break;
+  }// switch (mode)
+} // toggleHeaders()

@@ -318,6 +318,10 @@ TerminusUI.prototype.setMessageDOM = function(dom){
 	this.messages = dom;
 }
 
+TerminusUI.prototype.setbuttonControls = function(dom){
+	this.buttons = dom;
+}
+
 TerminusUI.prototype.setControllerDOM = function(dom){
 	this.controller = dom;
 }
@@ -335,17 +339,21 @@ TerminusUI.prototype.setViewerDOM = function(dom){
 }
 
 TerminusUI.prototype.draw = function(comps, slocation){
+  if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
-    if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
+  if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
+  if(this.buttons){
+    this.toggleControl();
+  }
 	if(this.controller){
 		this.drawControls();
 	}
-    if(this.explorer){
+  /*  if(this.explorer){
 		this.drawExplorer();
-	}
+	}*/
 	if(this.plugins){
 		this.drawPlugins();
 	}
@@ -367,15 +375,30 @@ TerminusUI.prototype.redraw = function(msg){
 		FrameHelper.removeChildren(this.controller);
 		this.drawControls();
 	}
-    if(this.explorer){
+  if(this.explorer){
 		FrameHelper.removeChildren(this.explorer);
-		this.drawExplorer();
+		//this.drawExplorer();
 	}
 	if(this.viewer){
 		this.redrawMainPage();
 	}
 	if(msg) this.showMessage(msg);
 };
+
+TerminusUI.prototype.toggleControl = function(){
+  var self = this;
+  this.buttons.client.addEventListener('click', function(){
+    FrameHelper.removeChildren(self.controller);
+    FrameHelper.removeChildren(self.explorer);
+    self.drawControls();
+    self.showServerMainPage();
+  })
+  this.buttons.explorer.addEventListener('click', function(){
+    FrameHelper.removeChildren(self.controller);
+    FrameHelper.removeChildren(self.explorer);
+    self.drawExplorer();
+  })
+}
 
 TerminusUI.prototype.drawControls = function(){
 	this.controls = [];
@@ -394,6 +417,7 @@ TerminusUI.prototype.drawExplorer = function(){
        var exp = new ApiExplorer(this);
        ae = exp.getAsDOM();
        this.explorer.appendChild(ae);
+       this.explorer.style.display = 'block';
     }
   }
 }
@@ -452,10 +476,10 @@ TerminusUI.prototype.pseudoCapability = function(el){
 }
 
 TerminusUI.prototype.setOptions = function(opts){
-	this.show_controls = opts && opts.controls ? opts.controls : 
-		["server", "db", "change-server", "schema_format", 
-			"import_schema", "class_frame", "create_database", 
-			"create_document", "get_document", "update_schema", 
+	this.show_controls = opts && opts.controls ? opts.controls :
+		["server", "db", "change-server", "schema_format",
+			"import_schema", "class_frame", "create_database",
+			"create_document", "get_document", "update_schema",
 			"get_schema", "woql_select"
 		];
 	this.show_views = opts && opts.views ? opts.views : this.show_controls;

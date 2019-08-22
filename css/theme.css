@@ -181,8 +181,8 @@ body [class^="icon-"], body [class*=" icon-"] {
 	border-top: 1px solid #f5f5f5
 }
 .terminus-form-horizontal .terminus-control-label{
-	/*float: left;*/
-  width: 160px;
+	float: left;
+  width: 160px !important;
   padding-top: 12px;
 	font-size: 18px;
   text-align: right;
@@ -227,7 +227,7 @@ body [class^="icon-"], body [class*=" icon-"] {
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 4px;
 	font-size: 18px;
   box-sizing: border-box;
@@ -1225,6 +1225,9 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	font-size: 16px;
 	padding: 10px*/
 }
+.terminus-explorer-hide{
+	display: none;
+}
 .terminus-table-header-full-css{
 	color: #767676;
 	background-color: #f6f6f6;
@@ -1237,6 +1240,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	padding: 10px;
 	color: black;
 	min-width: 189px;
+	cursor: pointer;
 }
 .terminus-application-controls{
  margin-top: 20px

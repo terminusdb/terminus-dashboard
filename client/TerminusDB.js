@@ -43,7 +43,7 @@ TerminusDBController.prototype.getAsDOM = function(){
       ul.appendChild(li);
       var a = document.createElement('a');
       var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-home');
       a.appendChild(icon);
       var txt = document.createTextNode('Database Home');
       a.appendChild(txt);
@@ -60,7 +60,7 @@ TerminusDBController.prototype.getAsDOM = function(){
       ul.appendChild(li);
       var a = document.createElement('a');
       var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-trash-alt');
       a.appendChild(icon);
       var txt = document.createTextNode('Delete Database');
       a.appendChild(txt);
@@ -77,7 +77,7 @@ TerminusDBController.prototype.getAsDOM = function(){
       ul.appendChild(li);
       var a = document.createElement('a');
       var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-search');
       a.appendChild(icon);
       var txt = document.createTextNode('Query');
       a.appendChild(txt);
@@ -94,7 +94,7 @@ TerminusDBController.prototype.getAsDOM = function(){
       ul.appendChild(li);
       var a = document.createElement('a');
       var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+      icon.setAttribute('class', 'terminus-menu-icon fa fa-cog');
       a.appendChild(icon);
       var txt = document.createTextNode('Schema');
       a.appendChild(txt);
@@ -106,7 +106,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		ul.appendChild(li);
 		var a = document.createElement('a');
 		var icon = document.createElement('i');
-		icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+		icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
 		a.appendChild(icon);
 		var txt = document.createTextNode('Documents');
 		a.appendChild(txt);
