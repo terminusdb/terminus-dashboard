@@ -83,37 +83,6 @@ ValueRenderer.prototype.currentFacet = function(){
 
 ValueRenderer.prototype.setOptions = function(options){
 	return RenderingMap.decorateRenderer(options, this);
-	/*
-	options = (options ? options : {});
-	if(options.mode) this.mode = options.mode;
-	else {
-		this.mode = (this.parent && this.parent.mode ? this.parent.mode : "view");
-		options.mode = this.mode;
-	}
-	if(options.view) this.view = options.view;
-	else {
-		this.view = (this.parent && this.parent.view ? this.parent.view : "full");
-		options.view = this.view;
-	}
-	if(options.viewer) this.viewerType = options.viewer;
-	else this.viewerType = this.getViewerForDataValue();
-	if(options.facet) this.facet = options.facet;
-	else this.facet = this.getDefaultFacet();
-	this.text_summary_length = (options && options.summary_length ? options.summary_length : 12);
-	this.hide_disabled_controls = (options && options.hide_disabled_controls ? options.hide_disabled_controls : true);
-	this.facets = {
-		icon: 	["facet", "summary"],
-		label: 	["facet", "status", "body"],
-		inline: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"].concat(this.controls),
-		line: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"].concat(this.controls),
-		page: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"].concat(this.controls)
-	}
-	if(options && options.facets){
-		for(var facet in options.facets){
-			this.facets[facet] = options.facets[facet];
-		}
-	}
-	return options;*/
 }
 
 ValueRenderer.prototype.hideDisabledControls = function(){
@@ -306,9 +275,11 @@ ValueRenderer.prototype.render = function(viewer){
 ValueRenderer.prototype.extract = function(){
 	var val = this.value();
 	if(val !== "" && val !== false && this.frame.isDatatypeProperty()){
-		var objlit = { data: this.value()}
-		if(this.frame.isString()) objlit.lang = this.frame.lang();
-		else objlit.type = this.type();
+		var objlit = { "@value": this.value()}
+		
+		//var objlit = { data: this.value()}
+		if(this.frame.isString()) objlit["@language"] = this.frame.lang();
+		else objlit["@type"] = this.type();
 		return objlit;
 	}
 	else return val;
@@ -322,11 +293,14 @@ ValueRenderer.prototype.getDataValueViewer = function(){
 	if(!this.viewerType) {
 		this.viewerType = this.getViewerForDataValue();
 	}
-	return RenderingMap.getDataViewer(this.viewerType);		
+	return RenderingMap.getViewer(this.viewerType);		
 }
 
 ValueRenderer.prototype.getAvailableViewers = function(){
 	var dt = this.frame.getTypeShorthand();
+	if(!dt){
+		alert("here");
+	}
 	var ft = this.frame.ftype();
 	if(this.mode == "view"){
 		return RenderingMap.getAvailableDataViewers(dt, ft);		

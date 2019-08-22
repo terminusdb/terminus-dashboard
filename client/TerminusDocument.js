@@ -66,9 +66,9 @@ TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 	var self = this;
 	this.page_config = "views";
 
-	if(url.indexOf("/") == -1 && url.indexOf(":") == -1) url = "docs:" + url;
+	//if(url.indexOf("/") == -1 && url.indexOf(":") == -1) url = "docs:" + url;
 	this.ui.showBusy("Loading Document from " + url);
-	return this.ui.client.getDocument(url, {format: "frame"})
+	return this.ui.client.getDocument(url, {"terminus:encoding": "terminus:frame"})
 	.then(function(response){
 		self.ui.clearBusy();
 		self.loadDataFrames(response.result);
@@ -111,7 +111,7 @@ TerminusDocumentViewer.prototype.deleteDocument = function(URL){
 TerminusDocumentViewer.prototype.createDocument = function(id){
 	var self = this;
 	var extr = this.renderer.extract();
-	var opts = { format: "json", show_result: 2};
+	var opts = { "terminus:encoding": "jsonld" };
 	this.ui.showBusy("Creating document");
 	return this.ui.client.createDocument(id, extr, opts)
 	.then(function(response){
@@ -127,7 +127,7 @@ TerminusDocumentViewer.prototype.updateDocument = function(){
 	var durl = this.document.subjid;
 	var extr = this.renderer.extract();
 	var self = this;
-	var opts = {format: "json", editmode: "replace"};
+	var opts = { "terminus:encoding": "jsonld" };
 	this.ui.showBusy("Updating document " + durl);
 	return this.ui.client.updateDocument(durl, extr, opts)
 	.then(function(response){
@@ -198,59 +198,7 @@ TerminusDocumentViewer.prototype.render = function(){
 }
 
 TerminusDocumentViewer.prototype.getBuiltInViewerOptions = function(){
-	var opts = {
-		view: {
-			label: "View Document",
-			load_schema: false, //should we load the document schema or just use the document frame
-			editor: true,
-			facet: "page",
-			mode: "view",
-			viewer: "html",
-			hide_disabled_buttons: true,
-			features: ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"],
-			controls: ["mode"],
-			rules: [{
-				pattern: { type: "property"},
-				output: {mode: "edit"}
-			}]			
-		},
-		edit: {
-			label: "Edit Document",
-			load_schema: true, //should we load the document schema or just use the document frame
-			editor: true,
-			facet: "page",
-			mode: "edit",
-			viewer: "html"			
-		},
-		create: {
-			label: "Create Document",
-			features: ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"],
-			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"],
-			editor: true,
-			facet: "page",
-			mode: "edit",
-			viewer: "html"			
-		},
-		model: {
-			label: "View Class Frame",
-			features: ["body", "type", "label", "comment"],
-			controls: [],
-			editor: true,
-			facet: "page",
-			mode: "view",
-			viewer: "html"			
-		},
-		expert: {
-			label: "Expert Mode",
-			features: ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"],
-			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"],
-			editor: true,
-			facet: "page",
-			mode: "edit",
-			viewer: "html"						
-		}
-	}
-	return opts;
+	return FrameConfig;
 }
 
 TerminusDocumentViewer.prototype.getOptionsFromPageConfig = function(pageconf){

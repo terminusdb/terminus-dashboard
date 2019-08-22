@@ -5,6 +5,7 @@ function HTMLObjectViewer(renderer){
 	this.renderer = renderer;
 	this.properties = [];
 	this.headerViewer = renderer.getObjectHeaderViewer();
+	//this.featureViewers = {};
 }
 
 /**
@@ -60,6 +61,12 @@ HTMLObjectViewer.prototype.getObjectBodyDOM = function(){
 	}
 	return vholder;
 }
+
+HTMLObjectViewer.prototype.getFeatureDOM = function(feature){
+	if(this.hasFeatureViewer(feature)){
+		return this.featureViewer[feature](this.renderer, this);
+	}
+} 
 
 HTMLObjectViewer.prototype.redraw = function(){
 	FrameHelper.removeChildren(this.renderedDOM);

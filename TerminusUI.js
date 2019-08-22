@@ -7,7 +7,6 @@
  */
 function TerminusUI(opts){
 	this.client = new WOQLClient();
-	this.schema_cache = {};
 	this.controls = [];
 	this.setOptions(opts);
 }

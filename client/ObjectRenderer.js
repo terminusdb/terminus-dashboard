@@ -102,6 +102,19 @@ ObjectRenderer.prototype.subject = function(){
 	return false;
 }
 
+ObjectRenderer.prototype.subjectClass = function(){
+	if(this.objframe) return this.objframe.cls;
+	return false;
+}
+
+ObjectRenderer.prototype.getAvailableViewers = function(){
+	//if(this.mode == "view"){
+	//	return RenderingMap.getAvailableObjectViewers(this);		
+	//}
+	//return RenderingMap.getAvailableObjectEditors(this);				
+	return ["html", "json"];
+}
+
 ObjectRenderer.prototype.depth = function(){
 	if(this.parent) return (this.parent.depth() + 1);
 	return 0;
@@ -449,12 +462,7 @@ ObjectRenderer.prototype.getObjectHeaderViewer = function(){
 }
 
 ObjectRenderer.prototype.getViewerForObject = function(format){
-	if(format){
-		return RenderingMap.getViewerForObject(this, format);
-	}
-	else {
-		return this.viewer; 
-	}
+	return RenderingMap.getViewerForObject(format, this);	
 }
 
 ObjectRenderer.prototype.getFeaturesForFacet = function(facet){
@@ -607,6 +615,19 @@ ObjectRenderer.prototype.redraw = function(){
 	this.render(this.viewer);
 }
 
+ObjectRenderer.prototype.extractLDO = function(extracts){
+	extracts["rdf:type"] = this.objframe.cls;
+	var full = {};
+	full[this.subject()] = extracts;
+	return full;	
+}
+
+ObjectRenderer.prototype.extractJSONLD = function(extracts){
+	extracts["@type"] = this.objframe.cls;
+	if(this.subject() != "_:")	extracts["@id"] = this.subject();
+	return extracts;
+}
+
 ObjectRenderer.prototype.extract = function(){
 	var extracts = {};
 	for(var i in this.properties){
@@ -619,10 +640,8 @@ ObjectRenderer.prototype.extract = function(){
 		return false;
 	}
 	else {
-		extracts["rdf:type"] = this.objframe.cls;
-		var full = {};
-		full[this.subject()] = extracts;
-		return full;	
+		return this.extractJSONLD(extracts);
+		//return this.extractLDO(extracts);
 	}
 }
 

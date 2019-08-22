@@ -13,6 +13,7 @@
 		<script src="query/WOQLQuery.js"></script>
 		<script src="query/WOQLResult.js"></script>
 		<script src="query/WOQLResultsViewer.js"></script>
+		<script src="client/FrameConfig.js"></script>
 		<script src="client/ObjectRenderer.js"></script>
 		<script src="client/PropertyRenderer.js"></script>
 		<script src="client/ValueRenderer.js"></script>
@@ -78,16 +79,6 @@
 				</td>
 			</tr>
 	</table>
-	<!--<div class="sdk-viewer">
-		<table style="width: 100%">
-		<tr><td id='control-panel'></td>
-		<td class='main-page' style="width: 100%;">
-			<div id='user-messages'></div>
-		   	<div id='content-viewer'></div>
-		</td></tr>
-		</table>
-		<div class='sdk-footer'></div>
-	</div> -->
 	<script>
 		var terminator = new TerminusUI(TerminusConfig);
 		var pconfig = {};//server: "http://195.201.12.87:6363/", key: "root"};
@@ -102,16 +93,6 @@
 		cssloader.addEventListener("change", function(){
 			terminator.piman.loadPageCSS(this.value);
 		});
-		/*function toggleHeaders(mode){
-			switch(mode){
-				case 'client':
-					document.getElementById("terminus-explorer").hide();
-				break;
-				case 'explorer':
-				  document.getElementById("terminus-control-panel").hide();
-				break;
-			}// switch (mode)
-		}*/
 	</script>
 </BODY>
 </html>

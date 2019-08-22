@@ -76,7 +76,7 @@ let RenderingMap = {
 	getAvailablePropertyViewers: function(type, renderer) {
 		var viewers = [];
 		var nviewers = []
-		var opts = this.getValidPropertyViewerList(type, frametype);
+		var opts = this.getValidPropertyViewerList(type);
 		for(var i = 0; i<opts.length; i++){
 			if(nviewers.indexOf(opts[i]) == -1) {
 				nviewers.push(opts[i]);
@@ -93,7 +93,7 @@ let RenderingMap = {
 	getAvailablePropertyEditors: function(type, renderer) {
 		var viewers = [];
 		var nviewers = []
-		var opts = this.getValidPropertyEditorList(type, frametype);
+		var opts = this.getValidPropertyEditorList();
 		for(var i = 0; i<opts.length; i++){
 			if(nviewers.indexOf(opts[i]) == -1) {
 				nviewers.push(opts[i]);
@@ -229,22 +229,23 @@ let RenderingMap = {
 }
 
 
+RenderingMap.getViewerForProperty = function(target, renderer){
+	return new HTMLPropertyViewer(renderer);
+}
+
+RenderingMap.getEditorForProperty = function(target, renderer){
+	return new HTMLPropertyViewer(renderer);
+}
+
+
 RenderingMap.getViewerForObject = function(target, renderer){
-	var available_viewers = this.getAvailableObjectViewers(renderer);
-	if(available_viewers.indexOf(target) !== -1){
-		return this.getNewObjectViewer(target, renderer);
+	if(target == "json"){
+		return new JSONObjectViewer(renderer);
 	}
 	return new HTMLObjectViewer(renderer);
 }
 
-RenderingMap.getNewObjectViewer = function(type, renderer){
-	if(type == "json"){
-		var nv = new JSONObjectViewer(renderer);
-	}
-	else var nv = new HTMLObjectViewer(renderer);
-	return nv;
-}
-
+RenderingMap.getEditorForObject = RenderingMap.getViewerForObject;
 
 RenderingMap.getAvailableObjectViewers = function(renderer){
 	var entries = ['html', 'json'];
@@ -295,13 +296,15 @@ RenderingMap.decorateRenderer = function(options, renderer){
 		renderer.features = compiled_options.features;
 	}
 	else {
-		renderer.features = renderer.getDefaultFeatures();
+		renderer.features = renderer.facets[renderer.facet].features;
+		//renderer.features = renderer.getDefaultFeatures(renderer.facet);
 	}
 	if(compiled_options && typeof compiled_options.controls == "object"){
 		renderer.controls = compiled_options.controls;
 	}
 	else {
-		renderer.features = renderer.getDefaultControls();
+		renderer.controls = renderer.facets[renderer.facet].controls;
+		//renderer.controls = renderer.getDefaultControls();
 	}
 	if(compiled_options && typeof compiled_options.viewer != "undefined"){
 		//get available views from rendering map...
@@ -329,10 +332,10 @@ RenderingMap.compileOptions = function(options, renderer){
 	}
 	if(options.rules){
 		for(var i = 0; i<options.rules.length; i++){
-			var match = (!rules[i].pattern || this.patternMatchesRenderer(rules[i].pattern, renderer));
-			if(match && rules[i].output){
-				for(var k in rules[i].output){
-					compiled_options[k] = rules[i].output[k];
+			var match = (!options.rules[i].pattern || this.patternMatchesRenderer(options.rules[i].pattern, renderer));
+			if(match && options.rules[i].output){
+				for(var k in options.rules[i].output){
+					compiled_options[k] = options.rules[i].output[k];
 				}
 			}
 		}
@@ -356,7 +359,7 @@ FramePattern = function(pattern){
 			this.children.push(new FramePattern(pattern.children[i]));
 		}
 	}
-	this.depth = (pattern.depth ? pattern.depth : false);
+	this.depth = (typeof pattern.depth != "undefined" ? pattern.depth : false);
 	this.index = (pattern.index ? pattern.index : false);
 	this.status = (pattern.status ? pattern.status : false);
 }
@@ -371,7 +374,7 @@ FramePattern.prototype.checkRenderer = function(renderer){
 	if(this.subject && !this.checkSubject(rtype, renderer)) return false;
 	if(this.subjectClass && !this.checkSubjectClass(rtype, renderer)) return false;
 	if(this.property && !this.checkProperty(rtype, renderer)) return false;
-	if(this.depth && !this.checkDepth(rtype, renderer)) return false;
+	if(this.depth !== false && !this.checkDepth(rtype, renderer)) return false;
 	if(this.range && !this.checkRange(rtype, renderer)) return false;
 	if(this.value && !this.checkValue(rtype, renderer)) return false;
 	if(this.parent && !this.checkParent(rtype, renderer)) return false;
@@ -512,7 +515,15 @@ FramePattern.prototype.checkSubjectClass = function(rtype, renderer){
 
 FramePattern.prototype.checkFrameType = function (rtype, renderer){
 	if(rtype == "object") return this.frame_type == "object";
-	if(rtype == "value") return this.frame_type == renderer.frame.ftype();
+	if(rtype == "value") {
+		if(renderer.frame){
+			return this.frame_type == renderer.frame.ftype();
+		}
+		else {
+			alert(JSON.stringify(renderer));
+			alert("No frame");
+		}
+	}
 	if(rtype == "property") return false;
 }
 
@@ -541,7 +552,15 @@ FramePattern.prototype.valuesMatch = function(vala, valb){
 	return vala == valb;
 }
 FramePattern.prototype.numberMatch = function(vala, valb){
-	return vala >= valb;
+	if(typeof vala == "string"){
+		try {
+			return eval(valb + vala);
+		}
+		catch(e){
+			return false;
+		}
+	}
+	return vala === valb;
 }
 
 FramePattern.prototype.stringMatch = function(vala, valb){
@@ -550,9 +569,9 @@ FramePattern.prototype.stringMatch = function(vala, valb){
 }
 
 FramePattern.prototype.getRendererType = function(renderer){
-	if(renderer.constructor.name != "ValueRenderer") return "value";
-	if(renderer.constructor.name != "PropertyRenderer") return "property";
-	if(renderer.constructor.name != "ObjectRenderer") return "object";
+	if(renderer.constructor.name == "ValueRenderer") return "value";
+	if(renderer.constructor.name == "PropertyRenderer") return "property";
+	if(renderer.constructor.name == "ObjectRenderer") return "object";
 	console.log(new Error("frame configuration passed non-renderer type: " + renderer.constructor.name));
 	return false;
 }

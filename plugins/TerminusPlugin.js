@@ -170,7 +170,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 				return true;
 			}
 			case "font-awesome": {
-				return false;
+				return this.fontAwesomeCheck();
 			}
 			case "datatables": {
 				 if(typeof jQuery != "undefined" && jQuery.isFunction( jQuery.fn.dataTable)) return true;
@@ -200,6 +200,22 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 	return false;
 };
 
+TerminusPluginManager.prototype.fontAwesomeCheck = function(){
+	var span = document.createElement('span');
+	span.className = 'fa';
+	span.style.display = 'none';
+	document.body.insertBefore(span, document.body.firstChild);
+	function css(element, property) {
+	  return window.getComputedStyle(element, null).getPropertyValue(property);
+	}
+	var loaded = false; 
+	if (css(span, 'font-family') == 'FontAwesome') {
+		loaded = true;
+	}
+	document.body.removeChild(span);
+	return loaded
+}
+
 TerminusPluginManager.prototype.getDefaultPlugins = function(){
 	var defplugs = ["font-awesome"];
 	return defplugs;
@@ -224,11 +240,31 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 			FrameHelper.loadDynamicCSS(cssid, pug.css[i]);
 		}
 	}
-	var scripts = (pug.js ? pug.js : []);;
+	var scripts = (pug.js ? pug.js : []);
+	if(plugin == "gmaps" && pug.key){
+		scripts[0] += "?key=" + pug.key;
+	}
 	if(pug.plugin){
 		scripts.push("plugins/" + pug.plugin);
 	}
+	if(plugin == "codemirror"){
+		var cm = scripts[0];
+		var sid = plugin + "_js_" + (scripts.length -1);
+		scripts.splice(0, 1);
+		var self = this;
+		var cback = function(){
+			self.loadPluginScripts(plugin, scripts);
+		}
+		FrameHelper.loadDynamicScript(sid, cm, cback);		
+	}
+	else {
+		this.loadPluginScripts(plugin, scripts);
+	}
+}
+
+TerminusPluginManager.prototype.loadPluginScripts = function(plugin, scripts){
 	var ticker = scripts.length;
+	var self = this;
 	var cback = function(){
 		if(ticker == 0) {
 			if(self.loaded.indexOf(plugin) == -1){
@@ -280,7 +316,7 @@ TerminusPluginManager.prototype.disabled = function(pid, obj){
 	if(this.precluded.indexOf(pid) != -1) return true;
 	if(obj.requires){
 		for(var i = 0; i<obj.requires.length; i++){
-			if(!this.pluginLoadedOrLoading(pid)) return true;
+			if(!this.pluginLoadedOrLoading(obj.requires[i])) return true;
 		}
 	}
 	return false;

@@ -174,9 +174,6 @@ PropertyRenderer.prototype.extract = function(){
  				extr[subjid] = extracts[i][subjid];
  			}
  		}
- 		if(this.cframe.isClassChoice()){
- 			alert("class frame anomaly " + JSON.stringify(extr));
- 		}
  		return extr;
  	}
 }
@@ -550,12 +547,9 @@ PropertyRenderer.prototype.containsPage = function(){
 
 PropertyRenderer.prototype.getViewerForProperty = function(ptype){
 	if(this.mode == "edit"){
-		return RenderingMap.getEditorForProperty(dt, ft);				
+		return RenderingMap.getEditorForProperty(ptype, this);				
 	}
-	return RenderingMap.getViewerForProperty(dt, ft);	
-	//
-	//return new HTMLPropertyViewer(this);
-	//getValidPropertyViewerList
+	return RenderingMap.getViewerForProperty(ptype, this);	
 }
 
 PropertyRenderer.prototype.getPropertyHeaderViewer = function(){

@@ -139,7 +139,7 @@ WOQLClient.prototype.createDocument = function(docurl, doc, opts){
 	else if(doc && doc["@id"] && !this.setDocument(doc["@id"], doc["@context"])){
         return Promise.reject(new URIError(this.getInvalidURIMessage(doc["@id"], "Create Document")));
 	}
-	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(docurl, doc), opts);
+	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(doc, docurl), opts);
 	return this.dispatch(this.docURL(), "create_document", doc);
 }
 
@@ -177,7 +177,7 @@ WOQLClient.prototype.updateDocument = function(docurl, doc, opts){
 	else if(doc && doc["@id"] && !this.setDocument(details["@id"], details["@context"])){
         return Promise.reject(new URIError(this.getInvalidURIMessage(doc["@id"], "Update Document")));
 	}
-	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(docurl, doc), opts);
+	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(doc, docurl), opts);
 	return this.dispatch(this.docURL(), "update_document", doc);
 }
 

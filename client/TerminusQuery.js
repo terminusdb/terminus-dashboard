@@ -1,11 +1,15 @@
-function TerminusQueryViewer(ui, query, options){
+function TerminusQueryViewer(ui, options){
 	this.ui = ui;
-	this.options;
-	this.wquery = new WOQLQuery(this.ui.client, this.options);
-	this.init(query);
+	this.options = options;
+	this.meta = {};
+	this.init();
+	this.generator = false;
+	this.result = false;
+	this.wquery = new WOQLQuery(ui.client, this.options);
+	this.results_first = true;
 }
 
-TerminusQueryViewer.prototype.init = function(q){
+TerminusQueryViewer.prototype.init = function(){
 	var wq = new WOQLQuery(this.ui.client, this.options);
 	var woql = wq.getElementMetaDataQuery();
 	var self = this;
@@ -30,11 +34,16 @@ TerminusQueryViewer.prototype.query = function(val, qresults){
 	FrameHelper.removeChildren(qresults);
 	this.wquery.execute(val)
 	.then(function(result){
-		qresults.appendChild(document.createTextNode("Results: "));
-		var rv = new WOQLResultsViewer(result, this.options);
-		var nd = rv.getDOM();
+		//qresults.appendChild(document.createTextNode("Results: "));
+		if(!self.result){
+			self.result = new WOQLResultsViewer(result, self.options);			
+		}
+		else {
+			self.result.newResult(result);
+		}
+		var nd = self.result.getAsDOM();
 		if(nd){
-			qresults.appendChild(nd);
+			self.resultDOM.appendChild(nd);
 		}
 	})
 	.catch(function(err){
@@ -46,27 +55,47 @@ TerminusQueryViewer.prototype.query = function(val, qresults){
 TerminusQueryViewer.prototype.getAsDOM = function(q){
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-page");
-	var qres = document.createElement("div");
-	qres.setAttribute("class", "terminus-query-results");
-	var qquery = document.createElement("div");
+	this.resultDOM = document.createElement("div");
+	this.resultDOM.setAttribute("class", "terminus-query-results");
+	this.inputDOM = document.createElement("div");
+	this.inputDOM.setAttribute("class", "terminus-query-input");
+	this.inputDOM.appendChild(this.getQueryInputDOM(q));
+	if(this.results_first){
+		qbox.appendChild(this.resultDOM);
+		qbox.appendChild(this.inputDOM);	
+	}
+	else {
+		qbox.appendChild(this.inputDOM);
+		qbox.appendChild(this.resultDOM);
+	}
+	return qbox;
+}
+
+TerminusQueryViewer.prototype.getQueryCreatorChoiceDOM = function(){
+	
+}
+
+TerminusQueryViewer.prototype.getQueryInputDOM = function(q){
+	//input options ...
+	//this.inputDOM.appendChild(this.getQueryCreatorChoiceDOM());
+	var qbox = document.createElement("div");
+	qbox.setAttribute("class", "terminus-query-textbox-input");
 	var qip = document.createElement("textarea");
 	qip.setAttribute("class", "terminus-query-box");
 	qip.setAttribute("placeholder", "enter your query");
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
 	if(q) qip.value = q;
-	qquery.appendChild(qip);
+	qbox.appendChild(qip);
 	var self = this;
 	var qbut = document.createElement("button");
 	qbut.setAttribute("class", "terminus-control-button")
 	qbut.appendChild(document.createTextNode("Send Query"));
 	qbut.addEventListener("click", function(){
-		self.query(qip.value, qres);
+		self.query(qip.value);
 	})
 	var qbuts = document.createElement("div");
 	qbuts.setAttribute("class", "terminus-control-buttons");
 	qbuts.appendChild(qbut);
-	qbox.appendChild(qres);
-	qbox.appendChild(qquery);
 	qbox.appendChild(qbuts);
 	var qexs = document.createElement("div");
 	qexs.setAttribute("class", "terminus-query-examples");
@@ -78,7 +107,7 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	nqbut.setAttribute("class", "terminus-control-button");
 	nqbut.addEventListener("click", function(){
 		qip.value = self.wquery.getClassMetaDataQuery(); 
-		self.query(qip.value, qres);
+		self.query(qip.value);
 	})
 
 	var aqbut = document.createElement("button");
@@ -86,7 +115,7 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	aqbut.setAttribute("class", "terminus-control-button");
 	aqbut.addEventListener("click", function(){
 		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")");
-		self.query(qip.value, qres);
+		self.query(qip.value);
 	})
 
 	var ebut = document.createElement("button");
@@ -94,21 +123,21 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	ebut.setAttribute("class", "terminus-control-button");
 	ebut.addEventListener("click", function(){
 		qip.value = self.wquery.getElementMetaDataQuery(); 
-		self.query(qip.value, qres);
+		self.query(qip.value);
 	})
 	var dbut = document.createElement("button");
 	dbut.appendChild(document.createTextNode("Show All Documents"));
 	dbut.setAttribute("class", "terminus-control-button");
 	dbut.addEventListener("click", function(){
 		qip.value = self.wquery.getDocumentQuery(); 
-		self.query(qip.value, qres);
+		self.query(qip.value);
 	})
 	var pbut = document.createElement("button");
 	pbut.appendChild(document.createTextNode("Show All Data"));
 	pbut.setAttribute("class", "terminus-control-button");
 	pbut.addEventListener("click", function(){
 		qip.value = self.wquery.getEverythingQuery(); 
-		self.query(qip.value, qres);
+		self.query(qip.value);
 	})
 		
 	qexs.appendChild(nqbut);
