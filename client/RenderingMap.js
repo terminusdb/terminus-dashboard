@@ -306,10 +306,10 @@ RenderingMap.decorateRenderer = function(options, renderer){
 		renderer.controls = renderer.facets[renderer.facet].controls;
 		//renderer.controls = renderer.getDefaultControls();
 	}
-	if(compiled_options && typeof compiled_options.viewer != "undefined"){
-		//get available views from rendering map...
-		//
-		//renderer.controls = compiled_options.controls;
+	if(compiled_options && typeof compiled_options.viewerType != "undefined"){
+		renderer.viewerType = compiled_options.viewerType;
+		if(compiled_options.viewerOptions)
+			renderer.viewerOptions = compiled_options.viewerOptions;
 	}
 	if(compiled_options && typeof compiled_options.header != "undefined"){}
 	else {
@@ -543,7 +543,8 @@ FramePattern.prototype.classIDsMatch = function(ida, idb){
 	return this.IDsMatch(ida, idb);
 }
 FramePattern.prototype.propertyIDsMatch = function(ida, idb){
-	return this.IDsMatch(ida, idb);
+	var match = this.IDsMatch(ida, idb);
+	return match;
 }
 FramePattern.prototype.rangeIDsMatch = function(ida, idb){
 	return this.IDsMatch(ida, idb);

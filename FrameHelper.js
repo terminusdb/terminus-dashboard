@@ -66,7 +66,7 @@ FrameHelper.compareIDs = function(ida, idb){
 	if(this.unshorten(ida) == this.unshorten(idb)) return true;
 	var sha = this.getShorthand(ida);
 	var shb = this.getShorthand(idb);
-	if(sha && (sha == idb) || (sha == shb)) return true;
+	if(sha && ((sha == idb) || (sha == shb))) return true;
 	if(shb && shb == ida) return true;
 	return false;
 }

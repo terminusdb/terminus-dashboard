@@ -293,7 +293,7 @@ ValueRenderer.prototype.getDataValueViewer = function(){
 	if(!this.viewerType) {
 		this.viewerType = this.getViewerForDataValue();
 	}
-	return RenderingMap.getViewer(this.viewerType);		
+	return RenderingMap.getViewer(this.viewerType, this.viewerOptions);		
 }
 
 ValueRenderer.prototype.getAvailableViewers = function(){

@@ -34,7 +34,6 @@ TerminusQueryViewer.prototype.query = function(val, qresults){
 	FrameHelper.removeChildren(qresults);
 	this.wquery.execute(val)
 	.then(function(result){
-		//qresults.appendChild(document.createTextNode("Results: "));
 		if(!self.result){
 			self.result = new WOQLResultsViewer(result, self.options);			
 		}

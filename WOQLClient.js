@@ -97,7 +97,7 @@ WOQLClient.prototype.deleteDatabase = function(dburl, opts){
  * 		opts.key is an optional API key
  */
 WOQLClient.prototype.getSchema = function(schurl, opts){
-	if(schurl && this.setSchemaURL(schurl)){
+	if(schurl && !this.setSchemaURL(schurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(schurl, "Get Schema")));
 	}
 	return this.dispatch(this.schemaURL(), "get_schema", opts);

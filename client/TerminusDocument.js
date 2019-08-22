@@ -25,6 +25,7 @@ TerminusDocumentViewer.prototype.init = function(){
 					self.classmeta[cls] = wresult.bindings[i];
 				}
 			}
+			self.refreshPage();
 		}
 	})
 	.catch(function(e){
