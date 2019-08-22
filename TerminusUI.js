@@ -105,7 +105,7 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 		.then(function(response){
 			if(crec = self.client.getDBRecord(dbid)){
 				self.client.dbid = dbid;
-				self.viewer.showDBMainPage();
+				self.showDBMainPage();
 				self.showMessage("Successfully Created Database " + dbid);
 			}
 			else {
