@@ -2,12 +2,23 @@ var FrameConfig = {
 	view: {
 		label: "View Document",
 		load_schema: false, //should we load the document schema or just use the document frame
-		editor: true,
+		editor: false,
 		mode: "view",
 		viewer: "html",
 		hide_disabled_buttons: true,
-		features: ["body", "label"],
-		controls: [],
+		rules: [{
+				pattern: { renderer: "object"},
+				output: {facet: "page", features: ["body", "type"]}
+			},
+			{
+				pattern: { renderer: "property"},
+				output: {facet: "multiline", features: ["body", "label"]}
+			},
+			{
+				pattern: { renderer: "value"},
+				output: {facet: "line", features: ["body"]}
+			}
+		]
 	},
 	edit: {
 		label: "Edit Document",

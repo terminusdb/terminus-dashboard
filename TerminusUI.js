@@ -497,6 +497,10 @@ TerminusUI.prototype.setOptions = function(opts){
 	this.loadControls();
 }
 
+TerminusUI.prototype.pluginAvailable = function(p){
+	return this.piman.pluginAvailable(p);
+}
+
 TerminusUI.prototype.drawPlugins = function(){
 	if(!this.piman) {
 		console.log(new Error("No plugin manager initialised in UI object"));

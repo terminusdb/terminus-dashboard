@@ -246,10 +246,9 @@ WOQLTimePicker.prototype.showCurrentPick = function(){
 		if(ty != fy){
 			this.curedate.innerHTML = ty;
 			this.adjustOffset(this.curedate, this.timeslice.to, true);
-			jQuery(this.curedate).show();
+			//jQuery(this.curedate).show();
 		}
 		else {
-			jQuery(this.curedate).hide();
 			this.curedate.innerHTML = "";
 		}
 	}

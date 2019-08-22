@@ -32,9 +32,16 @@ function TerminusPluginManager(){
 		label: "jQuery",
 		js: ["https://code.jquery.com/jquery-2.2.4.min.js"]
 	};
+	this.plugins["jqueryui"] = {
+		label: "jQuery UI",
+		css: ["https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css"],
+		js: ["https://code.jquery.com/ui/1.12.0/jquery-ui.js"],
+		requires: ['jquery']
+	};
 	this.plugins["datatables"] = {
 		label: "Data Tables",
-		js: ["https://code.jquery.com/jquery-2.2.4.min.js"],
+		js: ["https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"],
+		css: ["https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"],
 		requires: ['jquery']
 	};
 	this.plugins["prettify"] = {
@@ -153,6 +160,11 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 				if(typeof jQuery == "undefined") return false;
 				if(version_check && required_version){}
 				return true;
+				break;
+			}
+			case "jqueryui": {
+				if(typeof jQuery != "undefined" && jQuery.isFunction( jQuery.fn.slider )) return true;
+				return false;
 				break;
 			}
 			case "quill": {
