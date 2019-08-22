@@ -36,10 +36,10 @@ TerminusQueryViewer.prototype.loadGenerator = function(){
 		self.query(q)
 	}
 	if(this.gentype == "textbox"){
-		this.generator = new WOQLTextboxGenerator(nquery, this, this.ui);
+	//	this.generator = new WOQLTextboxGenerator(nquery, this, this.ui);
 	}
 	else if(this.gentype == "gbrowse"){
-		this.generator = new WOQLGraphBrowserGenerator(nquery, this, this.ui);
+		//this.generator = new WOQLGraphBrowserGenerator(nquery, this, this.ui);
 	}
 }
 
@@ -60,7 +60,7 @@ TerminusQueryViewer.prototype.init = function(){
 	})
 	.catch(function(e){
 		console.error(e);
-	});	
+	});
 }
 
 TerminusQueryViewer.prototype.query = function(val){
@@ -69,7 +69,7 @@ TerminusQueryViewer.prototype.query = function(val){
 	this.wquery.execute(val)
 	.then(function(result){
 		if(true || !self.result){
-			self.result = new WOQLResultsViewer(result, self.options);			
+			self.result = new WOQLResultsViewer(result, self.options);
 		}
 		else {
 			//self.result.newResult(result);
@@ -96,7 +96,7 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	this.inputDOM.appendChild(this.getQueryInputDOM(q));
 	if(this.results_first){
 		qbox.appendChild(this.resultDOM);
-		qbox.appendChild(this.inputDOM);	
+		qbox.appendChild(this.inputDOM);
 	}
 	else {
 		qbox.appendChild(this.inputDOM);
@@ -128,4 +128,3 @@ TerminusQueryViewer.prototype.getQueryInputDOM = function(q){
 	//this.inputDOM.appendChild(this.getQueryCreatorChoiceDOM());
 	return this.generator.getAsDOM(q);
 }
-

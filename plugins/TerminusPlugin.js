@@ -157,7 +157,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 		var required_version = (pluginmeta.version ? pluginmeta.version : false);
 		switch(plugin){
 			case "jquery": {
-				if(typeof jQuery == "undefined") return false;
+				if(typeof(jQuery) == "undefined") return false;
 				if(version_check && required_version){}
 				return true;
 				break;
@@ -220,7 +220,7 @@ TerminusPluginManager.prototype.fontAwesomeCheck = function(){
 	function css(element, property) {
 	  return window.getComputedStyle(element, null).getPropertyValue(property);
 	}
-	var loaded = false; 
+	var loaded = false;
 	if (css(span, 'font-family') == 'FontAwesome') {
 		loaded = true;
 	}
@@ -265,17 +265,17 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 		scripts.splice(0, 1);
 		var self = this;
 		var cback = function(){
-			self.loadPluginScripts(plugin, scripts);
+			self.loadPluginScripts(plugin, scripts, then);
 		}
-		FrameHelper.loadDynamicScript(sid, cm, cback);		
+		FrameHelper.loadDynamicScript(sid, cm, cback);
 	}
 	else {
-		this.loadPluginScripts(plugin, scripts);
+		this.loadPluginScripts(plugin, scripts, then);
 	}
 }
 
-TerminusPluginManager.prototype.loadPluginScripts = function(plugin, scripts){
-	var ticker = scripts.length;
+TerminusPluginManager.prototype.loadPluginScripts = function(plugin, scripts, then){
+	var ticker = scripts.length - 1;
 	var self = this;
 	var cback = function(){
 		if(ticker == 0) {
@@ -369,6 +369,7 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 TerminusPluginManager.prototype.togglePlugin = function(plugid, ui){
 	if(this.loaded.indexOf(plugid) == -1){
 		var then = function(){
+			alert("about to redraw()");
 			ui.redraw();
 		}
 		this.loadPlugin(plugid, then);
