@@ -22,7 +22,9 @@ function TerminusPluginManager(){
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/turtle/turtle.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/javascript/javascript.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/anyword-hint.js",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js"],
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/runmode/runmode.js",
+		  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/http/http.js"],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css"
@@ -157,7 +159,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 		var required_version = (pluginmeta.version ? pluginmeta.version : false);
 		switch(plugin){
 			case "jquery": {
-				if(typeof(jQuery) == "undefined") return false;
+				if(typeof jQuery == "undefined") return false;
 				if(version_check && required_version){}
 				return true;
 				break;
@@ -369,7 +371,6 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 TerminusPluginManager.prototype.togglePlugin = function(plugid, ui){
 	if(this.loaded.indexOf(plugid) == -1){
 		var then = function(){
-			alert("about to redraw()");
 			ui.redraw();
 		}
 		this.loadPlugin(plugid, then);

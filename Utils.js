@@ -241,17 +241,11 @@ function getInfoAlertDom(type, label, msg){
   ald.appendChild(str);
   var txt = document.createTextNode(msg);
   ald.appendChild(txt);
-  /*var button = document.createElement('button');
-  button.setAttribute('class','close');
-  button.setAttribute('data-dismiss','alert');
-  button.setAttribute('type', 'button');
-  button.innerHTML = 'x';
-  ald.appendChild(button);*/
   return ald;
 } // getInfoAlertDom()
 
 // formats response results from platform
-function prettifyResponse(currForm, action, data){
+function prettifyResponse(currForm, action, data, plugin){
 
   var rd = document.createElement('div');
   // get header result
@@ -265,7 +259,7 @@ function prettifyResponse(currForm, action, data){
   switch(action){
     case 'connect':
       txt = document.createTextNode(data);
-      mode = 'javascript';
+      mode = 'jsonld';
       editable = 'noncursor'; // non editable
     break;
     case 'createDatabase':
@@ -316,12 +310,18 @@ function prettifyResponse(currForm, action, data){
     break;
   }
 
-  var textarea = document.createElement('textarea');
-  textarea.setAttribute('class', 'terminus-api-result-textarea');
-  //var decodedTxt = jQuery(textarea).html(data).text();
-  textarea.value = data;
-  rd.appendChild(textarea);
-  if(typeof(CodeMirror) != 'undefined'){
+  var pre = document.createElement('pre');
+  pre.setAttribute('class', 'terminus-api-view terminus-scheme-pre');
+  pre.innerHTML = data;
+  if(plugin.pluginAvailable("codemirror")){
+    var cm = new Codemirror(pre, mode);
+    var pr = cm.colorizePre();
+    rd.appendChild(pr);
+  }
+  else rd.appendChild(pre);
+
+
+  /*if(typeof(CodeMirror) != 'undefined'){
     var editor = codeMirrorFormat(textarea, mode, editable);
     // refresh load
     setTimeout(function() {
@@ -333,6 +333,7 @@ function prettifyResponse(currForm, action, data){
     }
     editor.on('change', updateTextArea);
   }
+  */
   var br = document.createElement('BR');
   rd.appendChild(br);
 
@@ -342,7 +343,7 @@ function prettifyResponse(currForm, action, data){
 } // processResponseThen
 
 // formats the response from fetch call and spits out Http header and result
-function showHttpResult(response, action, currForm){
+function showHttpResult(response, action, currForm, plugin){
     //var currForm = document.createElement('div');
 
     var br = document.createElement('BR');
@@ -366,38 +367,19 @@ function showHttpResult(response, action, currForm){
 
     // http header result
     var hdres = document.createElement('pre');
-    hdres.setAttribute('class', 'prettyprint terminus-api-signature-pre');
+    hdres.setAttribute('class', 'terminus-api-signature-pre');
     var txt = document.createTextNode(retHttpHeaders);
     hdres.appendChild(txt);
-    currForm.appendChild(hdres);
 
-    /*$.getScript("assets/js/prettify.js", function(){
-      prettyPrint() ;
-    });*/
+    if(plugin.pluginAvailable("codemirror")){
+      var cm = new Codemirror(hdres, 'message/http');
+      var pr = cm.colorizePre();
+    }
+    currForm.appendChild(hdres);
 
     return response.text()
     .then(function(response){
-      prettifyResponse(currForm, action, response); // get return response
+      prettifyResponse(currForm, action, response, plugin); // get return response
     })
 
 } // showHttpResult()
-
-// toggle between client and api explorer
-function toggleHeaders(mode, body){
-  switch(mode){
-    case 'client':
-      var cp = document.getElementById("terminus-control-panel");
-      cp.style.display = 'block';
-      var te = document.getElementById("terminus-explorer");
-      te.style.display = 'none';
-    break;
-    case 'explorer':
-      var cp = document.getElementById("terminus-control-panel");
-      cp.style.display = 'none';
-      var te = document.getElementById("terminus-explorer");
-      te.style.display = 'block';
-      var explorer = new ApiExplorer();
-      explorer.prettifyApiExplorer('connect', body);
-    break;
-  }// switch (mode)
-} // toggleHeaders()

@@ -10,6 +10,7 @@
    this.ui = ui;
    this.viewer = ui.main;
    this.client = new WOQLClient();
+   this.pman = new TerminusPluginManager();
  }
 
 
@@ -534,7 +535,7 @@ ApiExplorer.prototype.prettifyServerForm = function(){
     .then(function(response){
       FrameHelper.removeChildren(resd);
       //var currForm = buttonSelf.parentNode;
-      var resultDom = showHttpResult(response, 'connect', resd);
+      var resultDom = showHttpResult(response, 'connect', resd, self.pman);
     });
   }) // button click
   return form;
@@ -719,7 +720,7 @@ ApiExplorer.prototype.prettifyDBForm = function(mode){
       self.client.createDatabase(input.id, opts, '')
       .then(function(response){
         var currForm = buttonSelf.parentNode;
-        var resultDom = showHttpResult(response, 'create', currForm);
+        var resultDom = showHttpResult(response, 'create', currForm, self.pman);
       });
     }) // button click
   } // if(mode == 'create')
@@ -731,7 +732,7 @@ ApiExplorer.prototype.prettifyDBForm = function(mode){
       self.client.deleteDatabase(inpId.value, opts)
       .then(function(response){
         var currForm = buttonSelf.parentNode;
-        var resultDom = showHttpResult(response, 'delete', currForm);
+        var resultDom = showHttpResult(response, 'delete', currForm, self.pman);
       });
     }) // button click
   } // if(mode == 'delete')
@@ -802,19 +803,11 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
   txtar.setAttribute('class', 'terminus-api-explorer-text-area');
   cd.appendChild(txtar);
   fd.appendChild(cd);
-
-  var editor = codeMirrorFormat(txtar, 'turtle', true) ;
-  editor.save();
-  setTimeout(function() {
-      editor.refresh();
-  },1);
-  // save changes of code mirror editor
-  function updateTextArea() {
-    editor.save();
-    var currQuery = editor.getValue();
+	if(this.ui.pluginAvailable("codemirror")){
+    var cm = new Codemirror(txtar, 'turtle');
+		var ar = cm.colorizeTextArea();
+		cm.updateTextArea(ar);
   }
-  editor.on('change', updateTextArea);
-
   var br = document.createElement('BR');
   fd.appendChild(br);
 
@@ -830,7 +823,7 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
     self.client.select(inpId.value, txtar.value, opts)
     .then(function(response){
       var currForm = buttonSelf.parentNode;
-      var resultDom = showHttpResult(response, 'select', currForm);
+      var resultDom = showHttpResult(response, 'select', currForm, self.pman);
     });
   }) // button click
   fd.appendChild(button);
@@ -925,10 +918,6 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
        var br = document.createElement('BR');
        body.appendChild(br);
 
-       // text area
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
@@ -943,30 +932,24 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
        var txtar = document.createElement('textarea');
        cd.appendChild(txtar);
        txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-       var editor = codeMirrorFormat(txtar, 'turtle', true);
-       // refresh load
-       setTimeout(function() {
-           editor.refresh();
-       },1);
-       // save changes of code mirror editor
-       function updateTextArea() {
-         editor.save();
+
+       if(this.ui.pluginAvailable("codemirror")){
+         var cm = new Codemirror(txtar, 'turtle');
+     		var ar = cm.colorizeTextArea();
+     		cm.updateTextArea(ar);
        }
-       editor.on('change', updateTextArea);
-        body.appendChild(formDoc);
+       var br = document.createElement('BR');
+       body.appendChild(br);
 
-        var br = document.createElement('BR');
-        body.appendChild(br);
+       // gather the dom objects
+       var gatherips = {};
+       gatherips.schemaUrlDom = inpId;
+       gatherips.schemaTextDom = txtar;
+       gatherips.htmlEditor   = txtar;
 
-        // gather the dom objects
-        var gatherips = {};
-        gatherips.schemaUrlDom =  inpId;
-        gatherips.schemaTextDom =  txtar;
-        gatherips.htmlEditor =  editor;
-
-        //form to update schema
-        var form = this.prettifyApiForm(action, gatherips);
-        body.appendChild(form);
+       //form to update schema
+       var form = this.prettifyApiForm(action, gatherips);
+       body.appendChild(form);
      break;
      case 'viewDocument':
        // form
@@ -1160,31 +1143,26 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
        cd.appendChild(txtar);
        txtar.setAttribute('class', 'terminus-api-explorer-text-area');
 
-       var editor = codeMirrorFormat(txtar, 'javascript', true);
-       // refresh load
-       setTimeout(function() {
-           editor.refresh();
-       },1);
-       // save changes of code mirror editor
-       function updateTextArea() {
-         editor.save();
+       if(this.ui.pluginAvailable("codemirror")){
+         var cm = new Codemirror(txtar, 'turtle');
+     		var ar = cm.colorizeTextArea();
+     		cm.updateTextArea(ar);
        }
-       editor.on('change', updateTextArea);
 
-        body.appendChild(formDoc);
+       body.appendChild(formDoc);
 
-        var br = document.createElement('BR');
-        body.appendChild(br);
+       var br = document.createElement('BR');
+       body.appendChild(br);
 
-        // gather the dom objects
-        var gatherips = {};
-        gatherips.schemaUrlDom =  inpId;
-        gatherips.schemaTextDom =  txtar;
-        gatherips.htmlEditor =  editor;
+       // gather the dom objects
+       var gatherips = {};
+       gatherips.schemaUrlDom =  inpId;
+       gatherips.schemaTextDom =  txtar;
+       gatherips.htmlEditor =  editor;
 
-        //form to update schema
-        var form = this.prettifyApiForm(action, gatherips);
-        body.appendChild(form);
+       //form to update schema
+       var form = this.prettifyApiForm(action, gatherips);
+       body.appendChild(form);
 
      break;
    }// switch(action)
@@ -1218,14 +1196,14 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
         self.client.getSchema(schurl, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, 'getSchema', resd);
+          var resultDom = showHttpResult(response, 'getSchema', resd, self.pman);
         });
       }) // button click
     break;
     case 'updateSchema':
       button.addEventListener("click", function(){
         var schurl = input.schemaUrlDom.value;
-        var payload = input.htmlEditor.getValue();
+        var payload = input.htmlEditor.value;
         var buttonSelf = this;
         opts = {};
         opts.explorer = true;
@@ -1238,16 +1216,12 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
           var currForm = buttonSelf.parentNode;
           currForm.appendChild(gtxtar);
 
-          var editor = codeMirrorFormat(gtxtar, 'turtle', true) ;
-          editor.save();
-          setTimeout(function() {
-              editor.refresh();
-          },1);
-          // save changes of code mirror editor
-          function updateTextArea() {
-            editor.save();
+          if(this.ui.pluginAvailable("codemirror")){
+            var cm = new Codemirror(gtxtar, 'turtle');
+        		var ar = cm.colorizeTextArea();
+        		cm.updateTextArea(ar);
           }
-          editor.on('change', updateTextArea);
+
         });
       }) // button click
     break;
@@ -1261,7 +1235,7 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
       self.client.getDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
-        var resultDom = showHttpResult(response, action, resd);
+        var resultDom = showHttpResult(response, action, resd, self.pman);
       });
     }) // button click
     break;
@@ -1274,7 +1248,7 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
       self.client.deleteDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
-        var resultDom = showHttpResult(response, action, resd);
+        var resultDom = showHttpResult(response, action, resd, self.pman);
       });
     }) // button click
     break;
@@ -1288,7 +1262,7 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
         self.client.createDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, action, resd);
+          var resultDom = showHttpResult(response, action, resd, self.pman);
         });
       }) // button click
     break;
@@ -1304,7 +1278,7 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
         self.client.updateDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, action, resd);
+          var resultDom = showHttpResult(response, action, resd, self.pman);
         });
       }) // button click
     break;
@@ -1334,9 +1308,11 @@ ApiExplorer.prototype.prettifySignature = function(action){
   pre.appendChild(br);
   var txt = document.createTextNode(sig.result);
   pre.appendChild(txt);
-  d.appendChild(pre);
-  /*$.getScript("assets/js/prettify.js", function(){
-    prettyPrint() ;
-  });*/
+  if(this.ui.pluginAvailable("codemirror")){
+    var cm = new Codemirror(pre, 'javascript');
+		var pr = cm.colorizePre();
+		d.appendChild(pr);
+  }
+  else d.appendChild(pre);
   return d;
 } // prettifySignature()
