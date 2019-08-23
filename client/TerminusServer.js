@@ -262,7 +262,11 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		tbody.appendChild(tr);
 	}
 	scd.appendChild(tbody);
-	sec.appendChild(scd);
+  sec.appendChild(scd);
+  if(this.ui.pluginAvailable("datatables")){
+    var dt = new Datatables(scd);
+		var tab = dt.draw();
+  }
 	return sec;
 }
 

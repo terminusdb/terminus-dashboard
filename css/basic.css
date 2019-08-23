@@ -46,6 +46,11 @@ pre.terminus-schema-view {
 	padding: 3px;
 }
 
+pre.terminus-api-view {
+	background-color: #eaf5ff;
+	padding: 3px;
+}
+
 div.terminus-url-loader {
 	max-width: 500px;
 }

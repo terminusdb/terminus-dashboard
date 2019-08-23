@@ -22,7 +22,9 @@ function TerminusPluginManager(){
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/turtle/turtle.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/javascript/javascript.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/anyword-hint.js",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js"],
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/runmode/runmode.js",
+		  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/http/http.js"],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css"
@@ -219,7 +221,7 @@ TerminusPluginManager.prototype.fontAwesomeCheck = function(){
 	function css(element, property) {
 	  return window.getComputedStyle(element, null).getPropertyValue(property);
 	}
-	var loaded = false; 
+	var loaded = false;
 	if (css(span, 'font-family') == 'FontAwesome') {
 		loaded = true;
 	}
@@ -264,17 +266,17 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 		scripts.splice(0, 1);
 		var self = this;
 		var cback = function(){
-			self.loadPluginScripts(plugin, scripts);
+			self.loadPluginScripts(plugin, scripts, then);
 		}
-		FrameHelper.loadDynamicScript(sid, cm, cback);		
+		FrameHelper.loadDynamicScript(sid, cm, cback);
 	}
 	else {
-		this.loadPluginScripts(plugin, scripts);
+		this.loadPluginScripts(plugin, scripts, then);
 	}
 }
 
-TerminusPluginManager.prototype.loadPluginScripts = function(plugin, scripts){
-	var ticker = scripts.length;
+TerminusPluginManager.prototype.loadPluginScripts = function(plugin, scripts, then){
+	var ticker = scripts.length - 1;
 	var self = this;
 	var cback = function(){
 		if(ticker == 0) {

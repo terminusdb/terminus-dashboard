@@ -328,6 +328,11 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	}
 	this.schema_edit_dom = ipval;
 	np.appendChild(ipval);
+	if(this.ui.pluginAvailable("codemirror")){
+    var cm = new Codemirror(ipval, this.format);
+		var ar = cm.colorizeTextArea();
+		cm.updateTextArea(ar);
+  }
 	return np;
 }
 
@@ -348,7 +353,12 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 	else if(typeof (this.schema) == "object") {
 		ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
 	}
-	np.appendChild(ipval);
+	if(this.ui.pluginAvailable("codemirror")){
+    var cm = new Codemirror(ipval, this.format);
+		var pr = cm.colorizePre();
+		np.appendChild(pr);
+  }
+	else np.appendChild(ipval);
 	return np;
 }
 

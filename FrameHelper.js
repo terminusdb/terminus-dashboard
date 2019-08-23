@@ -1,5 +1,5 @@
 /**
- * Helper functions for dealing with frames and linked data documents 
+ * Helper functions for dealing with frames and linked data documents
  */
 let FrameHelper = {
 	standard_urls: {
@@ -37,7 +37,7 @@ FrameHelper.empty = function(obj){
     for (var key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
     }
-    return true;	
+    return true;
 }
 
 FrameHelper.genBNID = function(dom){
@@ -103,7 +103,7 @@ FrameHelper.urlFragment = function(url){
 	url = (typeof url != "string") ? window.location.href : url;
 	url = url.split('#')[1];
 	if(url){
-		url = url.split("?")[0];		
+		url = url.split("?")[0];
 	}
 	return url;
 }
@@ -162,26 +162,26 @@ FrameHelper.numberWithCommas = function(value){
 }
 
 FrameHelper.datatypes = [
-	"xdd:coordinate", "xdd:coordinatePolyline", 
+	"xdd:coordinate", "xdd:coordinatePolyline",
 	"xdd:coordinatePolygon", "xdd:dateRange", "xdd:gYearRange", "xdd:integerRange",
 	"xdd:decimalRange","xdd:cc", "xdd:email","xdd:html", "xdd:url", "xsd:anySimpleType",
-	"xsd:string", "xsd:boolean", "xsd:decimal", "xsd:double", "xsd:float", "xsd:time", "xsd:date", 
-	"xsd:dateTime", "xsd:dateTimeStamp", "xsd:gYear", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", 
-	"xsd:gMonthDay", "xsd:duration", "xsd:yearMonthDuration", "xsd:dayTimeDuration", 
+	"xsd:string", "xsd:boolean", "xsd:decimal", "xsd:double", "xsd:float", "xsd:time", "xsd:date",
+	"xsd:dateTime", "xsd:dateTimeStamp", "xsd:gYear", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth",
+	"xsd:gMonthDay", "xsd:duration", "xsd:yearMonthDuration", "xsd:dayTimeDuration",
 	"xsd:byte", "xsd:short", "xsd:integer", "xsd:long", "xsd:unsignedByte",	"xsd:unsignedInt",
 	"xsd:unsignedLong",	"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger",
 	"xsd:nonPositiveInteger", "xsd:base64Binary", "xsd:anyURI", "xsd:language", "xsd:normalizedString",
-	"xsd:token", "xsd:NMTOKEN",	"xsd:Name",	"xsd:NCName","xsd:NOTATION", "xsd:QName", "xsd:ID", 
-	"xsd:IDREF", "xsd:ENTITY", "rdf:XMLLiteral","rdf:PlainLiteral","rdfs:Literal", "xdd:json" 
+	"xsd:token", "xsd:NMTOKEN",	"xsd:Name",	"xsd:NCName","xsd:NOTATION", "xsd:QName", "xsd:ID",
+	"xsd:IDREF", "xsd:ENTITY", "rdf:XMLLiteral","rdf:PlainLiteral","rdfs:Literal", "xdd:json"
 ];
 
 FrameHelper.parseDate = function(ty, value){
 	if(ty == "xsd:date"){
 		var parsed = this.parseXsdDate(value);
-	} 
+	}
 	else if(ty == "xsd:dateTime"){
-		var parsed = this.parseXsdDateTime(value);		
-	} 
+		var parsed = this.parseXsdDateTime(value);
+	}
 	else if(ty == "xsd:gYear"){
 		var parsed = { year: value };
 	}
@@ -225,7 +225,7 @@ FrameHelper.parseXsdDate = function(val){
 	}
 	if(year && Math.abs(year) < 10000){
 		var month = val.substring(year.length+1, year.length+3);
-		if(month) month = month.toNumber(); 
+		if(month) month = month.toNumber();
 		else return false;
 		var day = val.substring(year.length+4);
 		if(day) day = day.toNumber();
@@ -243,9 +243,9 @@ FrameHelper.parseXsdDate = function(val){
 FrameHelper.addXsdPadding = function(parsed){
 	var nparsed = {};
 	if(typeof parsed.year != "undefined" && parsed.year !== false && parsed.year < 1000){
-		if(Math.abs(parsed.year) < 10) nparsed.year = (parsed.year < 0 ? "-000" + Math.abs(parsed.year) : "000" + parsed.year); 
-		else if(Math.abs(parsed.year) < 100) nparsed.year = (parsed.year < 0 ? "-00" + Math.abs(parsed.year) : "00" + parsed.year); 
-		else nparsed.year = (parsed.year < 0 ? "-0" + Math.abs(parsed.year) : "0" + parsed.year); 
+		if(Math.abs(parsed.year) < 10) nparsed.year = (parsed.year < 0 ? "-000" + Math.abs(parsed.year) : "000" + parsed.year);
+		else if(Math.abs(parsed.year) < 100) nparsed.year = (parsed.year < 0 ? "-00" + Math.abs(parsed.year) : "00" + parsed.year);
+		else nparsed.year = (parsed.year < 0 ? "-0" + Math.abs(parsed.year) : "0" + parsed.year);
 	}
 	else if(parsed.year){
 		nparsed.year = parsed.year;
@@ -295,7 +295,7 @@ FrameHelper.xsdFromParsed = function(parsed, ty){
 	else if(ty == "xsd:dateTime" || ty == "xsd:dateTimeStamp"){
 		var ret = (xparsed.year && xparsed.month && xparsed.day) ? xparsed.year + "-" + xparsed.month + "-" + xparsed.day + "T" : false;
 		if(ret) ret += (xparsed.hour ? xparsed.hour : "12") + ":" + (xparsed.minute ? xparsed.minute : "00") + ":" + (xparsed.second ? xparsed.second : "00");
-	} 
+	}
 	else if(ty == "xsd:gMonth"){
 		var ret = (xparsed.month ? "--" + xparsed.month : false);
 	}
@@ -369,9 +369,9 @@ FrameHelper.extractXsdTimezone = function(val){
 		val.substring(val.length-6);
 	}
 	return false;
-	
-}	
-	
+
+}
+
 FrameHelper.parseRangeValue = function(val, dividor){
 	dividor = (dividor ? dividor : ",");
 	var vals = [];
