@@ -190,37 +190,6 @@ function getFunctionSignature(which){
   return sigs[which];
 }//getFunctionSignature
 
-/*
-txtar    : editor is attached to textar
-mode     : format for highlighting, ex: json, html etc.
-editable : readOnly false/ nocursor is special value in code editor to set readonly true */
-function codeMirrorFormat(txtar, mode, editable){
-  //initize auto complete
-  CodeMirror.commands.autocomplete = function(cm) {
-    cm.showHint({hint: CodeMirror.hint.anyword});
-  }
-
-  // initialise code editor on text area
-  var htmlEditor = CodeMirror.fromTextArea(txtar, {
-    mode                : mode,
-    firstLineNumber     : 1,
-    lineNumbers         : false,
-    lineWrapping        : true,
-    smartIndent         : true,
-    indentWithTabs      : true,
-    newlineAndIndent    : true,
-    styleActiveLine     : { nonEmpty: true },
-    matchBrackets       : true,
-    matchTags           : { bothTags: true },
-    findMatchingBrackets: true,
-    extraKeys           : { "Ctrl-J": "toMatchingTag", "Ctrl-F": "find", "Tab": "autocomplete" },
-    refresh             : true
-    //readOnly            : editable
-   });
-
-   return htmlEditor;
-} // codeMirrorFormat()
-
 // returns dom element for header text
 function prettifyHeaderDom(text){
   var hd = document.createElement('div');
@@ -245,95 +214,27 @@ function getInfoAlertDom(type, label, msg){
 } // getInfoAlertDom()
 
 // formats response results from platform
-function prettifyResponse(currForm, action, data, plugin){
+function prettifyResponse(currForm, action, response, plugin){
 
   var rd = document.createElement('div');
+
   // get header result
   rd.appendChild(prettifyHeaderDom('Result'));
   var br = document.createElement('BR');
   rd.appendChild(br);
 
-  // setting default values
-  var editable = true, mode = 'javascript', txt; // variable to set editor editable/ non editable
-
-  switch(action){
-    case 'connect':
-      txt = document.createTextNode(data);
-      mode = 'jsonld';
-      editable = 'noncursor'; // non editable
-    break;
-    case 'createDatabase':
-      txt = document.createTextNode(data);
-      mode = 'text'; // turtle format
-      editable = 'noncursor'; // non editable
-    break;
-    case 'getSchema':
-      txt = document.createTextNode(data.contents);
-      mode = 'turtle'; // turtle format
-      editable = 'noncursor'; // non editable
-    break;
-    case 'updateSchema':
-      txt = document.createTextNode(data.contents);
-      mode = 'turtle'; // turtle format
-      editable = 'noncursor'; // non editable
-    break;
-    case 'viewDocument':
-      txt = document.createTextNode(data);
-      mode = 'turtle'; // turtle format
-      editable = 'noncursor'; // non editable
-    break;
-    case 'createDocument':
-      txt = document.createTextNode(data);
-      mode = 'turtle'; // turtle format
-      editable = true; // editable
-    break;
-    case 'updateDocument':
-      txt = document.createTextNode(data);
-      mode = 'turtle'; // turtle format
-      editable = true; // editable
-    break;
-    case 'select':
-      txt = document.createTextNode(data);
-      mode = 'javascript'; // turtle format
-      editable = 'noncursor'; // editable
-    break;
-    case 'deleteDocument':
-      txt = document.createTextNode(data);
-      mode = 'javascript'; // turtle format
-      editable = 'noncursor'; // editable
-    break;
-    case 'delete':
-      // response is text
-      txt = document.createTextNode(data);
-      mode = 'html'; // text format
-      editable = 'noncursor'; // non editable
-    break;
-  }
+  var data = JSON.stringify(response, 0, 4);
 
   var pre = document.createElement('pre');
   pre.setAttribute('class', 'terminus-api-view terminus-scheme-pre');
   pre.innerHTML = data;
   if(plugin.pluginAvailable("codemirror")){
-    var cm = new Codemirror(pre, mode);
+    var cm = new Codemirror(pre, 'javascript');
     var pr = cm.colorizePre();
     rd.appendChild(pr);
   }
   else rd.appendChild(pre);
 
-
-  /*if(typeof(CodeMirror) != 'undefined'){
-    var editor = codeMirrorFormat(textarea, mode, editable);
-    // refresh load
-    setTimeout(function() {
-        editor.refresh();
-    },1);
-    // save changes of code mirror editor
-    function updateTextArea() {
-      editor.save();
-    }
-    editor.on('change', updateTextArea);
-  }
-  */
   var br = document.createElement('BR');
   rd.appendChild(br);
 
@@ -362,7 +263,6 @@ function showHttpResult(response, action, currForm, plugin){
      // iterate over all headers
      for (let [key, value] of response.headers) {
        retHttpHeaders = retHttpHeaders +  `${key} = ${value}` + '\n';
-       //alert( `${key} = ${value}`);
      }
 
     // http header result
@@ -377,7 +277,7 @@ function showHttpResult(response, action, currForm, plugin){
     }
     currForm.appendChild(hdres);
 
-    return response.text()
+    return response.json()
     .then(function(response){
       prettifyResponse(currForm, action, response, plugin); // get return response
     })
