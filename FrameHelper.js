@@ -73,6 +73,7 @@ FrameHelper.compareIDs = function(ida, idb){
 
 FrameHelper.unshorten = function(url){
 	if(this.validURL(url)) return url;
+	if(!url) return url;
 	var bits = url.split(":");
 	if(bits[1]){
 		if(this.standard_urls[bits[0]]){

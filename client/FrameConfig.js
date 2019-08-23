@@ -87,7 +87,16 @@ var FrameConfig = {
 					viewerOptions: { big: true},
 					features: ["body"],
 				}
+			},
+			{
+				pattern: { renderer: "object", property: "dcog:temporality"},
+				output: {
+					facet: "summary",
+					features: ["body", "control"],
+					controls: ["view"]
+				}
 			}
+
 
 		],
 		editor: true,
