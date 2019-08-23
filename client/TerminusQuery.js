@@ -36,10 +36,10 @@ TerminusQueryViewer.prototype.loadGenerator = function(){
 		self.query(q)
 	}
 	if(this.gentype == "textbox"){
-	//	this.generator = new WOQLTextboxGenerator(nquery, this, this.ui);
+		this.generator = new WOQLTextboxGenerator(nquery, this, this.ui);
 	}
 	else if(this.gentype == "gbrowse"){
-		//this.generator = new WOQLGraphBrowserGenerator(nquery, this, this.ui);
+		this.generator = new WOQLGraphBrowserGenerator(nquery, this, this.ui);
 	}
 }
 

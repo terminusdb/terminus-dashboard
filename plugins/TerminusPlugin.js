@@ -55,8 +55,7 @@ function TerminusPluginManager(){
 	this.plugins["gmaps"] = {
 		label: "Google Maps",
 		js: ["https://maps.googleapis.com/maps/api/js"],
-		plugin: "gmaps.terminus.js",
-		requires: ['jquery']
+		plugin: "gmaps.terminus.js"
 	};
 	this.plugins["d3"] = {
 		label: "d3",

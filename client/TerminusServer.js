@@ -30,22 +30,22 @@ TerminusServerController.prototype.getAsDOM = function(){
     rsc.appendChild(nav);
     // change server
 		if(this.ui.showControl("change-server")){
-      var li = document.createElement('li');
-      li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
-      var self = this;
-      li.addEventListener("click", function(){
-        self.ui.showLoadURLPage();
-      })
-      ul.appendChild(li);
-      var a = document.createElement('a');
-      var icon = document.createElement('i');
-      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
-      a.appendChild(icon);
-      var txt = document.createTextNode('Change Server');
-      a.appendChild(txt);
-      li.appendChild(a);
-      var icon = document.createElement('i');
-		}
+	      var li = document.createElement('li');
+	      li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
+	      var self = this;
+	      li.addEventListener("click", function(){
+	        self.ui.showLoadURLPage();
+	      })
+	      ul.appendChild(li);
+	      var a = document.createElement('a');
+	      var icon = document.createElement('i');
+	      icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+	      a.appendChild(icon);
+	      var txt = document.createTextNode('Change Server');
+	      a.appendChild(txt);
+	      li.appendChild(a);
+	      var icon = document.createElement('i');
+		}	
     // view databases
 		if(this.ui.showControl("db")){
       var li = document.createElement('li');
