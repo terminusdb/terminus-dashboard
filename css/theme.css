@@ -76,7 +76,7 @@ blockquote small::before {
 }
 
 .terminus-wrapper-height {
- height: auto;
+ height: auto !important;
 }
 
 .footer {
@@ -1074,7 +1074,8 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 
 .terminus-widget-menu a {
 	color: #fff;
-	font-size:large;
+	font-size: 18px;
+  font-weight: 400;
 	display: block;
 	line-height: 20px;
 	padding: 15px;
@@ -1226,6 +1227,8 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	border-bottom: 1px solid transparent;
 	border-top-right-radius: 3px;
 	border-top-left-radius: 3px;
+	font-weight: 500 !important;
+  font-size: 28px;
 }
 .terminus-full-css-margin-top{
   margin-top: 30px;
@@ -1721,8 +1724,10 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 }
 
 .terminus-plugin-nav a:hover {
-  color: #f1f1f1;
-	cursor: pointer
+  /*color: #f1f1f1;*/
+	cursor: pointer;
+	background-color: #D3D3D3;
+  color: black;
 }
 
 .terminus-plugin-nav .closebtn {

@@ -358,7 +358,7 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 		cbox.disabled = true;
 	}
 	var clab = document.createElement("label");
-	clab.setAttribute("class", "terminus-plugin-label");
+	clab.setAttribute("class", "terminus-plugin-label terminus-pointer");
 	clab.setAttribute("for", cbox.id);
 	clab.appendChild(document.createTextNode(obj.label));
 	cl.appendChild(clab);
@@ -414,20 +414,24 @@ TerminusPluginManager.prototype.getAsDOM = function(ui){
 	var dm = document.createElement("span");
 	dm.setAttribute("class", "terminus-plugin-manager");
 	var clh = document.createElement("span");
-	clh.setAttribute("class", "terminus-plugin-control-header terminus-plugin-nav");
+	clh.setAttribute("class", "terminus-plugin-control-header terminus-plugin-nav terminus-pointer");
 	clh.appendChild(document.createTextNode("Plugins"));
 	dm.appendChild(clh);
-	var self = this;
+	var a = document.createElement('a');
+	this.showPlugins(a, ui);
+	clh.appendChild(a);
+	a.style.display = 'none';
 	clh.addEventListener('click', function(){
-		self.showPlugins(clh, ui);
+		if(a.style.display == 'none')
+			a.style.display = 'block';
+		else a.style.display = 'none';
 	})
 	return dm;
 }
 
-TerminusPluginManager.prototype.showPlugins = function(sp, ui){
-	var a = document.createElement('a')
+TerminusPluginManager.prototype.showPlugins = function(a, ui){
+	a.setAttribute('style', 'background-color: #111;');
 	for(var pid in this.plugins){
 		a.appendChild(this.getPluginDOM(pid, this.plugins[pid], ui));
 	}
-	 sp.appendChild(a);
 }
