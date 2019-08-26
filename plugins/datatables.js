@@ -14,8 +14,7 @@ Datatables.prototype.draw = function(){
      }); //jQuery(tab)
 
      //styling
-     //tab.setAttribute('class'    , 'datatable-1 table table-bordered table-striped	display');
-     tab.setAttribute('class'      , 'display stripe');
+     tab.setAttribute('class'      , 'stripe dataTable');
      tab.setAttribute('cellpadding', '0');
      tab.setAttribute('cellspacing', '0');
      tab.setAttribute('border'     , '0');

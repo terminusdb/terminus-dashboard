@@ -47,12 +47,12 @@ function TerminusPluginManager(){
 		css: ["https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"],
 		requires: ['jquery']
 	};
-	this.plugins["prettify"] = {
+	/*this.plugins["prettify"] = {
 		label: "Prettify",
 		js: ["https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"],
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css"],
 		requires: ['jquery']
-	};
+	};*/
 	this.plugins["gmaps"] = {
 		label: "Google Maps",
 		js: ["https://maps.googleapis.com/maps/api/js"],

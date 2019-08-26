@@ -7,7 +7,7 @@
 body {
 	font-size: 16px;
 	font-family: 'Open Sans', Arial, sans-serif;
-	background: #fff;
+	/*background: #fff;*/
 	color: #777
 }
 h1, h2, h3, h4, h5, h6 {
@@ -48,7 +48,7 @@ small, .small {
 pre, code {
 	padding: 1px 2px;
 	font-weight: bold;
-	font-size: 12px
+	font-size: 16px
 }
 blockquote {
 	border-left: 3px solid #dcdddf
@@ -1382,6 +1382,11 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	color: black;
 	/*margin:30px;*/
 	padding:15px;
+	white-space: pre-wrap;       /* Since CSS 2.1 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+.terminus-wrap-text{
 	white-space: pre-wrap;       /* Since CSS 2.1 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }

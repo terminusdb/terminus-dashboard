@@ -73,7 +73,7 @@ output (DOM node): The tokens will be converted to spans as in an editor,
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
   //this.textdom.setOption("theme", 'ambiance');
-  this.textdom.setAttribute('class', 'cm-s-default');
+  this.textdom.setAttribute('class', 'cm-s-default terminus-wrap-text');
   return this.textdom;
 } // colorizePre()
 
