@@ -1,12 +1,13 @@
 function WOQLResultsViewer(wresult, options){
 	this.result = wresult;
 	this.options = options;
+	this.pman = new TerminusPluginManager();
 }
 
 WOQLResultsViewer.prototype.showTable = function(){
 	if(this.options && typeof this.options.show_table != "undefined") return this.options.show_table;
 	return true;
-} 
+}
 
 
 WOQLResultsViewer.prototype.getAsDOM = function(){
@@ -37,6 +38,7 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings){
 	var ordered_headings = this.orderColumns(bindings[0]);
 	for(var i = 0; i<ordered_headings.length; i++){
 		var th = document.createElement("th");
+		th.setAttribute('class', 'terminus-table-header-full-css');
 		th.appendChild(document.createTextNode(ordered_headings[i]));
 		thr.appendChild(th);
 	}
@@ -61,6 +63,11 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings){
 		tbody.appendChild(tr);
 	}
 	tab.appendChild(tbody);
-	return tab;	
+	var td = document.createElement('div');
+	td.appendChild(tab);
+	if(this.pman.pluginAvailable("datatables")){
+    var dt = new Datatables(tab);
+		var tab = dt.draw();
+  }
+	return td;
 }
-

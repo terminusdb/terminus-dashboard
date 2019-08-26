@@ -45,7 +45,7 @@ TerminusServerController.prototype.getAsDOM = function(){
 	      a.appendChild(txt);
 	      li.appendChild(a);
 	      var icon = document.createElement('i');
-		}	
+		}
     // view databases
 		if(this.ui.showControl("db")){
       var li = document.createElement('li');
@@ -171,6 +171,7 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 	var self = this;
 	var wrap = document.createElement("a");
 	wrap.setAttribute("href", "#");
+  wrap.setAttribute("class", "terminus-table-content");
 	wrap.appendChild(document.createTextNode(text));
 	wrap.addEventListener("click", function(){
 		self.ui.connectToDB(dbid);

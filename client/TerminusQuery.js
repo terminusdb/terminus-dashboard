@@ -6,7 +6,7 @@ function TerminusQueryViewer(ui, options){
 	this.generator = false;
 	this.result = false;
 	this.wquery = new WOQLQuery(ui.client, this.options);
-	this.results_first = true;
+	this.results_first = false;
 	this.gentype = (options && options.generator ? options.generator : "textbox");
 	this.generators = {
 		"textbox" : { label: "Simple Text Box", value: "textbox"},
