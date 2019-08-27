@@ -8,7 +8,7 @@ function Codemirror(text, format){
 txtar    : editor is attached to textar
 mode     : format for highlighting, ex: json, html etc.
 editable : readOnly false/ nocursor is special value in code editor to set readonly true */
-Codemirror.prototype.colorizeTextArea = function(){
+Codemirror.prototype.colorizeTextArea = function(mode){
   //initize auto complete
   /*CodeMirror.commands.autocomplete = function(cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
@@ -31,8 +31,30 @@ Codemirror.prototype.colorizeTextArea = function(){
     refresh             : true
    });
 
+   this.setCodemirrorSize(editor, mode);
+   editor.defaultCharWidth('20px');
+   editor.setOption("theme", 'duotone-light');
+
    return editor;
 } // colorizeTextArea()
+
+/*
+  set editor size according to screens
+  editor : code mirror editor Object
+  mode   : editor being viewed from schema/ doc/ query page*/
+Codemirror.prototype.setCodemirrorSize = function(editor, mode){
+  switch(mode){
+    case 'query':
+      editor.setSize('1200', '150');
+    break;
+    case 'schema':
+      editor.setSize('1200', '1550');
+    break;
+    case 'document':
+     editor.setSize('1200', '250');
+    break;
+  } // switch(mode)
+} // setCodemirrorSize()
 
 // updateTextArea(): highlights new changes on editor
 Codemirror.prototype.updateTextArea = function(editor){
@@ -54,7 +76,7 @@ output (DOM node): The tokens will be converted to spans as in an editor,
                    and inserted into the node (through innerHTML).*/
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
-  this.textdom.setAttribute('class', 'cm-s-default');
+  this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap cm-s-duotone-light terminus-wrap-text terminus-wrapper-height ');
   return this.textdom;
 } // colorizePre()
 

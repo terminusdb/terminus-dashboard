@@ -330,7 +330,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	np.appendChild(ipval);
 	if(this.ui.pluginAvailable("codemirror")){
     var cm = new Codemirror(ipval, this.format);
-		var ar = cm.colorizeTextArea();
+		var ar = cm.colorizeTextArea('schema');
 		cm.updateTextArea(ar);
   }
 	return np;

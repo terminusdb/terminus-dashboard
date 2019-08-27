@@ -1,6 +1,7 @@
 div.terminus-object-frame div.terminus-object-header,
 .terminus-client-header, .terminus-application-header {
 	margin-bottom: 1em;
+	margin-right: 10px;
 	background-color: #48f;
 	color: white;
 }
@@ -12,6 +13,8 @@ div.terminus-object-frame div.terminus-object-header {
 
 div.terminus-object-properties {
 	background-color: rgba(200, 230, 255, 0.1);
+	border: 1px solid lightgrey;
+	margin-right: 20px;
 	padding-top: 4px;
 	padding-bottom: 4px;
 }
@@ -24,6 +27,7 @@ div.terminus-object-properties {
 div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
+	width: 150px;
 }
 
 div.terminus-object-frame select {
@@ -161,4 +165,19 @@ div.terminus-object-frame {}
 
 div.terminus-property-frame{
 	margin-bottom: 10px;
+}
+
+.terminus-property-label-align{
+	margin-left: 20px;
+	width: 100px;
+	text-align: right;
+}
+
+.terminus-property-body-align{
+	/*margin-left: 20px;*/
+	text-align: right;
+}
+
+.terminus-property-values-align{
+	margin-left: 80px;
 }

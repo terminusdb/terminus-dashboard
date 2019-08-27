@@ -15,7 +15,7 @@ HTMLDataViewer.prototype.render = function(){
 	if(this.body) this.valDOM.appendChild(this.body);
 	if(this.headerViewer){
 		this.header = this.headerViewer.getAsDOM(this.renderer);
-		if(this.header) this.valDOM.appendChild(this.header);		
+		if(this.header) this.valDOM.appendChild(this.header);
 	}
 	return this.valDOM;
 }
@@ -29,19 +29,19 @@ HTMLDataViewer.prototype.getValueDOM = function(){
 	}
 	sp.setAttribute("class", "terminus-property-value property-value-" + this.renderer.currentFacet() + " property-value-" + this.renderer.mode);
 	if(this.renderer.mode == "view"){
-		sp.setAttribute('data-value', this.renderer.value());		
+		sp.setAttribute('data-value', this.renderer.value());
 	}
 	return sp;
 }
 
 HTMLDataViewer.prototype.getValueBodyDOM = function(){
 	if(this.renderer.currentFacet() == "page"){
-		var vholder = document.createElement("div");			
+		var vholder = document.createElement("div");
 	}
 	else {
 		var vholder = document.createElement("span");
 	}
-    vholder.setAttribute('class', 'terminus-property-body property-value-body property-value-body-'+this.renderer.currentFacet());
+    vholder.setAttribute('class', 'terminus-property-body property-value-body property-value-body-'+this.renderer.currentFacet() + ' terminus-property-body-align');
     if(this.renderer.showFeature("body")){
         var valueViewer = this.renderer.getDataValueViewer();
     	var vdom = valueViewer.getDOM(this.renderer, this);
@@ -60,7 +60,7 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
  * Removes the value from the dom
  */
 HTMLDataViewer.prototype.remove = function(){
-	this.valDOM.parentNode.removeChild(this.valDOM);	
+	this.valDOM.parentNode.removeChild(this.valDOM);
 }
 
 HTMLDataViewer.prototype.redrawHeader = function(){
@@ -148,7 +148,7 @@ HTMLDataHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("type")){
 		var typeDOM = this.getValueTypeDOM(renderer);
-		if(typeDOM) objDOM.appendChild(typeDOM);		
+		if(typeDOM) objDOM.appendChild(typeDOM);
 	}
 	if(renderer.showFeature("status")){
 		var sumDOM = this.getValueStatusDOM(renderer);
@@ -257,7 +257,7 @@ HTMLDataHeaderViewer.prototype.getValueUpdateDOM = function(renderer){
 	dpropDOM.setAttribute("class", "terminus-value-update");
 	var saveback = function(){renderer.save()};
 	var disabled = (renderer.isUpdated() ? false : "Nothing to save - no change");
-	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("value", "save", "Save", saveback, disabled));		
+	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("value", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
 
@@ -293,4 +293,3 @@ JSONObjectViewer.prototype.render = function(){
 JSONObjectViewer.prototype.redraw = function(){
 	alert('redraw json tbd');
 }
-

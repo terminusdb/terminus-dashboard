@@ -27,7 +27,8 @@ function TerminusPluginManager(){
 		  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/http/http.js"],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css"
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/duotone-light.css"
 		]
 	};
 	this.plugins["jquery"] = {
@@ -46,12 +47,12 @@ function TerminusPluginManager(){
 		css: ["https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"],
 		requires: ['jquery']
 	};
-	this.plugins["prettify"] = {
+	/*this.plugins["prettify"] = {
 		label: "Prettify",
 		js: ["https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"],
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css"],
 		requires: ['jquery']
-	};
+	};*/
 	this.plugins["gmaps"] = {
 		label: "Google Maps",
 		js: ["https://maps.googleapis.com/maps/api/js"],
@@ -336,7 +337,9 @@ TerminusPluginManager.prototype.disabled = function(pid, obj){
 }
 
 TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
+	var a = document.createElement("a");
 	var cl = document.createElement("span");
+	a.appendChild(cl);
 	cl.setAttribute("class", "terminus-plugin-control");
 	var cbox = document.createElement("input");
 	cbox.id = "terminus-plugin-control-" + plugid;
@@ -355,7 +358,7 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 		cbox.disabled = true;
 	}
 	var clab = document.createElement("label");
-	clab.setAttribute("class", "terminus-plugin-label terminus-plugin-label-full-css");
+	clab.setAttribute("class", "terminus-plugin-label terminus-pointer");
 	clab.setAttribute("for", cbox.id);
 	clab.appendChild(document.createTextNode(obj.label));
 	cl.appendChild(clab);
@@ -364,7 +367,7 @@ TerminusPluginManager.prototype.getPluginDOM = function(plugid, obj, ui){
 	cbox.addEventListener("change", function(){
 		self.togglePlugin(plugid, ui);
 	});
-	return cl;
+	return a;
 }
 
 TerminusPluginManager.prototype.togglePlugin = function(plugid, ui){
@@ -411,11 +414,24 @@ TerminusPluginManager.prototype.getAsDOM = function(ui){
 	var dm = document.createElement("span");
 	dm.setAttribute("class", "terminus-plugin-manager");
 	var clh = document.createElement("span");
-	clh.setAttribute("class", "terminus-plugin-control-header");
-	clh.appendChild(document.createTextNode("Plugins "));
+	clh.setAttribute("class", "terminus-plugin-control-header terminus-plugin-nav terminus-pointer");
+	clh.appendChild(document.createTextNode("Plugins"));
 	dm.appendChild(clh);
-	for(var pid in this.plugins){
-		dm.appendChild(this.getPluginDOM(pid, this.plugins[pid], ui));
-	}
+	var a = document.createElement('a');
+	this.showPlugins(a, ui);
+	clh.appendChild(a);
+	a.style.display = 'none';
+	clh.addEventListener('click', function(){
+		if(a.style.display == 'none')
+			a.style.display = 'block';
+		else a.style.display = 'none';
+	})
 	return dm;
+}
+
+TerminusPluginManager.prototype.showPlugins = function(a, ui){
+	a.setAttribute('style', 'background-color: #111;');
+	for(var pid in this.plugins){
+		a.appendChild(this.getPluginDOM(pid, this.plugins[pid], ui));
+	}
 }

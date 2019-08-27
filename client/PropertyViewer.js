@@ -55,7 +55,7 @@ HTMLPropertyViewer.prototype.getPropertyBodyDOM = function(){
 	else {
 		var vholder = document.createElement("span");
 	}
-    vholder.setAttribute('class', 'terminus-property-values ' + pcls);
+    vholder.setAttribute('class', 'terminus-property-values ' + pcls + ' terminus-property-values-align');
 	for(var i =0; i<this.values.length; i++){
 		vholder.appendChild(this.values[i]);
 	}

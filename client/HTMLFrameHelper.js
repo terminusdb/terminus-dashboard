@@ -7,11 +7,11 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 	var button = document.createElement("button");
 	button.appendChild(document.createTextNode(label));
 	if(disabled){
-		button.setAttribute("class", "terminus-frame-control frame-control-action action-disabled " + type + "-" + control + "-disabled");
+		button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
 		button.setAttribute("title", disabled);
 	}
 	else {
-		button.setAttribute("class", "terminus-frame-control frame-control-action " + type + "-" + control);
+		button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action " + type + "-" + control);
 		button.addEventListener("click", function(){
 			callback(control);
 		});
@@ -90,7 +90,7 @@ HTMLFrameHelper.goToName = function(s, p, i){
 
 HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 	var infoDOM = document.createElement("span");
-	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type);
+	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type );
 	if(help){
 		infoDOM.setAttribute("title", help);
 	}
@@ -105,7 +105,7 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 	lspacer.appendChild(document.createTextNode(" "));
 	infoDOM.appendChild(lspacer);
 	var lval = document.createElement("span");
-	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
+	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value terminus-property-label-align");
 	if(input){
 		input.value = value;
 		lval.appendChild(input);
