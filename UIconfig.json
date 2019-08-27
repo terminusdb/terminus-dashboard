@@ -18,18 +18,14 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://195.201.12.87:6363/", key: "root"},
-	//{server: "http://localhost/dcog/platform/", db: "simport", schema: true }, 
+	location: {server: "http://localhost/platform/", db: "docs", schema: true }, 
+	//"http://195.201.12.87:6363/", key: "root"},
 	css: "basic",
 	plugins: {
 		"font-awesome": true,
 		gmaps: { 
 			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI", 
-			loaded: true
-		},
-		codemirror: true,
-		jquery: true,
-		jqueryui: true,
-		datatables: true
+			loaded: false
+		}
 	} 
 };

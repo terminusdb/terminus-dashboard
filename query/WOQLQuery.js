@@ -123,10 +123,10 @@ WOQLQuery.prototype.getClassMetaDataQuery = function(constraint){
 }
 
 WOQLQuery.prototype.getEntityClassQuery = function(){
-	var vEl = "t(v('Object'), rdf/type, v('Class')";
+	var vEl = "t(v('Object'), rdf/type, v('Class'))";
 	var opts = [];
-	opts.push("(v('Class') << (dcog/'Entity')), v('Type') = \"Entity\")");
-	opts.push("t(v('Class'), rdfs/label, v('Class_Label'),g/" + this.client.dbid + "/graph/main/schema)");
+	//opts.push("(v('Class') << (dcog/'Entity')), v('Type') = \"Entity\")");
+	opts.push("t(v('Class'), rdfs/label, v('Class_Label'),dg/schema)");
 	opts.push("t(v('Object'), rdfs/label, v('Label'))");
 	var woql = "select([v('Object'),v('Class'),v('Class_Label'),v('Label'),v('Type')],(" + vEl;
 	for(var i = 0; i<opts.length; i++){

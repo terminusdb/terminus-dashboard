@@ -232,15 +232,15 @@ function TerminusDBViewer(ui){
 
 TerminusDBViewer.prototype.getAsDOM = function(selected){
 	var pd = document.createElement("span");
-	pd.setAttribute("class", "terminus-db-home-page terminus-headings");
+	pd.setAttribute("class", "terminus-db-home-page ");
 	pd.appendChild(document.createTextNode("DB Home Page - "));
 	var scd = document.createElement("span");
 	scd.setAttribute("class", "terminus-db-details");
 	var scl = document.createElement("span");
-	scl.setAttribute("class", "terminus-db-details-label terminus-headings");
+	scl.setAttribute("class", "terminus-db-details-label ");
 	scl.appendChild(document.createTextNode("Connected to Database "))
 	var scs = document.createElement("span");
-	scs.setAttribute("class", "terminus-db-details-value terminus-headings");
+	scs.setAttribute("class", "terminus-db-details-value ");
 	var dbrec = this.ui.getDBRecord();
 	if(dbrec){
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
