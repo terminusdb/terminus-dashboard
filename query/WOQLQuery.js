@@ -61,7 +61,7 @@ WOQLQuery.prototype.getAbstractQueryPattern = function(varname){
 }
 
 WOQLQuery.prototype.getSubclassQueryPattern = function(varname, clsname){
-	var sqp = "(v('" + varname + "') << (" + clsname + "))"; 
+	var sqp = "(v('" + varname + "') << (" + clsname + "))";
 	return sqp;
 }
 
@@ -114,6 +114,20 @@ WOQLQuery.prototype.getClassMetaDataQuery = function(constraint){
 	opts.push("t(v('Class'), dcog/tag, v('Abstract'), dg/schema)");
 	var woql = "select([v('Class'), v('Label'), v('Comment'), v('Abstract')],(" + vClass;
 	if(constraint) woql += ", " + constraint;
+	for(var i = 0; i<opts.length; i++){
+		woql += ", opt(" + opts[i] + ")";
+	}
+	woql += "))";
+	return woql;
+}
+
+WOQLQuery.prototype.getEntityClassQuery = function(){
+	var vEl = "t(v('Object'), rdf/type, v('Class')";
+	var opts = [];
+	opts.push("(v('Class') << (dcog/'Entity')), v('Type') = \"Entity\")");
+	opts.push("t(v('Class'), rdfs/label, v('Class_Label'),g/" + this.client.dbid + "/graph/main/schema)");
+	opts.push("t(v('Object'), rdfs/label, v('Label'))");
+	var woql = "select([v('Object'),v('Class'),v('Class_Label'),v('Label'),v('Type')],(" + vEl;
 	for(var i = 0; i<opts.length; i++){
 		woql += ", opt(" + opts[i] + ")";
 	}

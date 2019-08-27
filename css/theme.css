@@ -672,6 +672,7 @@ div.terminus-object-properties {
 div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
+	width: 250px;
 }
 
 div.terminus-object-frame select {
@@ -689,9 +690,20 @@ input.terminus-form-value {
 	padding: 6px 4px;
 }
 
-.terminus-splitter{
-	border-right: 1px solid blue;
+.terminus-headings{
+	font-size: 30px;
+	height: 100%;
+	width: 0;
+	z-index: 99999;
+	top: 0;
+	right: 0;
+	color: black;
+	overflow-x: hidden;
+	transition: 0.5s;
+	padding-top: 60px;
 }
+
+
 
 /*div.terminus-object-frame button,
 .terminus-control-button {

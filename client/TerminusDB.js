@@ -227,19 +227,20 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 
 function TerminusDBViewer(ui){
 	this.ui = ui;
+	this.wquery = new WOQLQuery(ui.client, this.options);
 }
 
 TerminusDBViewer.prototype.getAsDOM = function(selected){
 	var pd = document.createElement("span");
-	pd.setAttribute("class", "terminus-db-home-page");
+	pd.setAttribute("class", "terminus-db-home-page terminus-headings");
 	pd.appendChild(document.createTextNode("DB Home Page - "));
 	var scd = document.createElement("span");
 	scd.setAttribute("class", "terminus-db-details");
 	var scl = document.createElement("span");
-	scl.setAttribute("class", "terminus-db-details-label");
+	scl.setAttribute("class", "terminus-db-details-label terminus-headings");
 	scl.appendChild(document.createTextNode("Connected to Database "))
 	var scs = document.createElement("span");
-	scs.setAttribute("class", "terminus-db-details-value");
+	scs.setAttribute("class", "terminus-db-details-value terminus-headings");
 	var dbrec = this.ui.getDBRecord();
 	if(dbrec){
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
@@ -248,7 +249,31 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	scd.appendChild(scl);
 	scd.appendChild(scs);
 	pd.appendChild(scd);
+	this.getClassesDOM(pd);
 	return pd;
+}
+
+TerminusDBViewer.prototype.getClassesDOM = function(d){
+	var q = this.wquery.getEntityClassQuery();
+	var self = this;
+	this.wquery.execute(q)
+	.then(function(result){
+		if(true || !self.result){
+			self.result = new WOQLResultsViewer(result, {});
+		}
+		else {
+			//self.result.newResult(result);
+		}
+		var nd = self.result.getAsDOM();
+		if(nd){
+			d.appendChild(nd);
+		}
+	})
+	.catch(function(err){
+		console.error(err);
+		self.ui.showError(err);
+	});
+	return d;
 }
 
 
