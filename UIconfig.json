@@ -25,7 +25,11 @@ let TerminusConfig = {
 		"font-awesome": true,
 		gmaps: { 
 			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI", 
-			loaded: false
-		}
+			loaded: true
+		},
+		codemirror: true,
+		jquery: true,
+		jqueryui: true,
+		datatables: true
 	} 
 };

@@ -663,7 +663,7 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
  * Helper class for parsing and decomposing Terminus URLs / dealing with prefixed URLs
  */
 function TerminusIDParser(input_str, context){
-	this.contents = input_str.trim();
+	this.contents = (typeof input_str == "string") ? input_str.trim() : "";
 	this.context = context;
 	this.server_url = false;
 	this.db = false;

@@ -72,7 +72,7 @@ TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 	return this.ui.client.getDocument(url, {"terminus:encoding": "terminus:frame"})
 	.then(function(response){
 		self.ui.clearBusy();
-		self.loadDataFrames(response.result);
+		self.loadDataFrames(response);
 		self.setLabel();
 		self.refreshPage();
 		if(self.load_schema){
@@ -117,7 +117,7 @@ TerminusDocumentViewer.prototype.createDocument = function(id){
 	return this.ui.client.createDocument(id, extr, opts)
 	.then(function(response){
 		self.ui.clearBusy();
-		self.ui.showDocument(response);
+		self.ui.showDocument(id);
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
