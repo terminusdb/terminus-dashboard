@@ -18,8 +18,8 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://localhost/platform/", db: "docs", schema: true }, 
-	//"http://195.201.12.87:6363/", key: "root"},
+	location: {server: "http://195.201.12.87:6363/", key: "root"},
+	//{server: "http://localhost/dcog/platform/", db: "simport", schema: true }, 
 	css: "basic",
 	plugins: {
 		"font-awesome": true,
