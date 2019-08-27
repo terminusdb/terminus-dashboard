@@ -37,7 +37,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qexs.setAttribute("class", "terminus-query-examples terminus-db-list-title ");
 	var qh = document.createElement("H3");
 	qh.appendChild(document.createTextNode("Examples"));
-	qh.setAttribute('class', 'terminus-full-css-margin-top terminus-module-head');
+	qh.setAttribute('class', 'terminus-full-css-margin-top terminus-module-head')
 	qexs.appendChild(qh)
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));

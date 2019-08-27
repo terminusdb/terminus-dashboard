@@ -41,7 +41,7 @@ var FrameConfig = {
 		],
 		mode: "edit",
 		features: ["body", "label", "control"],
-		viewer: "html"			
+		viewer: "html"
 	},
 	create: {
 		label: "Create Document",
@@ -50,20 +50,20 @@ var FrameConfig = {
 			{
 				pattern: { renderer: "object", depth: ">0"},
 				output: {
-					facet: "page",	
+					facet: "page",
 					features: ["type", "comment", "body", "control"],
 					controls: ["add", "delete"]
 				}
-				
+
 			},
 			{
 				pattern: { renderer: "object", depth: 0},
 				output: {
-					facet: "page",	
+					facet: "page",
 					features: ["type", "id", "body", "control"],
 					controls: ["add", "update", "cancel"]
 				}
-				
+
 			},
 			{
 				pattern: { renderer: "property"},
@@ -87,21 +87,13 @@ var FrameConfig = {
 					viewerOptions: { big: true},
 					features: ["body"],
 				}
-			},
-			{
-				pattern: { renderer: "object", property: "dcog:temporality"},
-				output: {
-					facet: "summary",
-					features: ["body", "control"],
-					controls: ["view"]
-				}
 			}
 
 
 		],
 		editor: true,
 		mode: "edit",
-		viewer: "html"			
+		viewer: "html"
 	},
 	model: {
 		label: "Class Frame Schema",
@@ -109,7 +101,7 @@ var FrameConfig = {
 			{
 				pattern: { renderer: "object"},
 				output: {
-					facet: "page",	
+					facet: "page",
 					features: ["type", "comment", "body"]
 				}
 			},
@@ -129,7 +121,7 @@ var FrameConfig = {
 		editor: true,
 		facet: "page",
 		mode: "view",
-		viewer: "html"			
+		viewer: "html"
 	},
 	expert: {
 		label: "Expert Mode",
@@ -138,6 +130,6 @@ var FrameConfig = {
 		editor: true,
 		facet: "page",
 		mode: "edit",
-		viewer: "html"						
+		viewer: "html"
 	}
 };
