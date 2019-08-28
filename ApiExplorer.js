@@ -805,7 +805,7 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
   fd.appendChild(cd);
 	if(this.ui.pluginAvailable("codemirror")){
     var cm = new Codemirror(txtar, 'turtle');
-		var ar = cm.colorizeTextArea();
+		var ar = cm.colorizeTextArea('query');
 		cm.updateTextArea(ar);
   }
   var br = document.createElement('BR');
@@ -935,7 +935,7 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 
        if(this.ui.pluginAvailable("codemirror")){
          var cm = new Codemirror(txtar, 'turtle');
-     		var ar = cm.colorizeTextArea();
+     		var ar = cm.colorizeTextArea('schema');
      		cm.updateTextArea(ar);
        }
        var br = document.createElement('BR');
@@ -1145,7 +1145,7 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 
        if(this.ui.pluginAvailable("codemirror")){
          var cm = new Codemirror(txtar, 'turtle');
-     		var ar = cm.colorizeTextArea();
+     		var ar = cm.colorizeTextArea('document');
      		cm.updateTextArea(ar);
        }
 

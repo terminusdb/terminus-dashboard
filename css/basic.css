@@ -25,7 +25,7 @@ div.terminus-object-properties {
 
 
 table {
-  width: 100%;
+  /*width: 100%;*/
   border-collapse: collapse;
 }
 /* Zebra striping */
@@ -43,11 +43,12 @@ td, th {
   text-align: left;
 }
 
-.table-cell-layout{
-	table-layout: fixed;
-	width: 100%;
-	white-space: pre-wrap;
-    word-wrap: break-word;
+
+.truncate {
+  max-width:50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cm-hide{
