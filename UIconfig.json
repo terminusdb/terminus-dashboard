@@ -28,8 +28,6 @@ let TerminusConfig = {
 			loaded: true
 		},
 		jquery: true,
-		jqueryui: true,
-		datatables: true,
 		quill: true,
 		jsoneditor: true,
 		codemirror: true

@@ -101,7 +101,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	prbut.setAttribute("class", "terminus-control-button terminus-btn");
 	prbut.addEventListener("click", function(){
 		qip.value = self.wquery.getPropertyListQuery();
-		self.stylizeTxt(qip);
+		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 
