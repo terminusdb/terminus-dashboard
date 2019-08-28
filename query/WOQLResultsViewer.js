@@ -11,7 +11,7 @@ WOQLResultsViewer.prototype.showTable = function(){
 
 
 WOQLResultsViewer.prototype.getAsDOM = function(){
-	if(this.result.hasBindings() && this.showTable()){
+	if(this.result && this.result.hasBindings() && this.showTable()){
 		return this.getTableDOM(this.result.bindings);
 	}
 	else {

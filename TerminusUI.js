@@ -78,6 +78,7 @@ TerminusUI.prototype.createDatabase = function(dbdets){
         return Promise.reject(new Error(self.getBadArguments("createDatabase", "ID and title are mandatory fields")));
 	}
 	var dbid = dbdets.id;
+	var myserver = this.client.server;
 	self.showBusy("Creating Database " + dbdets.title + " with id " + dbid);
 	var dbdoc = this.generateNewDatabaseDocument(dbdets);
 	return this.client.createDatabase(dbid, dbdoc)
@@ -88,6 +89,8 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 			return self.client.getSchema(dbdets.schema, opts)
 			.then(function(response){
 				self.showBusy("Updating database with new schema");
+				self.client.server = myserver;
+				self.client.dbid = dbid;
 				return self.client.updateSchema(false, response);
 			})
 			.then(function(response){
@@ -301,6 +304,11 @@ TerminusUI.prototype.redrawMainPage = function(){
 		this.main.appendChild(this.viewer.getAsDOM());
 	}
 }
+
+TerminusUI.prototype.showResult = function(response){
+	this.showMessage(response);
+};
+
 
 TerminusUI.prototype.showError = function(response){
 	this.showMessage(response);
