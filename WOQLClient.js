@@ -351,9 +351,6 @@ WOQLClient.prototype.capabilitiesPermit = function(action, dbid, server){
 		auths = rec['terminus:authority'];
 		if(auths && auths.indexOf("terminus:"+action) !== -1) return true;
 	}
-	else {
-		alert("problem with " + action + server + dbid);
-	}
 	this.error = this.accessDenied(action, dbid, server);
 	return false;
 }
@@ -603,10 +600,10 @@ WOQLClient.prototype.URIEncodePayload = function(pl){
 
 WOQLClient.prototype.dispatch = function(url, action, payload){
 	var res = false;
-	if(action != "connect" && this.connectionMode() && !this.serverConnected()){
+	/*if(action != "connect" && this.connectionMode() && !this.serverConnected()){
 		let key = (payload && payload.key) ? payload.key : false;
 		var self = this;
-		return this.connect(this.server, key)
+		return this.connect(this.serverURL(), key)
 		.then(function(response){
 			if(key) delete(payload['key']);
 			self.dispatch(url, action, payload);
@@ -615,7 +612,7 @@ WOQLClient.prototype.dispatch = function(url, action, payload){
 	}
 	if(!this.capabilitiesPermit(action)){
 		return Promise.reject(new Error(this.getAccessDeniedMessage(url, action, this.error)));
-	}
+	}*/
 	if(this.includeKey()){
 		payload = this.addKeyToPayload(payload);
 	}

@@ -5,11 +5,14 @@ let FrameHelper = {
 	standard_urls: {
 		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-		"xdd": "https://datachemist.net/ontology/xdd#",
 		"xsd": "http://www.w3.org/2001/XMLSchema#",
-		"dcog": "https://datachemist.net/ontology/dcog#",
 		"owl": "http://www.w3.org/2002/07/owl#",
-		"dcogbox": "https://datachemist.net/ontology/dcogbox#"
+		"dcogbox": "https://datachemist.net/ontology/dcogbox#",
+		"dcog": "https://datachemist.net/ontology/dcog#",
+		"xdd": "https://datachemist.net/ontology/xdd#",
+		"terminus": "https://datachemist.net/ontology/terminus#",
+		"vio": "https://datachemist.net/ontology/vio#",
+		"docu": "https://datachemist.net/ontology/documentation#"
 	}
 };
 

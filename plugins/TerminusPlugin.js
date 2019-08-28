@@ -116,9 +116,14 @@ TerminusPluginManager.prototype.calculateRequiredInitPlugins = function(opts){
 		var pins = [];
 		for(var pid in opts){
 			if(opts[pid] && pins.indexOf(pid) == -1){
-				if(typeof opts[pid] != "object"
-				|| typeof opts[pid].loaded == "undefined"
-				|| opts[pid].loaded != false) pins.push[pid]
+				if(typeof opts[pid] != "object" && opts[pid]){
+					pins.push(pid);
+				}
+				else if(typeof opts[pid] == "object"){
+					if(!(typeof opts[pid].loaded != "undefined" && !opts[pid].loaded)){
+						pins.push(pid);
+					}
+				}
 			}
 		}
 	}

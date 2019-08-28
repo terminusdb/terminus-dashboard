@@ -45,8 +45,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qexs.setAttribute("class", "terminus-query-examples terminus-db-list-title ");
 	var qh = document.createElement("H3");
 	qh.appendChild(document.createTextNode("Examples"));
-	qh.setAttribute('class', 'terminus-full-css-margin-top terminus-module-head')
-	qexs.appendChild(qh)
+	qh.setAttribute('class', 'terminus-full-css-margin-top terminus-module-head');
+	qexs.appendChild(qh);
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
 	nqbut.setAttribute("class", "terminus-control-button terminus-btn");
@@ -96,11 +96,22 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		self.query(qip.value);
 	})
 
-	qexs.appendChild(nqbut);
+	var prbut = document.createElement("button");
+	prbut.appendChild(document.createTextNode("Show All Properties"));
+	prbut.setAttribute("class", "terminus-control-button terminus-btn");
+	prbut.addEventListener("click", function(){
+		qip.value = self.wquery.getPropertyListQuery();
+		self.stylizeTxt(qip);
+		self.query(qip.value);
+	})
+
+	
 	qexs.appendChild(ebut);
+	qexs.appendChild(nqbut);
+	qexs.appendChild(aqbut);
+	qexs.appendChild(prbut);
 	qexs.appendChild(dbut);
 	qexs.appendChild(pbut);
-	qexs.appendChild(aqbut);
 	qbox.appendChild(qexs);
 	return qbox;
 }

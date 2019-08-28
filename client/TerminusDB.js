@@ -179,8 +179,8 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	//scd.appendChild(dcip);
 	//scd.appendChild(nbuts);
 	var wq = new WOQLQuery(this.ui.client, {});
-	//var filter = wq.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
-	var filter = "not(" + wq.getAbstractQueryPattern("Class") + ")";
+	var filter = wq.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
+	//var filter = "not(" + wq.getAbstractQueryPattern("Class") + ")";
 
 	var termcc = new TerminusClassChooser(this.ui, filter);
 	termcc.empty_choice = "Create Document of Type";
@@ -236,9 +236,6 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	pd.appendChild(document.createTextNode("DB Home Page - "));
 	var scd = document.createElement("span");
 	scd.setAttribute("class", "terminus-db-details");
-	var scl = document.createElement("span");
-	scl.setAttribute("class", "terminus-db-details-label ");
-	scl.appendChild(document.createTextNode("Connected to Database "))
 	var scs = document.createElement("span");
 	scs.setAttribute("class", "terminus-db-details-value ");
 	var dbrec = this.ui.getDBRecord();
@@ -246,7 +243,6 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
 		scs.appendChild(document.createTextNode(nm));
 	}
-	scd.appendChild(scl);
 	scd.appendChild(scs);
 	pd.appendChild(scd);
 	this.getClassesDOM(pd);

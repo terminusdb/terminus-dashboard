@@ -88,6 +88,22 @@ WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 	return woql;
 }
 
+WOQLQuery.prototype.getPropertyListQuery = function(constraint){
+	var vEl = "t(v('Property'), rdfs/range, v('Range'), dg/schema)";
+	var opts = [];
+	opts.push("t(v('Property'), rdf/type, v('Type'), dg/schema)");
+	opts.push("t(v('Property'), rdfs/label, v('Label'), dg/schema)");
+	opts.push("t(v('Property'), rdfs/comment, v('Comment'), dg/schema)");
+	opts.push("t(v('Property'), rdfs/domain, v('Domain'), dg/schema)");
+	var woql = "select([v('Property'), v('Label'), v('Comment'), v('Domain'), v('Type'), v('Range')],(" + vEl;
+	if(constraint) woql += ", " + constraint;
+	for(var i = 0; i<opts.length; i++){
+		woql += ", opt(" + opts[i] + ")";
+	}
+	woql += "))";
+	return woql;
+}
+
 
 WOQLQuery.prototype.getElementMetaDataQuery = function(constraint){
 	var vEl = "t(v('Element'), rdf/type, v('Type'), dg/schema)";
@@ -123,12 +139,13 @@ WOQLQuery.prototype.getClassMetaDataQuery = function(constraint){
 }
 
 WOQLQuery.prototype.getEntityClassQuery = function(){
-	var vEl = "t(v('Object'), rdf/type, v('Class'))";
+	var vEl = "t(v('Doc ID'), rdf/type, v('Class ID'))";
 	var opts = [];
-	//opts.push("(v('Class') << (dcog/'Entity')), v('Type') = \"Entity\")");
-	opts.push("t(v('Class'), rdfs/label, v('Class_Label'),dg/schema)");
-	opts.push("t(v('Object'), rdfs/label, v('Label'))");
-	var woql = "select([v('Object'),v('Class'),v('Class_Label'),v('Label'),v('Type')],(" + vEl;
+	opts.push("t(v('Doc ID'), rdfs/label, v('Document'))");
+	opts.push("t(v('Doc ID'), rdfs/comment, v('Comment'))");
+	opts.push("t(v('Class ID'), rdfs/label, v('Type'),dg/schema)");
+	var woql = "select([v('Document'),v('Comment'),v('Doc ID'),v('Type'),v('Class ID')],(" + vEl;
+	woql += ", (v('Class ID') << (dcog/'Document'))";
 	for(var i = 0; i<opts.length; i++){
 		woql += ", opt(" + opts[i] + ")";
 	}
