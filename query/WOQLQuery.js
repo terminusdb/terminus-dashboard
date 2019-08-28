@@ -72,6 +72,7 @@ WOQLQuery.prototype.getDocumentQuery = function(constraint, limit, start){
 	var woql = "limit( " + limit + ", start(" + start + ","
 	var vdoc = "t(v('Document'), rdf/type, v('Type'))";
 	woql += "select([v('Document'), v('Type')],(" + vdoc;
+	woql += ", (v('Type') << (dcog/'Document'))";
 	if(constraint) woql += ", " + constraint;
 	woql += "))))";
 	return woql;
