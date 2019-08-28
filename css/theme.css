@@ -329,7 +329,7 @@ body [class^="icon-"], body [class*=" icon-"] {
 	padding-left: 14px;
 	padding-right: 14px;
 	position: relative;
-	z-index: 9999
+	z-index: 6666
 }
 .navbar .nav>li>.dropdown-menu {
 	border: 1px solid #ccc;
@@ -694,7 +694,6 @@ input.terminus-form-value {
 	font-size: 30px;
 	height: 100%;
 	width: 0;
-	z-index: 99999;
 	top: 0;
 	right: 0;
 	color: black;
@@ -1297,6 +1296,16 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	 font-size:16px;
 }
 
+.cm-hide{
+	display: none;
+}
+
+.table-cell-layout{
+	table-layout: fixed;
+	width: 130%;
+	white-space: pre-wrap;
+    word-wrap: break-word;
+}
 
 /* signature code */
 .terminus-api-signature-pre{
