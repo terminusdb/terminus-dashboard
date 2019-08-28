@@ -24,6 +24,36 @@ div.terminus-object-properties {
 }
 
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+/* Zebra striping */
+tr:nth-of-type(odd) {
+  /*background: #eee;*/
+}
+th {
+  background: #48f;
+  color: white;
+  font-weight: bold;
+}
+td, th {
+  padding: 6px;
+  border: 0.5px solid #ccc;
+  text-align: left;
+}
+
+.table-cell-layout{
+	table-layout: fixed;
+	width: 100%;
+	white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.cm-hide{
+	display: none;
+}
+
 div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;

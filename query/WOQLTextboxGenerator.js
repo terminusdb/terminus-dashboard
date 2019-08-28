@@ -4,11 +4,19 @@ function WOQLTextboxGenerator(tq, qman, ui){
 	this.pman = new TerminusPluginManager();
 }
 
-WOQLTextboxGenerator.prototype.stylizeTxt = function(txt){
+WOQLTextboxGenerator.prototype.stylizeEditor = function(txt){
 	if(this.pman.pluginAvailable("codemirror")){
 		var cm = new Codemirror(txt, 'javascript');
 		var ar = cm.colorizeTextArea('query');
 		cm.updateTextArea(ar);
+	}
+}
+
+WOQLTextboxGenerator.prototype.deleteStylizedEditor = function(qip){
+	if(this.pman.pluginAvailable("codemirror")){
+		var cm = qip.nextElementSibling;
+		cm.setAttribute('class', 'cm-hide');
+		FrameHelper.removeChildren(cm);
 	}
 }
 
@@ -21,7 +29,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
 	if(q) qip.value = q;
 	qbox.appendChild(qip);
-	this.stylizeTxt(qip);
+	this.stylizeEditor(qip);
 	var self = this;
 	var qbut = document.createElement("button");
 	qbut.setAttribute("class", "terminus-control-button terminus-btn")
@@ -43,8 +51,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
 	nqbut.setAttribute("class", "terminus-control-button terminus-btn");
 	nqbut.addEventListener("click", function(){
+		self.deleteStylizedEditor(qip);
 		qip.value = self.wquery.getClassMetaDataQuery();
-		self.stylizeTxt(qip);
+		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 
@@ -52,8 +61,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	aqbut.appendChild(document.createTextNode("Show Document Classes"));
 	aqbut.setAttribute("class", "terminus-control-button terminus-btn");
 	aqbut.addEventListener("click", function(){
+		self.deleteStylizedEditor(qip);
 		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")");
-		self.stylizeTxt(qip);
+		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 
@@ -62,24 +72,27 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	ebut.setAttribute("class", "terminus-control-button terminus-btn");
 	var self = this;
 	ebut.addEventListener("click", function(){
+		self.deleteStylizedEditor(qip);
 		qip.value = self.wquery.getElementMetaDataQuery();
-    self.stylizeTxt(qip);
+    	self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 	var dbut = document.createElement("button");
 	dbut.appendChild(document.createTextNode("Show All Documents"));
 	dbut.setAttribute("class", "terminus-control-button terminus-btn");
 	dbut.addEventListener("click", function(){
+		self.deleteStylizedEditor(qip);
 		qip.value = self.wquery.getDocumentQuery();
-		self.stylizeTxt(qip);
+		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 	var pbut = document.createElement("button");
 	pbut.appendChild(document.createTextNode("Show All Data"));
 	pbut.setAttribute("class", "terminus-control-button terminus-btn");
 	pbut.addEventListener("click", function(){
+		self.deleteStylizedEditor(qip);
 		qip.value = self.wquery.getEverythingQuery();
-		self.stylizeTxt(qip);
+		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 
