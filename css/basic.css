@@ -141,6 +141,21 @@ div.terminus-control-buttons {
 	padding-left: 1em;
 }
 
+.terminus-db-info-box-display{
+	display: flex
+}
+
+.terminus-db-info-box {
+  position: relative;
+  background-color: #eee;
+  color: black;
+  border: 1px solid #48f;
+  padding: 2rem;
+  text-align: center;
+  width: 290px;
+  margin:30px;
+}
+
 .terminus-plugin-control {
 	display: inline-block;
 	padding: 6px;

@@ -232,8 +232,11 @@ function TerminusDBViewer(ui){
 
 TerminusDBViewer.prototype.getAsDOM = function(selected){
 	var pd = document.createElement("span");
-	pd.setAttribute("class", "terminus-db-home-page ");
-	pd.appendChild(document.createTextNode("DB Home Page - "));
+	pd.setAttribute("class", "terminus-db-home-page");
+	var dhp = document.createElement("span");
+	dhp.setAttribute('class', 'terminus-home-heading');
+	dhp.appendChild(document.createTextNode("DB Home Page - "));
+	pd.appendChild(dhp);
 	var scd = document.createElement("span");
 	scd.setAttribute("class", "terminus-db-details");
 	var scs = document.createElement("span");
@@ -242,11 +245,72 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	if(dbrec){
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
 		scs.appendChild(document.createTextNode(nm));
+		scs.setAttribute('class', 'terminus-home-heading');
 	}
 	scd.appendChild(scs);
 	pd.appendChild(scd);
+	this.getDBSummary(pd);
 	this.getClassesDOM(pd);
 	return pd;
+}
+
+TerminusDBViewer.prototype.getDbInfoBox = function(r, module){
+	var sp = document.createElement('span');
+    sp.setAttribute('class', 'terminus-db-info-box');
+
+    var a = document.createElement('a');
+    a.setAttribute('style', 'font-size: large;')
+    var i = document.createElement('i');
+	a.appendChild(i);
+    var b = document.createElement('b');
+    b.setAttribute('class', 'terminus-info-heading');
+	switch(module){
+		case 'size':
+			i.setAttribute('class', 'terminus-menu-icon fa fa-balance-scale');
+			b.innerHTML = 'Size';
+		    var txt = document.createTextNode('2 Gb');
+		break;
+		case 'created':
+			i.setAttribute('class', 'terminus-menu-icon fa fa-calendar');
+			b.innerHTML = 'Created';
+		    var txt = document.createTextNode('16 July 2015');
+		break;
+		case 'modified':
+			i.setAttribute('class', 'terminus-menu-icon fa fa-clock');
+			b.innerHTML = 'Last Modified';
+		    var txt = document.createTextNode('22 Dec 2019');
+		break;
+	}
+    a.appendChild(b);
+	var br = document.createElement('BR');
+    a.appendChild(br);
+    if(txt) a.appendChild(txt);
+    sp.appendChild(a);
+    r.appendChild(sp);
+}
+
+TerminusDBViewer.prototype.getDBSummary = function(d){
+  var r = document.createElement('span');
+  r.setAttribute('class', 'terminus-db-info-box-display');
+  d.appendChild(r);
+
+  /* temporary - can change according to further requirments */
+
+  this.getDbInfoBox(r, 'size');
+  this.getDbInfoBox(r, 'created');
+  this.getDbInfoBox(r, 'modified');
+
+  // delete button
+  /*var button = document.createElement('button');
+  button.setAttribute('class', 'btn');
+  button.setAttribute('type', 'button');
+  //button.setAttribute('style', 'background-color:red; color:white; margin-left:1015px;');
+  button.innerHTML = 'Delete';
+  var self = this;
+  button.addEventListener("click", function(){
+    self.regulumUI.deleteDatabase(dbId);
+  });
+  d.appendChild(button);*/
 }
 
 TerminusDBViewer.prototype.getClassesDOM = function(d){
@@ -262,6 +326,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		}
 		var nd = self.result.getAsDOM();
 		if(nd){
+			nd.setAttribute('class', 'terminus-margin-box');
 			d.appendChild(nd);
 		}
 	})

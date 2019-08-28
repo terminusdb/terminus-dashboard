@@ -1634,12 +1634,63 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	 text-align: right;
 }
 
+.terminus-home-heading{
+	font-size: 28px;
+    height: 100%;
+    width: 0;
+    color: black;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+.terminus-margin-box{
+	margin: 10px;
+}
+
+.terminus-db-info-box-display{
+	display: flex
+}
+
+.terminus-db-info-box {
+  position: relative;
+  background-color: cadetblue;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  width: 290px;
+  margin:30px;
+}
+
+.terminus-db-info-box::before {
+  content: "";
+  position : absolute;
+  z-index  : -1;
+  bottom   : 15px;
+  right    : 5px;
+  width    : 50%;
+  top      : 80%;
+  max-width: 200px;
+  box-shadow: 0px 13px 10px black;
+  transform: rotate(4deg);
+}
+
+.terminus-db-info-box .terminus-menu-icon {
+	margin-right: 10px;
+	padding-right:10px;
+	font-size: larger;
+	color: #fff;
+}
+
+.terminus-db-info-box .terminus-info-heading {
+	font-size: 26px;
+	color: #fff;
+	font-weight: 500
+}
+
 .terminus-plugin-nav {
-	font-size: 30px;
+  font-size: 30px;
   height: 100%;
   width: 0;
-  /*z-index: 1;*/
-	 z-index:99999;
+  z-index:99999;
   top: 0;
   right: 0;
   color: black;
