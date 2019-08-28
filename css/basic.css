@@ -25,7 +25,7 @@ div.terminus-object-properties {
 
 
 table {
-  width: 100%;
+  /*width: 100%;*/
   border-collapse: collapse;
 }
 /* Zebra striping */
@@ -43,11 +43,12 @@ td, th {
   text-align: left;
 }
 
-.table-cell-layout{
-	table-layout: fixed;
-	width: 100%;
-	white-space: pre-wrap;
-    word-wrap: break-word;
+
+.truncate {
+  max-width:50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cm-hide{
@@ -138,6 +139,21 @@ div.terminus-control-buttons {
 
 .terminus-header-tab {
 	padding-left: 1em;
+}
+
+.terminus-db-info-box-display{
+	display: flex
+}
+
+.terminus-db-info-box {
+  position: relative;
+  background-color: #eee;
+  color: black;
+  border: 1px solid #48f;
+  padding: 2rem;
+  text-align: center;
+  width: 290px;
+  margin:30px;
 }
 
 .terminus-plugin-control {
