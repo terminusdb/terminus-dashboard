@@ -15,7 +15,7 @@ WOQLTextboxGenerator.prototype.stylizeEditor = function(txt){
 WOQLTextboxGenerator.prototype.deleteStylizedEditor = function(qip){
 	if(this.pman.pluginAvailable("codemirror")){
 		var cm = qip.nextElementSibling;
-		cm.setAttribute('class', 'cm-hide');
+		cm.setAttribute('class', 'terminus-hide');
 		FrameHelper.removeChildren(cm);
 	}
 }
@@ -100,12 +100,13 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	prbut.appendChild(document.createTextNode("Show All Properties"));
 	prbut.setAttribute("class", "terminus-control-button terminus-btn");
 	prbut.addEventListener("click", function(){
+		self.deleteStylizedEditor(qip);
 		qip.value = self.wquery.getPropertyListQuery();
-		self.stylizeTxt(qip);
+		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
 
-	
+
 	qexs.appendChild(ebut);
 	qexs.appendChild(nqbut);
 	qexs.appendChild(aqbut);

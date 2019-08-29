@@ -570,6 +570,24 @@ box-shadow: none;
 	user-select: none
 }
 
+.terminus-del-btn{
+	display: inline-block;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 4px 10px;
+	margin-left: 10px;
+	font-size: large;
+	line-height: 1.42857;
+	border-radius: 4px;
+	float: right;
+}
+
 .terminus-doc-btn{
 	float: right;
 	border: 1px solid transparent;
@@ -645,6 +663,33 @@ fieldset[disabled] .terminus-btn-default:active, fieldset[disabled] .terminus-bt
 fieldset[disabled] .terminus-btn-default:hover {
 	background-color: #fafafa;
 	border-color: #ededed
+}
+
+/* Collapsible */
+
+.terminus-collapsible {
+  background-color: #f6f6f6;
+  border-color: #e9e9e9;
+  color: black;
+  cursor: pointer;
+  padding: 10px 15px;
+  width: 100%;
+  border: 1px solid transparent;
+  font-size: large;
+  font-weight: 600;
+  margin: 0;
+  text-align: left;
+}
+
+.active, .terminus-collapsible:hover {
+  background-color: lightgrey;
+}
+
+.terminus-collapsible-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
 }
 
 /* terminus frames */
@@ -1153,7 +1198,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	border-top-right-radius: 3px;
 	border-top-left-radius: 3px;
 	font-weight: 500 !important;
-  font-size: 28px;
+    font-size: 28px;
 }
 .terminus-full-css-margin-top{
   margin-top: 30px;
@@ -1302,7 +1347,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	 font-size:16px;
 }
 
-.cm-hide{
+.terminus-hide{
 	display: none;
 }
 
@@ -1650,6 +1695,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	display: flex
 }
 
+
 .terminus-db-info-box {
   position: relative;
   background-color: cadetblue;
@@ -1659,6 +1705,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
   width: 290px;
   margin:30px;
 }
+
 
 .terminus-db-info-box::before {
   content: "";
