@@ -1306,6 +1306,7 @@ ApiExplorer.prototype.prettifySignature = function(action){
     return api;
 } // prettifySignature()
 
+// displays signature only on click
 function tolggleSignatureContent(content){
     if (content.style.display === "block")
         content.style.display = "none";
