@@ -24,9 +24,7 @@ Codemirror.prototype.colorizeTextArea = function(mode){
     indentWithTabs      : true,
     newlineAndIndent    : true,
     styleActiveLine     : { nonEmpty: true },
-    matchBrackets       : true,
-    matchTags           : { bothTags: true },
-    findMatchingBrackets: true,
+    autoCloseBrackets   : true,
     extraKeys           : { "Ctrl-J": "toMatchingTag", "Ctrl-F": "find", "Tab": "autocomplete" },
     refresh             : true
    });
@@ -45,7 +43,7 @@ Codemirror.prototype.colorizeTextArea = function(mode){
 Codemirror.prototype.setCodemirrorSize = function(editor, mode){
   switch(mode){
     case 'query':
-      editor.setSize('1200', '150');
+      editor.setSize('1200', '200');
     break;
     case 'schema':
       editor.setSize('1200', '1550');

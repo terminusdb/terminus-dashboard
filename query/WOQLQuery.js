@@ -4,6 +4,7 @@ function WOQLQuery(client, options){
 	this.prefixes = {};
 	if(client.platformEndpoint()){
 		var sid = client.server.substring(0, client.server.lastIndexOf("platform"));
+		this.sid = sid;
 		var colid = client.server.substring(0, client.server.lastIndexOf("platform")) + client.dbid;
 		this.prefixes['s'] = colid + "/ontology/main#";
 		this.prefixes['g'] = sid;
@@ -137,6 +138,26 @@ WOQLQuery.prototype.getClassMetaDataQuery = function(constraint){
 	woql += "))";
 	return woql;
 }
+
+WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen){
+	var gLink = "g/'" + chosen.substring(this.sid.length, chosen.length) + "'";
+	var vEl = "t(v('Document'), rdf/type, " + gLink + ")";
+	var opts = "t(v('Document'),  v('Property'), v('Value'))";
+	var woql = "select([v('Document'), v('Property'), v('Value')],(" + vEl + ",";
+	woql += opts;
+	woql += "))";
+	return woql;
+}
+
+WOQLQuery.prototype.getDataOfChosenPropertyQuery = function(chosen){
+	var gLink = "g/'" + chosen.substring(this.sid.length, chosen.length) + "'";
+	var vdoc = "t(v('Class'), " + gLink + ", v('Value'))";
+	woql = "select([v('Class'), v('Value')],(" + vdoc;
+	woql += "))";
+	return woql;
+}
+
+
 
 WOQLQuery.prototype.getEntityClassQuery = function(){
 	var vEl = "t(v('Doc ID'), rdf/type, v('Class ID'))";

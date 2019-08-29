@@ -11,11 +11,18 @@ WOQLResultsViewer.prototype.showTable = function(){
 
 
 WOQLResultsViewer.prototype.getAsDOM = function(){
+	var rs = document.createElement('div');
+	var rh = document.createElement('div');
+	rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
+	rh.appendChild(document.createTextNode("Results"));
+	rs.appendChild(rh);
 	if(this.result && this.result.hasBindings() && this.showTable()){
-		return this.getTableDOM(this.result.bindings);
+		rs.appendChild(this.getTableDOM(this.result.bindings));
+		return rs;
 	}
 	else {
 		console.log("no bindings for query");
+		return rs.appendChild(document.createTextNode("No bindings for query"));
 	}
 }
 

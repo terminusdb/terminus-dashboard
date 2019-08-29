@@ -2,6 +2,7 @@ function WOQLTextboxGenerator(tq, qman, ui){
 	this.query = tq;
 	this.wquery = qman.wquery;
 	this.pman = new TerminusPluginManager();
+	this.ui = ui;
 }
 
 WOQLTextboxGenerator.prototype.stylizeEditor = function(txt){
@@ -62,7 +63,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	aqbut.setAttribute("class", "terminus-control-button terminus-btn");
 	aqbut.addEventListener("click", function(){
 		self.deleteStylizedEditor(qip);
-		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")");
+		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'")
+														+ ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")");
 		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
@@ -106,6 +108,31 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		self.query(qip.value);
 	})
 
+	var termcc = new TerminusClassChooser(this.ui);
+	termcc.empty_choice = "Choose a class to view data ...";
+	var self = this;
+	termcc.change = function(new_class){
+		if(new_class){
+			self.deleteStylizedEditor(qip);
+			qip.value = self.wquery.getDataOfChosenClassQuery(new_class);
+			self.stylizeEditor(qip);
+			self.query(qip.value);
+		}
+	}
+	var tcdom = termcc.getAsDOM();
+
+	var termpc = new TerminusPropertyChooser(this.ui);
+	termpc.empty_choice = "Choose a property to view data ...";
+	var self = this;
+	termpc.change = function(new_property){
+		if(new_property){
+			self.deleteStylizedEditor(qip);
+			qip.value = self.wquery.getDataOfChosenPropertyQuery(new_property);
+			self.stylizeEditor(qip);
+			self.query(qip.value);
+		}
+	}
+	var pdom = termpc.getAsDOM();
 
 	qexs.appendChild(ebut);
 	qexs.appendChild(nqbut);
@@ -114,5 +141,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qexs.appendChild(dbut);
 	qexs.appendChild(pbut);
 	qbox.appendChild(qexs);
+	qbox.appendChild(tcdom);
+	qbox.appendChild(pdom);
+
 	return qbox;
 }

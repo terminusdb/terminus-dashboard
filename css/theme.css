@@ -1691,6 +1691,11 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	margin: 10px;
 }
 
+.terminus-margin-top-bottom{
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
 .terminus-db-info-box-display{
 	display: flex
 }
