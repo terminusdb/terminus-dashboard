@@ -25,12 +25,14 @@ function TerminusPluginManager(){
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/runmode/runmode.js",
 		  	"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/http/http.js",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/edit/closebrackets.js"
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/edit/closebrackets.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/edit/matchbrackets.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/display/placeholder.js"
 	  ],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/duotone-light.css"
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/neo.css"
 		]
 	};
 	this.plugins["jquery"] = {

@@ -26,7 +26,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qbox.setAttribute("class", "terminus-query-textbox-input");
 	var qip = document.createElement("textarea");
 	qip.setAttribute("class", "terminus-query-box");
-	qip.setAttribute("placeholder", "enter your query");
+	qip.setAttribute("placeholder", "Enter new query or load queries from example buttons provided below ...");
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
 	if(q) qip.value = q;
 	qbox.appendChild(qip);

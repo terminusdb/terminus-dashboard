@@ -1700,6 +1700,10 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	display: flex
 }
 
+.CodeMirror {
+	border: 1px solid #eee;
+	height: auto;
+}
 
 .terminus-db-info-box {
   position: relative;
