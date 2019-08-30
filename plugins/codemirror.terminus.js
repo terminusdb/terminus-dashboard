@@ -24,7 +24,6 @@ Codemirror.prototype.colorizeTextArea = function(mode){
     smartIndent         : true,
     indentWithTabs      : true,
     newlineAndIndent    : true,
-    styleActiveLine     : { nonEmpty: true },
     autoCloseBrackets   : true,
     matchBrackets       : {afterCursor: true},
     extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },

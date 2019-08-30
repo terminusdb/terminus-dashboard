@@ -196,6 +196,11 @@ body [class^="icon-"], body [class*=" icon-"] {
 	margin-left: 180px;
 	margin-left: 0;
 }
+
+.terminus-font-align{
+	margin: 10px;
+	cursor:pointer;
+}
 /* terminus frame inputs & labels */
 /*.terminus-property-header-wrapper-spacer{
 	padding-right: 10px;

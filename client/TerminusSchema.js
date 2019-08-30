@@ -332,7 +332,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
     var cm = new Codemirror(ipval, this.format);
 		var ar = cm.colorizeTextArea('schema');
 		cm.updateTextArea(ar);
-  }
+    }
 	return np;
 }
 

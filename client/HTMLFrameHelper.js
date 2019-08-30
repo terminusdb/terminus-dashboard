@@ -2,24 +2,64 @@
 let HTMLFrameHelper = {};
 
 HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled){
+	var pman = new TerminusPluginManager();
 	var dpropDOM = document.createElement("span");
 	dpropDOM.setAttribute("class", "terminus-action-control " + type + "-" + control);
-	var button = document.createElement("button");
-	button.appendChild(document.createTextNode(label));
-	if(disabled){
-		button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
-		button.setAttribute("title", disabled);
+	var pman = new TerminusPluginManager();
+    if(pman.pluginAvailable("font-awesome")){
+		var icon = document.createElement('icon');
+		var faic = this.getControlIcon(control);
+		if(disabled){
+			icon.setAttribute("class", "terminus-frame-control frame-control-action action-disabled fa fa" + faic + " " + type + "-" + control + "-disabled terminus-font-align");
+			icon.setAttribute("title", disabled);
+		}
+		else {
+			icon.setAttribute("class", "terminus-frame-control frame-control-action frame-control-action fa fa" + faic + " " + type + "-" + control + " terminus-font-align");
+			icon.addEventListener("click", function(){
+				callback(control);
+			});
+		}
+		dpropDOM.appendChild(icon);
 	}
-	else {
-		button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action " + type + "-" + control);
-		button.addEventListener("click", function(){
-			callback(control);
-		});
+	else{
+		var button = document.createElement("button");
+		button.appendChild(document.createTextNode(label));
+		if(disabled){
+			button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
+			button.setAttribute("title", disabled);
+		}
+		else {
+			button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action " + type + "-" + control);
+			button.addEventListener("click", function(){
+				callback(control);
+			});
+		}
+		dpropDOM.appendChild(button);
 	}
-	dpropDOM.appendChild(button);
 	return dpropDOM;
 }
 
+HTMLFrameHelper.getControlIcon = function(control){
+	var icon;
+	switch(control){
+		case 'delete':
+			icon = '-alt-delete';
+		break;
+		case 'add':
+			icon = '-plus';
+		break;
+		case 'reset':
+			icon = '-undo';
+		break;
+		case 'save':
+			icon = '-save';
+		break;
+		case 'hide':
+			icon = '-eye-slash';
+		break;
+	}
+	return icon;
+}
 
 HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback){
 	var sel = document.createElement("select");

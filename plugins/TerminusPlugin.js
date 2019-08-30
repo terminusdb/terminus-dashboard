@@ -193,6 +193,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 				return true;
 			}
 			case "font-awesome": {
+				//if(typeof CodeMirror != "undefined") return true;
 				return this.fontAwesomeCheck();
 			}
 			case "datatables": {
@@ -236,7 +237,7 @@ TerminusPluginManager.prototype.fontAwesomeCheck = function(){
 		loaded = true;
 	}
 	document.body.removeChild(span);
-	return loaded
+	return loaded;
 }
 
 TerminusPluginManager.prototype.getDefaultPlugins = function(){
