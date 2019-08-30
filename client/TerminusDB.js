@@ -242,7 +242,7 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	pd.appendChild(scd);
 	pd.appendChild(prettifyHeaderDom('Summary'));
 	this.getDBSummary(pd);
-	pd.appendChild(pd.appendChild(prettifyHeaderDom('List of Classes')));
+	pd.appendChild(pd.appendChild(prettifyHeaderDom('List of Documents')));
 	this.getClassesDOM(pd);
 	return pd;
 }

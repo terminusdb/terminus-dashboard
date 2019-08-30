@@ -151,22 +151,20 @@ WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen){
 
 WOQLQuery.prototype.getDataOfChosenPropertyQuery = function(chosen){
 	var gLink = "g/'" + chosen.substring(this.sid.length, chosen.length) + "'";
-	var vdoc = "t(v('Class'), " + gLink + ", v('Value'))";
-	woql = "select([v('Class'), v('Value')],(" + vdoc;
+	var vdoc = "t(v('Document'), " + gLink + ", v('Value'))";
+	woql = "select([v('Document'), v('Value')],(" + vdoc;
 	woql += "))";
 	return woql;
 }
 
-
-
 WOQLQuery.prototype.getEntityClassQuery = function(){
-	var vEl = "t(v('Doc ID'), rdf/type, v('Class ID'))";
+	var vEl = "t(v('ID'), rdf/type, v('Class'))";
 	var opts = [];
-	opts.push("t(v('Doc ID'), rdfs/label, v('Document'))");
-	opts.push("t(v('Doc ID'), rdfs/comment, v('Comment'))");
-	opts.push("t(v('Class ID'), rdfs/label, v('Type'),dg/schema)");
-	var woql = "select([v('Document'),v('Comment'),v('Doc ID'),v('Type'),v('Class ID')],(" + vEl;
-	woql += ", (v('Class ID') << (dcog/'Document'))";
+	opts.push("t(v('ID'), rdfs/label, v('Label'))");
+	opts.push("t(v('ID'), rdfs/comment, v('Comment'))");
+	opts.push("t(v('Class'), rdfs/label, v('Type'),dg/schema)");
+	var woql = "select([v('Label'),v('Comment'),v('ID'),v('Type'),v('Class')],(" + vEl;
+	woql += ", (v('Class') << (dcog/'Document'))";
 	for(var i = 0; i<opts.length; i++){
 		woql += ", opt(" + opts[i] + ")";
 	}
