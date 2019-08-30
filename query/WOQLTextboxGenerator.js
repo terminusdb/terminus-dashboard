@@ -84,7 +84,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	dbut.setAttribute("class", "terminus-control-button terminus-btn");
 	dbut.addEventListener("click", function(){
 		self.deleteStylizedEditor(qip);
-		qip.value = self.wquery.getDocumentQuery();
+		qip.value = self.wquery.getAllDocumentQuery();
 		self.stylizeEditor(qip);
 		self.query(qip.value);
 	})
@@ -134,6 +134,20 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	}
 	var pdom = termpc.getAsDOM();
 
+	var dcip = document.createElement("input");
+	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
+	dcip.setAttribute("placeholder", "Enter Document ID");
+	dcip.addEventListener('keypress', function(e){
+		// on enter
+		var key = e.which || e.keyCode;
+		if (key === 13) { // 13 is enter
+			self.deleteStylizedEditor(qip);
+    		qip.value = self.wquery.getDocumentQuery(dcip.value);
+    		self.stylizeEditor(qip);
+    		self.query(qip.value);
+		}
+	})
+
 	qexs.appendChild(ebut);
 	qexs.appendChild(nqbut);
 	qexs.appendChild(aqbut);
@@ -143,6 +157,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qbox.appendChild(qexs);
 	qbox.appendChild(tcdom);
 	qbox.appendChild(pdom);
+	qbox.appendChild(dcip);
 
 	return qbox;
 }

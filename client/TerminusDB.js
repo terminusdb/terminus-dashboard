@@ -308,7 +308,7 @@ TerminusDBViewer.prototype.getDBSummary = function(d){
 }
 
 TerminusDBViewer.prototype.getClassesDOM = function(d){
-	var q = this.wquery.getEntityClassQuery();
+	var q = this.wquery.getClassesQuery();
 	var self = this;
 	this.wquery.execute(q)
 	.then(function(result){

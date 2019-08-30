@@ -67,7 +67,7 @@ WOQLQuery.prototype.getSubclassQueryPattern = function(varname, clsname){
 	return sqp;
 }
 
-WOQLQuery.prototype.getDocumentQuery = function(constraint, limit, start){
+WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 	limit = limit ? limit : 100;
 	start = start ? start : 0;
 	var woql = "limit( " + limit + ", start(" + start + ","
@@ -151,13 +151,22 @@ WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen){
 
 WOQLQuery.prototype.getDataOfChosenPropertyQuery = function(chosen){
 	var gLink = "g/'" + chosen.substring(this.sid.length, chosen.length) + "'";
-	var vdoc = "t(v('Document'), " + gLink + ", v('Value'))";
-	woql = "select([v('Document'), v('Value')],(" + vdoc;
+	var vdoc = "t(v('Document'), " + gLink + ", v('Value')),";
+	var ldoc = "opt(t(v('Document'), rdfs/label, v('Label')))"
+	woql = "select([v('Document'), v('Label'), v('Value')],(" + vdoc + ldoc;
 	woql += "))";
 	return woql;
 }
 
-WOQLQuery.prototype.getEntityClassQuery = function(){
+WOQLQuery.prototype.getDocumentQuery = function(id){
+	var docid = "'" + id + "'";
+	var vEl = "t(doc/" + docid + ", v('Property'), v('Value'))";
+	var woql = "select([v('Property'), v('Value')],(" + vEl;
+	woql += "))";
+	return woql;
+}
+
+WOQLQuery.prototype.getClassesQuery = function(){
 	var vEl = "t(v('ID'), rdf/type, v('Class'))";
 	var opts = [];
 	opts.push("t(v('ID'), rdfs/label, v('Label'))");
