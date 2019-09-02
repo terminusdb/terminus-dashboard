@@ -22,6 +22,5 @@ Datatables.prototype.draw = function(){
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');
-    //tab.setAttribute('style'      , 'width:100%; cursor:pointer; font-size:larger;');
     return tab;
 }

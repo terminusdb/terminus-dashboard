@@ -160,8 +160,14 @@ WOQLQuery.prototype.getDataOfChosenPropertyQuery = function(chosen){
 
 WOQLQuery.prototype.getDocumentQuery = function(id){
 	var docid = "'" + id + "'";
-	var vEl = "t(doc/" + docid + ", v('Property'), v('Value'))";
-	var woql = "select([v('Property'), v('Value')],(" + vEl;
+	var vEl = "t(doc/" + docid + ", v('Property'), v('Property Value'))";
+	var opts = [];
+	opts.push("t(v('Property'), rdfs/label, v('Property Label'), dg/schema)");
+	opts.push("t(v('Property'), rdf/type, v('Property Type'), dg/schema)");
+	var woql = "select([v('Property Label'), v('Property'), v('Property Value'), v('Property Type')],(" + vEl;
+	for(var i = 0; i<opts.length; i++){
+		woql += ", opt(" + opts[i] + ")";
+	}
 	woql += "))";
 	return woql;
 }

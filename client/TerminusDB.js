@@ -322,7 +322,8 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		if(nd){
 			nd.setAttribute('class', 'terminus-margin-box');
 			d.appendChild(nd);
-		}
+        }
+		else d.appendChild(document.createTextNode("No bindings for query"));
 	})
 	.catch(function(err){
 		console.error(err);

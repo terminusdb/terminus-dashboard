@@ -22,7 +22,6 @@ WOQLResultsViewer.prototype.getAsDOM = function(){
 	}
 	else {
 		console.log("no bindings for query");
-		return rs.appendChild(document.createTextNode("No bindings for query"));
 	}
 }
 
