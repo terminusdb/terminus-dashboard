@@ -925,38 +925,6 @@ div.terminus-property-frame{
   font-size: 36px;
   margin-left: 50px;
 }
-/*
-#loader {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-/*  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  border: 16px solid white;
-  border-radius: 50%;
-  border-top: 16px solid green;*/
- /* width: 120px;
-  height: 120px;
- /* -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;*/
-
- /* height: 100%;
-  background: repeating-linear-gradient(
-  45deg,
-    #008737,
-    #008737 10px,
-    #69AF23 10px,
-    #69AF23 20px
-  ); /* Stripes Background Gradient */
- /* box-shadow: 0px 0px 14px 1px #008737;
-  position: absolute;
-  /*top: 0;
-  left: 0;*/
- /* animation: flicker 5s infinite;
-  overflow: hidden;
-}*/
 
 .terminus-show-msg {
 	color: #3c763d;
