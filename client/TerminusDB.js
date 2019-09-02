@@ -301,7 +301,7 @@ TerminusDBViewer.prototype.getDBSummary = function(d){
     r.setAttribute('class', 'terminus-db-info-box-display');
     d.appendChild(r);
 
-    /* temporary - can change according to further requirments */
+    /* getDbInfoBox() calls can change according to further requirments */
     this.getDbInfoBox(r, 'size');
     this.getDbInfoBox(r, 'created');
     this.getDbInfoBox(r, 'modified');
