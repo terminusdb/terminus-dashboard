@@ -233,7 +233,8 @@ TerminusPluginManager.prototype.fontAwesomeCheck = function(){
 	  return window.getComputedStyle(element, null).getPropertyValue(property);
 	}
 	var loaded = false;
-	if (css(span, 'font-family') == 'FontAwesome') {
+	var fontAwsm = css(span, 'font-family');
+	if (fontAwsm.replace(/"/g, "") == 'Font Awesome 5 Free') { // remove double quotes
 		loaded = true;
 	}
 	document.body.removeChild(span);
