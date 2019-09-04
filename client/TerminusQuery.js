@@ -7,6 +7,7 @@ function TerminusQueryViewer(ui, options){
 	this.result = false;
 	this.wquery = new WOQLQuery(ui.client, this.options);
 	this.results_first = false;
+	this.pman = new TerminusPluginManager();
 	this.gentype = (options && options.generator ? options.generator : "textbox");
 	this.generators = {
 		"textbox" : { label: "Simple Text Box", value: "textbox"},
@@ -32,8 +33,8 @@ TerminusQueryViewer.prototype.redrawGenerator = function(q){
 
 TerminusQueryViewer.prototype.loadGenerator = function(){
 	var self = this;
-	var nquery = function(q){
-		self.query(q)
+	var nquery = function(q, settings){
+		self.query(q, settings)
 	}
 	if(this.gentype == "textbox"){
 		this.generator = new WOQLTextboxGenerator(nquery, this, this.ui);
@@ -63,18 +64,42 @@ TerminusQueryViewer.prototype.init = function(){
 	});
 }
 
-TerminusQueryViewer.prototype.query = function(val){
+
+TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	var self = this;
 	FrameHelper.removeChildren(this.resultDOM);
 	this.wquery.execute(val)
 	.then(function(result){
 		if(true || !self.result){
-			self.result = new WOQLResultsViewer(result, self.options);
+			self.result = new WOQLResultsViewer(self.ui, result, self.options, settings);
 		}
 		else {
 			//self.result.newResult(result);
 		}
-		var nd = self.result.getAsDOM();
+		var nd = self.result.getAsDOM(self.resultDOM);
+		if(nd){
+			 self.resultDOM.appendChild(nd);
+		}
+	})
+	.catch(function(err){
+		console.error(err);
+		self.ui.showError(err);
+	});
+}
+
+
+/*TerminusQueryViewer.prototype.query = function(val, settings){
+	var self = this;
+	rameHelper.removeChildren(this.resultDOM);
+	this.wquery.execute(val)
+	.then(function(result){
+		if(true || !self.result){
+			self.result = new WOQLResultsViewer(self.ui, result, self.options, settings);
+		}
+		else {
+			//self.result.newResult(result);
+		}
+		var nd = self.result.getAsDOM(self.resultDOM);
 		if(nd){
 			self.resultDOM.appendChild(nd);
 		}
@@ -83,6 +108,11 @@ TerminusQueryViewer.prototype.query = function(val){
 		console.error(err);
 		self.ui.showError(err);
 	});
+}*/
+
+TerminusQueryViewer.prototype.getResultViewDom = function(){
+	this.resultDOM = document.createElement("div");
+	this.resultDOM.setAttribute("class", "terminus-query-results");
 }
 
 TerminusQueryViewer.prototype.getAsDOM = function(q){

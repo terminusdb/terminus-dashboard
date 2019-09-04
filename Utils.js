@@ -283,3 +283,20 @@ function showHttpResult(response, action, currForm, plugin){
     })
 
 } // showHttpResult()
+
+
+function deleteStylizedEditor(ui, qip){
+    if(ui.pluginAvailable("codemirror")){
+		var cm = qip.nextElementSibling;
+		cm.setAttribute('class', 'terminus-hide');
+		FrameHelper.removeChildren(cm);
+	}
+}
+
+function stylizeEditor(ui, txt){
+	if(ui.pluginAvailable("codemirror")){
+		var cm = new Codemirror(txt, 'javascript');
+		var ar = cm.colorizeTextArea('query');
+		cm.updateTextArea(ar);
+	}
+}

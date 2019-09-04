@@ -265,8 +265,8 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	scd.appendChild(tbody);
   sec.appendChild(scd);
   if(this.ui.pluginAvailable("datatables")){
-    var dt = new Datatables(scd);
-		var tab = dt.draw();
+        var dt = new Datatables();
+		var tab = dt.draw(false, scd);
   }
 	return sec;
 }

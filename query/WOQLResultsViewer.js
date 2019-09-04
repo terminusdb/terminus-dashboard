@@ -1,28 +1,14 @@
-function WOQLResultsViewer(wresult, options){
+function WOQLResultsViewer(ui, wresult, options, settings){
+	this.ui = ui;
 	this.result = wresult;
 	this.options = options;
 	this.pman = new TerminusPluginManager();
+	this.settings = settings;
 }
 
 WOQLResultsViewer.prototype.showTable = function(){
 	if(this.options && typeof this.options.show_table != "undefined") return this.options.show_table;
 	return true;
-}
-
-
-WOQLResultsViewer.prototype.getAsDOM = function(){
-	var rs = document.createElement('div');
-	var rh = document.createElement('div');
-	rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
-	rh.appendChild(document.createTextNode("Results"));
-	rs.appendChild(rh);
-	if(this.result && this.result.hasBindings() && this.showTable()){
-		rs.appendChild(this.getTableDOM(this.result.bindings));
-		return rs;
-	}
-	else {
-		console.log("no bindings for query");
-	}
 }
 
 WOQLResultsViewer.prototype.orderColumns = function(sample){
@@ -35,8 +21,32 @@ WOQLResultsViewer.prototype.orderColumns = function(sample){
 	return ordered;
 }
 
+WOQLResultsViewer.prototype.getAsDOM = function(resultDOM){
+	var rs = document.createElement('div');
+	var rh = document.createElement('div');
+	rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
+	rh.appendChild(document.createTextNode("Results"));
+	rs.appendChild(rh);
+	if(this.result && this.result.hasBindings() && this.showTable()){
+		this.getTableDOM(this.result.bindings, rs);
+		return rs;
+	}
+	else {
+		console.log("no bindings for query");
+	}
+}
 
-WOQLResultsViewer.prototype.getTableDOM = function(bindings){
+WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
+	var tab = this.getTable(bindings);
+	if(this.pman.pluginAvailable("datatables")){
+    	var dt = new Datatables();
+		var tab = dt.draw(true, tab, this.settings, this.ui, resultDOM);
+		return tab;
+    }
+	else resultDOM.appendChild(tab);
+}
+
+WOQLResultsViewer.prototype.getTable = function(bindings){
 	var tab = document.createElement("table");
 	tab.setAttribute("class", "terminus-query-results-table");
 	var thead = document.createElement("thead");
@@ -69,11 +79,5 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings){
 		tbody.appendChild(tr);
 	}
 	tab.appendChild(tbody);
-	var td = document.createElement('div');
-	td.appendChild(tab);
-	if(this.pman.pluginAvailable("datatables")){
-    var dt = new Datatables(tab);
-		var tab = dt.draw();
-  }
-	return td;
+	return tab;
 }
