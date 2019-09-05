@@ -1,6 +1,6 @@
 function Datatables(){}
 
-Datatables.prototype.convertTableDomToDatatable = function(tab){
+Datatables.prototype.convertToDatatable = function(tab){
     var table = jQuery(tab).DataTable({
          searching : false,
          pageLength: 10,
@@ -22,6 +22,32 @@ Datatables.prototype.convertTableDomToDatatable = function(tab){
     return tab;
 }
 
+/*
+    dcb: datatable drawCallBack reference
+    ui: terminus ui reference
+    dt: datatable reference
+    query: new woqlquery with current pagination changes
+    pageInfo: current drawCallBack page change info
+    resultDOM: result dom on veiwer page
+*/
+Datatables.prototype.executeQuery = function(dcb, ui, dt, query, pageInfo, resultDOM){
+    var self = this;
+    dcb.wquery.execute(query)
+      .then(function(result){
+          if(true || !self.result){
+              self.result = new WOQLResultsViewer(ui, result, null, pageInfo);
+          }
+          var rtab = self.result.getTable(result.bindings);
+          if(rtab){
+              self.getDataFromServer(rtab, pageInfo, ui, resultDOM);
+          }
+      })
+      .catch(function(err){
+          console.error(err);
+          self.ui.showError(err);
+      });
+}
+
 Datatables.prototype.getQueryOnPagination = function(wq, settings){
     switch(settings.query){
         case 'Show_All_Documents':
@@ -33,8 +59,40 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
     }
 }
 
-Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
-    var dt = this;
+/*
+    dcb: datatable drawCallBack reference
+    ui: terminus ui reference
+    dt: datatable reference
+    pageInfo: current drawCallBack page change info
+*/
+Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageInfo){
+    dcb.wquery = new WOQLQuery(ui.client, null);
+    deleteStylizedEditor(ui, pageInfo.qTextDom);
+    var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
+    pageInfo.qTextDom.value = query;
+    stylizeEditor(ui, pageInfo.qTextDom);
+    return query;
+}
+
+/*
+    dt: Datatable reference
+    len : current number of records to display
+*/
+Datatables.prototype.getCallbackSettings = function(dt, len){
+    var pageInfo = {};
+    pageInfo.pageLength = len;
+    pageInfo.start      = 0;
+    pageInfo.qTextDom   = dt.qTextDom;
+    pageInfo.query      = dt.query;
+    return pageInfo;
+}
+
+/*
+    tab: datatable table dom
+    settings : settings from woql txt generator
+    resultDOM: result dom of viewer
+*/
+Datatables.prototype.setUp = function(tab, settings, resultDOM){
     // delete previous datatable
     FrameHelper.removeChildren(this.dtdom);
     this.dtdom = document.createElement('div');
@@ -43,6 +101,11 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
     // saving query text box dom to change limit value on change of datatable page length
     this.qTextDom = settings.qTextDom;
     this.query = settings.query;
+}
+
+Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
+    var dt = this;
+    this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
          searching   : false,
@@ -58,30 +121,9 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
          drawCallback: function(settings) {
                              // on change of page length
                              $(this).on( 'length.dt', function (e, settings, len){
-                                  settings.pageLength = len;
-                                  settings.start = 0;
-                                  settings.qTextDom = dt.qTextDom;
-                                  settings.query = dt.query;
-                                  this.wquery = new WOQLQuery(ui.client, null);
-                                  deleteStylizedEditor(ui, settings.qTextDom);
-                                  var query = dt.getQueryOnPagination(this.wquery, settings)
-                                  settings.qTextDom.value = query;
-                                  stylizeEditor(ui, settings.qTextDom);
-                                  var self = this;
-                                  this.wquery.execute(query)
-                                  	.then(function(result){
-                                  		if(true || !self.result){
-                                  			self.result = new WOQLResultsViewer(ui, result, null, settings);
-                                  		}
-                                  		var rtab = self.result.getTable(result.bindings);
-                                  		if(rtab){
-                                            dt.getDataFromServer(rtab, settings, ui, resultDOM);
-                                  		}
-                                  	})
-                                  	.catch(function(err){
-                                  		console.error(err);
-                                  		self.ui.showError(err);
-                                  	});
+                                  var pageInfo = dt.getCallbackSettings(dt, len);
+                                  var query = dt.generateNewQueryOnPageChange(this, ui, dt, pageInfo);
+                                  return dt.executeQuery(this, ui, dt, query, pageInfo, resultDOM);
                              });
 
         }
@@ -102,5 +144,5 @@ serverside: true or false
 Datatables.prototype.draw = function(serverside, tab, settings, ui, resultDOM){
     if(serverside)
         return(this.getDataFromServer(tab, settings, ui, resultDOM));
-    else return(this.convertTableDomToDatatable(tab));
+    else return(this.convertToDatatable(tab));
 }
