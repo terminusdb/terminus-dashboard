@@ -18,22 +18,21 @@ Codemirror.prototype.colorizeTextArea = function(mode){
   var editor = CodeMirror.fromTextArea(this.textdom, {
     mode                : this.mode,
     firstLineNumber     : 1,
-    lineNumbers         : false,
+    lineNumbers         : true,
+    styleActiveLine     : true,
     lineWrapping        : true,
     smartIndent         : true,
     indentWithTabs      : true,
     newlineAndIndent    : true,
-    styleActiveLine     : { nonEmpty: true },
-    matchBrackets       : true,
-    matchTags           : { bothTags: true },
-    findMatchingBrackets: true,
-    extraKeys           : { "Ctrl-J": "toMatchingTag", "Ctrl-F": "find", "Tab": "autocomplete" },
+    autoCloseBrackets   : true,
+    matchBrackets       : {afterCursor: true},
+    extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },
     refresh             : true
    });
 
    this.setCodemirrorSize(editor, mode);
    editor.defaultCharWidth('20px');
-   editor.setOption("theme", 'duotone-light');
+   editor.setOption("theme", 'neo');
 
    return editor;
 } // colorizeTextArea()
@@ -45,7 +44,7 @@ Codemirror.prototype.colorizeTextArea = function(mode){
 Codemirror.prototype.setCodemirrorSize = function(editor, mode){
   switch(mode){
     case 'query':
-      editor.setSize('1200', '150');
+      editor.setSize('1200', '200');
     break;
     case 'schema':
       editor.setSize('1200', '1550');
@@ -76,7 +75,7 @@ output (DOM node): The tokens will be converted to spans as in an editor,
                    and inserted into the node (through innerHTML).*/
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
-  this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap cm-s-duotone-light terminus-wrap-text terminus-wrapper-height ');
+  this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap cm-s-neo terminus-wrap-text terminus-wrapper-height ');
   return this.textdom;
 } // colorizePre()
 

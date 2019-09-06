@@ -468,7 +468,10 @@ TerminusUI.prototype.clearBusy = function(response){
 
 TerminusUI.prototype.showMessage = function(msg){
 	if(this.messages){
-		this.messages.appendChild(document.createTextNode(msg));
+        var md = document.createElement('div');
+        md.setAttribute('class', 'terminus-show-msg');
+        md.appendChild(document.createTextNode(msg));
+		this.messages.appendChild(md);
 	}
 };
 

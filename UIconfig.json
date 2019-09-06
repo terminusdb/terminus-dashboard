@@ -18,8 +18,7 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	//location: {server: "http://localhost/dcog/platform/"}, 
-	//location: {server: "http://195.201.12.87:6363/", key: "root"},
+	location: {server: "http://localhost/dcog/platform/"}, 
 	css: "theme",
 	plugins: {
 		"font-awesome": true,
@@ -28,6 +27,8 @@ let TerminusConfig = {
 			loaded: true
 		},
 		jquery: true,
+		jqueryui: false,
+		datatables: true,
 		quill: true,
 		jsoneditor: true,
 		codemirror: true

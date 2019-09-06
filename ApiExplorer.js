@@ -24,13 +24,6 @@
    return aec;
  }
 
-// delete this
- /*ApiExplorer.prototype.draw = function(opts){
-   if(opts && opts.nav)  this.prettifyApiNav(opts.nav, opts.viewer);
-   if(opts && opts.viewer)  this.prettifyApiExplorer('connect', opts.viewer);
-   //return apiDom.appendChild(this.prettifyApiExplorer());
- } // draw() */
-
 // prettifys api nav bar
 ApiExplorer.prototype.prettifyApiNav = function(navDom, viewer){
    // list view of apis
@@ -440,16 +433,9 @@ ApiExplorer.prototype.prettifyConnectExplorer = function(body){
   var br = document.createElement('BR');
   body.appendChild(br);
 
-  // get header signature
-  body.appendChild(prettifyHeaderDom('Signature'));
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
   // get signature
   var b = this.prettifySignature('connect');
   body.appendChild(b);
-  var br = document.createElement('BR');
-  body.appendChild(br);
 
   // get header Parameter
   body.appendChild(prettifyHeaderDom('Parameters'));
@@ -604,16 +590,9 @@ ApiExplorer.prototype.prettifyDatabaseExplorer = function(cont){
   var br = document.createElement('BR');
   body.appendChild(br);
 
-  // get header signature
-  body.appendChild(prettifyHeaderDom('Signature'));
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
   // get signature
   var b = this.prettifySignature(mode);
   body.appendChild(b);
-  var br = document.createElement('BR');
-  body.appendChild(br);
 
   // get header Parameter
   body.appendChild(prettifyHeaderDom('Parameters'));
@@ -745,16 +724,11 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
 
   var br = document.createElement('BR');
   body.appendChild(br);
-  // get header signature
-  body.appendChild(prettifyHeaderDom('Signature'));
-  var br = document.createElement('BR');
-  body.appendChild(br);
 
- // signature
+  // signature
   var b = this.prettifySignature(action);
   body.appendChild(b);
-  var br = document.createElement('BR');
-  body.appendChild(br);
+
   // get header Parameter
   body.appendChild(prettifyHeaderDom('Parameters'));
   var br = document.createElement('BR');
@@ -838,16 +812,10 @@ ApiExplorer.prototype.prettifyQueryApiDom = function(action, body){
    var br = document.createElement('BR');
    body.appendChild(br);
 
-   // get header signature
-   body.appendChild(prettifyHeaderDom('Signature'));
-   var br = document.createElement('BR');
-   body.appendChild(br);
-
-  // signature
+   // signature
    var b = this.prettifySignature(action);
    body.appendChild(b);
-   var br = document.createElement('BR');
-   body.appendChild(br);
+
    // get header Parameter
    body.appendChild(prettifyHeaderDom('Parameters'));
    var br = document.createElement('BR');
@@ -1294,25 +1262,53 @@ ApiExplorer.prototype.prettifyApiForm = function(action, input){
 
 // prettify signature of api calls
 ApiExplorer.prototype.prettifySignature = function(action){
-  var d = document.createElement('div');
-  var sig = getFunctionSignature(action);
-  var txt = document.createTextNode(sig.spec);
-  var pre = document.createElement('pre');
-  pre.setAttribute('class', 'terminus-api-signature-pre');
-  pre.appendChild(txt);
-  var txt =  document.createTextNode(sig.descr);
-  pre.appendChild(txt);
-  var br = document.createElement('BR');
-  pre.appendChild(br);
-  var br = document.createElement('BR');
-  pre.appendChild(br);
-  var txt = document.createTextNode(sig.result);
-  pre.appendChild(txt);
-  if(this.ui.pluginAvailable("codemirror")){
-    var cm = new Codemirror(pre, 'javascript');
+    var api = document.createElement('div');
+
+    // get header signature
+    var sg = document.createElement('button');
+    sg.innerHTML = 'Click to read Api Signature';
+    sg.setAttribute('class', 'terminus-collapsible');
+    api.appendChild(sg);
+
+    var br = document.createElement('BR');
+    api.appendChild(br);
+
+    var cl = document.createElement('div');
+    cl.setAttribute('class', 'terminus-collapsible-content content');
+
+    var sig = getFunctionSignature(action);
+    var txt = document.createTextNode(sig.spec);
+    var pre = document.createElement('pre');
+    pre.setAttribute('class', 'terminus-api-signature-pre');
+    pre.appendChild(txt);
+    var txt =  document.createTextNode(sig.descr);
+    pre.appendChild(txt);
+    var br = document.createElement('BR');
+    pre.appendChild(br);
+    var br = document.createElement('BR');
+    pre.appendChild(br);
+    var txt = document.createTextNode(sig.result);
+    pre.appendChild(txt);
+    if(this.ui.pluginAvailable("codemirror")){
+        var cm = new Codemirror(pre, 'javascript');
 		var pr = cm.colorizePre();
-		d.appendChild(pr);
-  }
-  else d.appendChild(pre);
-  return d;
+		cl.appendChild(pr);
+    }
+    else cl.appendChild(pre);
+    api.appendChild(cl);
+    var br = document.createElement('BR');
+    api.appendChild(br);
+
+    sg.addEventListener('click', function(){
+        tolggleSignatureContent(cl);
+    });
+
+    return api;
 } // prettifySignature()
+
+// displays signature only on click
+function tolggleSignatureContent(content){
+    if (content.style.display === "block")
+        content.style.display = "none";
+    else content.style.display = "block";
+}

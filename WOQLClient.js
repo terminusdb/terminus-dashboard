@@ -80,7 +80,7 @@ WOQLClient.prototype.deleteDatabase = function(dburl, opts){
         return Promise.reject(new URIError(this.getInvalidURIMessage(dburl, "Delete Database")));
 	}
 	var self = this;
-	return this.dispatch(this.dbURL() + "/", "delete_database", opts).
+	return this.dispatch(this.dbURL() + "/config", "delete_database", opts).
 	then(function(response){
 		self.removeDBFromConnection();
 		return response;

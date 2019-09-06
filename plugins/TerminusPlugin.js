@@ -24,11 +24,15 @@ function TerminusPluginManager(){
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/anyword-hint.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/runmode/runmode.js",
-		  "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/http/http.js"],
+		  	"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/http/http.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/edit/closebrackets.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/edit/matchbrackets.js",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/display/placeholder.js"
+	  ],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/duotone-light.css"
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/neo.css"
 		]
 	};
 	this.plugins["jquery"] = {
@@ -189,6 +193,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 				return true;
 			}
 			case "font-awesome": {
+				//if(typeof CodeMirror != "undefined") return true;
 				return this.fontAwesomeCheck();
 			}
 			case "datatables": {
@@ -228,11 +233,12 @@ TerminusPluginManager.prototype.fontAwesomeCheck = function(){
 	  return window.getComputedStyle(element, null).getPropertyValue(property);
 	}
 	var loaded = false;
-	if (css(span, 'font-family') == 'FontAwesome') {
+	var fontAwsm = css(span, 'font-family');
+	if (fontAwsm.replace(/"/g, "") == 'Font Awesome 5 Free') { // remove double quotes
 		loaded = true;
 	}
 	document.body.removeChild(span);
-	return loaded
+	return loaded;
 }
 
 TerminusPluginManager.prototype.getDefaultPlugins = function(){
