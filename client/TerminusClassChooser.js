@@ -34,7 +34,7 @@ TerminusClassChooser.prototype.getAsDOM = function(){
 	});
 	ccdom.appendChild(ccsel);
 	var wq = new WOQLQuery(this.ui.client);
-	var woql = wq.getClassMetaDataQuery(this.filter);
+	var woql = wq.getClassListMetaDataQuery(this.filter);
 	var self = this;
 	wq.execute(woql)
 	.then(function(response){
