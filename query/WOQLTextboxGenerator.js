@@ -8,6 +8,11 @@ function WOQLTextboxGenerator(tq, qman, ui){
 	this.datatable.start = 0;
 }
 
+WOQLTextboxGenerator.prototype.gatherSettings = function(txtArea, queryName){
+	this.datatable.qTextDom =  txtArea;
+	this.datatable.query =  queryName;
+}
+
 WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-textbox-input");
@@ -24,8 +29,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qbut.appendChild(document.createTextNode("Send Query"));
 	qbut.addEventListener("click", function(){
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Any_Query';
+			self.gatherSettings(qip, 'Any_Query');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -48,8 +52,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		qip.value = self.wquery.getClassMetaDataQuery();
 		stylizeEditor(self.ui, qip);
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Show_All_Classes';
+			self.gatherSettings(qip, 'Show_All_Classes');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -64,8 +67,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 														+ ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")");
 		stylizeEditor(self.ui, qip);
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Show_Document_Classes';
+			self.gatherSettings(qip, 'Show_Document_Classes');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -80,8 +82,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		qip.value = self.wquery.getElementMetaDataQuery();
 		stylizeEditor(self.ui, qip);
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Show_All_Schema_Elements';
+			self.gatherSettings(qip, 'Show_All_Schema_Elements');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -94,8 +95,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		qip.value = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
 		stylizeEditor(self.ui, qip);
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Show_All_Documents';
+			self.gatherSettings(qip, 'Show_All_Documents');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -108,8 +108,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		qip.value = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
 		stylizeEditor(self.ui, qip);
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Show_All_Data';
+			self.gatherSettings(qip, 'Show_All_Data');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -123,8 +122,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		qip.value = self.wquery.getPropertyListQuery();
 		stylizeEditor(self.ui, qip);
 		if(self.ui.pluginAvailable("datatables")){
-			self.datatable.qTextDom =  qip;
-			self.datatable.query =  'Show_All_Properties';
+			self.gatherSettings(qip, 'Show_All_Properties');
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -139,8 +137,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 			qip.value = self.wquery.getDataOfChosenClassQuery();
 			stylizeEditor(self.ui, qip);
 			if(self.ui.pluginAvailable("datatables")){
-				self.datatable.qTextDom =  qip;
-				self.datatable.query =  'Show_Data_Class';
+				self.gatherSettings(qip, 'Show_Data_Class');
 				self.query(qip.value, self.datatable);
 			}
 			else self.query(qip.value);
@@ -157,8 +154,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 			qip.value = self.wquery.getDataOfChosenPropertyQuery(new_property);
 			stylizeEditor(self.ui, qip);
 			if(self.ui.pluginAvailable("datatables")){
-				self.datatable.qTextDom =  qip;
-				self.datatable.query =  'Show_Property_Class';
+				self.gatherSettings(qip, 'Show_Property_Class');
 				self.query(qip.value, self.datatable);
 			}
 			else self.query(qip.value);
@@ -177,8 +173,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
     		qip.value = self.wquery.getDocumentQuery(dcip.value);
     		stylizeEditor(self.ui, qip);
 			if(self.ui.pluginAvailable("datatables")){
-				self.datatable.qTextDom =  qip;
-				self.datatable.query =  'Show_Document_Info_by_Id';
+				self.gatherSettings(qip, 'Show_Document_Info_by_Id');
 				self.query(qip.value, self.datatable);
 			}
 			else self.query(qip.value);
