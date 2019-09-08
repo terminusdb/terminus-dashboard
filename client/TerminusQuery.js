@@ -50,7 +50,8 @@ TerminusQueryViewer.prototype.init = function(){
 	var self = this;
 	self.meta = {};
 	wq.execute(woql).then(function(wresult){
-		if(wresult.hasBindings()){
+		var wqlR = new WOQLResult(wresult, null ,null);
+		if(wqlR.hasBindings(wresult)){
 			for(var i = 0; i<wresult.bindings.length; i++){
 				var el = wresult.bindings[i].Element;
 				if(el && typeof self.meta[el] == "undefined"){
@@ -86,29 +87,6 @@ TerminusQueryViewer.prototype.query = function(val, settings, tab){
 		self.ui.showError(err);
 	});
 }
-
-
-/*TerminusQueryViewer.prototype.query = function(val, settings){
-	var self = this;
-	rameHelper.removeChildren(this.resultDOM);
-	this.wquery.execute(val)
-	.then(function(result){
-		if(true || !self.result){
-			self.result = new WOQLResultsViewer(self.ui, result, self.options, settings);
-		}
-		else {
-			//self.result.newResult(result);
-		}
-		var nd = self.result.getAsDOM(self.resultDOM);
-		if(nd){
-			self.resultDOM.appendChild(nd);
-		}
-	})
-	.catch(function(err){
-		console.error(err);
-		self.ui.showError(err);
-	});
-}*/
 
 TerminusQueryViewer.prototype.getResultViewDom = function(){
 	this.resultDOM = document.createElement("div");
