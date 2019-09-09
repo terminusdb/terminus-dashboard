@@ -128,9 +128,11 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.dtdom.appendChild(tab);
     resultDOM.appendChild(this.dtdom);
     // saving query text box dom to change limit value on change of datatable page length
-    this.qTextDom = settings.qTextDom;
-    this.query = settings.query;
-    this.chosenValue = settings.chosenValue;
+    if(settings.length > 0){
+        this.qTextDom = settings.qTextDom;
+        this.query = settings.query;
+        this.chosenValue = settings.chosenValue;
+    }
 }
 
 Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){

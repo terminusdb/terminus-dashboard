@@ -148,10 +148,10 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 				jQuery(nbut).hide();
 				jQuery(sdom).show();
 				jQuery(nlab).text("Choose by ID");
-			}				
+			}
 		})
 		scd.appendChild(sdom);
-		scd.prepend(nlab);		
+		scd.prepend(nlab);
 	}
 	var nbuts = document.createElement("div");
 	nbuts.setAttribute("class", "terminus-control-buttons terminus-document-chooser-buttons");
@@ -328,7 +328,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	this.wquery.execute(q)
 	.then(function(result){
 		if(true || !self.result){
-			self.result = new WOQLResultsViewer(this.ui, result, {}, null);
+			self.result = new WOQLResultsViewer(this.ui, result, {}, {});
 		}
 		else {
 			//self.result.newResult(result);

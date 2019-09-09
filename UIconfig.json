@@ -18,7 +18,7 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://localhost/dcog/platform/", db: "baba"}, 
+	location: {server: "http://localhost/platform/", db: "baba"}, 
 	css: "theme",
 	plugins: {
 		"font-awesome": true,
