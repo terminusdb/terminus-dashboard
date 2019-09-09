@@ -13,5 +13,6 @@ WOQLResult.prototype.shorten = function(url){
 
 
 WOQLResult.prototype.hasBindings = function(result){
-	return result.bindings.length;
+	if(result) return (result.bindings && result.bindings.length);
+	else return (this.bindings && this.bindings.length);
 }

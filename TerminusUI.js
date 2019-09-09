@@ -286,6 +286,11 @@ TerminusUI.prototype.showQueryPage = function(query){
 	this.redrawMainPage();
 }
 
+TerminusUI.prototype.showMappingPage = function(mapping){
+	this.viewer = new TerminusMappingViewer(this, mapping, this.options);
+	this.redrawMainPage();
+}
+
 TerminusUI.prototype.showDocument = function(durl){
 	this.viewer = new TerminusDocumentViewer(this, "view", this.getDocViewerOptions());
 	this.viewer.loadDocument(durl);
@@ -308,7 +313,6 @@ TerminusUI.prototype.redrawMainPage = function(){
 TerminusUI.prototype.showResult = function(response){
 	this.showMessage(response);
 };
-
 
 TerminusUI.prototype.showError = function(response){
 	this.showMessage(response);
@@ -501,7 +505,10 @@ TerminusUI.prototype.setOptions = function(opts){
 		this.schema_options = opts.schema;
 	}
 	this.piman = new TerminusPluginManager();
-	this.piman.init(opts.plugins);
+	var self = this;
+	this.piman.init(opts.plugins, function(){
+		self.redraw();
+	});
 	if(opts.css && this.piman){
 		this.piman.loadPageCSS(opts.css);
 	}

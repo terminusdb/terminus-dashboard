@@ -1,7 +1,7 @@
 let TerminusConfig = {
 	controls: [
 		"server", "db", "api_explorer", "change-server", "class_frame",	"import_schema", "create_database", "delete_database",
-		"create_document", "schema_format", "get_document", "get_schema", "update_schema", "woql_select"
+		"create_document", "schema_format", "get_document", "get_schema", "update_schema", "woql_select", "woql_update"
 	],
 	document: {
 		view: {
@@ -18,8 +18,7 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://localhost/platform/", db: "baba"},
-	//location: {server: "http://195.201.12.87:6363/", key: "root"},
+	location: {server: "http://localhost/dcog/platform/", db: "baba"}, 
 	css: "theme",
 	plugins: {
 		"font-awesome": true,
@@ -27,10 +26,11 @@ let TerminusConfig = {
 			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI",
 			loaded: true
 		},
-		jquery: false,
-		jqueryui: false,
-		datatables: false,
+		jquery: true,
+		jqueryui: true,
+		datatables: true,
 		quill: true,
+		select2: true,
 		jsoneditor: true,
 		codemirror: true
 	}

@@ -141,7 +141,7 @@ ObjectRenderer.prototype.root = function(){
 ObjectRenderer.prototype.load = function(link){
 	var self = this;
 	if(this.controller){
-		this.controller.loadDocument(link);
+		this.controller.ui.showDocument(link);
 	}
 	else if(this.parent) {
 		this.parent.load(link);

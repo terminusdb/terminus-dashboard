@@ -102,8 +102,9 @@ HTMLDataViewer.prototype.getSummaryDOM = function(){
 	return HTMLFrameHelper.getInfoboxDOM("value-summary", false, sum.long, sum.long);
 }
 
-HTMLDataViewer.prototype.internalLink = function(link){
+HTMLDataViewer.prototype.internalLink = function(link, label){
 	var self = this;
+	
 	var onclick = function(e){
 		e.preventDefault();
 		self.renderer.load(link);
@@ -112,13 +113,18 @@ HTMLDataViewer.prototype.internalLink = function(link){
 	a.onClick = onclick;
 	a.href="";
 	a.addEventListener("click", onclick);
-	var sh = FrameHelper.getShorthand(link);
-	if(sh){
-		a.setAttribute("title", link);
-		a.appendChild(document.createTextNode(sh));
+	if(label){
+		a.appendChild(document.createTextNode(label));
 	}
 	else {
-		a.appendChild(document.createTextNode(link));
+		var sh = FrameHelper.getShorthand(link);
+		if(sh){
+			a.setAttribute("title", link);
+			a.appendChild(document.createTextNode(sh));
+		}
+		else {
+			a.appendChild(document.createTextNode(link));
+		}
 	}
 	return a;
 }

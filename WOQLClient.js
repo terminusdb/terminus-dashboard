@@ -719,7 +719,7 @@ TerminusIDParser.prototype.parseDocumentURL = function(str){
 	}
 	if(this.validURL(str)){
 		if(str.lastIndexOf("/document/") != -1) {
-			this.doc = str.substring(str.lastIndexOf("/document/") + 11);
+			this.doc = str.substring(str.lastIndexOf("/document/") + 10);
 			str = str.substring(0, str.lastIndexOf("/document/"));
 		}
 		return this.parseDBID(str);

@@ -17,8 +17,9 @@ TerminusDocumentViewer.prototype.init = function(){
 	var woql = wq.getClassMetaDataQuery();
 	var self = this;
 	self.classmeta = {};
+	self.instancemeta = {};
 	wq.execute(woql).then(function(wresult){
-		if(wresult.hasBindings()){
+		if(wresult && wresult.hasBindings()){
 			for(var i = 0; i<wresult.bindings.length; i++){
 				var cls = wresult.bindings[i].Class;
 				if(cls && typeof self.classmeta[cls] == "undefined"){
@@ -29,9 +30,27 @@ TerminusDocumentViewer.prototype.init = function(){
 		}
 	})
 	.catch(function(e){
-		console.error(e);
+		console.log(e);
 	});
 }
+
+TerminusDocumentViewer.prototype.getInstanceMeta = function(elid){
+	var self = this;
+	//if(typeof self.instancemeta[elid] != "undefined") return self.instancemeta[elid] ;
+	var wq = new WOQLQuery(this.ui.client, this.options);
+	var woql = wq.getInstanceMeta(elid);	
+	return wq.execute(woql).then(function(wresult){
+		if(wresult && wresult.hasBindings()){
+			var res = wresult.bindings[0];
+			return res;
+		}
+		return false;
+	})
+	.catch(function(e){
+		console.log(e);
+	});
+}
+
 
 TerminusDocumentViewer.prototype.getClassMeta = function(cls){
 	if(typeof this.classmeta[cls]){
@@ -65,9 +84,8 @@ TerminusDocumentViewer.prototype.loadCreateDocument = function(url){
 TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 	if(!url) return false;
 	var self = this;
-	this.page_config = "views";
-
-	//if(url.indexOf("/") == -1 && url.indexOf(":") == -1) url = "docs:" + url;
+	this.page_config = "view";
+	url = url.replace("/candidate", "/platform/document");
 	this.ui.showBusy("Loading Document from " + url);
 	return this.ui.client.getDocument(url, {"terminus:encoding": "terminus:frame"})
 	.then(function(response){
@@ -187,7 +205,7 @@ TerminusDocumentViewer.prototype.loadSchemaFrames = function(classframes, cls){
 TerminusDocumentViewer.prototype.render = function(){
 	if(!this.renderer && this.document){
 		if(this.page_config){
-			this.options = this.getOptionsFromPageConfig(this.page_config);
+			this.options = this.getOptionsFromPageConfig(this.page_config);	
 		}
 		this.renderer = new ObjectRenderer(this.document, false, this.options);
 		this.renderer.mode = this.mode;

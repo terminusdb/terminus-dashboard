@@ -107,8 +107,17 @@ TerminusPluginManager.prototype.init = function(opts, then){
 	if(opts) this.setPluginOptions(opts);
 	this.calculatePreloaded();
 	var toload = this.calculateRequiredInitPlugins(opts);
-	if(toload.length){
-		this.loadPlugins(toload, then);
+	if(toload && toload[0].length) {
+		if(toload[1].length){
+			var self = this;
+			var nthen = function(){
+				self.loadPlugins(toload[1], then);
+			}
+			this.loadPlugins(toload[0], nthen);
+		}
+		else {
+			this.loadPlugins(toload[0], then);
+		}
 	}
 	else if(then){
 		then();
@@ -140,7 +149,16 @@ TerminusPluginManager.prototype.calculateRequiredInitPlugins = function(opts){
 			needed_pins.push(pins[i])
 		}
 	}
-	return needed_pins;
+	var loading_order = [[], []];
+	for(var i = 0; i<needed_pins.length; i++){
+		if(this.plugins[needed_pins[i]].requires && this.plugins[needed_pins[i]].requires.length){
+			loading_order[1].push(needed_pins[i]);
+		}
+		else {
+			loading_order[0].push(needed_pins[i]);		
+		}
+	}	
+	return loading_order;
 }
 
 TerminusPluginManager.prototype.getAvailablePlugins = function(){
@@ -249,8 +267,9 @@ TerminusPluginManager.prototype.getDefaultPlugins = function(){
 TerminusPluginManager.prototype.loadPlugins = function(plugins, then){
 	var ticker = plugins.length;
 	var cback = function(){
-		if(ticker == 0) then();
-		ticker--;
+		if(--ticker <= 1 && then){
+			then();
+		}
 	};
 	for(var i = 0; i < plugins.length; i++){
 		this.loadPlugin(plugins[i], cback);

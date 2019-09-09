@@ -131,7 +131,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	})
 
 	var termcc = new TerminusClassChooser(this.ui);
-	termcc.empty_choice = "Choose a class to view data ...";
+	termcc.empty_choice = "View data of type...";
 	var self = this;
 	termcc.change = function(new_class){
 		if(new_class){
@@ -149,7 +149,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	var tcdom = termcc.getAsDOM();
 
 	var termpc = new TerminusPropertyChooser(this.ui);
-	termpc.empty_choice = "Choose a property to view data ...";
+	termpc.empty_choice = "Show data for property...";
 	var self = this;
 	termpc.change = function(new_property){
 		if(new_property){
@@ -165,26 +165,24 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		}
 	}
 	var pdom = termpc.getAsDOM();
-
-	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
-	dcip.setAttribute("placeholder", "Enter Document ID");
-	dcip.addEventListener('keypress', function(e){
-		// on enter
-		var key = e.which || e.keyCode;
-		if (key === 13) { // 13 is enter
-			deleteStylizedEditor(self.ui, qip);
-    		qip.value = self.wquery.getDocumentQuery(dcip.value, self.datatable.pageLength, self.datatable.start);
-    		stylizeEditor(self.ui, qip);
-			if(self.ui.pluginAvailable("datatables")){
-				self.gatherDatatableSettings(qip, 'Show_Document_Info_by_Id');
-				self.datatable.chosenValue = dcip.value; // store entred id
-				self.query(qip.value, self.datatable);
-			}
-			else self.query(qip.value);
+	var docch = new TerminusDocumentChooser(this.ui);
+	docch.change = function(val){
+		deleteStylizedEditor(self.ui, qip);
+		qip.value = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
+		stylizeEditor(self.ui, qip);
+		if(self.ui.pluginAvailable("datatables")){
+			self.gatherDatatableSettings(qip, 'Show_Document_Info_by_Id');
+			self.datatable.chosenValue = val; 
+			self.query(qip.value, self.datatable);
 		}
-	})
-
+		else self.query(qip.value);
+	}
+	var docdom = docch.getAsDOM();
+	var d2ch = new TerminusDocumentChooser(this.ui, FrameHelper.unshorten("dcog:Document"));
+	d2ch.view = "label";
+	var d2dom = d2ch.getAsDOM();
+	var p = document.createElement("p");
+	p.appendChild(d2dom);
 	qexs.appendChild(ebut);
 	qexs.appendChild(nqbut);
 	qexs.appendChild(aqbut);
@@ -194,7 +192,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qbox.appendChild(qexs);
 	qbox.appendChild(tcdom);
 	qbox.appendChild(pdom);
-	qbox.appendChild(dcip);
-
+	qbox.appendChild(docdom);
+	qbox.appendChild(p);
 	return qbox;
 }

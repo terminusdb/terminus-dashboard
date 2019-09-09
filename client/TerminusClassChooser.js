@@ -2,10 +2,11 @@
  * Utility class which runs a query against the schema and presents the returned classes as a drop-down / class filter list
  */
 
-TerminusClassChooser = function(ui, filter){
+TerminusClassChooser = function(ui, filter, chosen){
 	this.ui = ui;
-	this.choice = false;
+	this.choice = (chosen ? chosen : false);
 	this.filter = filter;
+	this.show_single = true;
 }
 
 TerminusClassChooser.prototype.setRoot = function(root){
@@ -39,8 +40,14 @@ TerminusClassChooser.prototype.getAsDOM = function(){
 	wq.execute(woql)
 	.then(function(response){
 		var opts = self.getResultsAsOptions(response);
-		for(var i = 0; i<opts.length; i++){
-			ccsel.appendChild(opts[i]);
+		if(opts){
+			for(var i = 0; i<opts.length; i++){
+				ccsel.appendChild(opts[i]);
+			}
+			self.options = opts;
+		}
+		else {
+			ccdom.removeChild(ccsel);
 		}
 	});
 	return ccdom;
@@ -48,14 +55,15 @@ TerminusClassChooser.prototype.getAsDOM = function(){
 
 TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 	var choices = [];
-	if(this.empty_choice){
-		var opt1 = document.createElement("option");
-		opt1.setAttribute("class", "terminus-class-choice terminus-empty-choice");
-		opt1.value = "";
-		opt1.appendChild(document.createTextNode(this.empty_choice));
-		choices.push(opt1);
-	}
 	if(clist.bindings){
+		if(this.show_single == false && clist.bindings.length < 2) return false;
+		if(this.empty_choice){
+			var opt1 = document.createElement("option");
+			opt1.setAttribute("class", "terminus-class-choice terminus-empty-choice");
+			opt1.value = "";
+			opt1.appendChild(document.createTextNode(this.empty_choice));
+			choices.push(opt1);
+		}
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
 			if(clist.bindings[i].Class && added.indexOf(clist.bindings[i].Class) == -1){
@@ -63,6 +71,9 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 				var opt = document.createElement("option");
 				opt.setAttribute("class", "terminus-class-choice");
 				opt.value = clist.bindings[i].Class;
+				if(opt.value == this.choice){
+					opt.selected = true;
+				}
 				var lab = clist.bindings[i].Label;
 				if(!lab || lab == "unknown"){
 					lab = FrameHelper.labelFromURL(clist.bindings[i].Class);
