@@ -313,7 +313,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	this.wquery.execute(q)
 	.then(function(result){
 		if(true || !self.result){
-			self.result = new WOQLResultsViewer(result, {});
+			self.result = new WOQLResultsViewer(this.ui, result, {}, null);
 		}
 		else {
 			//self.result.newResult(result);
