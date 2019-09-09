@@ -18,6 +18,14 @@ function TerminusQueryViewer(ui, options){
 	this.loadGenerator();
 }
 
+TerminusQueryViewer.prototype.hasGeneratorOptions = function(){
+	var yup = false;
+	for(var gen in this.generators){
+		if(yup) return true;
+		else yup = true;
+	}
+	return false;
+}
 
 TerminusQueryViewer.prototype.changeGenerator = function(ng){
 	if(this.gentype != ng){
@@ -96,7 +104,9 @@ TerminusQueryViewer.prototype.getResultViewDom = function(){
 TerminusQueryViewer.prototype.getAsDOM = function(q){
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-page");
-	qbox.appendChild(this.getQueryCreatorChoiceDOM(q));
+	if(this.hasGeneratorOptions()){
+		qbox.appendChild(this.getQueryCreatorChoiceDOM(q));
+	}
 	this.resultDOM = document.createElement("div");
 	this.resultDOM.setAttribute("class", "terminus-query-results");
 	this.inputDOM = document.createElement("div");

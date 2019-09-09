@@ -112,6 +112,20 @@ ValueRenderer.prototype.getAPIURL = function(a, b){
 	return false;
 }
 
+ValueRenderer.prototype.getClient = function(){
+	if(this.parent && this.parent.parent){
+		return this.parent.parent.getClient();
+	}	
+	return false;
+}
+
+ValueRenderer.prototype.getController = function(){
+	if(this.parent && this.parent.parent){
+		return this.parent.parent.getController();
+	}	
+	return false;
+}
+
 ValueRenderer.prototype.DBURL = function(){
 	if(this.parent && this.parent.parent){
 		if(client = this.parent.parent.getClient()){
