@@ -15,7 +15,7 @@ Datatables.prototype.convertToDatatable = function(tab){
     }); //jQuery(tab)
 
     //styling
-    tab.setAttribute('class'      , 'stripe dataTable');
+    tab.setAttribute('class'      , 'stripe dataTable terminus-db-size terminus-db-border');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');
@@ -128,11 +128,9 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.dtdom.appendChild(tab);
     resultDOM.appendChild(this.dtdom);
     // saving query text box dom to change limit value on change of datatable page length
-    if(settings.length > 0){
-        this.qTextDom = settings.qTextDom;
-        this.query = settings.query;
-        this.chosenValue = settings.chosenValue;
-    }
+    this.qTextDom = settings.qTextDom;
+    this.query = settings.query;
+    this.chosenValue = settings.chosenValue;
 }
 
 Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
