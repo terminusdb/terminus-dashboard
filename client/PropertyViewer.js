@@ -12,13 +12,21 @@ function HTMLPropertyViewer(renderer){
  * Draws the property as header and body components
  */
 HTMLPropertyViewer.prototype.render = function(){
+	var block = document.createElement('div');
+	block.setAttribute('style', 'display: flex; margin: 10px 10px 0px 0px;');
+	var br = document.createElement('br');
+	block.appendChild(br);
 	if(this.propDOM){
 		var npropDOM = this.getPropertyDOM();
+		block.appendChild(npropDOM);
 		this.propDOM.replaceWith(npropDOM);
-		this.propDOM = npropDOM;
+		//11092019 this.propDOM = npropDOM;
+		this.propDOM = block;
 	}
 	else {
-		this.propDOM = this.getPropertyDOM();
+		block.appendChild(this.getPropertyDOM());
+		this.propDOM = block;
+		//11092019 this.propDOM = this.getPropertyDOM();
 	}
 	this.propDOM.appendChild(this.getPropertyIDMarker(this.renderer));
 	if(this.headerViewer){
@@ -32,7 +40,7 @@ HTMLPropertyViewer.prototype.render = function(){
 
 HTMLPropertyViewer.prototype.getPropertyDOM = function(){
 	var orientation = this.renderer.getContentOrientation();
-	var pcls = "terminus-property-frame-" + orientation;
+	var pcls = " terminus-property-frame-display terminus-property-frame-" + orientation;
 	if(orientation == "label"){
 		var sp = document.createElement("span");
 	}
@@ -41,7 +49,7 @@ HTMLPropertyViewer.prototype.getPropertyDOM = function(){
 	}
 	//terminus-property-frame-spacer
 
-	sp.setAttribute("class", " terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
+	sp.setAttribute("class", "WHATER terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
 	sp.setAttribute('data-property', this.renderer.property());
 	return sp;
 }
@@ -139,7 +147,7 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	else {
 		var objDOM = document.createElement("span");
 	}
-	objDOM.setAttribute("class", "terminus-property-header " + pcls);
+	objDOM.setAttribute("class", "terminus-text terminus-property-header " + pcls);
 	var wrapper = document.createElement("span");
 	wrapper.setAttribute("class", "terminus-property-header-wrapper");
 	if(renderer.showFeature("control")){

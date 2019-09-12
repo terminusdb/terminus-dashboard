@@ -392,7 +392,6 @@ body [class^="icon-"], body [class*=" icon-"] {
 div.terminus-object-frame div.terminus-object-header, .terminus-application-header {
 	margin-bottom: 1em;
 	margin-right: 10px;
-	background-color: cadetblue;
 	color: white;
 }
 
@@ -402,7 +401,7 @@ div.terminus-object-frame div.terminus-object-header {
 }
 
 div.terminus-object-properties {
-	background-color: rgba(200, 230, 255, 0.1);
+	background-color: #f5f5f5;
 	border: 1px solid lightgrey;
 	margin-right: 20px;
 	padding-top: 4px;
@@ -424,6 +423,7 @@ div.terminus-object-frame select {
 div.terminus-object-frame .terminus-frame-infobox-box {
 	padding: 4px;
 	margin: 0 4px;
+	/*border: 1px solid red;*/
 }
 
 div.terminus-object-frame input,
@@ -469,6 +469,8 @@ div.terminus-property-frame{
 
 .terminus-property-values-align{
 	margin-left: 80px;
+	/*float: right;
+    width: 800px;*/
 }
 
 /* terminus table */
@@ -1703,7 +1705,7 @@ a.terminus-a:focus, a.terminus-a:hover {
 	margin-top: 3px;
 }
 
-.terminus-query-btn:hover, .terminus-query-go-btn:hover {
+.terminus-query-btn:hover, .terminus-query-go-btn:hover, .terminus-object-frame-btn:hover{
 	color: #000 !important;
 	background: #0DCA90;
 	border-color: #0DCA90 !important;
@@ -1714,4 +1716,85 @@ a.terminus-a:focus, a.terminus-a:hover {
 	margin-left: 5px;
     margin-bottom: 5px;
     width: 388px;
+}
+/*
+.terminus-frame-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -15px;
+	margin-left: -15px;
+	box-sizing: border-box;
+}
+
+.terminus-frame-length {
+	flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+	position: relative;
+	width: 100%;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.terminus-frame-group {
+	margin-bottom: 10px;
+    position: relative;
+	box-sizing: border-box;
+}
+
+.terminus-frame-label {
+	font-size: .75rem;
+    margin-bottom: 5px;
+}*/
+
+.terminus-text{
+	/*border: 1px solid green;*/
+	/*margin-left: 100px;*/
+	width: 200px;
+	display: block;
+	text-align: right;
+}
+
+.terminus-property-frame-display{
+	display: inline-flex;
+}
+
+.terminus-object-frame-btn{
+	color: #494949 !important;
+	text-decoration: none;
+	background: #ffffff;
+	padding: 20px;
+	border: 2px solid #494949 !important;
+	display: inline-block;
+	transition: all 0.4s ease 0s;
+	margin-top: 3px;
+    padding: 4px;
+    width: 100%;
+	cursor: pointer;
+}
+
+
+.terminus-banner{
+	position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+	-ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+	background: #fff;
+    z-index: 999999;
+    top: 0px !important;
+    padding: 0;
+    box-shadow: 0px 3px 6px 3px rgba(0, 0, 0, 0.06);
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+    background: #fff !important;
 }

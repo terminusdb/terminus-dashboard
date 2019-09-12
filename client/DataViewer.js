@@ -104,7 +104,7 @@ HTMLDataViewer.prototype.getSummaryDOM = function(){
 
 HTMLDataViewer.prototype.internalLink = function(link, label){
 	var self = this;
-	
+
 	var onclick = function(e){
 		e.preventDefault();
 		self.renderer.load(link);

@@ -238,6 +238,9 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	var pd = document.createElement("span");
 	pd.setAttribute("class", "terminus-db-home-page");
 	var sth = document.createElement('div');
+	var banner = document.createElement('div');
+	pd.appendChild(banner);
+	banner.setAttribute('class', 'terminus-banner');
 	var dhp = document.createElement("span");
 	dhp.setAttribute('class', 'terminus-home-heading');
 	dhp.appendChild(document.createTextNode("DB Home Page - "));
@@ -254,7 +257,8 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	}
 	scd.appendChild(scs);
 	sth.appendChild(scd);
-	pd.appendChild(sth);
+	banner.appendChild(sth);
+	//pd.appendChild(sth);
 	pd.appendChild(prettifyHeaderDom('Summary'));
 	this.getDBSummary(pd);
 	pd.appendChild(pd.appendChild(prettifyHeaderDom('List of Documents')));

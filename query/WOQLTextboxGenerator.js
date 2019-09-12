@@ -89,7 +89,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qexs.appendChild(qrow);
 
 	/* grouping classe queries */
-	var qcGroup = this.qGroupQueries(qrow, 'Class Queries', 'descr blah blah');
+	var qcGroup = this.qGroupQueries(qrow, 'Schema Queries', 'descr blah blah');
 
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
@@ -250,21 +250,19 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qcGroup.appendChild(prbut);
 	var br = document.createElement('BR');
 	qcGroup.appendChild(br);
-	qcGroup.appendChild(dbut);
-	var br = document.createElement('BR');
-	qcGroup.appendChild(br);
-	qcGroup.appendChild(pbut);
-	var br = document.createElement('BR');
-	qcGroup.appendChild(br);
 
 	qbox.appendChild(qexs);
 
 	/* data queries */
 	qdGroup.appendChild(tcdom);
 	qdGroup.appendChild(pdom);
+	var br = document.createElement('BR');
+	qdGroup.appendChild(br);
+	qdGroup.appendChild(pbut);
 
 	/* document queries */
 	qdocGroup.appendChild(docdom);
+	qdocGroup.appendChild(dbut);
 	qdocGroup.appendChild(p);
 
 	return qbox;
