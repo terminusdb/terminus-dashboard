@@ -44,7 +44,7 @@ Codemirror.prototype.colorizeTextArea = function(mode){
 Codemirror.prototype.setCodemirrorSize = function(editor, mode){
   switch(mode){
     case 'query':
-      editor.setSize('1200', '200');
+      editor.setSize('', '200');
     break;
     case 'schema':
       editor.setSize('1200', '1550');

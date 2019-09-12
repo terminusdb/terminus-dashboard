@@ -23,14 +23,14 @@ TerminusDocumentChooser.prototype.change = function(docid){
 	alert("Need to specify doc chooser function (" + docid + ")");
 }
 
-TerminusDocumentChooser.prototype.getAsDOM = function(){
-	if(this.view == "label" && 	this.ui.client.platformEndpoint() && this.ui.pluginAvailable("select2")){	
-		return this.getS2DOM();
-	}	
+TerminusDocumentChooser.prototype.getAsDOM = function(style){
+	if(this.view == "label" && 	this.ui.client.platformEndpoint() && this.ui.pluginAvailable("select2")){
+		return this.getS2DOM(style);
+	}
 	return this.getIDDOM();
 }
 
-TerminusDocumentChooser.prototype.getS2DOM = function(){
+TerminusDocumentChooser.prototype.getS2DOM = function(style){
 	var docchooser = document.createElement("span");
 	docchooser.setAttribute("class", "terminus-document-chooser terminus-doc-holder");
 	var wq = new WOQLQuery(this.ui.client, {});
@@ -44,7 +44,7 @@ TerminusDocumentChooser.prototype.getS2DOM = function(){
 			self.filter = new_class;
 		}
 	}
-	tdom = termcc.getAsDOM();
+	tdom = termcc.getAsDOM(style);
 	if(tdom) docchooser.appendChild(tdom);
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-entity-reference-value");
@@ -81,7 +81,8 @@ TerminusDocumentChooser.prototype.getIDDOM = function(){
 	var docchooser = document.createElement("span");
 	docchooser.setAttribute("class", "terminus-document-chooser terminus-doc-holder");
 	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
+	dcip.setAttribute("class", "terminus-document-chooser terminus-query-text");
+	//11092019 dcip.setAttribute("class", "terminus-form-value terminus-document-chooser");
 	dcip.setAttribute("placeholder", "Enter Document ID");
 	dcip.addEventListener('keypress', function(e){
 		var key = e.which || e.keyCode;
@@ -94,7 +95,7 @@ TerminusDocumentChooser.prototype.getIDDOM = function(){
 	docchooser.appendChild(dcip);
 	if(this.show_button){
 		var dbut = document.createElement("button");
-		dbut.setAttribute("class", "terminus-control-button terminus-btn");
+		dbut.setAttribute("class", "terminus-control-button terminus-query-go-btn");
 		var self = this;
 		dbut.addEventListener("click", function(){
 			if(dcip.value) {
@@ -102,7 +103,8 @@ TerminusDocumentChooser.prototype.getIDDOM = function(){
 				self.change(dcip.value);
 			}
 		});
-		dbut.appendChild(document.createTextNode("View Document Properties"));
+		//11092019 dbut.appendChild(document.createTextNode("View Document Properties"));
+		dbut.appendChild(document.createTextNode("Go"));
 		docchooser.appendChild(dbut);
 	}
 	return docchooser;

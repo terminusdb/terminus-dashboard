@@ -429,7 +429,7 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
-	width: 400px;
+	/*width: 400px;*/
 }
 
 .terminus-headings{
@@ -859,7 +859,7 @@ div.terminus-property-frame{
 }
 
 .CodeMirror {
-	border: 1px solid #eee;
+	border: 2px solid #eee;
 	height: auto;
 }
 
@@ -1380,14 +1380,14 @@ div.terminus-property-frame{
 span.terminus-document-chooser {
 	display: inline-block;
 }
-span.terminus-document-chooser select {
+/*span.terminus-document-chooser select {
 	font-size: large;
 	padding: 0.4em;
 	margin: 4px 1px 8px 4px;
 	color: #999;
 	font-weight: bold;
 	width: 300px;
-}
+}*/
 
 
 span.terminus-document-chooser .select2-selection-rendered {
@@ -1604,4 +1604,114 @@ a.terminus-a:focus, a.terminus-a:hover {
 /* terminus document chooser */
 .terminus-choose-by-id{
 	margin: 20px 0px 20px 30px;
+}
+
+
+/* terminus query button grouping */
+.terminus-query-group-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+	/*background-color: whitesmoke;*/
+}
+
+.terminus-group-box {
+	margin-right: 15px;
+	margin-left: 15px;
+	background-color: #f5f5f5;
+	width: 397px;
+}
+
+.terminus-group {
+    border: 0;
+    position: relative;
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border-radius: .2857rem;
+}
+
+.terminus-group:after, .terminus-group:before {
+    box-sizing: border-box;
+}
+
+.terminus-group-header {
+	padding: 15px 15px 0;
+    border: 0;
+    color: hsla(0,0%,100%,.8);
+	background-color: transparent;
+}
+
+.terminus-group-sub-title{
+	color: #9a9a9a;
+    margin-bottom: 5px;
+    font-weight: 300;
+	margin-bottom: 2px;
+	font-size: 14px;
+}
+
+.terminus-query-select{
+	color: #494949 !important;
+	text-decoration: none;
+	background: #ffffff;
+	padding: 20px;
+	border: 2px solid #494949 !important;
+	display: inline-block;
+	transition: all 0.4s ease 0s;margin: 3px;
+	width: 388px;
+}
+
+.terminus-query-text{
+	color: #494949 !important;
+	text-decoration: none;
+	background: #ffffff;
+	padding: 20px;
+	border: 2px solid #494949 !important;
+	display: inline-block;
+	transition: all 0.4s ease 0s;
+	margin: 3px;
+	width: 250px;
+}
+
+.terminus-query-go-btn {
+	color: #494949 !important;
+	text-decoration: none;
+	background: #ffffff;
+	padding: 20px;
+	border: 2px solid #494949 !important;
+	display: inline-block;
+	transition: all 0.4s ease 0s;
+	margin: 3px;
+	width: 80px;
+	margin-left: 10px;
+}
+
+.terminus-query-btn {
+	color: #494949 !important;
+	text-transform: uppercase;
+	text-decoration: none;
+	background: #ffffff;
+	padding: 20px;
+	border: 2px solid #494949 !important;
+	display: inline-block;
+	transition: all 0.4s ease 0s;
+	margin-top: 3px;
+}
+
+.terminus-query-btn:hover, .terminus-query-go-btn:hover {
+	color: #000 !important;
+	background: #0DCA90;
+	border-color: #0DCA90 !important;
+	transition: all 0.4s ease 0s;
+}
+
+.terminus-query-btn-size{
+	margin-left: 5px;
+    margin-bottom: 5px;
+    width: 388px;
 }

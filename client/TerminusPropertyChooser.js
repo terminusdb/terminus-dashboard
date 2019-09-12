@@ -24,7 +24,7 @@ TerminusPropertyChooser.prototype.getAsDOM = function(){
 	var ccdom = document.createElement("span");
 	ccdom.setAttribute("Class", "terminus-Class-chooser");
 	var ccsel = document.createElement("select");
-	ccsel.setAttribute("Class", "terminus-class-select terminus-type-select");
+	ccsel.setAttribute("Class", " terminus-type-select terminus-query-select");
 	var self = this;
 	ccsel.addEventListener("change", function(){
 		if(this.value != this.choice){

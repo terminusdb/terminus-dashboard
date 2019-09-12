@@ -117,7 +117,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 			self.ui.showDocument(val);
 		}
 		d2ch.view = "label";
-		var sdom = d2ch.getAsDOM();
+		var sdom = d2ch.getAsDOM('terminus-class-select');
 		/*
 		var showDoc = function(durl){
 			self.ui.showDocument(durl);
@@ -194,7 +194,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 			termcc.choice = false;
 		}
 	}
-	var tcdom = termcc.getAsDOM();
+	var tcdom = termcc.getAsDOM('terminus-class-select');
 	var nlab = document.createElement("a");
 	nlab.setAttribute("href", "#");
 	nlab.setAttribute("class", "document-which-chooser document-chooser-a");
