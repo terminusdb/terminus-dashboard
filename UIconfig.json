@@ -18,7 +18,7 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://localhost/platform/", db: "baba"}, 
+	location: {server: "http://localhost/platform/", db: "baba"},
 	css: "theme",
 	plugins: {
 		"font-awesome": true,
@@ -32,6 +32,9 @@ let TerminusConfig = {
 		quill: true,
 		select2: true,
 		jsoneditor: true,
-		codemirror: true
+		codemirror: {
+			darkMode: true, // true for dark theamed text editor
+			loaded: true
+		}
 	}
 };

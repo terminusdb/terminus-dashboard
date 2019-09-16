@@ -39,6 +39,20 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 	return dpropDOM;
 }
 
+HTMLFrameHelper.getSettingsControl = function(){
+	var pman = new TerminusPluginManager();
+	if(pman.pluginAvailable("font-awesome")){
+		var icon = document.createElement('icon');
+		icon.setAttribute('class', 'fa fa-bars');
+		return icon;
+	}
+	else{
+		var button = document.createElement("button");
+		button.appendChild(document.createTextNode('Settings'));
+		return button;
+	}
+}
+
 HTMLFrameHelper.getControlIcon = function(control){
 	var icon;
 	switch(control){

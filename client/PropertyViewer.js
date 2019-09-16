@@ -274,45 +274,68 @@ HTMLPropertyHeaderViewer.prototype.getPropertyCardinalityDOM = function(renderer
 	return HTMLFrameHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help);
 }
 
-HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
-	var controlsDOM = document.createElement("span");
-	controlsDOM.setAttribute("class", "terminus-property-controls");
+HTMLPropertyHeaderViewer.prototype.getActionControlDOM = function(settingsDOM, renderer){
 	if(renderer.showFeature("mode")){
 		var viewsDOM = HTMLFrameHelper.getModeSelectorDOM("property", renderer);
-		if(viewsDOM) controlsDOM.appendChild(viewsDOM);
+		if (viewsDOM) settingsDOM.appendChild(viewsDOM);
 	}
 	if(renderer.showFeature("delete")){
 		var dpropDOM = this.getPropertyDeleteDOM(renderer);
-		if(dpropDOM) controlsDOM.appendChild(dpropDOM);
+		if (dpropDOM) settingsDOM.appendChild(dpropDOM);
 	}
 	if(renderer.showFeature("add") && !renderer.isClassChoice()){
 		var addDOM = this.getAddValueDOM(renderer);
-		if(addDOM) controlsDOM.appendChild(addDOM);
+		if(addDOM) settingsDOM.appendChild(addDOM);
 	}
 	if(renderer.showFeature("reset")){
 		var rpropDOM = this.getPropertyResetDOM(renderer);
-		if(rpropDOM) controlsDOM.appendChild(rpropDOM);
+		if(rpropDOM) settingsDOM.appendChild(rpropDOM);
 	}
 	if(renderer.showFeature("update")){
 		var upropDOM = this.getPropertyUpdateDOM(renderer);
-		if(upropDOM) controlsDOM.appendChild(upropDOM);
+		if(upropDOM) settingsDOM.appendChild(upropDOM);
 	}
 	if(renderer.showFeature("show")){
 		var showDOM = this.getPropertyShowDOM(renderer);
-		if(showDOM) controlsDOM.appendChild(showDOM);
+		if(showDOM) settingsDOM.appendChild(showDOM);
 	}
 	if(renderer.showFeature("hide")){
 		var hideDOM = this.getPropertyHideDOM(renderer);
-		if(hideDOM) controlsDOM.appendChild(hideDOM);
+		if(hideDOM) settingsDOM.appendChild(hideDOM);
 	}
 	if(renderer.showFeature("viewer")){
 		var hideDOM = this.getViewerSelectorDOM(renderer);
-		if(hideDOM) controlsDOM.appendChild(hideDOM);
+		if(hideDOM) settingsDOM.appendChild(hideDOM);
 	}
 	if(renderer.showFeature("add") && renderer.isClassChoice()){
 		var addDOM = this.getAddValueDOM(renderer);
-		if(addDOM) controlsDOM.appendChild(addDOM);
+		if(addDOM) settingsDOM.appendChild(addDOM);
 	}
+}
+
+HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM, renderer){
+	var settings = document.createElement("div");
+	var sControl = HTMLFrameHelper.getSettingsControl();
+	var popup = document.createElement('div');
+	popup.setAttribute('class', 'terminus-hide terminus-popup');
+	popup.appendChild(document.createTextNode('blah blah'));
+	sControl.appendChild(popup);
+	sControl.addEventListener('click', function(){
+		if(this.children[0].style.display == 'none') this.children[0].style.display = 'block';
+		else this.children[0].style.display = 'block';
+
+	});
+    settings.appendChild(sControl);
+	controlsDOM.appendChild(settings);
+	// append action controls to pop up
+	this.getActionControlDOM(popup, renderer);
+}
+
+HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
+	var controlsDOM = document.createElement("span");
+	controlsDOM.setAttribute("class", "terminus-property-controls");
+	// get settings icon or button
+	this.getSettingsControlDOM(controlsDOM, renderer);
 	return controlsDOM;
 }
 

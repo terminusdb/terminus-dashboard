@@ -1,6 +1,7 @@
-function Codemirror(text, format){
+function Codemirror(text, format, config){
   this.textdom = text;
   this.mode = format;
+  this.darkMode = config.darkMode;
   if(this.jsonldCheck(format)) this.mode = 'javascript';
 }
 
@@ -32,7 +33,8 @@ Codemirror.prototype.colorizeTextArea = function(mode){
 
    this.setCodemirrorSize(editor, mode);
    editor.defaultCharWidth('20px');
-   editor.setOption("theme", 'neo');
+   if(this.darkMode) editor.setOption("theme", 'paraiso-dark');
+   else editor.setOption("theme", 'neo');
 
    return editor;
 } // colorizeTextArea()
@@ -44,7 +46,7 @@ Codemirror.prototype.colorizeTextArea = function(mode){
 Codemirror.prototype.setCodemirrorSize = function(editor, mode){
   switch(mode){
     case 'query':
-      editor.setSize('', '200');
+      editor.setSize('', '300');
     break;
     case 'schema':
       editor.setSize('1200', '1550');
@@ -75,7 +77,10 @@ output (DOM node): The tokens will be converted to spans as in an editor,
                    and inserted into the node (through innerHTML).*/
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
-  this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap cm-s-neo terminus-wrap-text terminus-wrapper-height ');
+  if(this.darkMode)
+    var theme = 'cm-s-paraiso-dark';
+  else var theme = 'cm-s-neo';
+  this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap ' + theme + ' terminus-wrap-text terminus-wrapper-height ');
   return this.textdom;
 } // colorizePre()
 

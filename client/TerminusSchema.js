@@ -328,11 +328,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	}
 	this.schema_edit_dom = ipval;
 	np.appendChild(ipval);
-	if(this.ui.pluginAvailable("codemirror")){
-    var cm = new Codemirror(ipval, this.format);
-		var ar = cm.colorizeTextArea('schema');
-		cm.updateTextArea(ar);
-    }
+	stylizeEditor(this.ui, ipval, 'schema', 'turtle');
 	return np;
 }
 
@@ -353,12 +349,8 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 	else if(typeof (this.schema) == "object") {
 		ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
 	}
-	if(this.ui.pluginAvailable("codemirror")){
-    var cm = new Codemirror(ipval, this.format);
-		var pr = cm.colorizePre();
-		np.appendChild(pr);
-  }
-	else np.appendChild(ipval);
+	var cm = stylizeCodeDisplay(this.ui, ipval, np, 'turtle');
+	if(!cm) np.appendChild(ipval);
 	return np;
 }
 

@@ -2,11 +2,12 @@
 
 
 */
-
-
 body {
 	font-size: 16px;
 	font-family: 'Poppins', sans-serif !important;
+    font-family: 'Poppins', sans-serif !important;
+    border-top: 2px solid #0DCA90;
+    margin: 0px;
 	/*color: #777*/
 }
 h1, h2, h3, h4, h5, h6 {
@@ -726,19 +727,25 @@ div.terminus-property-frame{
 }
 .terminus-control-panel-label{
 	display: inline-block;
-  padding: 10px 4px 10px 70px;
-  border-right: 1px solid #88f;
-  /* padding-left: 50px; */
-  margin-top: 10px;
-  /* padding-right: 4px; */
-  margin-right: 4px;
-  font-size: larger;
-  min-width: fit-content;
-  width: 60px;
+    padding: 10px 4px 10px 70px;
+    border-right: 1px solid #88f;
+    /* padding-left: 50px; */
+    margin-top: 10px;
+    /* padding-right: 4px; */
+    margin-right: 4px;
+    font-size: larger;
+    min-width: fit-content;
+    width: 60px;
 }
 .terminus-control-panel-value{
 	padding-left: 5px;
 	font-size: 14px;
+}
+
+.terminus-control-panel-table-layout{
+	vertical-align: top;
+	background-color: #f5f5f5;
+	box-shadow: 5px 10px 8px #888888;
 }
 
 .terminus-nav-body-span{
@@ -1202,11 +1209,11 @@ div.terminus-property-frame{
 }
 
 
-.ico-popup {
+.terminus-popup {
   /*margin: 30px auto; */
     margin-left: 40px;
     padding: 20px;
-    background: whitesmoke;
+    background: #0DCA90;
     border-radius: 5px;
     width: 270px;
     position: relative;
@@ -1214,12 +1221,12 @@ div.terminus-property-frame{
 	display: none;
 }
 
-.ico-popup h2 {
+.terminus-popup h2 {
   margin-top: 0;
   color: #333;
   font-family: Tahoma, Arial, sans-serif;
 }
-.ico-popup .close {
+.terminus-popup .close {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -1230,16 +1237,16 @@ div.terminus-property-frame{
   color: #333;
   transition: all 5s ease-in-out;
 }
-.ico-popup .close:hover {
+.terminus-popup .close:hover {
   color: #06D85F;
 }
-.ico-popup .content {
+.terminus-popup .content {
   max-height: 30%;
   overflow: auto;
 }
 
 
-.ico-popup-property {
+.terminus-popup-property {
   /*margin: 30px auto; */
     margin-left: 40px;
     padding: 20px;
@@ -1252,12 +1259,12 @@ div.terminus-property-frame{
 	z-index: 20;
 }
 
-.ico-popup-property h2 {
+.terminus-popup-property h2 {
   margin-top: 0;
   color: #333;
   font-family: Tahoma, Arial, sans-serif;
 }
-.ico-popup-property .close {
+.terminus-popup-property .close {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -1267,10 +1274,10 @@ div.terminus-property-frame{
   text-decoration: none;
   color: #333;
 }
-.ico-popup-property .close:hover {
+.terminus-popup-property .close:hover {
   color: #06D85F;
 }
-.ico-popup-property .content {
+.terminus-popup-property .content {
   max-height: 30%;
   overflow: auto;
 }
@@ -1356,10 +1363,10 @@ div.terminus-property-frame{
 }
 
 @media screen and (max-width: 700px){
-  .ico-popup{
+  .terminus-popup{
     width: 70%;
   }
-  .ico-popup-property{
+  .terminus-popup-property{
     width: 70%;
   }
 }
@@ -1774,7 +1781,9 @@ a.terminus-a:focus, a.terminus-a:hover {
 
 
 .terminus-banner{
-	position: fixed;
+	margin-top: 20px;
+    margin-bottom: 20px;
+	/*position: fixed;
     top: 0;
     right: 0;
     left: 0;
@@ -1796,5 +1805,12 @@ a.terminus-a:focus, a.terminus-a:hover {
     animation-fill-mode: both;
     -webkit-animation-name: fadeInDown;
     animation-name: fadeInDown;
-    background: #fff !important;
+    background: #fff !important; */
+}
+
+
+.terminus-control-panel-layout {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
 }
