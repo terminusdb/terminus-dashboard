@@ -31,36 +31,52 @@ TerminusDBController.prototype.getAsDOM = function(){
 		nav.setAttribute('class', 'span3');
 		dbc.appendChild(nav);
 		var ul = document.createElement('ul');
-		ul.setAttribute('class','terminus-ul' );
+		ul.setAttribute('class','terminus-ul');
 		nav.appendChild(ul);
 		if(this.ui.showControl("db")){
 			var item = this.getControlHTML("Database Home", "fa-home");
-		    item.addEventListener("click", function(){ self.ui.showDBMainPage(); });
+			item.classList.add("terminus-selected");
+		    item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+				this.classList.add("terminus-selected");
+				self.ui.showDBMainPage();
+			});
 	        ul.appendChild(item);
 	    }
 		if(this.ui.showControl("delete_database")){
 			var item = this.getControlHTML("Delete Database", "fa-trash-alt");
-		    item.addEventListener("click", function(){ self.ui.deleteDatabase(); });
+		    item.addEventListener("click", function(){
+				self.ui.deleteDatabase();
+			});
 	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("woql_select")){
 			var item = this.getControlHTML("Query", "fa-search");
-		    item.addEventListener("click", function(){ self.ui.showQueryPage(); });
+		    item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+				this.classList.add("terminus-selected");
+				self.ui.showQueryPage();
+			});
 	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("woql_update")){
 			var item = this.getControlHTML("Mapping", "fa-file-import");
-	        item.addEventListener("click", function(){ self.ui.showMappingPage();})
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+				this.classList.add("terminus-selected");
+				self.ui.showMappingPage();
+			})
 	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("get_schema")){
 			var item = this.getControlHTML("Schema", "fa-cog");
-	        item.addEventListener("click", function(){ self.ui.showSchemaPage();})
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+				this.classList.add("terminus-selected");
+				self.ui.showSchemaPage();
+			});
 	        ul.appendChild(item);
 		}
-		/*var li = document.createElement('li');
-		li.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-doc-li active terminus-pointer");
-		ul.appendChild(li);*/
 		var a = document.createElement('a');
 		a.setAttribute('class', 'terminus-doc terminus-list-group-a terminus-list-group-a-action terminus-nav-width');
 		ul.appendChild(a);
@@ -91,6 +107,13 @@ TerminusDBController.prototype.getControlHTML = function(text, ic, css){
     var txt = document.createTextNode(text);
     a.appendChild(txt);
     return a;
+}
+
+TerminusDBController.prototype.getDocumentChooserIcons = function(show){
+	var icon = document.createElement('icon');
+	if(show == 'id') icon.setAttribute('class', 'fa fa-plus');
+	else icon.setAttribute('class', 'fa fa-random');
+	return icon;
 }
 
 TerminusDBController.prototype.getDocumentChooserDOM = function(){
@@ -130,22 +153,29 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		var nlab = document.createElement("a");
 		nlab.setAttribute("href", "#");
 		nlab.setAttribute("class", "terminus-document-which-chooser");
-		nlab.appendChild(document.createTextNode("Choose by ID"));
+		if(this.ui.pluginAvailable("font-awesome"))
+			nlab.appendChild(this.getDocumentChooserIcons('id'));
+		else nlab.appendChild(document.createTextNode("Choose by ID"));
 		var show = "label";
+		var self = this;
 		jQuery(nlab).click(function(){
 			if(show == "label"){
 				show = "id";
 				jQuery(dcip).show();
 				jQuery(nbut).show();
 				jQuery(sdom).hide();
-				jQuery(nlab).text("Choose by Label");
+				if(self.ui.pluginAvailable("font-awesome"))
+					jQuery(nlab).html(self.getDocumentChooserIcons(show));
+				else jQuery(nlab).text("Choose by Label");
 			}
 			else {
 				show = "label";
 				jQuery(dcip).hide();
 				jQuery(nbut).hide();
 				jQuery(sdom).show();
-				jQuery(nlab).text("Choose by ID");
+				if(self.ui.pluginAvailable("font-awesome"))
+					jQuery(nlab).html(self.getDocumentChooserIcons(show));
+				else jQuery(nlab).text("Choose by ID");
 			}
 		})
 		scd.appendChild(sdom);

@@ -258,12 +258,12 @@ TerminusUI.prototype.refreshDBList = function(){
 
 TerminusUI.prototype.showServerMainPage = function(){
 	this.viewer = new TerminusServerViewer(this);
-	this.redraw();
+	this.redrawMainPage();
 }
 
 TerminusUI.prototype.showLoadURLPage = function(val){
 	this.viewer = new TerminusURLLoader(this, val);
-	this.redraw();
+	this.redrawMainPage();
 }
 
 TerminusUI.prototype.showDBMainPage = function(){
@@ -273,7 +273,7 @@ TerminusUI.prototype.showDBMainPage = function(){
 
 TerminusUI.prototype.showCreateDBPage = function(){
 	this.viewer = new TerminusDBCreator(this);
-	this.redraw();
+	this.redrawMainPage();
 }
 
 TerminusUI.prototype.showSchemaPage = function(durl){

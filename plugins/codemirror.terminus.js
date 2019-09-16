@@ -33,7 +33,7 @@ Codemirror.prototype.colorizeTextArea = function(mode){
 
    this.setCodemirrorSize(editor, mode);
    editor.defaultCharWidth('20px');
-   if(this.darkMode) editor.setOption("theme", 'paraiso-dark');
+   if(this.darkMode) editor.setOption("theme", 'midnight');
    else editor.setOption("theme", 'neo');
 
    return editor;
@@ -78,7 +78,7 @@ output (DOM node): The tokens will be converted to spans as in an editor,
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
   if(this.darkMode)
-    var theme = 'cm-s-paraiso-dark';
+    var theme = 'cm-s-midnight';
   else var theme = 'cm-s-neo';
   this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap ' + theme + ' terminus-wrap-text terminus-wrapper-height ');
   return this.textdom;

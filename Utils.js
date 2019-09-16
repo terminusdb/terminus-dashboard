@@ -310,11 +310,19 @@ function stylizeEditor(ui, txt, view, mode){
    txt: text area to be stylized
    dom: stylized pre area is appended to dom
    mode: format to be displayed in
-*/function stylizeCodeDisplay(ui, txt, dom, mode){
+*/
+function stylizeCodeDisplay(ui, txt, dom, mode){
     var cmConfig = ui.pluginAvailable("codemirror");
     if(!(cmConfig)) return false;
     var cm = new Codemirror(txt, mode, cmConfig);
     var pr = cm.colorizePre();
     dom.appendChild(pr);
     return true;
+}
+
+function removeSelectedNavClass(name){
+    var el = document.getElementsByClassName(name);
+    for(var i=0; i<el.length; i++){
+        el[i].classList.remove(name);
+    }
 }

@@ -3,7 +3,7 @@ function Datatables(){}
 Datatables.prototype.convertToDatatable = function(tab){
     var table = jQuery(tab).DataTable({
          searching : false,
-         pageLength: 10,
+         pageLength: 25,
          lengthMenu: [10, 25, 50, 75, 100],
          paging    : true,
          select    : true,
@@ -19,6 +19,7 @@ Datatables.prototype.convertToDatatable = function(tab){
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');
+
     return tab;
 }
 
