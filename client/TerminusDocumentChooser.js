@@ -24,7 +24,7 @@ TerminusDocumentChooser.prototype.change = function(docid){
 }
 
 TerminusDocumentChooser.prototype.getAsDOM = function(style){
-	if(this.view == "label" && 	this.ui.client.platformEndpoint() && this.ui.pluginAvailable("select2")){
+	if(this.view == "label" && 	this.ui.client.connectionConfig.platformEndpoint() && this.ui.pluginAvailable("select2")){
 		return this.getS2DOM(style);
 	}
 	return this.getIDDOM();

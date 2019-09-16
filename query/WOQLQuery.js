@@ -3,10 +3,10 @@ function WOQLQuery(client, options){
 	this.options = options;
 	this.default_limit = 1000;
 	this.prefixes = {};
-	if(client.platformEndpoint()){
-		var sid = client.server.substring(0, client.server.lastIndexOf("platform"));
+	if(client.connectionConfig.platformEndpoint()){
+		var sid = client.connectionConfig.server.substring(0, client.connectionConfig.server.lastIndexOf("platform"));
 		this.sid = sid;
-		var colid = client.server.substring(0, client.server.lastIndexOf("platform")) + client.dbid;
+		var colid = client.connectionConfig.server.substring(0, client.connectionConfig.server.lastIndexOf("platform")) + client.connectionConfig.dbid;
 		this.prefixes['s'] = colid + "/ontology/main#";
 		this.prefixes['g'] = sid;
 		this.prefixes['db'] = colid + "/";
@@ -14,11 +14,11 @@ function WOQLQuery(client, options){
 		this.prefixes['dg'] = colid + "/graph/main/";
 	}
 	else {
-		this.prefixes['s'] = client.schemaURL() + "#";
-		this.prefixes['dg'] = client.dbURL() + "/schema";
-		this.prefixes['doc'] = client.docURL();
-		this.prefixes['db'] = client.dbURL() + "/";
-		this.prefixes['g'] = client.serverURL();
+		this.prefixes['s'] = client.connectionConfig.schemaURL() + "#";
+		this.prefixes['dg'] = client.connectionConfig.dbURL() + "/schema";
+		this.prefixes['doc'] = client.connectionConfig.docURL();
+		this.prefixes['db'] = client.connectionConfig.dbURL() + "/";
+		this.prefixes['g'] = client.connectionConfig.serverURL();
 	}
 	for(var pref in FrameHelper.standard_urls){
 		this.prefixes[pref] = FrameHelper.standard_urls[pref];
@@ -41,9 +41,6 @@ WOQLQuery.prototype.execute = function(woql){
 	.then(function(response){
 		var res = new WOQLResult(response, self, self.options);
 		return res;
-	})
-	.catch(function(error){
-		console.error(error);
 	});
 }
 

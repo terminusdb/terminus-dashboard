@@ -28,7 +28,7 @@ TerminusServerController.prototype.getAsDOM = function(){
 		ul.setAttribute('class',' terminus-widget-menu' );
 		nav.appendChild(ul);
 		rsc.appendChild(nav);
-    // change server
+        // change server
 		if(this.ui.showControl("change-server")){
 			var li = document.createElement('li');
 			li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
@@ -92,7 +92,7 @@ TerminusServerController.prototype.getAsDOM = function(){
 }
 
 TerminusServerController.prototype.getServerLabelDOM = function(){
-	var srec = this.ui.client.getServerRecord();
+	var srec = this.ui.client.connection.getServerRecord();
 	var lab = (srec && srec['rdfs:label'] && srec['rdfs:label']["@value"] ? srec['rdfs:label']["@value"] : this.ui.server());
 	var desc = (srec && srec['rdfs:comment'] && srec['rdfs:comment']["@value"] ? srec['rdfs:comment']["@value"] : "");
 	desc += " Server URL: "+ this.ui.server();
@@ -149,7 +149,9 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 		pd.appendChild(scd);
 	}
 	else {
-		pd.appendChild(this.getLoadURLPage());
+		self.ui.showLoadURLPage();
+
+		//pd.appendChild(this.getLoadURLPage());
 	}
 	return pd;
 }
@@ -220,7 +222,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	thead.appendChild(thr);
 	scd.appendChild(thead);
 	var tbody = document.createElement("tbody");
-	var dbrecs = this.ui.client.getServerDBRecords();
+	var dbrecs = this.ui.client.connection.getServerDBRecords();
 	for(var fullid in dbrecs){
 		var dbrec = dbrecs[fullid];
 		var dbid = fullid.split(":")[1];
@@ -280,6 +282,6 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 }
 
 TerminusServerViewer.prototype.deleteDBPermitted = function(dbid){
-	if(this.ui.client.capabilitiesPermit("delete_database", dbid)) return true;
+	if(this.ui.client.connection.capabilitiesPermit("delete_database", dbid)) return true;
 	return false;
 }

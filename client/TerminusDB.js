@@ -21,7 +21,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		lab.appendChild(document.createTextNode("DB "));
 		var val = document.createElement("span");
 		val.setAttribute("class", "terminus-value terminus-db-value terminus-control-panel-value");
-		var dbrec = this.ui.client.getDBRecord();
+		var dbrec = this.ui.client.connection.getDBRecord();
 		var nm = (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 		val.appendChild(document.createTextNode(nm));
 		scd.appendChild(lab);
@@ -109,7 +109,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	nbut.addEventListener("click", function(){
 		if(dcip.value) self.ui.showDocument(dcip.value);
 	})
-	if(this.ui.client.platformEndpoint() && this.ui.pluginAvailable("select2")){
+	if(this.ui.client.connectionConfig.platformEndpoint() && this.ui.pluginAvailable("select2")){
 		var mcls = FrameHelper.unshorten("dcog:Document");
 		var d2ch = new TerminusDocumentChooser(this.ui, mcls);
 		d2ch.change = function(val){
@@ -336,7 +336,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 				nd.setAttribute('class', 'terminus-margin-box');
 				d.appendChild(nd);
 	        }
-			else d.appendChild(document.createTextNode("No bindings for query"));
+			else d.appendChild(document.createTextNode("No results returned"));
 		}
 	})
 	.catch(function(err){
