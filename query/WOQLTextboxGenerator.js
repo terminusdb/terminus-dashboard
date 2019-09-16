@@ -47,6 +47,17 @@ WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	return g;
 }
 
+WOQLTextboxGenerator.prototype.setDatatableSettings = function(query){
+	var newQuery = query.replace(/\s/g,'');  // remove spaces
+	var searchStr = 'limit(';
+	if(newQuery.indexOf(searchStr) !== -1){
+		var remString = newQuery.substring(searchStr.length, newQuery.length);
+		var limit = remString.substr(0, remString.indexOf(','));
+		this.datatable.pageLength = limit;
+		this.datatable.start = 0;
+	}
+}
+
 WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-textbox-input");
@@ -62,7 +73,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
 	if(q) qip.value = q;
 	qbox.appendChild(qip);
-	stylizeEditor(this.ui, qip);
+	stylizeEditor(this.ui, qip, 'query', 'javascript');
 	var self = this;
 	var qbut = document.createElement("button");
 	qbut.setAttribute("class", "terminus-control-button terminus-query-btn")
@@ -70,6 +81,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	qbut.addEventListener("click", function(){
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Any_Query');
+			self.setDatatableSettings(qip.value);
 			self.query(qip.value, self.datatable);
 		}
 		else self.query(qip.value);
@@ -97,7 +109,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	nqbut.addEventListener("click", function(){
 		deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Classes');
 			self.query(qip.value, self.datatable);
@@ -113,7 +125,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'")
 														+ ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")",
 														self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Classes');
 			self.query(qip.value, self.datatable);
@@ -128,7 +140,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	ebut.addEventListener("click", function(){
 		deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getElementMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Schema_Elements');
 			self.query(qip.value, self.datatable);
@@ -141,7 +153,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	dbut.addEventListener("click", function(){
 		deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Documents');
 			self.query(qip.value, self.datatable);
@@ -154,7 +166,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	pbut.addEventListener("click", function(){
 		deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Data');
 			self.query(qip.value, self.datatable);
@@ -168,7 +180,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	prbut.addEventListener("click", function(){
 		deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Properties');
 			self.query(qip.value, self.datatable);
@@ -186,7 +198,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		if(new_class){
 			deleteStylizedEditor(self.ui, qip);
 			qip.value = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
-			stylizeEditor(self.ui, qip);
+			stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Data_Class');
 				self.datatable.chosenValue = new_class; // set chosen val from drop down
@@ -204,7 +216,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		if(new_property){
 			deleteStylizedEditor(self.ui, qip);
 			qip.value = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
-			stylizeEditor(self.ui, qip);
+			stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Property_Class');
 				self.datatable.chosenValue = new_property; // set chosen val from drop down
@@ -222,7 +234,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	docch.change = function(val){
 		deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip);
+		stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Info_by_Id');
 			self.datatable.chosenValue = val;
