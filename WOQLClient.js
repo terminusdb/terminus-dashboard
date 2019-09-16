@@ -171,10 +171,11 @@ WOQLClient.prototype.getDocument = function(docurl, opts){
  * the third argument (opts) is an options json - opts.key is an optional API key
  */
 WOQLClient.prototype.updateDocument = function(docurl, doc, opts){
+	alert(JSON.stringify(doc));
 	if(docurl && !this.setDocument(docurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(docurl, "Update Document")));
 	}
-	else if(doc && doc["@id"] && !this.setDocument(details["@id"], details["@context"])){
+	else if(doc && doc["@id"] && !this.setDocument(doc["@id"], doc["@context"])){
         return Promise.reject(new URIError(this.getInvalidURIMessage(doc["@id"], "Update Document")));
 	}
 	doc = this.addOptionsToDocument(this.makeDocumentConsistentWithURL(doc, docurl), opts);
@@ -684,8 +685,8 @@ TerminusIDParser.prototype.parseServerURL = function(str){
 	if(this.validURL(str)){
 		this.server_url = str;
 	}
-	else if(this.context && this.validPrefixedURL(str, context)){
-		this.server_url = this.expandPrefixed(str, context);
+	else if(this.context && this.validPrefixedURL(str, this.context)){
+		this.server_url = this.expandPrefixed(str, this.context);
 	}
 	if(this.server_url && this.server_url.lastIndexOf("/") != this.server_url.length-1){
 		this.server_url += "/";
@@ -695,8 +696,8 @@ TerminusIDParser.prototype.parseServerURL = function(str){
 
 TerminusIDParser.prototype.parseDBID = function(str){
 	str = (str ? str : this.contents);
-	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);
+	if(this.context && this.validPrefixedURL(str, this.context)){
+		str = this.expandPrefixed(str, this.context);
 	}
 	if(this.validURL(str)){
 		if(str.lastIndexOf("/") == str.length-1) str = str.substring(0, str.length-1);		//trim trailing slash
@@ -714,15 +715,16 @@ TerminusIDParser.prototype.parseDBID = function(str){
 
 TerminusIDParser.prototype.parseDocumentURL = function(str){
 	str = (str ? str : this.contents);
-	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);
+	if(this.context && this.validPrefixedURL(str, this.context)){
+		str = this.expandPrefixed(str, this.context);
 	}
 	if(this.validURL(str)){
 		if(str.lastIndexOf("/document/") != -1) {
 			this.doc = str.substring(str.lastIndexOf("/document/") + 10);
 			str = str.substring(0, str.lastIndexOf("/document/"));
 		}
-		return this.parseDBID(str);
+		return true;
+		//return this.parseDBID(str);
 	}
 	else if(this.validIDString(str)){
 		this.doc = str;
@@ -733,8 +735,8 @@ TerminusIDParser.prototype.parseDocumentURL = function(str){
 
 TerminusIDParser.prototype.parseSchemaURL = function(str){
 	str = (str ? str : this.contents);
-	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);
+	if(this.context && this.validPrefixedURL(str, this.context)){
+		str = this.expandPrefixed(str, this.context);
 	}
 	if(this.validURL(str)){
 		str = this.stripOptionalPath(str, "schema");
@@ -744,8 +746,8 @@ TerminusIDParser.prototype.parseSchemaURL = function(str){
 
 TerminusIDParser.prototype.parseQueryURL  = function(str){
 	str = (str ? str : this.contents);
-	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);
+	if(this.context && this.validPrefixedURL(str, this.context)){
+		str = this.expandPrefixed(str, this.context);
 	}
 	if(this.validURL(str)){
 		str = this.stripOptionalPath(str, "woql");
@@ -762,8 +764,8 @@ TerminusIDParser.prototype.stripOptionalPath = function(str, bit){
 
 TerminusIDParser.prototype.parseClassFrameURL = function(str){
 	str = (str ? str : this.contents);
-	if(this.context && this.validPrefixedURL(str, context)){
-		str = this.expandPrefixed(str, context);
+	if(this.context && this.validPrefixedURL(str, this.context)){
+		str = this.expandPrefixed(str, this.context);
 	}
 	if(this.validURL(str)){
 		str = this.stripOptionalPath(str, "schema");
@@ -783,6 +785,7 @@ TerminusIDParser.prototype.validURL = function(str){
 
 TerminusIDParser.prototype.validPrefixedURL = function(str, context){
 	let parts = str.split(":");
+	alert(JSON.stringify(parts));
 	if(parts.length != 2) return false;
 	if(parts[0].length < 1 || parts[1].length < 1) return false;
 	if(context && context[parts[0]] && this.validIDString(parts[1])) return true;

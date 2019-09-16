@@ -140,7 +140,7 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
     var table = jQuery(tab).DataTable({
          searching   : false,
          pageLength  : settings.pageLength,
-         lengthMenu  : [5, 10, 25, 50, 75, 100],
+         lengthMenu  : [10, 25, 50, 75, 100],
          paging      : true,
          select      : true,
          columnDefs  :[{targets:'_all',className:"truncate"}],

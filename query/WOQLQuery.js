@@ -85,7 +85,7 @@ WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 	start = start ? start : 0;
 	var woql = "limit( " + limit + ", start(" + start + ","
 	var vdoc = "t(v('Subject'), v('Predicate'), v('Object'))";
-	woql += "select([v('Subject'), v('PredgetClassMetaDataQueryicate'), v('Object')],(" + vdoc;
+	woql += "select([v('Subject'), v('Predicate'), v('Object')],(" + vdoc;
 	if(constraint) woql += ", " + constraint;
 	woql += "))))";
 	return woql;

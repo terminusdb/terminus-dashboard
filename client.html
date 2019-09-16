@@ -3,7 +3,7 @@
 	<head>
 		<meta charset=utf-8 />
 		<title>Terminus DB Javascript Client User Interface</title>
-		<script src="WOQLClient.js"></script>
+		<script src="../woql-client/dist/woql-client.min.js"></script>		
 		<script src="UIconfig.json"></script>
 		<script src="FrameHelper.js"></script>
 		<script src="ObjectFrame.js"></script>
@@ -92,14 +92,14 @@
 	</table>
 	<script>
 		var terminator = new TerminusUI(TerminusConfig);
-		var pconfig = {};//server: "http://195.201.12.87:6363/", key: "root"};
-		pconfig.buttons 	 = {'client'   : document.getElementById("terminus-client-btn"),
+		var pconfig = {};
+		pconfig.buttons = {'client'   : document.getElementById("terminus-client-btn"),
 			'explorer' : document.getElementById("terminus-explorer-btn")}
-		pconfig.controller = document.getElementById("terminus-control-panel");
-		pconfig.messages 	 = document.getElementById("terminus-user-messages");
-		pconfig.plugins 	 = document.getElementById("terminus-plugin-loader");
-		pconfig.explorer 	 = document.getElementById("terminus-explorer");
-		pconfig.viewer 		 = document.getElementById("terminus-content-viewer");
+		pconfig.controller 	= document.getElementById("terminus-control-panel");
+		pconfig.messages = document.getElementById("terminus-user-messages");
+		pconfig.plugins = document.getElementById("terminus-plugin-loader");
+		pconfig.explorer = document.getElementById("terminus-explorer");
+		pconfig.viewer = document.getElementById("terminus-content-viewer");
 		var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
 		terminator.draw(pconfig, nlocation);
 		var cssloader = document.getElementById("terminus-css-loader");

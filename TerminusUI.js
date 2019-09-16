@@ -6,7 +6,7 @@
  * @param opts - options array
  */
 function TerminusUI(opts){
-	this.client = new WOQLClient();
+	this.client = new TerminusDB.WOQLClient();
 	this.controls = [];
 	this.setOptions(opts);
 }
@@ -351,21 +351,18 @@ TerminusUI.prototype.setViewerDOM = function(dom){
 }
 
 TerminusUI.prototype.draw = function(comps, slocation){
-  if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
+	if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
-  if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
+	if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
-  if(this.buttons){
-    this.toggleControl();
-  }
+	if(this.buttons){
+		this.toggleControl();
+	}
 	if(this.controller){
 		this.drawControls();
 	}
-  /*  if(this.explorer){
-		this.drawExplorer();
-	}*/
 	if(this.plugins){
 		this.drawPlugins();
 	}
@@ -387,7 +384,7 @@ TerminusUI.prototype.redraw = function(msg){
 		FrameHelper.removeChildren(this.controller);
 		this.drawControls();
 	}
-  if(this.explorer){
+	if(this.explorer){
 		FrameHelper.removeChildren(this.explorer);
 		//this.drawExplorer();
 	}
@@ -424,14 +421,14 @@ TerminusUI.prototype.drawControls = function(){
 }
 
 TerminusUI.prototype.drawExplorer = function(){
-  if(this.explorer){
-    if(this.showControl("api_explorer")){
-       var exp = new ApiExplorer(this);
-       ae = exp.getAsDOM();
-       this.explorer.appendChild(ae);
-       this.explorer.style.display = 'block';
-    }
-  }
+	if(this.explorer){
+		if(this.showControl("api_explorer")){
+			var exp = new ApiExplorer(this);
+			ae = exp.getAsDOM();
+			this.explorer.appendChild(ae);
+			this.explorer.style.display = 'block';
+		}
+	}
 }
 
 TerminusUI.prototype.loadControls = function(){

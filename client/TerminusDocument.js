@@ -51,7 +51,6 @@ TerminusDocumentViewer.prototype.getInstanceMeta = function(elid){
 	});
 }
 
-
 TerminusDocumentViewer.prototype.getClassMeta = function(cls){
 	if(typeof this.classmeta[cls]){
 		return this.classmeta[cls];
