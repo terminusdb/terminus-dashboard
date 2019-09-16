@@ -39,6 +39,20 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 	return dpropDOM;
 }
 
+HTMLFrameHelper.getSettingsControl = function(){
+	var pman = new TerminusPluginManager();
+	if(pman.pluginAvailable("font-awesome")){
+		var icon = document.createElement('icon');
+		icon.setAttribute('class', 'fa fa-bars');
+		return icon;
+	}
+	else{
+		var button = document.createElement("button");
+		button.appendChild(document.createTextNode('Settings'));
+		return button;
+	}
+}
+
 HTMLFrameHelper.getControlIcon = function(control){
 	var icon;
 	switch(control){
@@ -128,9 +142,31 @@ HTMLFrameHelper.goToName = function(s, p, i){
 	}
 }
 
+
+
+/*HTMLFrameHelper.getFrameRow = function(){
+	var row = document.createElement('div');
+	row.setAttribute('class', 'terminus-frame-row');
+	return row;
+}
+
+HTMLFrameHelper.getFrameGroup = function(frow){
+	var fl = document.createElement('div');
+	fl.setAttribute('class', 'terminus-frame-length');
+	frow.appendChild(fl);
+
+	var fg = document.createElement('div');
+	fg.setAttribute('class', 'terminus-frame-group');
+	fl.appendChild(fg);
+	return fl;
+}*/
+
 HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
+	/*var frow = this.getFrameRow();
+	var fgroup = this.getFrameGroup(frow);*/
 	var infoDOM = document.createElement("span");
 	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type );
+	//fgroup.appendChild(infoDOM);
 	if(help){
 		infoDOM.setAttribute("title", help);
 	}

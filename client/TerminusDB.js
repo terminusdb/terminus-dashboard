@@ -26,82 +26,80 @@ TerminusDBController.prototype.getAsDOM = function(){
 		val.appendChild(document.createTextNode(nm));
 		scd.appendChild(lab);
 		scd.appendChild(val);
-		dbc.appendChild(scd);
+		//dbc.appendChild(scd);
 		var nav = document.createElement('div');
 		nav.setAttribute('class', 'span3');
 		dbc.appendChild(nav);
 		var ul = document.createElement('ul');
-		ul.setAttribute('class',' terminus-widget-menu' );
+		ul.setAttribute('class','terminus-ul' );
 		nav.appendChild(ul);
 		if(this.ui.showControl("db")){
-			var li = this.getControlHTML("Database Home", "fa-home");
-		    li.addEventListener("click", function(){ self.ui.showDBMainPage(); });
-	        ul.appendChild(li);
+			var item = this.getControlHTML("Database Home", "fa-home");
+		    item.addEventListener("click", function(){ self.ui.showDBMainPage(); });
+	        ul.appendChild(item);
 	    }
 		if(this.ui.showControl("delete_database")){
-			var li = this.getControlHTML("Delete Database", "fa-trash-alt");
-		    li.addEventListener("click", function(){ self.ui.deleteDatabase(); });
-	        ul.appendChild(li);
+			var item = this.getControlHTML("Delete Database", "fa-trash-alt");
+		    item.addEventListener("click", function(){ self.ui.deleteDatabase(); });
+	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("woql_select")){
-			var li = this.getControlHTML("Query", "fa-search");
-		    li.addEventListener("click", function(){ self.ui.showQueryPage(); });
-	        ul.appendChild(li);
+			var item = this.getControlHTML("Query", "fa-search");
+		    item.addEventListener("click", function(){ self.ui.showQueryPage(); });
+	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("woql_update")){
-			var li = this.getControlHTML("Mapping", "fa-file-import");
-	        li.addEventListener("click", function(){ self.ui.showMappingPage();})
-	        ul.appendChild(li);
+			var item = this.getControlHTML("Mapping", "fa-file-import");
+	        item.addEventListener("click", function(){ self.ui.showMappingPage();})
+	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("get_schema")){
-			var li = this.getControlHTML("Schema", "fa-cog");
-	        li.addEventListener("click", function(){ self.ui.showSchemaPage();})
-	        ul.appendChild(li);
+			var item = this.getControlHTML("Schema", "fa-cog");
+	        item.addEventListener("click", function(){ self.ui.showSchemaPage();})
+	        ul.appendChild(item);
 		}
-		var li = document.createElement('li');
+		/*var li = document.createElement('li');
 		li.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-doc-li active terminus-pointer");
-		ul.appendChild(li);
+		ul.appendChild(li);*/
 		var a = document.createElement('a');
+		a.setAttribute('class', 'terminus-doc terminus-list-group-a terminus-list-group-a-action terminus-nav-width');
+		ul.appendChild(a);
 		var icon = document.createElement('i');
 		icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
 		a.appendChild(icon);
 		var txt = document.createTextNode('Documents');
 		a.appendChild(txt);
-		li.appendChild(a);
+		//li.appendChild(a);
 		var icon = document.createElement('i');
 		if(this.ui.showControl("get_document")){
-			li.appendChild(this.getDocumentChooserDOM());
+			a.appendChild(this.getDocumentChooserDOM());
 		}
 		if(this.ui.showControl("create_document")){
-			li.appendChild(this.getDocumentCreatorDOM());
+			a.appendChild(this.getDocumentCreatorDOM());
 		}
 	}
 	return dbc;
 }
 
 TerminusDBController.prototype.getControlHTML = function(text, ic, css){
-	var li = document.createElement('li');
-	var ncss = "terminus-control-button terminus-change-server-button active terminus-pointer" + (css ? " " + css : "");
-    li.setAttribute("class", ncss);
     var self = this;
     var a = document.createElement('a');
-    a.setAttribute("href", "#");
+	a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var icon = document.createElement('i');
     icon.setAttribute('class', 'terminus-menu-icon fa ' + ic);
     a.appendChild(icon);
     var txt = document.createTextNode(text);
     a.appendChild(txt);
-    li.appendChild(a);
-    return li;
+    return a;
 }
 
 TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	var self = this;
 	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-document-chooser terminus-form-horizontal terminus-control-group");
+	scd.setAttribute("class", "terminus-document-chooser terminus-form-horizontal terminus-control-group terminus-choose-by-id");
 	var lab = document.createElement("span");
 	lab.setAttribute("class", "terminus-document-chooser-label terminus-control-label terminus-control-label-padding");
-	lab.appendChild(document.createTextNode("ID "));
+	//lab.appendChild(document.createTextNode("ID "));
 	var dcip = document.createElement("input");
 	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document ID");
@@ -119,7 +117,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 			self.ui.showDocument(val);
 		}
 		d2ch.view = "label";
-		var sdom = d2ch.getAsDOM();
+		var sdom = d2ch.getAsDOM('terminus-class-select');
 		/*
 		var showDoc = function(durl){
 			self.ui.showDocument(durl);
@@ -148,10 +146,10 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 				jQuery(nbut).hide();
 				jQuery(sdom).show();
 				jQuery(nlab).text("Choose by ID");
-			}				
+			}
 		})
 		scd.appendChild(sdom);
-		scd.prepend(nlab);		
+		scd.prepend(nlab);
 	}
 	var nbuts = document.createElement("div");
 	nbuts.setAttribute("class", "terminus-control-buttons terminus-document-chooser-buttons");
@@ -165,14 +163,14 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var self = this;
 	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-document-creator terminus-form-horizontal terminus-control-group");
+	scd.setAttribute("class", "terminus-document-creator terminus-form-horizontal terminus-control-group terminus-choose-by-id");
 	var dcip = document.createElement("input");
 	dcip.setAttribute("class", "terminus-form-value terminus-document-creator terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document Type");
 	var nbut = document.createElement("button");
 	var lab = document.createElement("span");
 	lab.setAttribute("class", "document-creator-label terminus-control-label terminus-control-label-padding");
-	lab.appendChild(document.createTextNode("Type "));
+	//lab.appendChild(document.createTextNode("Type "));
 	nbut.setAttribute('class', "terminus-control-button create-document-button terminus-doc-btn")
 	nbut.appendChild(document.createTextNode("Create Document"));
 	nbut.addEventListener("click", function(){
@@ -196,7 +194,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 			termcc.choice = false;
 		}
 	}
-	var tcdom = termcc.getAsDOM();
+	var tcdom = termcc.getAsDOM('terminus-class-select');
 	var nlab = document.createElement("a");
 	nlab.setAttribute("href", "#");
 	nlab.setAttribute("class", "document-which-chooser document-chooser-a");
@@ -239,10 +237,14 @@ function TerminusDBViewer(ui){
 TerminusDBViewer.prototype.getAsDOM = function(selected){
 	var pd = document.createElement("span");
 	pd.setAttribute("class", "terminus-db-home-page");
+	var sth = document.createElement('div');
+	var banner = document.createElement('div');
+	pd.appendChild(banner);
+	banner.setAttribute('class', 'terminus-banner');
 	var dhp = document.createElement("span");
 	dhp.setAttribute('class', 'terminus-home-heading');
 	dhp.appendChild(document.createTextNode("DB Home Page - "));
-	pd.appendChild(dhp);
+	sth.appendChild(dhp);
 	var scd = document.createElement("span");
 	scd.setAttribute("class", "terminus-db-details");
 	var scs = document.createElement("span");
@@ -254,10 +256,12 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 		scs.setAttribute('class', 'terminus-home-heading');
 	}
 	scd.appendChild(scs);
-	pd.appendChild(scd);
-	pd.appendChild(prettifyHeaderDom('Summary'));
+	sth.appendChild(scd);
+	banner.appendChild(sth);
+	//pd.appendChild(sth);
+	pd.appendChild(getHeaderDom('Summary'));
 	this.getDBSummary(pd);
-	pd.appendChild(pd.appendChild(prettifyHeaderDom('List of Documents')));
+	pd.appendChild(pd.appendChild(getHeaderDom('List of Documents')));
 	this.getClassesDOM(pd);
 	return pd;
 }
@@ -265,35 +269,28 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 TerminusDBViewer.prototype.getDbInfoBox = function(r, module){
 	var sp = document.createElement('span');
     sp.setAttribute('class', 'terminus-db-info-box');
+	var info = document.createElement('div');
+	info.appendChild(document.createTextNode(module.charAt(0).toUpperCase() + module.slice(1)));
+	info.setAttribute('class', 'terminus-db-info');
+	sp.appendChild(info);
 
-    var a = document.createElement('a');
-    a.setAttribute('style', 'font-size: large;')
     var i = document.createElement('i');
-	a.appendChild(i);
-    var b = document.createElement('b');
-    b.setAttribute('class', 'terminus-info-heading');
 	switch(module){
 		case 'size':
-			i.setAttribute('class', 'terminus-menu-icon fa fa-balance-scale');
-			b.innerHTML = 'Size';
+			i.setAttribute('class', 'terminus-icon fa fa-balance-scale');
 		    var txt = document.createTextNode('2 Gb');
 		break;
 		case 'created':
-			i.setAttribute('class', 'terminus-menu-icon fa fa-calendar');
-			b.innerHTML = 'Created';
+			i.setAttribute('class', 'terminus-icon fa fa-calendar');
 		    var txt = document.createTextNode('16 July 2015');
 		break;
 		case 'modified':
-			i.setAttribute('class', 'terminus-menu-icon fa fa-clock');
-			b.innerHTML = 'Last Modified';
+			i.setAttribute('class', 'terminus-icon fa fa-clock');
 		    var txt = document.createTextNode('22 Dec 2019');
 		break;
 	}
-    a.appendChild(b);
-	var br = document.createElement('BR');
-    a.appendChild(br);
-    if(txt) a.appendChild(txt);
-    sp.appendChild(a);
+    sp.appendChild(i);
+	if(txt) sp.appendChild(txt);
     r.appendChild(sp);
 }
 
@@ -328,7 +325,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	this.wquery.execute(q)
 	.then(function(result){
 		if(true || !self.result){
-			self.result = new WOQLResultsViewer(result, {});
+			self.result = new WOQLResultsViewer(this.ui, result, {}, {});
 		}
 		else {
 			//self.result.newResult(result);
@@ -361,8 +358,11 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	sct.setAttribute("class", "terminus-db-creator-title terminus-module-head");
 	sct.appendChild(document.createTextNode("Create New Database"));
 	scd.appendChild(sct);
+	var mfd = document.createElement('div');
+	mfd.setAttribute('class', 'terminus-form-border');
+	scd.appendChild(mfd);
 	var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field terminus-form-horizontal terminus-control-group");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
 	slab.setAttribute("class", "terminus-id-label terminus-form-label terminus-control-label");
 	slab.appendChild(document.createTextNode("ID"));
@@ -372,9 +372,9 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	idip.setAttribute("class", "terminus-form-value terminus-input-text");
 	idip.setAttribute("placeholder", "No spaces or special characters allowed in IDs");
 	sci.appendChild(idip);
-	scd.appendChild(sci);
+	mfd.appendChild(sci);
 	var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field terminus-form-horizontal terminus-control-group");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
 	slab.setAttribute("class", "terminus-title-label terminus-form-label terminus-control-label");
 	slab.appendChild(document.createTextNode("Title"));
@@ -384,9 +384,9 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	titip.setAttribute("class", "terminus-form-value terminus-input-text");
 	sci.appendChild(slab);
 	sci.appendChild(titip);
-	scd.appendChild(sci);
+	mfd.appendChild(sci);
 	var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field terminus-form-horizontal terminus-control-group");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
 	slab.setAttribute("class", "terminus-title-label terminus-form-label terminus-control-label");
 	slab.appendChild(document.createTextNode("Description"));
@@ -395,9 +395,9 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	descip.setAttribute("class", "terminus-textarea terminus-db-description terminus-textarea ");
 	descip.setAttribute("placeholder", "A short text describing the database and its purpose");
 	sci.appendChild(descip);
-	scd.appendChild(sci);
+	mfd.appendChild(sci);
 	var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field terminus-form-horizontal terminus-control-group");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
 	slab.setAttribute("class", "terminus-schema-label terminus-form-label terminus-control-label");
 	slab.appendChild(document.createTextNode("Import Schema"));
@@ -408,9 +408,9 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	schem.setAttribute("class", "terminus-form-value terminus-form-url terminus-input-text");
 
 	sci.appendChild(schem);
-	scd.appendChild(sci);
-	var sci = document.createElement("span");
-	sci.setAttribute("class", "terminus-form-field terminus-form-horizontal terminus-control-group");
+	mfd.appendChild(sci);
+	var sci = document.createElement("div");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
 	slab.setAttribute("class", "terminus-data-label terminus-form-label terminus-control-label");
 	slab.appendChild(document.createTextNode("Import Data"));
@@ -420,7 +420,7 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	datip.setAttribute("placeholder", "Terminus DB URL");
 	datip.setAttribute("class", "terminus-form-value terminus-form-url terminus-input-text");
 	sci.appendChild(datip);
-	scd.appendChild(sci);
+	mfd.appendChild(sci);
 	var butfield = document.createElement("div");
 	butfield.setAttribute("class", "terminus-control-buttons");
 	var cancbut = document.createElement("button");
@@ -449,6 +449,6 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	})
 	butfield.appendChild(cancbut);
 	butfield.appendChild(loadbut);
-	scd.appendChild(butfield);
+	mfd.appendChild(butfield);
 	return scd;
 }

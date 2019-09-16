@@ -15,7 +15,7 @@ Datatables.prototype.convertToDatatable = function(tab){
     }); //jQuery(tab)
 
     //styling
-    tab.setAttribute('class'      , 'stripe dataTable');
+    tab.setAttribute('class'      , 'stripe dataTable terminus-db-size terminus-db-border');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');

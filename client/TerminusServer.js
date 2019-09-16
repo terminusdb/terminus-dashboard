@@ -100,6 +100,7 @@ TerminusServerController.prototype.getServerLabelDOM = function(){
 	val.setAttribute("class", "terminus-server-value");
 	val.setAttribute("title", desc);
 	val.appendChild(document.createTextNode(lab));
+    val =  document.createElement('div');
 	return val;
 }
 
@@ -116,7 +117,7 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 		var scd = document.createElement("span");
 		scd.setAttribute("class", "terminus-server-home");
 		if(this.ui.showView("server")){
-			scd.appendChild(this.getServerDetailsDOM());
+			// 11092019 scd.appendChild(this.getServerDetailsDOM());
 		}
 		if(this.ui.showView("change-server")){
 			var csbut = document.createElement("button");
@@ -127,7 +128,7 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 				self.ui.clearServer();
 				self.ui.showLoadURLPage();
 			})
-			scd.appendChild(csbut);
+			// 11092019 scd.appendChild(csbut);
 		}
 		if(this.ui.showView("create_database")){
 			var crbut = document.createElement("button");
@@ -140,7 +141,7 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 				self.ui.clearMessages();
 				self.ui.showCreateDBPage();
 			})
-			scd.appendChild(crbut);
+			// 11092019 scd.appendChild(crbut);
 		}
 		if(this.ui.showView("db")){
 			scd.appendChild(this.getDBListDOM());
@@ -155,12 +156,12 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 
 TerminusServerViewer.prototype.getServerDetailsDOM = function(){
 	var scd = document.createElement("span");
-	scd.setAttribute("class", "terminus-server-details");
+	scd.setAttribute("class", "terminus-server-details terminus-server-banner");
 	var scl = document.createElement("span");
-	scl.setAttribute("class", "terminus-label terminus-server-details-label");
-	scl.appendChild(document.createTextNode("Server"))
+	scl.setAttribute("class", "terminus-label terminus-server-info");
+	scl.appendChild(document.createTextNode("Connected to Server - "))
 	var scs = document.createElement("span");
-	scs.setAttribute("class", "terminus-value terminus-server-details-value");
+	scs.setAttribute("class", "terminus-value terminus-server-info");
 	scs.appendChild(document.createTextNode(this.ui.server()))
 	scd.appendChild(scl);
 	scd.appendChild(scs);
@@ -185,31 +186,31 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	var sec = document.createElement("div");
 	sec.setAttribute("class", "terminus-db-list-section");
 	var lihed = document.createElement("h3");
-	lihed.setAttribute("class", "terminus-db-list-title terminus-full-css-margin-top terminus-module-head");
+	lihed.setAttribute("class", "terminus-db-list-title terminus-module-head");
 	lihed.appendChild(document.createTextNode("Available Databases"));
 	sec.appendChild(lihed);
 	var scd = document.createElement("table");
-	scd.setAttribute("class", "terminus-db-list");
+	scd.setAttribute("class", "terminus-db-list terminus-db-size terminus-db-border");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var th1 = document.createElement("th");
 	th1.appendChild(document.createTextNode("ID"));
-	th1.setAttribute("class", "terminus-db-id terminus-table-header-full-css");
+	th1.setAttribute("class", "terminus-db-id terminus-table-th");
 	var th2 = document.createElement("th");
 	th2.appendChild(document.createTextNode("Title"));
-	th2.setAttribute("class", "terminus-db-title terminus-table-header-full-css");
+	th2.setAttribute("class", "terminus-db-title terminus-table-th");
 	var th3 = document.createElement("th");
 	th3.appendChild(document.createTextNode("Description"));
-	th3.setAttribute("class", "terminus-db-description terminus-table-header-full-css");
+	th3.setAttribute("class", "terminus-db-description terminus-table-th");
 	var th4 = document.createElement("th");
-	th4.setAttribute("class", "terminus-db-size terminus-table-header-full-css");
+	th4.setAttribute("class", "terminus-db-size terminus-table-th");
 	th4.appendChild(document.createTextNode("Size"));
 	var th5 = document.createElement("th");
-	th5.setAttribute("class", "terminus-db-created terminus-table-header-full-css");
+	th5.setAttribute("class", "terminus-db-created terminus-table-th");
 	th5.appendChild(document.createTextNode("Created"));
 	var th6 = document.createElement("th");
 	th6.appendChild(document.createTextNode("Delete"));
-	th6.setAttribute("class", "terminus-db-delete terminus-table-header-full-css");
+	th6.setAttribute("class", "terminus-db-delete terminus-table-th");
 	thr.appendChild(th1);
 	thr.appendChild(th2);
 	thr.appendChild(th3);
@@ -246,10 +247,16 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		var td6 = document.createElement("td");
 		td6.setAttribute("class", "db-delete");
 		if(this.deleteDBPermitted(dbid)){
-			var delbut = document.createElement("button");
-			delbut.appendChild(document.createTextNode("Delete"));
-			delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
-			//function to fix db in a closure
+            if(this.ui.pluginAvailable("font-awesome")){
+                var delbut = document.createElement('i');
+        		delbut.setAttribute("class", "terminus-db-list-del-icon fa fa-times-circle");
+        	}
+            else{
+                var delbut = document.createElement("button");
+    			delbut.appendChild(document.createTextNode("Delete"));
+    			delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
+            }
+			// function to fix db in a closure
 			var delDB = function(db){ return function(){self.ui.deleteDatabase(db);}};
 			delbut.addEventListener("click", delDB(dbid));
 			td6.appendChild(delbut);
@@ -263,12 +270,12 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		tbody.appendChild(tr);
 	}
 	scd.appendChild(tbody);
-  sec.appendChild(scd);
+	sec.appendChild(scd);
 
-  if(this.ui.pluginAvailable("datatables")){
+	if(this.ui.pluginAvailable("datatables")){
         var dt = new Datatables();
 		var tab = dt.draw(false, scd);
-  }
+	}
 	return sec;
 }
 

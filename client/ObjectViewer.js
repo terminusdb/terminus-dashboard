@@ -66,7 +66,7 @@ HTMLObjectViewer.prototype.getFeatureDOM = function(feature){
 	if(this.hasFeatureViewer(feature)){
 		return this.featureViewer[feature](this.renderer, this);
 	}
-} 
+}
 
 HTMLObjectViewer.prototype.redraw = function(){
 	FrameHelper.removeChildren(this.renderedDOM);
@@ -131,7 +131,7 @@ function HTMLObjectHeaderViewer(){}
 
 HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 	var orientation = renderer.getContentOrientation();
-	var pcls = "terminus-object-header-" + orientation;
+	var pcls = "terminus-object-frame-btn terminus-object-header-" + orientation;
 	if(orientation == "page"){
 		var objDOM = document.createElement("div");
 	}
@@ -179,6 +179,11 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 		var controlsDOM = this.getObjectSummaryDOM(renderer);
 		if(controlsDOM) objDOM.appendChild(controlsDOM);
 	}
+	objDOM.addEventListener('click', function(){
+		if((this.nextSibling.style.display == 'block') || (this.nextSibling.style.display == '')) 
+			this.nextSibling.style.display = 'none';
+		else this.nextSibling.style.display = 'block';
+	});
 	return objDOM;
 }
 

@@ -191,14 +191,14 @@ function getFunctionSignature(which){
 }//getFunctionSignature
 
 // returns dom element for header text
-function prettifyHeaderDom(text){
+function getHeaderDom(text){
   var hd = document.createElement('div');
   hd.setAttribute('class', 'terminus-module-head');
   var h = document.createElement('h3');
   h.innerHTML = text;
   hd.appendChild(h);
   return hd;
-} // prettifyHeaderTextDom
+} // getHeaderTextDom
 
 // returns dom for alert banner
 function getInfoAlertDom(type, label, msg){
@@ -214,12 +214,12 @@ function getInfoAlertDom(type, label, msg){
 } // getInfoAlertDom()
 
 // formats response results from platform
-function prettifyResponse(currForm, action, response, plugin){
+function getResponse(currForm, action, response, plugin){
 
   var rd = document.createElement('div');
 
   // get header result
-  rd.appendChild(prettifyHeaderDom('Result'));
+  rd.appendChild(getHeaderDom('Result'));
   var br = document.createElement('BR');
   rd.appendChild(br);
 
@@ -253,7 +253,7 @@ function showHttpResult(response, action, currForm, plugin){
     currForm.appendChild(br);
 
     // get header result
-    currForm.appendChild(prettifyHeaderDom('HTTP Header'));
+    currForm.appendChild(getHeaderDom('HTTP Header'));
 
     var br = document.createElement('BR');
     currForm.appendChild(br);
@@ -279,7 +279,7 @@ function showHttpResult(response, action, currForm, plugin){
 
     return response.json()
     .then(function(response){
-      prettifyResponse(currForm, action, response, plugin); // get return response
+      getResponse(currForm, action, response, plugin); // get return response
     })
 
 } // showHttpResult()
@@ -293,10 +293,28 @@ function deleteStylizedEditor(ui, qip){
 	}
 }
 
-function stylizeEditor(ui, txt){
-	if(ui.pluginAvailable("codemirror")){
-		var cm = new Codemirror(txt, 'javascript');
-		var ar = cm.colorizeTextArea('query');
-		cm.updateTextArea(ar);
-	}
+/* ui: terminus ui reference
+   txt: text area to be stylized
+   view: defines the size of editor to appear in pages (schema/ query)
+   mode: format to be displayed in
+*/
+function stylizeEditor(ui, txt, view, mode){
+    var cmConfig = ui.pluginAvailable("codemirror");
+    if(!(cmConfig)) return;
+	var cm = new Codemirror(txt, mode, cmConfig);
+	var ar = cm.colorizeTextArea(view);
+	cm.updateTextArea(ar);
+}
+
+/* ui: terminus ui reference
+   txt: text area to be stylized
+   dom: stylized pre area is appended to dom
+   mode: format to be displayed in
+*/function stylizeCodeDisplay(ui, txt, dom, mode){
+    var cmConfig = ui.pluginAvailable("codemirror");
+    if(!(cmConfig)) return false;
+    var cm = new Codemirror(txt, mode, cmConfig);
+    var pr = cm.colorizePre();
+    dom.appendChild(pr);
+    return true;
 }

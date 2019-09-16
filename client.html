@@ -54,7 +54,7 @@
 
 <BODY>
 	<div class="terminus-client-ui">
-		<div class='terminus-client-header'>
+		<!-- 11092019 <div class='terminus-client-header'>
 			<span class="terminus-header-tab terminus-module-head-tab">
 				Terminus Client</span>
 			<span class="terminus-header-tab terminus-module-head-tab">
@@ -68,18 +68,42 @@
 			</span>
 			<span class="terminus-header-tab terminus-plugin-topcorner" id="terminus-plugin-loader">
 			</span>
-		</div>
+		</div> -->
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr>
-				<td class='terminus-control-panel' style='vertical-align: top;'>
-					<table class="terminus-application-controls">
+				<td class='terminus-control-panel terminus-control-panel-table-layout'>
+					<table class="terminus-application-controls terminus-control-panel-layout" style='width: 350px;'>
+						<tr><th class="terminus-logo">
+							 TerminusDB</th></tr>
+						<!-- Sidebar -->
+                        <!--<div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+                            <ul class="list-group">
+                                <a href="#introduction" class="bg-dark list-group-item list-group-item-action"
+                                   onClick="showInstallationBody('introduction')">
+                                    <div class="d-flex w-100 justify-content-start align-items-center">
+                                        <span class="fa fa-info-circle fa-fw mr-3"></span>
+                                        <span class="menu-collapsed">Introduction</span>
+                                    </div>
+                                </a>
+                                <a href="#quickstart_submenu" data-toggle="collapse" aria-expanded="false"
+                                   class="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+                                   onClick="showInstallationBody('quickStart')">
+                                    <div class="d-flex w-100 justify-content-start align-items-center">
+                                        <span class="fa fa-download fa-fw mr-3"></span>
+                                        <span class="menu-collapsed">Quick Start</span>
+                                        <span class="submenu-icon ml-auto"></span>
+                                    </div>
+                                </a>
+
+                            </ul>
+                        </div>-->
+
 						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
-										id = "terminus-client-btn">
-							Terminus Client</th></tr>
-						<tr><td class="terminus-application-control terminus-client-body" id="terminus-control-panel"></td></tr>
+										id = "terminus-client-btn">Client</th></tr>
+						<tr><td class="terminus-application-control terminus-client-body"
+								id="terminus-control-panel" ></td></tr>
 						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
-									  id = "terminus-explorer-btn">
-							Terminus API Explorer</th></tr>
+									  id = "terminus-explorer-btn">Explorer</th></tr>
 						<tr><td class="terminus-application-control terminus-expolrer-body terminus-explorer-hide"
 										id="terminus-explorer"></td></tr>
 					</table>
@@ -102,10 +126,10 @@
 		pconfig.viewer = document.getElementById("terminus-content-viewer");
 		var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
 		terminator.draw(pconfig, nlocation);
-		var cssloader = document.getElementById("terminus-css-loader");
+		/* 11092019 var cssloader = document.getElementById("terminus-css-loader");
 		cssloader.addEventListener("change", function(){
 			terminator.piman.loadPageCSS(this.value);
-		});
+		}); */
 		function showPanel(mode){
 			toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
 		}

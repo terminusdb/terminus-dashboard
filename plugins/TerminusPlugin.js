@@ -32,7 +32,9 @@ function TerminusPluginManager(){
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/hint/show-hint.css",
-			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/neo.css"
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/neo.css",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/paraiso-dark.css",
+			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/theme/eclipse.css"
 		]
 	};
 	this.plugins["jquery"] = {
@@ -155,9 +157,9 @@ TerminusPluginManager.prototype.calculateRequiredInitPlugins = function(opts){
 			loading_order[1].push(needed_pins[i]);
 		}
 		else {
-			loading_order[0].push(needed_pins[i]);		
+			loading_order[0].push(needed_pins[i]);
 		}
-	}	
+	}
 	return loading_order;
 }
 
@@ -208,7 +210,7 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 			}
 			case "codemirror": {
 				if(typeof CodeMirror == "undefined") return false;
-				return true;
+				return this.plugins[plugin];  // sent plugin config with darkmode true/ false
 			}
 			case "font-awesome": {
 				//if(typeof CodeMirror != "undefined") return true;

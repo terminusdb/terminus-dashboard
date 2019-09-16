@@ -32,6 +32,9 @@ let TerminusConfig = {
 		quill: true,
 		select2: true,
 		jsoneditor: true,
-		codemirror: true
+		codemirror: {
+			darkMode: true, // true for dark theamed text editor
+			loaded: true
+		}
 	}
 };
