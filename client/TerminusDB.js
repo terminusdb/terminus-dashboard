@@ -48,7 +48,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		    item.addEventListener("click", function(){ self.ui.showQueryPage(); });
 	        ul.appendChild(item);
 		}
-		if(this.ui.showControl("woql_update")){
+		if(this.ui.showControl("woql_update") && this.ui.client.connectionConfig.platformEndpoint()){
 			var item = this.getControlHTML("Mapping", "fa-file-import");
 	        item.addEventListener("click", function(){ self.ui.showMappingPage();})
 	        ul.appendChild(item);

@@ -2,7 +2,6 @@ function WOQLResultsViewer(ui, wresult, options, settings){
 	this.ui = ui;
 	this.result = wresult;
 	this.options = options;
-	this.wqlRes = new WOQLResult();
 	this.pman = new TerminusPluginManager();
 	this.settings = settings;
 }
@@ -28,7 +27,7 @@ WOQLResultsViewer.prototype.getAsDOM = function(resultDOM){
 	rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
 	rh.appendChild(document.createTextNode("Results"));
 	rs.appendChild(rh);
-	if(this.result && this.wqlRes.hasBindings(this.result) && this.showTable()){
+	if(this.result && this.result.hasBindings(this.result) && this.showTable()){
 		this.getTableDOM(this.result.bindings, rs);
 		return rs;
 	}
@@ -67,7 +66,7 @@ WOQLResultsViewer.prototype.getTable = function(bindings){
 		for(var j = 0; j<ordered_headings.length; j++){
 			var td = document.createElement("td");
 			if(typeof bindings[i][ordered_headings[j]] == "object"){
-				var lab = (bindings[i][ordered_headings[j]].data ? bindings[i][ordered_headings[j]].data : "Object?");
+				var lab = (bindings[i][ordered_headings[j]]["@value"] ? bindings[i][ordered_headings[j]]["@value"] : "Object?");
 				td.appendChild(document.createTextNode(lab));
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string"){
