@@ -37,7 +37,6 @@ TerminusSchemaViewer.prototype.loadSchema = function(){
 	.catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-		self.refreshPage();
 	});
 }
 

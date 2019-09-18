@@ -41,7 +41,6 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
 	if(this.pman.pluginAvailable("datatables")){
     	var dt = new Datatables();
 		var tab = dt.draw(true, tab, this.settings, this.ui, resultDOM);
-		resultDOM.setAttribute('class', 'terminus-expandable');
 		return tab;
     }
 	else resultDOM.appendChild(tab);
