@@ -9,7 +9,10 @@
  function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
-    this.client = new WOQLClient();
+    this.client = new TerminusDB.WOQLClient();
+    this.client.use_fetch = true;
+    this.client.return_full_response = true;
+    this.pman = new TerminusPluginManager();
  }
 
 
@@ -27,90 +30,107 @@ ApiExplorer.prototype.getAsDOM = function(){
 ApiExplorer.prototype.getApiNav = function(navDom, viewer){
     // list view of apis
     var nav = document.createElement('div');
+    nav.setAttribute('class', 'span3');
     navDom.appendChild(nav);
-    var ul = document.createElement('ul');
-    ul.setAttribute('class', 'terminus-ul');
-    nav.appendChild(ul);
 
-    // connect api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-selected terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+    // connect to server api
+    var ul = document.createElement('ul');
+    ul.setAttribute('class',' terminus-widget-menu' );
+    var li = document.createElement('li');
+    li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
+
     var self = this;
-    a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('connect', viewer);
+    li.addEventListener("click", function(){
+     self.getApiExplorerDom('connect', viewer);
     })
+    ul.appendChild(li);
+    var a = document.createElement('a');
+    a.setAttribute("href", "#");
     var icon = document.createElement('i');
     icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+    a.setAttribute("href", "#");
     a.appendChild(icon);
     var txt = document.createTextNode('Connect Api');
     a.appendChild(txt);
-    ul.appendChild(a);
+    li.appendChild(a);
+    var icon = document.createElement('i');
+    nav.appendChild(ul);
 
     // database api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+    var ul = document.createElement('ul');
+    ul.setAttribute('class',' terminus-widget-menu');
+    var li = document.createElement('li');
+    li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
     var self = this;
-    a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('create', viewer);
+    li.addEventListener("click", function(){
+     self.getApiExplorerDom('create', viewer);
     })
+    ul.appendChild(li);
+    var a = document.createElement('a');
+    a.setAttribute("href", "#");
     var icon = document.createElement('i');
     icon.setAttribute('class', 'terminus-menu-icon fa fa-database');
     a.appendChild(icon);
     var txt = document.createTextNode('Database Api');
     a.appendChild(txt);
-    ul.appendChild(a);
+    li.appendChild(a);
+    var icon = document.createElement('i');
+    nav.appendChild(ul);
 
-    // schema api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+    // schema
+    var li = document.createElement('li');
+    li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
     var self = this;
-    a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('schema', viewer);
+    li.addEventListener("click", function(){
+     self.getApiExplorerDom('schema', viewer);
     })
+    ul.appendChild(li);
+    var a = document.createElement('a');
+    a.setAttribute("href", "#");
     var icon = document.createElement('i');
     icon.setAttribute('class', 'terminus-menu-icon fa fa-cog');
     a.appendChild(icon);
     var txt = document.createTextNode('Schema Api');
     a.appendChild(txt);
-    ul.appendChild(a);
+    li.appendChild(a);
+    var icon = document.createElement('i');
+    nav.appendChild(ul);
 
-    // documents api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('document', viewer);
+    // documents
+    var li = document.createElement('li');
+    li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
+    li.addEventListener("click", function(){
+     self.getApiExplorerDom('document', viewer);
     })
+    ul.appendChild(li);
+    var a = document.createElement('a');
+    a.setAttribute("href", "#");
     var icon = document.createElement('i');
     icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
     a.appendChild(icon);
     var txt = document.createTextNode('Document Api');
     a.appendChild(txt);
-    ul.appendChild(a);
+    li.appendChild(a);
+    var icon = document.createElement('i');
+    nav.appendChild(ul);
 
-    // query api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('query', viewer);
+    // query
+    var li = document.createElement('li');
+    li.setAttribute('class', 'terminus-control-button terminus-change-server-button active terminus-pointer');
+    li.addEventListener("click", function(){
+     self.getApiExplorerDom('query', viewer);
     })
+    ul.appendChild(li);
+    var a = document.createElement('a');
+    a.setAttribute("href", "#");
     var icon = document.createElement('i');
     icon.setAttribute('class', 'terminus-menu-icon fa fa-search');
     a.appendChild(icon);
     var txt = document.createTextNode('Query Api');
     a.appendChild(txt);
-    ul.appendChild(a);
+    li.appendChild(a);
+    var icon = document.createElement('i');
+    nav.appendChild(ul);
 
     this.getApiExplorerDom('connect', viewer);
 
@@ -183,23 +203,6 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
   return wrap;
 } // getApiExplorerDom
 
-ApiExplorer.prototype.setSelectedNavMenu = function(a){
-    removeSelectedNavClass("terminus-selected");
-    a.classList.add("terminus-selected");
-}
-
-ApiExplorer.prototype.setSelectedSubMenu = function(a){
-    removeSelectedNavClass("terminus-submenu-selected");
-    a.classList.add("terminus-submenu-selected");
-}
-
-// on trigger of click event - change dom
-ApiExplorer.prototype.changeApiDom = function(action, cont, body){
-    FrameHelper.removeChildren(body);
-    var dom = this.getShowApiDom(action, body);
-    cont.appendChild(dom);
-}
-
 // get document api calls - on click of DocumentAPI nav bar
 ApiExplorer.prototype.getDocumentApi = function(cont){
 
@@ -208,66 +211,84 @@ ApiExplorer.prototype.getDocumentApi = function(cont){
   // list view of Databse tools
   var ul = document.createElement('ul');
   ul.setAttribute('class','terminus-ul-horizontal');
-
-  // view document api
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+  //view document
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedNavMenu(this);
-      self.changeApiDom('viewDocument', cont, body);
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getShowApiDom('viewDocument', body);
+    cont.appendChild(dom);
   })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-eye');
   a.appendChild(icon);
   var txt = document.createTextNode('View Document');
   a.appendChild(txt);
-  ul.appendChild(a);
-
-  // create document api
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedNavMenu(this);
-      self.changeApiDom('createDocument', cont, body);
-  })
+  li.appendChild(a);
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
+  ul.appendChild(li);
+
+  //create document
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
+  var self = this;
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getShowApiDom('createDocument', body);
+    cont.appendChild(dom);
+  })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
+  var icon = document.createElement('i');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-plus');
   a.appendChild(icon);
   var txt = document.createTextNode('Create Document');
   a.appendChild(txt);
-  ul.appendChild(a);
-
-  // update document api
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedNavMenu(this);
-      self.changeApiDom('updateDocument', cont, body);
-  })
+  li.appendChild(a);
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-arrow-up');
+  ul.appendChild(li);
+
+  //update document
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getShowApiDom('updateDocument', body);
+    cont.appendChild(dom);
+  })
+  //ul.appendChild(li);
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
+  var icon = document.createElement('i');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-arrow-up');
   a.appendChild(icon);
   var txt = document.createTextNode('Update Document');
   a.appendChild(txt);
-  ul.appendChild(a);
-
-  // delete document api
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedNavMenu(this);
-      self.changeApiDom('deleteDocument', cont, body);
-  })
+  li.appendChild(a);
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-trash-alt');
+  ul.appendChild(li);
+
+  //delete document
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getShowApiDom('deleteDocument', body);
+    cont.appendChild(dom);
+  })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
+  var icon = document.createElement('i');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-trash-alt');
   a.appendChild(icon);
   var txt = document.createTextNode('Delete Document');
   a.appendChild(txt);
-  ul.appendChild(a);
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
 
   cont.appendChild(ul);
 
@@ -285,54 +306,63 @@ ApiExplorer.prototype.getQueryApi  = function(cont){
   var ul = document.createElement('ul');
   ul.setAttribute('class','terminus-ul-horizontal');
   //woql select
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getQueryApiDom('select', body);
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getQueryApiDom('select', body);
   })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-mouse-pointer');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-mouse-pointer');
   a.appendChild(icon);
   var txt = document.createTextNode('Select');
   a.appendChild(txt);
-  ul.appendChild(a);
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
 
   //update select
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getQueryApiDom('update', body);
-      cont.appendChild(dom);
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getQueryApiDom('update', body);
+    cont.appendChild(dom);
   })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-arrow-up');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-arrow-up');
   a.appendChild(icon);
   var txt = document.createTextNode('Update');
   a.appendChild(txt);
-  ul.appendChild(a);
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
 
   //mapping
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getQueryApiDom('lookup', body);
-      cont.appendChild(dom);
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getQueryApiDom('lookup', body);
+    cont.appendChild(dom);
   })
+  //ul.appendChild(li);
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-random');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-random');
   a.appendChild(icon);
   var txt = document.createTextNode('Look up');
   a.appendChild(txt);
-  ul.appendChild(a);
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
 
   cont.appendChild(ul);
 
@@ -350,51 +380,45 @@ ApiExplorer.prototype.getSchemaApi = function(cont){
   // list view of Databse tools
   var ul = document.createElement('ul');
   ul.setAttribute('class','terminus-ul-horizontal');
-
   //get schema
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      self.changeApiDom('getSchema', cont, body);
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getShowApiDom('getSchema', body);
+    cont.appendChild(dom);
   })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-eye');
   a.appendChild(icon);
   var txt = document.createTextNode('View Schema');
   a.appendChild(txt);
-  ul.appendChild(a);
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
 
   //update schema
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      self.changeApiDom('updateSchema', cont, body);
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getShowApiDom('updateSchema', body);
+    cont.appendChild(dom);
   })
+  //ul.appendChild(li);
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-arrow-up');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-arrow-up');
   a.appendChild(icon);
   var txt = document.createTextNode('Update Schema');
   a.appendChild(txt);
-  ul.appendChild(a);
-
-  //get class frames
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      self.changeApiDom('getClassFrames', cont, body);
-  })
+  li.appendChild(a);
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-share-alt');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Get Class Frames');
-  a.appendChild(txt);
-  ul.appendChild(a);
+  ul.appendChild(li);
 
   cont.appendChild(ul);
 
@@ -494,12 +518,12 @@ ApiExplorer.prototype.getServerForm = function(){
     var buttonSelf = this;
     opts = {};
     var input = gatherips();
-    opts.explorer = true;
-    self.client.connect(input.url, input.key, opts)
+    self.client.return_full_response = true;
+    self.client.connect(input.url, input.key)
     .then(function(response){
       FrameHelper.removeChildren(resd);
       //var currForm = buttonSelf.parentNode;
-      var resultDom = showHttpResult(response, 'connect', resd, self.ui);
+      var resultDom = showHttpResult(response, 'connect', resd, self.pman);
     });
   }) // button click
   return form;
@@ -514,39 +538,44 @@ ApiExplorer.prototype.getDatabaseExplorer = function(cont){
   var ul = document.createElement('ul');
   ul.setAttribute('class','terminus-ul-horizontal');
   //create db
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
   var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getDatabaseDom('create', body);
-      cont.appendChild(dom);
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getDatabaseDom('create', body);
+    cont.appendChild(dom);
   })
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-plus');
   a.appendChild(icon);
   var txt = document.createTextNode('Create database');
   a.appendChild(txt);
-  ul.appendChild(a);
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
 
   //delete db
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getDatabaseDom('delete', body);
-      cont.appendChild(dom);
+  var li = document.createElement('li');
+  li.setAttribute('class', 'terminus-li-horizontal terminus-pointer');
+  li.addEventListener("click", function(){
+    FrameHelper.removeChildren(body);
+    var dom = self.getDatabaseDom('delete', body);
+    cont.appendChild(dom);
   })
+  //ul.appendChild(li);
+  var a = document.createElement('a');
+  a.setAttribute("href", "#");
   var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-trash-alt');
+  icon.setAttribute('class', 'terminus-sub-menu-icon fa fa-trash-alt');
   a.appendChild(icon);
   var txt = document.createTextNode('Delete database');
   a.appendChild(txt);
-  ul.appendChild(a);
-
+  li.appendChild(a);
+  var icon = document.createElement('i');
+  ul.appendChild(li);
   cont.appendChild(ul);
 
   // landing page
@@ -667,12 +696,11 @@ ApiExplorer.prototype.getDBForm = function(mode){
       var input = gatherips();
       var buttonSelf = this;
       opts = {};
-      opts.explorer = true;
       opts.title = input.title;
       self.client.createDatabase(input.id, opts, '')
       .then(function(response){
         var currForm = buttonSelf.parentNode;
-        var resultDom = showHttpResult(response, 'create', currForm, self.ui);
+        var resultDom = showHttpResult(response, 'create', currForm, self.pman);
       });
     }) // button click
   } // if(mode == 'create')
@@ -680,11 +708,10 @@ ApiExplorer.prototype.getDBForm = function(mode){
     button.addEventListener("click", function(){
       var buttonSelf = this;
       opts = {};
-      opts.explorer = true;
       self.client.deleteDatabase(inpId.value, opts)
       .then(function(response){
         var currForm = buttonSelf.parentNode;
-        var resultDom = showHttpResult(response, 'delete', currForm, self.ui);
+        var resultDom = showHttpResult(response, 'delete', currForm, self.pman);
       });
     }) // button click
   } // if(mode == 'delete')
@@ -762,110 +789,16 @@ ApiExplorer.prototype.getQueryApiDom = function(action, body){
   button.addEventListener("click", function(){
     var buttonSelf = this;
     var opts = {};
-    opts.explorer = true;
     self.client.select(inpId.value, txtar.value, opts)
     .then(function(response){
       var currForm = buttonSelf.parentNode;
-      var resultDom = showHttpResult(response, 'select', currForm, self.ui);
+      var resultDom = showHttpResult(response, 'select', currForm, self.pman);
     });
   }) // button click
   fd.appendChild(button);
   body.appendChild(form);
   return body;
 } // getQueryApiDom
-
-ApiExplorer.prototype.getClassFramesForm = function(){
-    // form
-    var form = document.createElement('form');
-    form.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-    var fd = document.createElement('div');
-    fd.setAttribute('class', 'terminus-control-group');
-    form.appendChild(fd);
-    var inpLabel = document.createElement('label');
-    inpLabel.setAttribute('class', 'terminus-control-label');
-    inpLabel.setAttribute('for', 'basicinput');
-    inpLabel.innerHTML = 'Url:';
-    fd.appendChild(inpLabel);
-    var cd = document.createElement('div');
-    cd.setAttribute('class', 'terminus-controls');
-    fd.appendChild(cd);
-    var inpUrl = document.createElement('input');
-    inpUrl.setAttribute('type', 'text');
-    inpUrl.setAttribute('id', 'basicinput');
-    inpUrl.setAttribute('class', 'span8 terminus-input-text');
-    inpUrl.setAttribute('placeholder', 'URL : database_url');
-    if(this.val) inpUrl.value = this.val;
-    cd.appendChild(inpUrl);
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-    cd.appendChild(icon);
-
-    var fd = document.createElement('div');
-    fd.setAttribute('class', 'terminus-control-group');
-    form.appendChild(fd);
-    var inpLabel = document.createElement('label');
-    inpLabel.setAttribute('class', 'terminus-control-label');
-    inpLabel.setAttribute('for', 'basicinput');
-    inpLabel.innerHTML = 'Url/ ID:';
-    fd.appendChild(inpLabel);
-    var cd = document.createElement('div');
-    cd.setAttribute('class', 'terminus-controls');
-    fd.appendChild(cd);
-    var inpDocUrl = document.createElement('input');
-    inpDocUrl.setAttribute('type', 'text');
-    inpDocUrl.setAttribute('id', 'basicinput');
-    inpDocUrl.setAttribute('class', 'span8 terminus-input-text');
-    inpDocUrl.setAttribute('placeholder', 'Url or ID of document class');
-    cd.appendChild(inpDocUrl);
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-    cd.appendChild(icon);
-
-    var fd = document.createElement('div');
-    fd.setAttribute('class', 'terminus-control-group');
-    form.appendChild(fd);
-    var optLabel = document.createElement('label');
-    optLabel.setAttribute('class', 'terminus-control-label');
-    optLabel.setAttribute('for', 'basicinput');
-    optLabel.innerHTML = 'Options:';
-    fd.appendChild(optLabel);
-    var cd = document.createElement('div');
-    cd.setAttribute('class', 'terminus-controls');
-    fd.appendChild(cd);
-    var optInp = document.createElement('input');
-    optInp.setAttribute('type', 'text');
-    optInp.setAttribute('id', 'basicinput');
-    optInp.setAttribute('class', 'span8 terminus-input-text');
-    optInp.setAttribute('placeholder', 'options');
-    cd.appendChild(optInp);
-
-    var button = document.createElement('button');
-    button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
-    button.setAttribute('type', 'button');
-    button.innerHTML = 'Send Api';
-    var gatherips = function(){
-        var input = {};
-        input.url = inpUrl.value;
-        input.docUrl = inpDocUrl.value;
-        input.options = optInp.value;
-        return input;
-    }
-    var self = this;
-    button.addEventListener("click", function(form){
-      var input = gatherips();
-      var buttonSelf = this;
-      opts = {};
-      opts.explorer = true;
-      self.client.getClassFrame(input.url, input.docUrl, opts)
-      .then(function(response){
-          var currForm = buttonSelf.parentNode;
-          var resultDom = showHttpResult(response, 'getClassFrames', currForm, self.ui);
-      });
-    }) // button click
-    form.appendChild(button);
-    return form;
-}
 
 // get schema & document dom
  ApiExplorer.prototype.getShowApiDom = function(action, body){
@@ -916,10 +849,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        //form to get schema
        var form = this.getApiForm(action, inpId);
        body.appendChild(form);
-     break;
-     case 'getClassFrames':
-        var form = this.getClassFramesForm();
-        body.appendChild(form);
      break;
      case 'updateSchema':
        // form to input schema url
@@ -1116,8 +1045,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
         var gatherips = {};
         gatherips.schemaUrlDom =  inpId;
         gatherips.schemaTextDom =  txtar;
-        //gatherips.htmlEditor =  editor;
-        gatherips.htmlEditor = txtar.value;
+        gatherips.htmlEditor =  editor;
 
         //form to update schema
         var form = this.getApiForm(action, gatherips);
@@ -1184,8 +1112,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var gatherips = {};
        gatherips.schemaUrlDom =  inpId;
        gatherips.schemaTextDom =  txtar;
-       //gatherips.htmlEditor =  editor;
-       gatherips.htmlEditor =  txtar.value;
+       gatherips.htmlEditor =  editor;
 
        //form to update schema
        var form = this.getApiForm(action, gatherips);
@@ -1217,13 +1144,12 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var schurl = input.value;
         var buttonSelf = this;
         var opts = {};
-        opts.explorer = true;
         opts.format = 'turtle';
         opts.responseType = 'text';
         self.client.getSchema(schurl, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, 'getSchema', resd, self.ui);
+          var resultDom = showHttpResult(response, 'getSchema', resd, self.pman);
         });
       }) // button click
     break;
@@ -1233,7 +1159,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var payload = input.htmlEditor.value;
         var buttonSelf = this;
         opts = {};
-        opts.explorer = true;
         opts.format = 'turtle';
         self.client.updateSchema(schurl, payload, opts)
         .then(function(response){
@@ -1252,12 +1177,11 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       var dcurl = input.value;
       var buttonSelf = this;
       var opts = {};
-      opts.explorer = true;
       opts.format = 'turtle';
       self.client.getDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
-        var resultDom = showHttpResult(response, action, resd, self.ui);
+        var resultDom = showHttpResult(response, action, resd, self.pman);
       });
     }) // button click
     break;
@@ -1266,11 +1190,10 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       var dcurl = input.value;
       var buttonSelf = this;
       var opts = {};
-      opts.explorer = true;
       self.client.deleteDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
-        var resultDom = showHttpResult(response, action, resd, self.ui);
+        var resultDom = showHttpResult(response, action, resd, self.pman);
       });
     }) // button click
     break;
@@ -1280,11 +1203,10 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var payload = input.htmlEditor.getValue();
         var buttonSelf = this;
         opts = {};
-        opts.explorer = true;
         self.client.createDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, action, resd, self.ui);
+          var resultDom = showHttpResult(response, action, resd, self.pman);
         });
       }) // button click
     break;
@@ -1294,13 +1216,12 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var payload = input.htmlEditor.getValue();
         var buttonSelf = this;
         opts = {};
-        opts.explorer = true;
         opts.editmode = 'replace';
         opts.format = 'json';
         self.client.updateDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, action, resd, self.ui);
+          var resultDom = showHttpResult(response, action, resd, self.pman);
         });
       }) // button click
     break;
@@ -1320,11 +1241,8 @@ ApiExplorer.prototype.getSignature = function(action){
 
     // get header signature
     var sg = document.createElement('button');
-    sg.appendChild(document.createTextNode('Click to read Api Signature'));
+    sg.innerHTML = 'Click to read Api Signature';
     sg.setAttribute('class', 'terminus-collapsible');
-    ic = document.createElement('i');
-    ic.setAttribute('class', 'terminus-cheveron-float fa fa-chevron-down');
-    sg.appendChild(ic);
     api.appendChild(sg);
 
     var br = document.createElement('BR');
@@ -1352,8 +1270,15 @@ ApiExplorer.prototype.getSignature = function(action){
     api.appendChild(br);
 
     sg.addEventListener('click', function(){
-        tolggleContent(ic, cl);
+        tolggleSignatureContent(cl);
     });
 
     return api;
 } // getSignature()
+
+// displays signature only on click
+function tolggleSignatureContent(content){
+    if (content.style.display === "block")
+        content.style.display = "none";
+    else content.style.display = "block";
+}
