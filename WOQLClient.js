@@ -242,7 +242,7 @@ WOQLClient.prototype.update = function(qurl, woql, opts){
  * the third argument (opts) is an options json - opts.key is an optional API key
  */
 WOQLClient.prototype.getClassFrame = function(cfurl, cls, opts){
-	if(cfurl && this.setClassFrameURL(cfurl)){
+	if(cfurl && !this.setClassFrameURL(cfurl)){
         return Promise.reject(new URIError(this.getInvalidURIMessage(cfurl, "Get Class Frame")));
 	}
 	if(!opts) opts = {};
@@ -766,7 +766,7 @@ TerminusIDParser.prototype.parseClassFrameURL = function(str){
 		str = this.expandPrefixed(str, context);
 	}
 	if(this.validURL(str)){
-		str = this.stripOptionalPath(str, "schema");
+		str = this.stripOptionalPath(str, "frame");
 	}
 	return this.parseDBID(str);
 }

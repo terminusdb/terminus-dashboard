@@ -227,3 +227,19 @@ div.terminus-property-frame{
 .terminus-property-values-align{
 	margin-left: 80px;
 }
+
+
+.terminus-list-group-a {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #eee;
+    border: 1px solid #48f;
+	cursor: pointer;
+}
+
+.terminus-list-group-a:hover {
+   background-color: #48f!important;
+   color: #fff;
+}

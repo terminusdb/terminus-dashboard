@@ -351,21 +351,18 @@ TerminusUI.prototype.setViewerDOM = function(dom){
 }
 
 TerminusUI.prototype.draw = function(comps, slocation){
-  if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
+    if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
-  if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
+    if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
-  if(this.buttons){
-    this.toggleControl();
-  }
+    if(this.buttons){
+        this.toggleControl();
+    }
 	if(this.controller){
 		this.drawControls();
 	}
-  /*  if(this.explorer){
-		this.drawExplorer();
-	}*/
 	if(this.plugins){
 		this.drawPlugins();
 	}

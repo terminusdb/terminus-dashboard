@@ -70,6 +70,17 @@ function getFunctionSignature(which){
     result : "Ontology Document on success (HTTP 200), 409 for already existing database, otherwise error code",
     options: { format: "turtle" }
   };
+  sigs.getClassFrames = {
+    spec   : "WOQLClient.getClassFrame = function(cfurl, cls, opts)",
+    descr  : "\n\nRetrieves a WOQL query on the specified database which updates the state and returns the results"
+              +  "\nThe first (cfurl) argument can be"
+              + "\n1) a valid URL of a terminus database or"
+              +  "\n2) omitted - the current database will be used"
+              +  "\nthe second argument (cls) is the URL / ID of a document class that exists in the database schema"
+              +  "\nthe third argument (opts) is an options json - opts.key is an optional API key",
+    result : "Ontology Document on success (HTTP 200), 409 for already existing database, otherwise error code",
+    options: { format: "turtle" }
+  };
   sigs.updateSchema = {
     spec    : "WOQLClient.updateSchema(schema_url, docs, options)",
     descr   : "\n\nUpdates the Schema of the specified database"
@@ -214,7 +225,7 @@ function getInfoAlertDom(type, label, msg){
 } // getInfoAlertDom()
 
 // formats response results from platform
-function getResponse(currForm, action, response, plugin){
+function getResponse(currForm, action, response, terminator){
 
   var rd = document.createElement('div');
 
@@ -228,12 +239,9 @@ function getResponse(currForm, action, response, plugin){
   var pre = document.createElement('pre');
   pre.setAttribute('class', 'terminus-api-view terminus-scheme-pre');
   pre.innerHTML = data;
-  if(plugin.pluginAvailable("codemirror")){
-    var cm = new Codemirror(pre, 'javascript');
-    var pr = cm.colorizePre();
-    rd.appendChild(pr);
-  }
-  else rd.appendChild(pre);
+
+  var cm = stylizeCodeDisplay(terminator, pre, rd, 'javascript');
+  if(!cm) rd.appendChild(pre);
 
   var br = document.createElement('BR');
   rd.appendChild(br);
@@ -241,10 +249,10 @@ function getResponse(currForm, action, response, plugin){
   currForm.appendChild(rd);
 
   return currForm;
-} // processResponseThen
+}
 
 // formats the response from fetch call and spits out Http header and result
-function showHttpResult(response, action, currForm, plugin){
+function showHttpResult(response, action, currForm, terminator){
     //var currForm = document.createElement('div');
 
     var br = document.createElement('BR');
@@ -271,15 +279,12 @@ function showHttpResult(response, action, currForm, plugin){
     var txt = document.createTextNode(retHttpHeaders);
     hdres.appendChild(txt);
 
-    if(plugin.pluginAvailable("codemirror")){
-      var cm = new Codemirror(hdres, 'message/http');
-      var pr = cm.colorizePre();
-    }
-    currForm.appendChild(hdres);
+    var cm = stylizeCodeDisplay(terminator, hdres, currForm, 'message/http');
+    if(!cm) currForm.appendChild(hdres);
 
     return response.json()
     .then(function(response){
-      getResponse(currForm, action, response, plugin); // get return response
+      getResponse(currForm, action, response, terminator); // get return response
     })
 
 } // showHttpResult()
@@ -320,9 +325,25 @@ function stylizeCodeDisplay(ui, txt, dom, mode){
     return true;
 }
 
+/* name: classname to find and remove classes from elements
+*/
 function removeSelectedNavClass(name){
     var el = document.getElementsByClassName(name);
     for(var i=0; i<el.length; i++){
         el[i].classList.remove(name);
+    }
+}
+
+// toggles between contents
+function tolggleContent(icon, content){
+    if (content.style.display === "block"){
+        removeSelectedNavClass("fa-chevron-up");
+        icon.classList.add("fa-chevron-down");
+        content.style.display = "none";
+    }
+    else{
+        removeSelectedNavClass("fa-chevron-down");
+        icon.classList.add("fa-chevron-up");
+        content.style.display = "block";
     }
 }

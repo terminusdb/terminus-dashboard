@@ -1,6 +1,6 @@
 let TerminusConfig = {
 	controls: [
-		"server", "db", "api_explorer", "change-server", "class_frame",	"import_schema", "create_database", "delete_database",
+		"server", "db", "api_explorer", "change-server", "class_frame",	"import_schema", "create_database",
 		"create_document", "schema_format", "get_document", "get_schema", "update_schema", "woql_select", "woql_update"
 	],
 	document: {
@@ -33,7 +33,7 @@ let TerminusConfig = {
 		select2: true,
 		jsoneditor: true,
 		codemirror: {
-			darkMode: true, // true for dark theamed text editor
+			darkMode: false, // true for dark theamed text editor
 			loaded: true
 		}
 	}

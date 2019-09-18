@@ -19,7 +19,6 @@ Datatables.prototype.convertToDatatable = function(tab){
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');
-
     return tab;
 }
 
