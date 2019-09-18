@@ -121,11 +121,9 @@ HTMLObjectViewer.prototype.getObjectIDMarker = function(renderer){
 	idm.setAttribute("class", "terminus-object-idmarker");
 	var sh = FrameHelper.getShorthand(renderer.subject());
     if(!sh) sh = renderer.subject();
-    if(sh){
-		var bits = sh.split(":");
-		if(bits.length > 1) sh = bits[1];
-		idm.setAttribute("name", sh);
-    }
+	var bits = sh.split(":");
+	if(bits.length > 1) sh = bits[1];
+	idm.setAttribute("name", sh);
 	return idm;
 }
 

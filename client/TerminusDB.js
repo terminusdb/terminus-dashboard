@@ -21,7 +21,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		lab.appendChild(document.createTextNode("DB "));
 		var val = document.createElement("span");
 		val.setAttribute("class", "terminus-value terminus-db-value terminus-control-panel-value");
-		var dbrec = this.ui.client.connection.getDBRecord();
+		var dbrec = this.ui.client.getDBRecord();
 		var nm = (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 		val.appendChild(document.createTextNode(nm));
 		scd.appendChild(lab);
@@ -35,7 +35,12 @@ TerminusDBController.prototype.getAsDOM = function(){
 		nav.appendChild(ul);
 		if(this.ui.showControl("db")){
 			var item = this.getControlHTML("Database Home", "fa-home");
-		    item.addEventListener("click", function(){ self.ui.showDBMainPage(); });
+			item.classList.add("terminus-selected");
+		    item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showDBMainPage();
+			 });
 	        ul.appendChild(item);
 	    }
 		if(this.ui.showControl("delete_database")){
@@ -45,40 +50,67 @@ TerminusDBController.prototype.getAsDOM = function(){
 		}
 		if(this.ui.showControl("woql_select")){
 			var item = this.getControlHTML("Query", "fa-search");
-		    item.addEventListener("click", function(){ self.ui.showQueryPage(); });
+		    item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showQueryPage();
+			});
 	        ul.appendChild(item);
 		}
-		if(this.ui.showControl("woql_update") && this.ui.client.connectionConfig.platformEndpoint()){
+		if(this.ui.showControl("woql_update")){
 			var item = this.getControlHTML("Mapping", "fa-file-import");
-	        item.addEventListener("click", function(){ self.ui.showMappingPage();})
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showMappingPage();
+			})
 	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("get_schema")){
 			var item = this.getControlHTML("Schema", "fa-cog");
-	        item.addEventListener("click", function(){ self.ui.showSchemaPage();})
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showSchemaPage();
+			})
 	        ul.appendChild(item);
 		}
-		/*var li = document.createElement('li');
-		li.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-doc-li active terminus-pointer");
-		ul.appendChild(li);*/
-		var a = document.createElement('a');
-		a.setAttribute('class', 'terminus-doc terminus-list-group-a terminus-list-group-a-action terminus-nav-width');
-		ul.appendChild(a);
-		var icon = document.createElement('i');
-		icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
-		a.appendChild(icon);
-		var txt = document.createTextNode('Documents');
-		a.appendChild(txt);
-		//li.appendChild(a);
-		var icon = document.createElement('i');
-		if(this.ui.showControl("get_document")){
-			a.appendChild(this.getDocumentChooserDOM());
+		if((this.ui.showControl("get_document")) || (this.ui.showControl("create_document"))) {
+			var item = this.getControlHTML("Document", "fa-book");
+			var dHolder = document.createElement('div');
+			item.appendChild(dHolder);
+		    item.addEventListener("click", function(){
+				/*var gd = document.getElementsByClassName('get-doc');
+				gd.style.display = 'block';
+				var cd = document.getElementsByClassName('create-doc');
+				cd.style.display = 'block';*/
+				FrameHelper.removeChildren(dHolder);
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.showDocumentWidget(dHolder);
+			 });
+	        ul.appendChild(item);
+	    }
+		/*if(this.ui.showControl("get_document")){
+			var gd = document.createElement('div');
+			gd.setAttribute('class', 'get-doc terminus-hide');
+			gd.appendChild(th);
+			ul.appendChild(gd);
 		}
 		if(this.ui.showControl("create_document")){
-			a.appendChild(this.getDocumentCreatorDOM());
-		}
+			var cd = document.createElement('div');
+			cd.setAttribute('class', 'create-doc terminus-hide');
+			ul.appendChild(cd);
+		} */
 	}
 	return dbc;
+}
+
+TerminusDBController.prototype.showDocumentWidget = function(d){
+	if(this.ui.showControl("get_document"))
+		d.appendChild(this.getDocumentChooserDOM());
+	if(this.ui.showControl("create_document"))
+		d.appendChild(this.getDocumentCreatorDOM());
 }
 
 TerminusDBController.prototype.getControlHTML = function(text, ic, css){
@@ -91,6 +123,13 @@ TerminusDBController.prototype.getControlHTML = function(text, ic, css){
     var txt = document.createTextNode(text);
     a.appendChild(txt);
     return a;
+}
+
+TerminusDBController.prototype.getDocumentChooserIcons = function(show){
+	var icon = document.createElement('icon');
+	if(show == 'id') icon.setAttribute('class', 'fa fa-plus terminus-icon-white');
+	else icon.setAttribute('class', 'fa fa-random terminus-icon-white');
+	return icon;
 }
 
 TerminusDBController.prototype.getDocumentChooserDOM = function(){
@@ -109,7 +148,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	nbut.addEventListener("click", function(){
 		if(dcip.value) self.ui.showDocument(dcip.value);
 	})
-	if(this.ui.client.connectionConfig.platformEndpoint() && this.ui.pluginAvailable("select2")){
+	if(this.ui.client.platformEndpoint() && this.ui.pluginAvailable("select2")){
 		var mcls = FrameHelper.unshorten("dcog:Document");
 		var d2ch = new TerminusDocumentChooser(this.ui, mcls);
 		d2ch.change = function(val){
@@ -118,13 +157,6 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		}
 		d2ch.view = "label";
 		var sdom = d2ch.getAsDOM('terminus-class-select');
-		/*
-		var showDoc = function(durl){
-			self.ui.showDocument(durl);
-		}
-		var callback = showDoc;
-		var searchurl = self.ui.client.dbURL() + "/search";
-		var sdom = getS2EntityChooser(false, searchurl, this.ui.client, mcls, callback);*/
 		jQuery(dcip).hide();
 		jQuery(nbut).hide();
 		var nlab = document.createElement("a");
@@ -132,6 +164,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		nlab.setAttribute("class", "terminus-document-which-chooser");
 		nlab.appendChild(document.createTextNode("Choose by ID"));
 		var show = "label";
+		var self = this;
 		jQuery(nlab).click(function(){
 			if(show == "label"){
 				show = "id";
@@ -336,7 +369,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 				nd.setAttribute('class', 'terminus-margin-box');
 				d.appendChild(nd);
 	        }
-			else d.appendChild(document.createTextNode("No results returned"));
+			else d.appendChild(document.createTextNode("No bindings for query"));
 		}
 	})
 	.catch(function(err){

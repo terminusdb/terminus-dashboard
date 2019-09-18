@@ -178,9 +178,9 @@ TerminusSchemaViewer.prototype.getSaveButton = function(){
 		if(typeof(self.schema) == "object"){
 			text = JSON.parse(text);
 		}
-		return self.updateSchema(text, {"terminus:encoding": "terminus:" + self.format});
+		self.updateSchema(text);
 	}
-	return this.getSchemaButton("Save", "update_schema", func);
+	return this.getSchemaButton("Save", "update_schema", func)
 }
 
 TerminusSchemaViewer.prototype.getSchemaEditButton = function(){
@@ -218,7 +218,7 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 	return this.ui.client.updateSchema(false, text, opts)
 	.then(function(response){
 		self.ui.showBusy("Retrieving updated schema");
-		self.loadSchema()
+		self.ui.client.getSchema()
 		.then(function(response){
 			self.ui.clearBusy();
 			self.schema = response;
@@ -251,7 +251,6 @@ TerminusSchemaViewer.prototype.load  = function(url, key, mode){
 			self.updateSchema(false, newschema).then(function(response){
 				self.ui.clearBusy();
 				self.ui.showResult("Successfully deployed new schema from " + url);
-				return response;
 			});
 		}
 	}).catch(function(error){

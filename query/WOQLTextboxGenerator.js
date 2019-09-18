@@ -4,7 +4,7 @@ function WOQLTextboxGenerator(tq, qman, ui){
 	this.ui = ui;
 	// default datatable settings if datatable plug in available
 	this.datatable = {};
-	this.datatable.pageLength = 25;
+	this.datatable.pageLength = 5;
 	this.datatable.start = 0;
 }
 
@@ -58,7 +58,7 @@ WOQLTextboxGenerator.prototype.setDatatableSettings = function(query){
 	}
 }
 
-WOQLTextboxGenerator.prototype.getAsDOM = function(q){
+WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-textbox-input");
 
@@ -86,9 +86,17 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 		}
 		else self.query(qip.value);
 	})
+	qbox.appendChild(qbut);
+	box.appendChild(qbox);
+	return qip;
+}
+
+WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
+	var qbox = document.createElement("div");
+	qbox.setAttribute("class", "terminus-query-textbox-input");
 	var qbuts = document.createElement("div");
 	qbuts.setAttribute("class", "terminus-control-buttons");
-	qbuts.appendChild(qbut);
+	//qbuts.appendChild(qbut);
 	qbox.appendChild(qbuts);
 	var qexs = document.createElement("div");
 	qexs.setAttribute("class", "terminus-query-examples terminus-db-list-title ");
@@ -100,7 +108,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q){
 	var qrow = this.getQueryButtonGroups(qexs);
 	qexs.appendChild(qrow);
 
-	/* grouping classe queries */
+	/* grouping class queries */
 	var qcGroup = this.qGroupQueries(qrow, 'Schema Queries', 'descr blah blah');
 
 	var nqbut = document.createElement("button");

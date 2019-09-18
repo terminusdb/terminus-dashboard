@@ -36,7 +36,7 @@ TerminusQueryViewer.prototype.changeGenerator = function(ng){
 }
 TerminusQueryViewer.prototype.redrawGenerator = function(q){
 	FrameHelper.removeChildren(this.inputDOM);
-	this.inputDOM.appendChild(this.getQueryInputDOM(q));
+	this.inputDOM.appendChild(this.getQueryButtonsDOM(q));
 }
 
 TerminusQueryViewer.prototype.loadGenerator = function(){
@@ -109,17 +109,22 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	}
 	this.resultDOM = document.createElement("div");
 	this.resultDOM.setAttribute("class", "terminus-query-results");
-	this.inputDOM = document.createElement("div");
-	this.inputDOM.setAttribute("class", "terminus-query-input");
-	this.inputDOM.appendChild(this.getQueryInputDOM(q));
-	if(this.results_first){
+	this.qTextBox = this.getQueryTextAreaDOM(q, qbox);
+	//this.qTextBox.appendChild(this.getQueryTextAreaDOM(q));
+	this.buttonsDOM = document.createElement("div");
+	this.buttonsDOM.setAttribute("class", "terminus-query-input");
+	this.buttonsDOM.appendChild(this.getQueryButtonsDOM(q, this.qTextBox));
+	//qbox.appendChild(this.qTextBox);
+	qbox.appendChild(this.resultDOM);
+	qbox.appendChild(this.buttonsDOM);
+	/*if(this.results_first){
 		qbox.appendChild(this.resultDOM);
 		qbox.appendChild(this.inputDOM);
 	}
 	else {
 		qbox.appendChild(this.inputDOM);
 		qbox.appendChild(this.resultDOM);
-	}
+	}*/
 	return qbox;
 }
 
@@ -141,8 +146,12 @@ TerminusQueryViewer.prototype.getQueryCreatorChoiceDOM = function(){
 	return qcc;
 }
 
-TerminusQueryViewer.prototype.getQueryInputDOM = function(q){
+TerminusQueryViewer.prototype.getQueryButtonsDOM = function(q, qip){
 	//input options ...
 	//this.inputDOM.appendChild(this.getQueryCreatorChoiceDOM());
-	return this.generator.getAsDOM(q);
+	return this.generator.getAsDOM(q, qip);
+}
+
+TerminusQueryViewer.prototype.getQueryTextAreaDOM = function(q, box){
+	return this.generator.getQueryTextAreaDOM(q, box);
 }
