@@ -9,7 +9,10 @@
  function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
-    this.client = new WOQLClient();
+    this.client = new TerminusDB.WOQLClient();
+    this.client.use_fetch = true;
+    this.client.return_full_response = true;
+    this.pman = new TerminusPluginManager();
  }
 
 
@@ -494,8 +497,8 @@ ApiExplorer.prototype.getServerForm = function(){
     var buttonSelf = this;
     opts = {};
     var input = gatherips();
-    opts.explorer = true;
-    self.client.connect(input.url, input.key, opts)
+    self.client.return_full_response = true;
+    self.client.connect(input.url, input.key)
     .then(function(response){
       FrameHelper.removeChildren(resd);
       //var currForm = buttonSelf.parentNode;
@@ -667,7 +670,6 @@ ApiExplorer.prototype.getDBForm = function(mode){
       var input = gatherips();
       var buttonSelf = this;
       opts = {};
-      opts.explorer = true;
       opts.title = input.title;
       self.client.createDatabase(input.id, opts, '')
       .then(function(response){
@@ -680,7 +682,6 @@ ApiExplorer.prototype.getDBForm = function(mode){
     button.addEventListener("click", function(){
       var buttonSelf = this;
       opts = {};
-      opts.explorer = true;
       self.client.deleteDatabase(inpId.value, opts)
       .then(function(response){
         var currForm = buttonSelf.parentNode;
@@ -762,7 +763,6 @@ ApiExplorer.prototype.getQueryApiDom = function(action, body){
   button.addEventListener("click", function(){
     var buttonSelf = this;
     var opts = {};
-    opts.explorer = true;
     self.client.select(inpId.value, txtar.value, opts)
     .then(function(response){
       var currForm = buttonSelf.parentNode;
@@ -1217,7 +1217,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var schurl = input.value;
         var buttonSelf = this;
         var opts = {};
-        opts.explorer = true;
         opts.format = 'turtle';
         opts.responseType = 'text';
         self.client.getSchema(schurl, opts)
@@ -1233,7 +1232,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var payload = input.htmlEditor.value;
         var buttonSelf = this;
         opts = {};
-        opts.explorer = true;
         opts.format = 'turtle';
         self.client.updateSchema(schurl, payload, opts)
         .then(function(response){
@@ -1252,7 +1250,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       var dcurl = input.value;
       var buttonSelf = this;
       var opts = {};
-      opts.explorer = true;
       opts.format = 'turtle';
       self.client.getDocument(dcurl, opts)
       .then(function(response){
@@ -1266,7 +1263,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       var dcurl = input.value;
       var buttonSelf = this;
       var opts = {};
-      opts.explorer = true;
       self.client.deleteDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
@@ -1280,7 +1276,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var payload = input.htmlEditor.getValue();
         var buttonSelf = this;
         opts = {};
-        opts.explorer = true;
         self.client.createDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
@@ -1294,7 +1289,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var payload = input.htmlEditor.getValue();
         var buttonSelf = this;
         opts = {};
-        opts.explorer = true;
         opts.editmode = 'replace';
         opts.format = 'json';
         self.client.updateDocument(dcurl, payload, opts)

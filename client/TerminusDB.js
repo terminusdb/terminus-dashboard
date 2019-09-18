@@ -57,7 +57,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 			});
 	        ul.appendChild(item);
 		}
-		if(this.ui.showControl("woql_update")){
+		if(this.ui.showControl("woql_update") && this.ui.client.connectionConfig.platformEndpoint()){
 			var item = this.getControlHTML("Mapping", "fa-file-import");
 	        item.addEventListener("click", function(){
 				removeSelectedNavClass("terminus-selected");

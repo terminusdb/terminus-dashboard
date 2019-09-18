@@ -67,7 +67,7 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 				if(!lab || lab == "unknown"){
 					lab = FrameHelper.labelFromURL(clist.bindings[i].Property);
 				}
-				if(lab.data) lab = lab.data;
+				if(lab["@value"]) lab = lab["@value"];
 				opt.appendChild(document.createTextNode(lab));
 				choices.push(opt);
 			}
