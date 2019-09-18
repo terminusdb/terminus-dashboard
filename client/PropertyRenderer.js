@@ -209,7 +209,7 @@ PropertyRenderer.prototype.getAvailableClassChoices = function(){
 			var choices = [];
 			for(var i = 0; i < cf.length; i++){
 				var clsmeta = this.parent.getClassMeta(cf[i]);
-				var lab = ((clsmeta && clsmeta.Label && clsmeta.Label.data) ? clsmeta.Label.data : FrameHelper.labelFromURL(cf[i]));
+				var lab = ((clsmeta && clsmeta.Label && clsmeta.Label["@value"]) ? clsmeta.Label["@value"] : FrameHelper.labelFromURL(cf[i]));
 				choices.push({value: cf[i], label: lab});
 			}
 			return choices;

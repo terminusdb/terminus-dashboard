@@ -625,6 +625,7 @@ ObjectRenderer.prototype.extractLDO = function(extracts){
 ObjectRenderer.prototype.extractJSONLD = function(extracts){
 	extracts["@type"] = this.objframe.cls;
 	if(this.subject() != "_:")	extracts["@id"] = this.subject();
+	if(this.objframe.jsonld_context) extracts['@context'] = this.objframe.jsonld_context;
 	return extracts;
 }
 
