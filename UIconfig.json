@@ -18,8 +18,8 @@ let TerminusConfig = {
 			}]
 		}
 	},
-	location: {server: "http://localhost/platform/", db: "baba"},
-	css: "theme",
+ 	location: {server: "http://195.201.12.87:6363", key: "root"},
+ 	css: "theme",
 	plugins: {
 		"font-awesome": true,
 		gmaps: {
