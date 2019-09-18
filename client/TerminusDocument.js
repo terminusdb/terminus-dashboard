@@ -51,7 +51,6 @@ TerminusDocumentViewer.prototype.getInstanceMeta = function(elid){
 	});
 }
 
-
 TerminusDocumentViewer.prototype.getClassMeta = function(cls){
 	if(typeof this.classmeta[cls]){
 		return this.classmeta[cls];
@@ -84,6 +83,9 @@ TerminusDocumentViewer.prototype.loadCreateDocument = function(url){
 TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 	if(!url) return false;
 	var self = this;
+	if(url.substring(0,4) == "doc:"){
+		url = url.substring(4);
+	}
 	this.page_config = "view";
 	url = url.replace("/candidate", "/platform/document");
 	this.ui.showBusy("Loading Document from " + url);
@@ -191,10 +193,12 @@ TerminusDocumentViewer.prototype.loadSchemaFrames = function(classframes, cls){
 		if(!this.document){
 			this.document = new ObjectFrame(cls);
 		}
-		this.document.loadClassFrames(classframes);
-		if(!this.document.subjid){
-			this.document.newDoc = true;
-			this.document.fillFromSchema("_:");
+		if(classframes){
+			this.document.loadClassFrames(classframes);
+			if(!this.document.subjid){
+				this.document.newDoc = true;
+				this.document.fillFromSchema("_:");
+			}
 		}
 	}
 	else {

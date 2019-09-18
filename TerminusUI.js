@@ -6,7 +6,7 @@
  * @param opts - options array
  */
 function TerminusUI(opts){
-	this.client = new WOQLClient();
+	this.client = new TerminusDB.WOQLClient();
 	this.controls = [];
 	this.setOptions(opts);
 }
@@ -25,7 +25,7 @@ function TerminusUI(opts){
  */
 TerminusUI.prototype.connect = function(opts){
 	var self = this;
-	this.client.server = false;
+	this.client.connectionConfig.server = false;
 	var key = ((opts && opts.key) ? opts.key : false);
 	this.showBusy("Connecting to server at " + opts.server);
 	return this.client.connect(opts.server, key)
@@ -78,7 +78,7 @@ TerminusUI.prototype.createDatabase = function(dbdets){
         return Promise.reject(new Error(self.getBadArguments("createDatabase", "ID and title are mandatory fields")));
 	}
 	var dbid = dbdets.id;
-	var myserver = this.client.server;
+	var myserver = this.client.connectionConfig.server;
 	self.showBusy("Creating Database " + dbdets.title + " with id " + dbid);
 	var dbdoc = this.generateNewDatabaseDocument(dbdets);
 	return this.client.createDatabase(dbid, dbdoc)
@@ -89,8 +89,8 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 			return self.client.getSchema(dbdets.schema, opts)
 			.then(function(response){
 				self.showBusy("Updating database with new schema");
-				self.client.server = myserver;
-				self.client.dbid = dbid;
+				self.client.connectionConfig.server = myserver;
+				self.client.connectionConfig.dbid = dbid;
 				return self.client.updateSchema(false, response);
 			})
 			.then(function(response){
@@ -106,8 +106,8 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 	.then(function(response){ //reload list of databases in background..
 		return self.refreshDBList()
 		.then(function(response){
-			if(crec = self.client.getDBRecord(dbid)){
-				self.client.dbid = dbid;
+			if(crec = self.client.connection.getDBRecord(dbid)){
+				self.client.connectionConfig.dbid = dbid;
 				self.showDBMainPage();
 				self.showMessage("Successfully Created Database " + dbid);
 			}
@@ -127,14 +127,14 @@ TerminusUI.prototype.createDatabase = function(dbdets){
  */
 TerminusUI.prototype.deleteDatabase = function(dbid){
 	var self = this;
-	var delrec = this.client.getDBRecord();
+	var delrec = this.client.connection.getDBRecord();
 	var lid = (dbid ? dbid : this.db());
 	var dbn = (delrec && delrec['rdfs:label'] && delrec['rdfs:label']["@value"] ? delrec['rdfs:label']["@value"] + " (id: " + lid + ")" : lid);
 	this.showBusy("Deleting database " + dbn);
 	return this.client.deleteDatabase(dbid)
 	.then(function(response){
 		self.clearBusy();
-		self.client.dbid = false;
+		self.client.connectionConfig.dbid = false;
 		self.removeDB(dbid);
 		self.showServerMainPage();
 		self.showMessage("Successfully Deleted Database " + dbn);
@@ -224,31 +224,31 @@ TerminusUI.prototype.getConnectionEndpoint = function(url){
 }
 
 TerminusUI.prototype.server = function(){
-	return this.client.server;
+	return this.client.connectionConfig.server;
 }
 
 TerminusUI.prototype.db = function(){
-	return this.client.dbid;
+	return this.client.connectionConfig.dbid;
 }
 
 TerminusUI.prototype.clearServer = function(){
-	this.client.server = false;
+	this.client.connectionConfig.server = false;
 }
 
 TerminusUI.prototype.connectToDB = function(dbid){
-	this.client.dbid = dbid;
+	this.client.connectionConfig.dbid = dbid;
 }
 
 TerminusUI.prototype.clearDB = function(){
-	this.client.dbid = false;
+	this.client.connectionConfig.dbid = false;
 }
 
 TerminusUI.prototype.removeDB = function(db, url){
-	this.client.removeDBFromConnection(db, url);
+	this.client.connection.removeDBFromConnection(db, url);
 }
 
 TerminusUI.prototype.getDBRecord = function(db, url){
-	return this.client.getDBRecord(db, url);
+	return this.client.connection.getDBRecord(db, url);
 }
 
 TerminusUI.prototype.refreshDBList = function(){
@@ -258,12 +258,12 @@ TerminusUI.prototype.refreshDBList = function(){
 
 TerminusUI.prototype.showServerMainPage = function(){
 	this.viewer = new TerminusServerViewer(this);
-	this.redrawMainPage();
+	this.redraw();
 }
 
 TerminusUI.prototype.showLoadURLPage = function(val){
 	this.viewer = new TerminusURLLoader(this, val);
-	this.redrawMainPage();
+	this.redraw();
 }
 
 TerminusUI.prototype.showDBMainPage = function(){
@@ -273,7 +273,7 @@ TerminusUI.prototype.showDBMainPage = function(){
 
 TerminusUI.prototype.showCreateDBPage = function(){
 	this.viewer = new TerminusDBCreator(this);
-	this.redrawMainPage();
+	this.redraw();
 }
 
 TerminusUI.prototype.showSchemaPage = function(durl){
@@ -351,15 +351,15 @@ TerminusUI.prototype.setViewerDOM = function(dom){
 }
 
 TerminusUI.prototype.draw = function(comps, slocation){
-    if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
+	if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
-    if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
+	if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
-    if(this.buttons){
-        this.toggleControl();
-    }
+	if(this.buttons){
+		this.toggleControl();
+	}
 	if(this.controller){
 		this.drawControls();
 	}
@@ -367,7 +367,7 @@ TerminusUI.prototype.draw = function(comps, slocation){
 		this.drawPlugins();
 	}
 	if(slocation && slocation.server){
-		if(typeof this.client.connection[slocation.server] == "undefined") this.connect(slocation)
+		if(typeof this.client.connection.connection[slocation.server] == "undefined") this.connect(slocation)
 		.catch(function(error){
 			this.showLoadURLPage();
 			this.showError(error);
@@ -384,7 +384,7 @@ TerminusUI.prototype.redraw = function(msg){
 		FrameHelper.removeChildren(this.controller);
 		this.drawControls();
 	}
-  if(this.explorer){
+	if(this.explorer){
 		FrameHelper.removeChildren(this.explorer);
 		//this.drawExplorer();
 	}
@@ -421,14 +421,14 @@ TerminusUI.prototype.drawControls = function(){
 }
 
 TerminusUI.prototype.drawExplorer = function(){
-  if(this.explorer){
-    if(this.showControl("api_explorer")){
-       var exp = new ApiExplorer(this);
-       ae = exp.getAsDOM();
-       this.explorer.appendChild(ae);
-       this.explorer.style.display = 'block';
-    }
-  }
+	if(this.explorer){
+		if(this.showControl("api_explorer")){
+			var exp = new ApiExplorer(this);
+			ae = exp.getAsDOM();
+			this.explorer.appendChild(ae);
+			this.explorer.style.display = 'block';
+		}
+	}
 }
 
 TerminusUI.prototype.loadControls = function(){
@@ -447,7 +447,7 @@ TerminusUI.prototype.loadControls = function(){
 TerminusUI.prototype.showControl = function(el){
 	if(this.show_controls.indexOf(el) == -1) return false;
 	if(this.pseudoCapability(el)) return true;
-	if(this.client.capabilitiesPermit(el)) {
+	if(this.client.connection.capabilitiesPermit(el)) {
 		return true;
 	}
 	return false;
@@ -456,7 +456,7 @@ TerminusUI.prototype.showControl = function(el){
 TerminusUI.prototype.showView = function(el){
 	if(this.show_views.indexOf(el) == -1) return false;
 	if(this.pseudoCapability(el)) return true;
-	if(this.client.capabilitiesPermit(el)) {
+	if(this.client.connection.capabilitiesPermit(el)) {
 		return true;
 	}
 	return false;
