@@ -104,8 +104,12 @@ FrameHelper.labelFromURL = function(url){
 
 FrameHelper.urlFragment = function(url){
 	url = (typeof url != "string") ? window.location.href : url;
-	url = url.split('#')[1];
-	if(url){
+	bits = url.split('#');
+	if(bits.length <= 1){
+		bits = url.split(":");
+	}
+	if(bits.length >= 1){
+		url = bits[1];
 		url = url.split("?")[0];
 	}
 	return url;
