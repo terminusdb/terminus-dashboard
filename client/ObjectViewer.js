@@ -121,9 +121,11 @@ HTMLObjectViewer.prototype.getObjectIDMarker = function(renderer){
 	idm.setAttribute("class", "terminus-object-idmarker");
 	var sh = FrameHelper.getShorthand(renderer.subject());
     if(!sh) sh = renderer.subject();
-	var bits = sh.split(":");
-	if(bits.length > 1) sh = bits[1];
-	idm.setAttribute("name", sh);
+    if(sh){
+		var bits = sh.split(":");
+		if(bits.length > 1) sh = bits[1];
+		idm.setAttribute("name", sh);
+    }
 	return idm;
 }
 
@@ -292,8 +294,8 @@ HTMLObjectHeaderViewer.prototype.getObjectTypeDOM = function(renderer){
 	var lab = renderer.subjectClass();
 	var cmt = "All objects have types, identified by a unique URL";
 	if(cm){
-		lab = (cm.Label && cm.Label.data ? cm.Label.data : lab);
-		cmt = (cm.Comment && cm.Comment.data ? renderer.subjectClass() + " " + cm.Comment.data : cmt);
+		lab = (cm.Label && cm.Label["@value"] ? cm.Label["@value"]: lab);
+		cmt = (cm.Comment && cm.Comment["@value"] ? renderer.subjectClass() + " " + cm.Comment["@value"] : cmt);
 	}
 	return HTMLFrameHelper.getInfoboxDOM("object-type", "Type", lab, cmt);
 }

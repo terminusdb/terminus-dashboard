@@ -133,6 +133,7 @@ ObjectFrame.prototype.clearData = function(){
  */
 ObjectFrame.prototype.loadClassFrames = function(classframes){
 	for(var j = 0; j< classframes.length; j++){
+		if(classframes[j]["@context"]) this.jsonld_context = classframes[j]["@context"];
 		var cf = new ClassFrame(classframes[j]);
 		if(cf.isValid()){
 			if(typeof this.classframes[classframes[j].property] == "undefined"){
@@ -165,6 +166,7 @@ ObjectFrame.prototype.loadDataFrames = function(frames){
 	if(!this.originalFrames) this.originalFrames = frames;
 	if(!this.subjid && frames[0].domainValue) this.subjid = frames[0].domainValue;
 	for(var i = 0; i<frames.length; i++){
+		if(frames[i]["@context"]) this.jsonld_context = frames[i]["@context"];
 		var cframe = this.getPropertyClassFrame(frames[i].property, frames[i]);
 		if(cframe.isClassChoice()){
 			cframe = cframe.getChosenClassFrame(frames[i].range);
@@ -573,7 +575,7 @@ DataFrame.prototype.copy = function(newid){
 
 DataFrame.prototype.getLabel = function(){
 	var lab = "";
-	if(this.label && typeof this.label == 'object') lab = this.label.data; 
+	if(this.label && typeof this.label == 'object') lab = this.label["@value"]; 
 	if(this.label && typeof this.label == 'string') lab = this.label; 
 	if(!lab && this.property) lab = FrameHelper.labelFromURL(this.property);//always return something
 	if(!lab) lab = FrameHelper.labelFromURL(this.cls);
@@ -590,7 +592,7 @@ ObjectFrame.prototype.getLabel = DataFrame.prototype.getLabel;
 
 DataFrame.prototype.getComment = function(){
 	var comment = "";
-	if(this.comment && typeof this.comment == 'object') comment = this.comment.data; 
+	if(this.comment && typeof this.comment == 'object') comment = this.comment["@value"]; 
 	if(this.comment && typeof this.comment == 'string') comment = this.comment; 
 	return comment;
 }
@@ -671,7 +673,7 @@ DataFrame.prototype.getChoiceOptions = function(){
 	for(var i = 0; i<this.frame.elements.length; i++){
 		var option = {};
 	    if(this.frame.elements[i].label){
-	    	option.label = this.frame.elements[i].label.data;
+	    	option.label = this.frame.elements[i].label["@value"];
 	    }
 	    else {
 	    	option.label = FrameHelper.labelFromURL(this.frame.elements[i].class);
@@ -712,8 +714,8 @@ DataFrame.prototype.get = function(format){
 	if(this.contents){
 		return this.contents;
 	}
-	if(this.isDatatypeProperty() &&  this.rangeValue &&  typeof this.rangeValue.data != "undefined"){
-		return this.rangeValue.data;
+	if(this.isDatatypeProperty() &&  this.rangeValue &&  typeof this.rangeValue["@value"] != "undefined"){
+		return this.rangeValue["@value"];
 	}
 	else if(this.isChoice() || this.isEntity()){
 		return this.frame.domainValue;
@@ -728,7 +730,7 @@ DataFrame.prototype.set = function(value, normalizer){
 		this.frame.domainValue = value;
 	}
 	if(this.isDatatypeProperty() && this.rangeValue){
-		this.rangeValue.data = value;
+		this.rangeValue["@value"] = value;
 	}
 }
 

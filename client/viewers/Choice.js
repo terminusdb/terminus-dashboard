@@ -9,8 +9,8 @@ HTMLChoiceViewer.prototype.getDOM = function(renderer, dataviewer){
 		var els = renderer.frame.frame.elements;
 		for(var i = 0; i<els.length; i++){
 			if(els[i].class == value){
-				if(els[i].label && els[i].label.data){
-					input.appendChild(document.createTextNode(els[i].label.data));
+				if(els[i].label && els[i].label["@value"]){
+					input.appendChild(document.createTextNode(els[i].label["@value"]));
 				}
 				else {
 					input.appendChild(FrameHelper.labelFromURL(value));					
