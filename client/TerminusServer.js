@@ -21,70 +21,72 @@ TerminusServerController.prototype.getAsDOM = function(){
 		lab.appendChild(document.createTextNode("Server "));
 		scd.appendChild(lab);
 		scd.appendChild(this.getServerLabelDOM());
-        //11092019
-		//rsc.appendChild(scd);
-        var nav = document.createElement('div');
-        nav.setAttribute('class', 'span3');
-        var ul = document.createElement('ul');
-        ul.setAttribute('class', 'terminus-ul');
-        nav.appendChild(ul);
-        rsc.appendChild(nav);
-        // change server
-    	if(this.ui.showControl("change-server")){
-            var a = document.createElement('a');
-            a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-            var self = this;
-            a.addEventListener("click", function(){
-                removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
-                self.ui.showLoadURLPage();
-            })
-            var icon = document.createElement('i');
-            icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
-            a.appendChild(icon);
-            var txt = document.createTextNode('Change Server');
-            a.appendChild(txt);
-            ul.appendChild(a);
-    	}
-        // view databases
-        if(this.ui.showControl("db")){
-            var a = document.createElement('a');
-            a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-            var self = this;
-            a.addEventListener("click", function(){
-                removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
-                if(self.ui.db()){
-        		    //self.ui.clearDB();
-        		}
-        		self.ui.showServerMainPage();
-            })
-            var icon = document.createElement('i');
-            icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
-            a.appendChild(icon);
-            var txt = document.createTextNode('View Databases');
-            a.appendChild(txt);
-            ul.appendChild(a);
-        }
-    	if(this.ui.showControl("create_database")){
-            var a = document.createElement('a');
-            a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-            var self = this;
-            a.addEventListener("click", function(){
-                removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
-                if(self.ui.db()){
-        		    //self.ui.clearDB();
-        		}
-        		self.ui.showCreateDBPage();
-            })
-            var icon = document.createElement('i');
-            icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
-            a.appendChild(icon);
-            var txt = document.createTextNode('Create New Database');
-            a.appendChild(txt);
-            ul.appendChild(a);
-    	}
+		rsc.appendChild(scd);
+		var nav = document.createElement('div');
+		nav.setAttribute('class', 'span3');
+		var ul = document.createElement('ul');
+		ul.setAttribute('class',' terminus-widget-menu' );
+		nav.appendChild(ul);
+		rsc.appendChild(nav);
+    // change server
+		if(this.ui.showControl("change-server")){
+			var li = document.createElement('li');
+			li.setAttribute("class", "terminus-control-button terminus-change-server-button active terminus-pointer")
+			var self = this;
+			li.addEventListener("click", function(){
+				self.ui.showLoadURLPage();
+			})
+			ul.appendChild(li);
+			var a = document.createElement('a');
+			var icon = document.createElement('i');
+			icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
+			a.appendChild(icon);
+			var txt = document.createTextNode('Change Server');
+			a.appendChild(txt);
+			li.appendChild(a);
+			var icon = document.createElement('i');
+		}
+		// view databases
+		if(this.ui.showControl("db")){
+			var li = document.createElement('li');
+			li.setAttribute("class", "terminus-control-button terminus-server-connection active terminus-pointer");
+			var self = this;
+			li.addEventListener("click", function(){
+				if(self.ui.db()){
+					self.ui.clearDB();
+				}
+				self.ui.showServerMainPage();
+			})
+			ul.appendChild(li);
+			var a = document.createElement('a');
+			var icon = document.createElement('i');
+			icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
+			a.appendChild(icon);
+			var txt = document.createTextNode('View Databases');
+		    a.appendChild(txt);
+		    li.appendChild(a);
+		    var icon = document.createElement('i');
+		}
+		if(this.ui.showControl("create_database")){
+			var li = document.createElement('li');
+			li.setAttribute("class", "terminus-control-button terminus-create-db-button active terminus-pointer");
+			var self = this;
+			li.addEventListener("click", function(){
+				if(self.ui.db()){
+					self.ui.clearDB();
+				}
+				self.ui.showCreateDBPage();
+			});
+			ul.appendChild(li);
+			var a = document.createElement('a');
+			var icon = document.createElement('i');
+			icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
+			a.appendChild(icon);
+			var txt = document.createTextNode('Create New Database');
+			a.appendChild(txt);
+			li.appendChild(a);
+			var icon = document.createElement('i');
+		}
 	}
 	return rsc;
 }
@@ -122,8 +124,8 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 			csbut.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-btn")
 			csbut.appendChild(document.createTextNode("Disconnect"));
 			csbut.addEventListener("click", function(){
-				//self.ui.clearDB();
-				//self.ui.clearServer();
+				self.ui.clearDB();
+				self.ui.clearServer();
 				self.ui.showLoadURLPage();
 			})
 			// 11092019 scd.appendChild(csbut);
@@ -134,7 +136,7 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 			crbut.appendChild(document.createTextNode("Create New Database"));
 			crbut.addEventListener("click", function(){
 				if(self.ui.db()){
-					//self.ui.clearDB();
+					self.ui.clearDB();
 				}
 				self.ui.clearMessages();
 				self.ui.showCreateDBPage();
@@ -147,7 +149,6 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 		pd.appendChild(scd);
 	}
 	else {
-        //self.ui.showLoadURLPage();
 		pd.appendChild(this.getLoadURLPage());
 	}
 	return pd;
@@ -171,7 +172,7 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 	var self = this;
 	var wrap = document.createElement("a");
 	wrap.setAttribute("href", "#");
-  wrap.setAttribute("class", "terminus-table-content");
+	wrap.setAttribute("class", "terminus-table-content");
 	wrap.appendChild(document.createTextNode(text));
 	wrap.addEventListener("click", function(){
 		self.ui.connectToDB(dbid);
@@ -269,12 +270,12 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		tbody.appendChild(tr);
 	}
 	scd.appendChild(tbody);
-  sec.appendChild(scd);
+	sec.appendChild(scd);
 
-  if(this.ui.pluginAvailable("datatables")){
+	if(this.ui.pluginAvailable("datatables")){
         var dt = new Datatables();
 		var tab = dt.draw(false, scd);
-  }
+	}
 	return sec;
 }
 
