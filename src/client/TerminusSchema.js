@@ -25,14 +25,14 @@ TerminusSchemaViewer.prototype.getAsDOM = function(){
 	return this.holder;
 }
 
-TerminusSchemaViewer.prototype.loadSchema = function(){
+TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 	var self = this;
 	this.ui.showBusy("Fetching Database Schema");
 	this.ui.client.getSchema(false, {"terminus:encoding": "terminus:" + this.format})
 	.then(function(response){
 		self.ui.clearBusy();
 		self.schema = response;
-		self.refreshPage();
+		self.refreshPage(msg, msgtype);
 	})
 	.catch(function(error){
 		self.ui.clearBusy();
@@ -96,12 +96,12 @@ TerminusSchemaViewer.prototype.getFormatChoices = function(){
 }
 
 
-TerminusSchemaViewer.prototype.refreshPage = function(){
+TerminusSchemaViewer.prototype.refreshPage = function(msg, msgtype){
 	if(this.controldom) this.resetControlDOM();
-	if(this.pagedom) this.refreshMainPage();
+	if(this.pagedom) this.refreshMainPage(msg, msgtype);
 }
 
-TerminusSchemaViewer.prototype.refreshMainPage = function(){
+TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
 	FrameHelper.removeChildren(this.pagedom);
 	if(this.mode == 'view'){
 		this.pagedom.appendChild(this.getSchemaViewDOM());
@@ -114,6 +114,9 @@ TerminusSchemaViewer.prototype.refreshMainPage = function(){
 	}
 	else if(this.mode == "class_frame"){
 		this.pagedom.appendChild(this.getClassFrameDOM());
+	}
+	if(msg){
+		this.ui.showMessage(msg)
 	}
 }
 
@@ -218,13 +221,8 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 	return this.ui.client.updateSchema(false, text, opts)
 	.then(function(response){
 		self.ui.showBusy("Retrieving updated schema");
-		self.loadSchema()
-		.then(function(response){
-			self.ui.clearBusy();
-			self.schema = response;
-			self.mode = "view";
-			self.refreshPage("Successfully updated schema");
-		});
+		self.mode = "view";
+		self.loadSchema("Successfully Updated Schema");
 	})
 	.catch(function(error){
 		self.ui.clearBusy();
