@@ -109,7 +109,7 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 			if(crec = self.client.connection.getDBRecord(dbid)){
 				self.client.connectionConfig.dbid = dbid;
 				self.showDBMainPage();
-				self.showMessage("Successfully Created Database " + dbid);
+				self.showMessage("Successfully Created Database " + dbid, "success");
 			}
 			else {
 		        return Promise.reject(new Error(self.getCrashString("createDatabase", "Failed to retrieve record of created database " + dbid)));
@@ -137,7 +137,7 @@ TerminusUI.prototype.deleteDatabase = function(dbid){
 		self.client.connectionConfig.dbid = false;
 		self.removeDB(dbid);
 		self.showServerMainPage();
-		self.showMessage("Successfully Deleted Database " + dbn);
+		self.showMessage("Successfully Deleted Database " + dbn, "success");
 		self.refreshDBList();
 		return response;
 	})
@@ -311,11 +311,11 @@ TerminusUI.prototype.redrawMainPage = function(){
 }
 
 TerminusUI.prototype.showResult = function(response){
-	this.showMessage(response);
+	this.showMessage(response, "success");
 };
 
 TerminusUI.prototype.showError = function(response){
-	this.showMessage(response);
+	this.showMessage(response, "error");
 };
 
 TerminusUI.prototype.clearMessages = function(response){
@@ -467,17 +467,17 @@ TerminusUI.prototype.clearBusy = function(response){
 	if(this.viewer && typeof this.viewer.busy == "function") this.viewer.busy(false);
 }
 
-TerminusUI.prototype.showMessage = function(msg){
+TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
         var md = document.createElement('div');
-        md.setAttribute('class', 'terminus-show-msg');
+        md.setAttribute('class', 'terminus-show-msg terminus-msg-' + type);
         md.appendChild(document.createTextNode(msg));
 		this.messages.appendChild(md);
 	}
 };
 
 TerminusUI.prototype.showBusy = function(msg){
-	this.showMessage(msg);
+	this.showMessage(msg, "busy");
 	if(this.viewer && typeof this.viewer.busy == "function") this.viewer.busy(msg);
 };
 
