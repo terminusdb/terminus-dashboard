@@ -470,7 +470,9 @@ TerminusUI.prototype.clearBusy = function(response){
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
         var md = document.createElement('div');
-        md.setAttribute('class', 'terminus-show-msg terminus-msg-' + type);
+        var clsstr = 'terminus-show-msg';
+        if(type) clsstr += 'terminus-msg-' + type;
+        md.setAttribute('class', clsstr);
         md.appendChild(document.createTextNode(msg));
 		this.messages.appendChild(md);
 	}
