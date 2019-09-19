@@ -670,7 +670,7 @@ ApiExplorer.prototype.getDBForm = function(mode){
   var gatherips = function(){
     var input = {};
     input.id = inpId.value;
-    input.doc = inpTxtAr.value;
+    input.doc = JSON.parse(inpTxtAr.value);
     input.key = inpKey.value;
     return input;
   }
@@ -894,6 +894,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var formDoc = document.createElement('form');
        formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
 
+       // schema url
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
@@ -915,10 +916,65 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
        cd.appendChild(icon);
 
+       //encoding
+       var fd = document.createElement('div');
+       fd.setAttribute('class', 'terminus-control-group');
+       formDoc.appendChild(fd);
+       var encLabel = document.createElement('label');
+       encLabel.setAttribute('class', 'terminus-control-label');
+       encLabel.setAttribute('for', 'basicinput');
+       encLabel.innerHTML = 'Encoding:';
+       fd.appendChild(encLabel);
+       var cd = document.createElement('div');
+       cd.setAttribute('class', 'terminus-controls');
+       fd.appendChild(cd);
+       var inpEnc = document.createElement('select');
+       inpEnc.setAttribute('type', 'text');
+       inpEnc.setAttribute('placeholder', 'turtle');
+       var optTurt = document.createElement('option');
+       optTurt.setAttribute('value', 'terminus:turtle');
+       optTurt.appendChild(document.createTextNode('turtle'));
+       inpEnc.appendChild(optTurt);
+       var optJld = document.createElement('option');
+       optJld.setAttribute('value', 'terminus:jsonld');
+       optJld.appendChild(document.createTextNode('jsonLD'));
+       inpEnc.appendChild(optJld);
+       cd.appendChild(inpEnc);
+       var icon = document.createElement('i');
+       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
+       cd.appendChild(icon);
+
+       var fd = document.createElement('div');
+       fd.setAttribute('class', 'terminus-control-group');
+       formDoc.appendChild(fd);
+       var keyLabel = document.createElement('label');
+       keyLabel.setAttribute('class', 'terminus-control-label');
+       keyLabel.setAttribute('for', 'basicinput');
+       keyLabel.innerHTML = 'Key:';
+       fd.appendChild(keyLabel);
+       var cd = document.createElement('div');
+       cd.setAttribute('class', 'terminus-controls');
+       fd.appendChild(cd);
+       var inpKey = document.createElement('input');
+       inpKey.setAttribute('type', 'text');
+       inpKey.setAttribute('id', 'basicinput');
+       inpKey.setAttribute('class', 'terminus-input-text');
+       inpKey.setAttribute('placeholder', 'Key');
+       cd.appendChild(inpKey);
+       var icon = document.createElement('i');
+       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
+       cd.appendChild(icon);
+
+       // gather the dom objects
+       var gatherips = {};
+       gatherips.url = inpId;
+       gatherips.enc = inpEnc;
+       gatherips.key  = inpKey;
+
        body.appendChild(formDoc);
 
        //form to get schema
-       var form = this.getApiForm(action, inpId);
+       var form = this.getApiForm(action, gatherips);
        body.appendChild(form);
      break;
      case 'getClassFrames':
@@ -933,6 +989,10 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
+       // schema url
+       var fd = document.createElement('div');
+       fd.setAttribute('class', 'terminus-control-group');
+       formDoc.appendChild(fd);
        var inpLabel = document.createElement('label');
        inpLabel.setAttribute('class', 'terminus-control-label');
        inpLabel.setAttribute('for', 'basicinput');
@@ -951,37 +1011,81 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
        cd.appendChild(icon);
 
-       body.appendChild(formDoc);
-
-       var br = document.createElement('BR');
-       body.appendChild(br);
+       //encoding
+       var fd = document.createElement('div');
+       fd.setAttribute('class', 'terminus-control-group');
+       formDoc.appendChild(fd);
+       var encLabel = document.createElement('label');
+       encLabel.setAttribute('class', 'terminus-control-label');
+       encLabel.setAttribute('for', 'basicinput');
+       encLabel.innerHTML = 'Encoding:';
+       fd.appendChild(encLabel);
+       var cd = document.createElement('div');
+       cd.setAttribute('class', 'terminus-controls');
+       fd.appendChild(cd);
+       var inpEnc = document.createElement('select');
+       inpEnc.setAttribute('type', 'text');
+       inpEnc.setAttribute('placeholder', 'turtle');
+       var optTurt = document.createElement('option');
+       optTurt.setAttribute('value', 'terminus:turtle');
+       optTurt.appendChild(document.createTextNode('turtle'));
+       inpEnc.appendChild(optTurt);
+       var optJld = document.createElement('option');
+       optJld.setAttribute('value', 'terminus:jsonld');
+       optJld.appendChild(document.createTextNode('jsonLD'));
+       inpEnc.appendChild(optJld);
+       cd.appendChild(inpEnc);
+       var icon = document.createElement('i');
+       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
+       cd.appendChild(icon);
 
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
        formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Schema:';
-       fd.appendChild(inpLabel);
+       var schLabel = document.createElement('label');
+       schLabel.setAttribute('class', 'terminus-control-label');
+       schLabel.setAttribute('for', 'basicinput');
+       schLabel.innerHTML = 'Schema:';
+       fd.appendChild(schLabel);
        var cd = document.createElement('div');
        cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
-       var txtar = document.createElement('textarea');
-       cd.appendChild(txtar);
-       txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-       stylizeEditor(this.ui, txtar, 'schema', 'turtle');
-       var br = document.createElement('BR');
-       body.appendChild(br);
+       var schDoc = document.createElement('textarea');
+       cd.appendChild(schDoc);
+       schDoc.setAttribute('class', 'terminus-api-explorer-text-area');
+       stylizeEditor(this.ui, schDoc, 'schema', 'turtle');
+
+       var fd = document.createElement('div');
+       fd.setAttribute('class', 'terminus-control-group');
+       formDoc.appendChild(fd);
+       var keyLabel = document.createElement('label');
+       keyLabel.setAttribute('class', 'terminus-control-label');
+       keyLabel.setAttribute('for', 'basicinput');
+       keyLabel.innerHTML = 'Key:';
+       fd.appendChild(keyLabel);
+       var cd = document.createElement('div');
+       cd.setAttribute('class', 'terminus-controls');
+       fd.appendChild(cd);
+       var inpKey = document.createElement('input');
+       inpKey.setAttribute('type', 'text');
+       inpKey.setAttribute('id', 'basicinput');
+       inpKey.setAttribute('class', 'terminus-input-text');
+       inpKey.setAttribute('placeholder', 'Key');
+       cd.appendChild(inpKey);
+       var icon = document.createElement('i');
+       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
+       cd.appendChild(icon);
 
        // gather the dom objects
        var gatherips = {};
-       gatherips.schemaUrlDom = inpId;
-       gatherips.schemaTextDom = txtar;
-       gatherips.htmlEditor   = txtar;
+       gatherips.url = inpId;
+       gatherips.enc = inpEnc;
+       gatherips.key = inpKey;
+       gatherips.doc = schDoc;
 
        //form to update schema
        var form = this.getApiForm(action, gatherips);
+       body.appendChild(formDoc);
        body.appendChild(form);
      break;
      case 'viewDocument':
@@ -1216,11 +1320,11 @@ ApiExplorer.prototype.getApiForm = function(action, input){
   switch(action){
     case 'getSchema':
       button.addEventListener("click", function(){
-        var schurl = input.value;
-        var buttonSelf = this;
         var opts = {};
-        opts.format = 'turtle';
-        opts.responseType = 'text';
+        opts['terminus:encoding'] = input.enc.value;
+        opts['terminus:user_key'] = input.key.value;
+        var schurl = input.url.value;
+        var buttonSelf = this;
         self.client.getSchema(schurl, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
@@ -1230,12 +1334,14 @@ ApiExplorer.prototype.getApiForm = function(action, input){
     break;
     case 'updateSchema':
       button.addEventListener("click", function(){
-        var schurl = input.schemaUrlDom.value;
-        var payload = input.htmlEditor.value;
         var buttonSelf = this;
         opts = {};
-        opts.format = 'turtle';
-        self.client.updateSchema(schurl, payload, opts)
+        opts['terminus:encoding'] = input.enc.value;
+        opts['terminus:user_key'] = input.key.value;
+        var schurl = input.url.value;
+        console.log('opts', opts);
+        self.client.connectionConfig.connected_mode = false;
+        self.client.updateSchema(schurl, input.doc.value, opts)
         .then(function(response){
           var gtxtar = document.createElement('textarea');
           gtxtar.setAttribute('readonly', true);
@@ -1243,7 +1349,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
           var currForm = buttonSelf.parentNode;
           currForm.appendChild(gtxtar);
           stylizeEditor(this.ui, txtar, 'schema', 'turtle');
-
         });
       }) // button click
     break;

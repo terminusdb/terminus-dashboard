@@ -48,7 +48,7 @@ Codemirror.prototype.setCodemirrorSize = function(editor, mode){
       editor.setSize('1200', '150');
     break;
     case 'schema':
-      editor.setSize('1200', '1550');
+      editor.setSize('1200', '250');
     break;
     case 'document':
      editor.setSize('1200', '250');
