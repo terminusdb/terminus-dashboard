@@ -268,7 +268,7 @@ TerminusUI.prototype.showLoadURLPage = function(val){
 
 TerminusUI.prototype.showDBMainPage = function(){
 	this.viewer = new TerminusDBViewer(this);
-	this.redrawMainPage();
+	this.redraw();
 }
 
 TerminusUI.prototype.showCreateDBPage = function(){
