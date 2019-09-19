@@ -659,7 +659,7 @@ ApiExplorer.prototype.getDBForm = function(mode){
   var inpKey = document.createElement('input');
   inpKey.setAttribute('type', 'text');
   inpKey.setAttribute('id', 'basicinput');
-  inpKey.setAttribute('class', 'sterminus-input-text');
+  inpKey.setAttribute('class', 'terminus-input-text');
   inpKey.setAttribute('placeholder', 'key');
   cd.appendChild(inpKey);
 

@@ -52,7 +52,7 @@ Codemirror.prototype.setCodemirrorSize = function(editor, mode){
       editor.setSize('1200', '1550');
     break;
     case 'document':
-     editor.setSize('1000', '250');
+     editor.setSize('800', 'auto');
     break;
   } // switch(mode)
 } // setCodemirrorSize()
