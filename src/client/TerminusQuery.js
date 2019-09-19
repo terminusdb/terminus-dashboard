@@ -18,6 +18,7 @@ function TerminusQueryViewer(ui, options){
 }
 
 TerminusQueryViewer.prototype.hasGeneratorOptions = function(){
+	return false;
 	var yup = false;
 	for(var gen in this.generators){
 		if(yup) return true;
