@@ -1662,7 +1662,7 @@ a.terminus-submenu-selected{
 	margin-right: 15px;
 	margin-left: 15px;
 	background-color: #f5f5f5;
-	width: 397px;
+	width: 358px;
 }
 
 .terminus-group {
@@ -1705,7 +1705,7 @@ a.terminus-submenu-selected{
 	border: 2px solid #494949 !important;
 	display: inline-block;
 	transition: all 0.4s ease 0s;margin: 3px;
-	width: 388px;
+	width: 348px;
 }
 
 .terminus-query-text{
@@ -1755,7 +1755,7 @@ a.terminus-submenu-selected{
 .terminus-query-btn-size{
 	margin-left: 5px;
     margin-bottom: 5px;
-    width: 388px;
+    width: 345px;
 }
 /*
 .terminus-frame-row {

@@ -35,7 +35,12 @@ TerminusDBController.prototype.getAsDOM = function(){
 		nav.appendChild(ul);
 		if(this.ui.showControl("db")){
 			var item = this.getControlHTML("Database Home", "fa-home");
-		    item.addEventListener("click", function(){ self.ui.showDBMainPage(); });
+			item.classList.add("terminus-selected");
+		    item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showDBMainPage();
+			 });
 	        ul.appendChild(item);
 	    }
 		if(this.ui.showControl("delete_database")){
@@ -45,17 +50,29 @@ TerminusDBController.prototype.getAsDOM = function(){
 		}
 		if(this.ui.showControl("woql_select")){
 			var item = this.getControlHTML("Query", "fa-search");
-		    item.addEventListener("click", function(){ self.ui.showQueryPage(); });
+		    item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showQueryPage();
+			});
 	        ul.appendChild(item);
 		}
-		if(this.ui.showControl("woql_update") && this.ui.client.connectionConfig.platformEndpoint()){
+		if(this.ui.showControl("woql_update")){
 			var item = this.getControlHTML("Mapping", "fa-file-import");
-	        item.addEventListener("click", function(){ self.ui.showMappingPage();})
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showMappingPage();
+			})
 	        ul.appendChild(item);
 		}
 		if(this.ui.showControl("get_schema")){
 			var item = this.getControlHTML("Schema", "fa-cog");
-	        item.addEventListener("click", function(){ self.ui.showSchemaPage();})
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.ui.showSchemaPage();
+			})
 	        ul.appendChild(item);
 		}
 		/*var li = document.createElement('li');
