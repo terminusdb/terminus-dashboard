@@ -72,10 +72,10 @@ WOQLResultsViewer.prototype.getTable = function(bindings){
 		for(var j = 0; j<ordered_headings.length; j++){
 			var td = document.createElement("td");
 			if(typeof bindings[i][ordered_headings[j]] == "object"){
-				var lab = (bindings[i][ordered_headings[j]].data ? bindings[i][ordered_headings[j]].data : "Object?");
+				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "Object?");
 				td.appendChild(document.createTextNode(lab));
 			}
-			else if(typeof bindings[i][ordered_headings[j]] == "string"){
+			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
 				if(lab == "unknown") lab = "";
 				td.appendChild(document.createTextNode(lab));

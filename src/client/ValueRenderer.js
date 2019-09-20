@@ -16,7 +16,7 @@ ValueRenderer.prototype.subjectClass = function(){ return (this.parent ? this.pa
 ValueRenderer.prototype.type = function(){	return (this.frame ? this.frame.range : false);};
 ValueRenderer.prototype.range = function(){	return (this.frame ? this.frame.range : false);};
 ValueRenderer.prototype.value = function(){	return (this.frame ? this.frame.get() : false);};
-ValueRenderer.prototype.isEntity = function(){	return (this.frame ? this.frame.isEntity() : false);};
+ValueRenderer.prototype.isDocument = function(){	return (this.frame ? this.frame.isDocument() : false);};
 ValueRenderer.prototype.currentViewer = function(){	return this.viewerType;}
 
 ValueRenderer.prototype.copy = function(nf){

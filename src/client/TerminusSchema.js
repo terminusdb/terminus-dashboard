@@ -29,14 +29,14 @@ TerminusSchemaViewer.prototype.getAsDOM = function(){
 	return this.holder;
 }
 
-TerminusSchemaViewer.prototype.loadSchema = function(){
+TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 	var self = this;
 	this.ui.showBusy("Fetching Database Schema");
 	this.ui.client.getSchema(false, {"terminus:encoding": "terminus:" + this.format})
 	.then(function(response){
 		self.ui.clearBusy();
 		self.schema = response;
-		self.refreshPage();
+		self.refreshPage(msg, msgtype);
 	})
 	.catch(function(error){
 		self.ui.clearBusy();
@@ -100,12 +100,12 @@ TerminusSchemaViewer.prototype.getFormatChoices = function(){
 }
 
 
-TerminusSchemaViewer.prototype.refreshPage = function(){
+TerminusSchemaViewer.prototype.refreshPage = function(msg, msgtype){
 	if(this.controldom) this.resetControlDOM();
-	if(this.pagedom) this.refreshMainPage();
+	if(this.pagedom) this.refreshMainPage(msg, msgtype);
 }
 
-TerminusSchemaViewer.prototype.refreshMainPage = function(){
+TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
 	FrameHelper.removeChildren(this.pagedom);
 	if(this.mode == 'view'){
 		this.pagedom.appendChild(this.getSchemaViewDOM());
@@ -118,6 +118,9 @@ TerminusSchemaViewer.prototype.refreshMainPage = function(){
 	}
 	else if(this.mode == "class_frame"){
 		this.pagedom.appendChild(this.getClassFrameDOM());
+	}
+	if(msg){
+		this.ui.showMessage(msg, msgtype);
 	}
 }
 
@@ -141,6 +144,7 @@ TerminusSchemaViewer.prototype.getSchemaImportActionButtons = function(){
 TerminusSchemaViewer.prototype.getShowSchemaButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "view";
 		self.refreshPage();
 	}
@@ -150,6 +154,7 @@ TerminusSchemaViewer.prototype.getShowSchemaButton = function(){
 TerminusSchemaViewer.prototype.getImportPreviewButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "preview";
 		self.refreshPage();
 	}
@@ -159,6 +164,7 @@ TerminusSchemaViewer.prototype.getImportPreviewButton = function(){
 TerminusSchemaViewer.prototype.getCancelButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "view";
 		self.refreshPage();
 	}
@@ -168,6 +174,7 @@ TerminusSchemaViewer.prototype.getCancelButton = function(){
 TerminusSchemaViewer.prototype.getImportSaveButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		if(typeof self.doImport == "function"){
 			self.doImport();
 		}
@@ -178,6 +185,7 @@ TerminusSchemaViewer.prototype.getImportSaveButton = function(){
 TerminusSchemaViewer.prototype.getSaveButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		var text = self.schema_edit_dom.value;
 		if(typeof(self.schema) == "object"){
 			text = JSON.parse(text);
@@ -199,6 +207,7 @@ TerminusSchemaViewer.prototype.getSchemaEditButton = function(){
 TerminusSchemaViewer.prototype.getImportButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "import";
 		self.refreshPage();
 	}
@@ -221,14 +230,18 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 	var self = this;
 	return this.ui.client.updateSchema(false, text, opts)
 	.then(function(response){
-		self.ui.showBusy("Retrieving updated schema");
-		self.loadSchema()
-		.then(function(response){
-			self.ui.clearBusy();
-			self.schema = response;
+		if(response['terminus:status'] && response['terminus:status'] == "terminus:success"){
+			self.ui.showBusy("Retrieving updated schema");
 			self.mode = "view";
-			self.refreshPage("Successfully updated schema");
-		});
+			self.loadSchema("Successfully Updated Schema");			
+		}
+		else if(response['terminus:status'] && response['terminus:status'] == "terminus:failure"){
+			self.ui.clearBusy();
+			self.ui.showViolations(response['terminus:witnesses'], "schema");
+		}
+		else {
+			throw new Error("Update Schema returned no terminus:status code");
+		}
 	})
 	.catch(function(error){
 		self.ui.clearBusy();
@@ -306,7 +319,6 @@ TerminusSchemaViewer.prototype.getClassFrameDOM = function(){
 	var docviewer = new TerminusDocumentViewer(this.ui, "model");
 	docviewer.loadCreateDocument(this.cls);
 	docviewer.page_config = "model";
-
 	np.appendChild(docviewer.getAsDOM());
 	return np;
 }

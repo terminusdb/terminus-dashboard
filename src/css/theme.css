@@ -1870,3 +1870,10 @@ div.dataTables_info, div.dataTables_paginate {
  .terminus-expandable:target {
   transform: scaleY(1);
 }
+
+.terminus-nav-in-focus{
+	border-left: 4px solid #00C08B;
+	background-color: #0055B8!important;
+	color: #fff;
+	border-bottom: 1px solid rgba(0,0,0,.125);
+}

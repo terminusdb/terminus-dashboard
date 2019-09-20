@@ -42,7 +42,7 @@ TerminusDocumentViewer.prototype.init = function(){
 
 TerminusDocumentViewer.prototype.getInstanceMeta = function(elid){
 	var self = this;
-	//if(typeof self.instancemeta[elid] != "undefined") return self.instancemeta[elid] ;
+	if(self.instancemeta && typeof self.instancemeta[elid] != "undefined") return self.instancemeta[elid] ;
 	var wq = new WOQLQuery(this.ui.client, this.options);
 	var woql = wq.getInstanceMeta(elid);	
 	return wq.execute(woql).then(function(wresult){

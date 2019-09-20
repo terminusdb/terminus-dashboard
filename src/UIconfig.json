@@ -7,7 +7,7 @@ let TerminusConfig = {
 		view: {
 			label: "My document view",
 			load_schema: true, //should we load the document schema or just use the document frame
-			editor: true,
+			editor: false,
 			facet: "page",
 			mode: "view",
 			viewer: "html",
@@ -174,4 +174,3 @@ var FrameConfig = {
 		viewer: "html"
 	}
 };
-

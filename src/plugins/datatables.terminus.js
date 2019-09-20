@@ -87,7 +87,7 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
             return wq.getDocumentQuery(settings.chosenValue, settings.pageLength, settings.start);
         break;
         default:
-            console.log('invalid woql option passed');
+            console.log('Invalid woql option passed');
         break;
 
     }
@@ -104,7 +104,7 @@ Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageIn
     UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
     pageInfo.qTextDom.value = query;
-    UTILS.stylizeEditor(ui, pageInfo.qTextDom);
+    UTILS.stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
     return query;
 }
 

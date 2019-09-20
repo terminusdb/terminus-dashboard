@@ -649,7 +649,7 @@ DataFrame.prototype.isRestriction = function(){
 }
 
 DataFrame.prototype.ftype = function(){
-	if(this.isEntity()) return "entity";
+	if(this.isDocument()) return "document";
 	if(this.isDatatypeProperty()) return "data";
 	if(this.isChoice()) return "oneOf";
 	if(this.isObject()) return "object";
@@ -692,20 +692,20 @@ DataFrame.prototype.isChoice = function(){
 	return(this.frame && this.frame.type == "oneOf");	
 }
 
-DataFrame.prototype.isEntity = function(){
-	return(this.frame && this.frame.type == "entity");	
+DataFrame.prototype.isDocument = function(){
+	return(this.frame && this.frame.type == "document");	
 }
 
 DataFrame.prototype.isData = function(){	
-	return (this.isEntity() || this.isChoice() || this.isDatatypeProperty());
+	return (this.isDocument() || this.isChoice() || this.isDatatypeProperty());
 }
 
 DataFrame.prototype.isObject = function(){	
-	return (this.isObjectProperty() && this.frame && !(this.isChoice() || this.isEntity()));
+	return (this.isObjectProperty() && this.frame && !(this.isChoice() || this.isDocument()));
 }
 
 DataFrame.prototype.getTypeShorthand = function(){
-	if(this.isEntity()) return "entity";
+	if(this.isDocument()) return "document";
 	else if(this.isChoice()) return "choice";
 	else return FrameHelper.getShorthand(this.range);
 }
@@ -717,7 +717,7 @@ DataFrame.prototype.get = function(format){
 	if(this.isDatatypeProperty() &&  this.rangeValue &&  typeof this.rangeValue["@value"] != "undefined"){
 		return this.rangeValue["@value"];
 	}
-	else if(this.isChoice() || this.isEntity()){
+	else if(this.isChoice() || this.isDocument()){
 		return this.frame.domainValue;
 	}
 	return "";
@@ -726,7 +726,7 @@ DataFrame.prototype.get = function(format){
 DataFrame.prototype.set = function(value, normalizer){
 	if(normalizer) value = normalizer(value, this);
 	this.contents = value;
-	if(this.isChoice() || this.isEntity()){
+	if(this.isChoice() || this.isDocument()){
 		this.frame.domainValue = value;
 	}
 	if(this.isDatatypeProperty() && this.rangeValue){
@@ -735,7 +735,7 @@ DataFrame.prototype.set = function(value, normalizer){
 }
 
 DataFrame.prototype.clear = function(){	
-	if(this.isEntity() || this.isChoice() || this.isDatatypeProperty()){
+	if(this.isDocument() || this.isChoice() || this.isDatatypeProperty()){
 		this.set("");
 	}
 }

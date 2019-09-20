@@ -85,7 +85,8 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qbut.appendChild(document.createTextNode("Send Query"));
 	qbut.addEventListener("click", function(){
 		if(self.ui.pluginAvailable("datatables")){
-			self.gatherDatatableSettings(qip, 'Any_Query');
+			// pass current Example query scope while editing the text editor 
+			self.gatherDatatableSettings(qip, self.datatable.query);
 			self.setDatatableSettings(qip.value);
 			self.query(qip.value, self.datatable);
 		}

@@ -1,6 +1,6 @@
 function WOQLResult(res, query ,options){
 	this.query = query;
-	this.bindings = ((res && res.result) ? res.result.bindings : []);
+	this.bindings = ((res && res.bindings) ? res.bindings : []);
 }
 
 WOQLResult.prototype.count = function(){

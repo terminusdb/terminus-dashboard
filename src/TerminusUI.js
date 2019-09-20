@@ -248,6 +248,7 @@ TerminusUI.prototype.clearServer = function(){
 
 TerminusUI.prototype.connectToDB = function(dbid){
 	this.client.connectionConfig.dbid = dbid;
+	FrameHelper.standard_urls['doc'] = this.client.connectionConfig.dbURL() + "/document/";
 }
 
 TerminusUI.prototype.clearDB = function(){
@@ -279,7 +280,7 @@ TerminusUI.prototype.showLoadURLPage = function(val){
 
 TerminusUI.prototype.showDBMainPage = function(){
 	this.viewer = new TerminusDBsdk.TerminusDBViewer(this);
-	this.redrawMainPage();
+	this.redraw();
 }
 
 TerminusUI.prototype.showCreateDBPage = function(){
@@ -480,12 +481,24 @@ TerminusUI.prototype.clearBusy = function(response){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
-        var md = document.createElement('div');
-        md.setAttribute('class', 'terminus-show-msg terminus-msg-' + type);
+		FrameHelper.removeChildren(this.messages);
+		var md = document.createElement('div');
+        var clsstr = 'terminus-show-msg';
+        if(type) clsstr += 'terminus-msg-' + type;
+        md.setAttribute('class', clsstr);
         md.appendChild(document.createTextNode(msg));
 		this.messages.appendChild(md);
 	}
 };
+
+TerminusUI.prototype.showViolations = function(vios, type){
+	var nvios = new TerminusViolations(vios, this);
+	if(this.messages){
+		var cmsg = (type == "schema" ? " in Schema" : " in Document");
+		FrameHelper.removeChildren(this.messages);
+		this.messages.appendChild(nvios.getAsDOM(cmsg));
+	}
+}
 
 TerminusUI.prototype.showBusy = function(msg){
 	this.showMessage(msg, "busy");

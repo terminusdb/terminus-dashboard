@@ -18,21 +18,6 @@ HTMLEntityViewer.prototype.getDOM = function(renderer, dataviewer){
 	return holder;
 }
 
-HTMLEntityViewer.prototype.getEntityLabel = function(url, response, dv){
-	var nspan = document.createElement("span");
-	if(response && typeof response.InstanceLabel == "object" && response.InstanceLabel.data){
-		nspan.appendChild(dv.internalLink(url, response.InstanceLabel.data));
-		var tit = response.InstanceType;
-		if(typeof response.InstanceComment == "object" && response.InstanceComment.data){
-			tit += " " + response.InstanceComment.data;
-		}
-		nspan.setAttribute("title", tit);
-		return nspan;
-	}
-	return false;
-}
-
-
 HTMLEntityViewer.prototype.getEntityViewHTML = function(value, renderer, dataviewer){
 	var span = document.createElement("span");
 	var self = this;
@@ -50,7 +35,19 @@ HTMLEntityViewer.prototype.getEntityViewHTML = function(value, renderer, datavie
 	return span;
 }
 
-
+HTMLEntityViewer.prototype.getEntityLabel = function(url, response, dv){
+	var nspan = document.createElement("span");
+	if(response && typeof response.InstanceLabel == "object" && response.InstanceLabel["@value"]){
+		nspan.appendChild(dv.internalLink(url, response.InstanceLabel["@value"]));
+		var tit = url + " Type: " + response.InstanceType;
+		if(typeof response.InstanceComment == "object" && response.InstanceComment["@value"]){
+			tit += " " + response.InstanceComment["@value"];
+		}
+		nspan.setAttribute("title", tit);
+		return nspan;
+	}
+	return false;
+}
 
 function HTMLEntityEditor(options){}
 HTMLEntityEditor.prototype.getDOM = function(renderer, dataviewer){
@@ -63,13 +60,13 @@ HTMLEntityEditor.prototype.getDOM = function(renderer, dataviewer){
 	var self = this;
 	input.addEventListener("change", function(){
 		var url = this.value;
-		if(url.indexOf("/") == -1){
-			url = "document:" + url;
+		if(url.indexOf("/") == -1 && url.indexOf(":") == -1){
+			url = "doc:" + url;
 		}
 		renderer.set(url);
 	});
 	return input;
 }
 
-RenderingMap.registerViewerForFrameType("HTMLEntityViewer", "Entity Viewer", "entity");
-RenderingMap.registerEditorForFrameType("HTMLEntityEditor", "Entity Selector", "entity");
+RenderingMap.registerViewerForFrameType("HTMLEntityViewer", "Document Viewer", "document");
+RenderingMap.registerEditorForFrameType("HTMLEntityEditor", "Document Selector", "document");
