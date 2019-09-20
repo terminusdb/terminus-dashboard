@@ -2,7 +2,9 @@ const FrameHelper = require('../FrameHelper');
 const PropertyViewer = require('./PropertyViewer');
 const ObjectViewer= require("./ObjectViewer")
 const HTMLStringViewer = require('./viewers/String');
-const HTMLStringEditor = require('./viewers/StringEditor.js');
+const HTMLStringEditor = require('./viewers/StringEditor');
+const HTMLBooleanViewer = require('./viewers/Boolean');
+const HTMLBooleanEditor = require('./viewers/BooleanEditor');
 
 let RenderingMap = {
 	registeredDataViewers: {},
