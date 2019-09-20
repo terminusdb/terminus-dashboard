@@ -147,6 +147,7 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
          searching   : false,
          pageLength  : settings.pageLength,
          lengthMenu  : [5, 10, 25, 50, 75, 100],
+         dom         : 'Rlfrtip',
          paging      : true,
          select      : true,
          columnDefs  :[{targets:'_all',className:"truncate"}],
