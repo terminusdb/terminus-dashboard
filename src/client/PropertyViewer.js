@@ -1,3 +1,6 @@
+const FrameHelper = require('../FrameHelper');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
+
 /**
  * Property Viewer
  */
@@ -439,3 +442,5 @@ function HTMLDataViewer(renderer){
 	this.renderer = renderer;
 	this.headerViewer = renderer.getValueHeaderViewer();
 }
+
+module.exports={HTMLPropertyViewer,HTMLPropertyHeaderViewer}

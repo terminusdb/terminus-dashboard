@@ -1,3 +1,9 @@
+const FrameHelper = require('../FrameHelper');
+const ObjectFrame = require('../ObjectFrame');
+const WOQLQuery = require('../query/WOQLQuery');
+//const FrameConfig = require('./FrameConfig');
+const ObjectRenderer = require('./ObjectRenderer');
+
 function TerminusDocumentViewer(ui, action, options){
 	this.ui = ui;
 	this.server = this.ui.server();
@@ -306,4 +312,6 @@ TerminusDocumentViewer.prototype.getDocumentPageControls = function(){
 	})
 	return dpc;
 }
+
+module.exports=TerminusDocumentViewer
 

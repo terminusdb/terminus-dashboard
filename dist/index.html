@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Terminus Javascript SDK</title>
+    <script src="../../woql-client/dist/woql-client.min.js"></script>		
+	<script src="UIconfig.json"></script>
+</head>
+<body>
+	<div class="terminus-client-ui">
+		<!-- 11092019 <div class='terminus-client-header'>
+			<span class="terminus-header-tab terminus-module-head-tab">
+				Terminus Client</span>
+			<span class="terminus-header-tab terminus-module-head-tab">
+				Terminus API Explorer</span>
+			<span class="terminus-header-tab terminus-module-head-tab">
+				<select id="terminus-css-loader">
+					<option value="">No CSS</option>
+					<option value="basic">Basic CSS</option>
+					<option value="theme" selected=selected>Full CSS</option>
+				</select>
+			</span>
+			<span class="terminus-header-tab terminus-plugin-topcorner" id="terminus-plugin-loader">
+			</span>
+		</div> -->
+		<table class="terminus-client-table-layout" style="width: 100%">
+			<tr>
+				<td class='terminus-control-panel terminus-control-panel-table-layout'>
+					<table class="terminus-application-controls terminus-control-panel-layout" style='width: 350px;'>
+						<tr><th class="terminus-logo">
+							 TerminusDB</th></tr>
+						<!-- Sidebar -->
+                        <!--<div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+                            <ul class="list-group">
+                                <a href="#introduction" class="bg-dark list-group-item list-group-item-action"
+                                   onClick="showInstallationBody('introduction')">
+                                    <div class="d-flex w-100 justify-content-start align-items-center">
+                                        <span class="fa fa-info-circle fa-fw mr-3"></span>
+                                        <span class="menu-collapsed">Introduction</span>
+                                    </div>
+                                </a>
+                                <a href="#quickstart_submenu" data-toggle="collapse" aria-expanded="false"
+                                   class="bg-dark list-group-item list-group-item-action flex-column align-items-start"
+                                   onClick="showInstallationBody('quickStart')">
+                                    <div class="d-flex w-100 justify-content-start align-items-center">
+                                        <span class="fa fa-download fa-fw mr-3"></span>
+                                        <span class="menu-collapsed">Quick Start</span>
+                                        <span class="submenu-icon ml-auto"></span>
+                                    </div>
+                                </a>
+
+                            </ul>
+                        </div>-->
+
+						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
+										id = "terminus-client-btn">Client</th></tr>
+						<tr><td class="terminus-application-control terminus-client-body"
+								id="terminus-control-panel" ></td></tr>
+						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
+									  id = "terminus-explorer-btn">Explorer</th></tr>
+						<tr><td class="terminus-application-control terminus-expolrer-body terminus-explorer-hide"
+										id="terminus-explorer"></td></tr>
+					</table>
+				</td>
+				<td class='terminus-main-window terminus-main-window-full-css' style="width: 100%; vertical-align: top;">
+					<div class='terminus-user-messages' id='terminus-user-messages'></div>
+				   	<div class='terminus-main-content' id='terminus-content-viewer'></div>
+				</td>
+			</tr>
+	</table>
+<script type="text/javascript" src="terminus-javascript-sdk.min.js"></script></body>
+</html>

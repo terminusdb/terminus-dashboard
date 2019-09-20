@@ -1,3 +1,11 @@
+const FrameHelper = require('../FrameHelper');
+const WOQLQuery = require('../query/WOQLQuery');
+const WOQLResult = require('../query/WOQLResult');
+const WOQLResultsViewer = require('../query/WOQLResultsViewer');
+const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
+const WOQLGraphBrowserGenerator = require('../query/WOQLGraphBrowserGenerator');
+const TerminusPluginManager = require('../plugins/TerminusPlugin');
+
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;
 	this.options = options;
@@ -146,3 +154,5 @@ TerminusQueryViewer.prototype.getQueryButtonsDOM = function(q, qip){
 TerminusQueryViewer.prototype.getQueryTextAreaDOM = function(q, box){
 	return this.generator.getQueryTextAreaDOM(q, box);
 }
+
+module.exports=TerminusQueryViewer

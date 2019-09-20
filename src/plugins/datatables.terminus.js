@@ -1,3 +1,9 @@
+const FrameHelper = require('../FrameHelper');
+const WOQLQuery = require('../query/WOQLQuery');
+const WOQLResult = require('../query/WOQLResult');
+const WOQLResultsViewer = require('../query/WOQLResultsViewer');
+const UTILS= require('../Utils')
+
 function Datatables(){}
 
 Datatables.prototype.convertToDatatable = function(tab){
@@ -95,10 +101,10 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
 */
 Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageInfo){
     dcb.wquery = new WOQLQuery(ui.client, null);
-    deleteStylizedEditor(ui, pageInfo.qTextDom);
+    UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
     pageInfo.qTextDom.value = query;
-    stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
+    UTILS.stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
     return query;
 }
 
@@ -176,3 +182,5 @@ Datatables.prototype.draw = function(serverside, tab, settings, ui, resultDOM){
         return(this.getDataFromServer(tab, settings, ui, resultDOM));
     else return(this.convertToDatatable(tab));
 }
+
+module.exports=Datatables

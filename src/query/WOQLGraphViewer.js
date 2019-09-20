@@ -797,3 +797,5 @@ WOQLGraphViewer.prototype.getLegendNodeEntry = function(cls) {
 	xp.appendChild(lab);
 	return xp;
 }
+
+module.exports=WOQLGraphViewer;

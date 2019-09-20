@@ -311,3 +311,5 @@ WOQLTimePicker.prototype.getSliderAxisDOM = function(){
 WOQLTimePicker.prototype.Y2Time = function(y){
 	return (new Date(y+ "-12-31T12:00:00.000Z").getTime() / 1000);
 }
+
+module.exports=WOQLTimePicker

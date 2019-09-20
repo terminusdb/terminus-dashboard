@@ -1,3 +1,5 @@
+const FrameHelper = require('../FrameHelper');
+const RenderingMap = require('../RenderingMap');
 
 function HTMLDateHelper(){
 	this.months = ["January", "Februrary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

@@ -8,6 +8,9 @@
  * @param options options json
  * @returns
  */
+const PropertyRenderer = require('./PropertyRenderer');
+const RenderingMap = require('./RenderingMap');
+
 function ObjectRenderer(obj, parent, options){
 	this.objframe = obj;
 	this.parent = parent;
@@ -646,4 +649,6 @@ ObjectRenderer.prototype.extract = function(){
 		//return this.extractLDO(extracts);
 	}
 }
+
+module.exports=ObjectRenderer
 

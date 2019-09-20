@@ -1,3 +1,6 @@
+const FrameHelper = require('../FrameHelper');
+const RenderingMap = require('../RenderingMap');
+
 function HTMLCoordinateViewer(options){
 	this.inputs = [];
 }

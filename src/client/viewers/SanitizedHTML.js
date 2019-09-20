@@ -1,3 +1,4 @@
+const RenderingMap = require('../RenderingMap');
 function SantizedHTMLViewer(options){
 	this.css = ((options && options.css) ? "literal-value " + options.css : "literal-value");
 }

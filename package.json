@@ -4,7 +4,37 @@
   "description": "Terminus DB Javascript Client and SDK",
   "main": "WOQLClient.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf -r dist/*",
+    "test": "npm run lint && npm run coveralls",
+    "test:only": "mocha --require @babel/register --require @babel/preset-env --recursive",
+    "test:watch": "mocha --watch --require @babel/register --require @babel/preset-env --recursive",
+    "test:examples": "node examples/",
+    "cover": "nyc --check-coverage --lines 55 npm run test:only ",
+    "lint": "eslint --fix lib/**",
+    "build": "webpack --mode production",
+    "prepare": "npm run clean && npm run coveralls && npm run build",
+    "coveralls": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*",
+    "coveralls-after": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.14.3",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "nyc": "^13.3.0",
+    "rimraf": "^2.6.2",
+    "uglify-js": "^3.6.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
   },
   "repository": {
     "type": "git",
