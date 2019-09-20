@@ -586,3 +586,7 @@ FramePattern.prototype.getRendererType = function(renderer){
 }
 
 module.exports=RenderingMap
+
+RenderingMap.registerViewerForTypes("HTMLBooleanViewer", "Checkbox Viewer", ["xsd:boolean"]);
+RenderingMap.registerEditorForTypes("HTMLBooleanEditor", "Checkbox Editor", ["xsd:boolean"]);
+

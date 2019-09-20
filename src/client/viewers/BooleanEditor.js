@@ -22,6 +22,5 @@ HTMLBooleanEditor.prototype.getDOM = function(renderer, dataviewer){
 	return input;
 }
 
-RenderingMap.registerEditorForTypes("HTMLBooleanEditor", "Checkbox Editor", ["xsd:boolean"]);
 module.exports={HTMLBooleanEditor}
 

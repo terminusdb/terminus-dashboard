@@ -1,4 +1,4 @@
-const RenderingMap = require('../RenderingMap');
+const x = require('../RenderingMap');
 
 function HTMLBooleanViewer(options){
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
@@ -14,8 +14,6 @@ HTMLBooleanViewer.prototype.getDOM = function(renderer, dataviewer){
 	}
 	return input;
 }
-
-RenderingMap.registerViewerForTypes("HTMLBooleanViewer", "Checkbox Viewer", ["xsd:boolean"]);
 
 module.exports={HTMLBooleanViewer}
 
