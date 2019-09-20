@@ -1877,3 +1877,25 @@ div.dataTables_info, div.dataTables_paginate {
 	color: #fff;
 	border-bottom: 1px solid rgba(0,0,0,.125);
 }
+
+.terminus-doc-btn-group button {
+	background-color: #00C08B;
+  	border: 1px solid green;
+  	color: #002856;
+  	padding: 10px 24px;
+  	font-weight: 900;
+  	cursor: pointer;
+  	float: right;
+	margin-bottom: 10px;
+}
+
+
+.terminus-doc-btn-group button:hover,  .terminus-doc-btn-selected{
+  background-color: #002856 !important;
+  color: #fff !important;
+}
+
+
+.terminus-doc-btn-gp-align{
+	margin-right: 10px;
+}
