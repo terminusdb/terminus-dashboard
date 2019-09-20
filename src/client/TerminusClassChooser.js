@@ -1,6 +1,8 @@
 /*
  * Utility class which runs a query against the schema and presents the returned classes as a drop-down / class filter list
  */
+const FrameHelper = require('../FrameHelper');
+const WOQLQuery = require('../query/WOQLQuery');
 
 TerminusClassChooser = function(ui, filter, chosen){
 	this.ui = ui;
@@ -87,3 +89,5 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 	}
 	return choices;
 }
+
+module.exports=TerminusClassChooser

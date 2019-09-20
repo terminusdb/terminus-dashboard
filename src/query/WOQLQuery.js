@@ -1,3 +1,6 @@
+const FrameHelper = require('../FrameHelper');
+const WOQLResult = require('./WOQLResult');
+
 function WOQLQuery(client, options){
 	this.client = client;
 	this.options = options;
@@ -231,3 +234,5 @@ WOQLQuery.prototype.getClassesQuery = function(){
 	woql += "))";
 	return woql;
 }
+
+module.exports=WOQLQuery

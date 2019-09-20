@@ -5,6 +5,8 @@
  * TerminusServerViewer is a window that displays server actions and server screens
  *
  */
+ const Datatables = require('../plugins/datatables.terminus');
+ const UTILS =require('../Utils')
  function TerminusServerController(ui){
 	 this.ui = ui;
  }
@@ -28,7 +30,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
             a.addEventListener("click", function(){
-                removeSelectedNavClass("terminus-selected");
+                UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
                 self.ui.showLoadURLPage();
             })
@@ -45,7 +47,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
             a.addEventListener("click", function(){
-                removeSelectedNavClass("terminus-selected");
+                UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
                 if(self.ui.db()){
                     //self.ui.clearDB();
@@ -64,7 +66,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
             a.addEventListener("click", function(){
-                removeSelectedNavClass("terminus-selected");
+                UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
                 if(self.ui.db()){
                     //self.ui.clearDB();
@@ -276,3 +278,5 @@ TerminusServerViewer.prototype.deleteDBPermitted = function(dbid){
 	if(this.ui.client.connection.capabilitiesPermit("delete_database", dbid)) return true;
 	return false;
 }
+
+module.exports = {TerminusServerViewer,TerminusServerController}

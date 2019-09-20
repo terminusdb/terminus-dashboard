@@ -1,3 +1,5 @@
+const FrameHelper = require('../FrameHelper');
+const TerminusPluginManager = require('../plugins/TerminusPlugin');
 
 let HTMLFrameHelper = {};
 
@@ -201,3 +203,5 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 	infoDOM.appendChild(lval);
 	return infoDOM;
 }
+
+module.exports=HTMLFrameHelper

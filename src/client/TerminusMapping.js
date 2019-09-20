@@ -72,3 +72,5 @@ TerminusMappingViewer.prototype.getFormField = function(holder, label){
 	holder.appendChild(ff);
 	return source;
 }
+
+module.exports=TerminusMappingViewer

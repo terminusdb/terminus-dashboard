@@ -1,3 +1,8 @@
+const FrameHelper = require('../FrameHelper');
+const TerminusClassChooser = require('../client/TerminusClassChooser');
+const TerminusPropertyChooser = require('../client/TerminusPropertyChooser');
+const TerminusDocumentChooser = require('../client/TerminusDocumentChooser');
+const UTILS= require('../Utils')
 function WOQLTextboxGenerator(tq, qman, ui){
 	this.query = tq;
 	this.wquery = qman.wquery;
@@ -73,7 +78,7 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
 	if(q) qip.value = q;
 	qbox.appendChild(qip);
-	stylizeEditor(this.ui, qip, 'query', 'javascript');
+	UTILS.stylizeEditor(this.ui, qip, 'query', 'javascript');
 	var self = this;
 	var qbut = document.createElement("button");
 	qbut.setAttribute("class", "terminus-control-button terminus-query-btn")
@@ -115,9 +120,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
 	nqbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
 	nqbut.addEventListener("click", function(){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Classes');
 			self.query(qip.value, self.datatable);
@@ -129,11 +134,11 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	aqbut.appendChild(document.createTextNode("Show Document Classes"));
 	aqbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
 	aqbut.addEventListener("click", function(){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'")
 														+ ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")",
 														self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Classes');
 			self.query(qip.value, self.datatable);
@@ -146,9 +151,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	ebut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
 	var self = this;
 	ebut.addEventListener("click", function(){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getElementMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Schema_Elements');
 			self.query(qip.value, self.datatable);
@@ -159,9 +164,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	dbut.appendChild(document.createTextNode("Show All Documents"));
 	dbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
 	dbut.addEventListener("click", function(){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Documents');
 			self.query(qip.value, self.datatable);
@@ -172,9 +177,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	pbut.appendChild(document.createTextNode("Show All Data"));
 	pbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
 	pbut.addEventListener("click", function(){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Data');
 			self.query(qip.value, self.datatable);
@@ -186,9 +191,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	prbut.appendChild(document.createTextNode("Show All Properties"));
 	prbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
 	prbut.addEventListener("click", function(){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Properties');
 			self.query(qip.value, self.datatable);
@@ -204,9 +209,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	var self = this;
 	termcc.change = function(new_class){
 		if(new_class){
-			deleteStylizedEditor(self.ui, qip);
+			UTILS.deleteStylizedEditor(self.ui, qip);
 			qip.value = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
-			stylizeEditor(self.ui, qip, 'query', 'javascript');
+			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Data_Class');
 				self.datatable.chosenValue = new_class; // set chosen val from drop down
@@ -222,9 +227,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	var self = this;
 	termpc.change = function(new_property){
 		if(new_property){
-			deleteStylizedEditor(self.ui, qip);
+			UTILS.deleteStylizedEditor(self.ui, qip);
 			qip.value = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
-			stylizeEditor(self.ui, qip, 'query', 'javascript');
+			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Property_Class');
 				self.datatable.chosenValue = new_property; // set chosen val from drop down
@@ -240,9 +245,9 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	var pdom = termpc.getAsDOM();
 	var docch = new TerminusDocumentChooser(this.ui);
 	docch.change = function(val){
-		deleteStylizedEditor(self.ui, qip);
+		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
-		stylizeEditor(self.ui, qip, 'query', 'javascript');
+		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Info_by_Id');
 			self.datatable.chosenValue = val;
@@ -287,3 +292,5 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 
 	return qbox;
 }
+
+module.exports=WOQLTextboxGenerator

@@ -1,6 +1,9 @@
 /**
  * Draws the property as header and body components
  */
+const IDParser = require('../FrameHelper');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
+
 HTMLDataViewer.prototype.render = function(){
 	if(this.valDOM){
 		var nvalDOM = this.getValueDOM();
@@ -299,3 +302,5 @@ JSONObjectViewer.prototype.render = function(){
 JSONObjectViewer.prototype.redraw = function(){
 	alert('redraw json tbd');
 }
+
+module.exports={HTMLDataViewer,HTMLDataHeaderViewer,JSONObjectViewer}

@@ -2,7 +2,6 @@ const FrameHelper = require('../FrameHelper');
 const WOQLQuery = require('../query/WOQLQuery');
 const WOQLResult = require('../query/WOQLResult');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
-const UTILS= require('../Utils')
 
 function Datatables(){}
 
@@ -101,10 +100,10 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
 */
 Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageInfo){
     dcb.wquery = new WOQLQuery(ui.client, null);
-    UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
+    deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
     pageInfo.qTextDom.value = query;
-    UTILS.stylizeEditor(ui, pageInfo.qTextDom);
+    stylizeEditor(ui, pageInfo.qTextDom);
     return query;
 }
 

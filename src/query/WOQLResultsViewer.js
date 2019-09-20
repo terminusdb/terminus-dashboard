@@ -1,3 +1,7 @@
+const WOQLResult = require('./WOQLResult');
+const TerminusPluginManager = require('../plugins/TerminusPlugin');
+const Datatables = require('../plugins/datatables.terminus');
+
 function WOQLResultsViewer(ui, wresult, options, settings){
 	this.ui = ui;
 	this.result = wresult;
@@ -83,3 +87,6 @@ WOQLResultsViewer.prototype.getTable = function(bindings){
 	tab.appendChild(tbody);
 	return tab;
 }
+
+
+module.exports=WOQLResultsViewer

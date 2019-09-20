@@ -1,3 +1,8 @@
+const FrameHelper = require('../FrameHelper');
+const ObjectRenderer = require('./ObjectRenderer');
+const ValueRenderer = require('./ValueRenderer');
+const RenderingMap = require('./RenderingMap');
+
 function PropertyRenderer(prop, parent, options){
 	/*
 	if(options && options.features){
@@ -596,4 +601,6 @@ PropertyRenderer.prototype.showFeature = function(which){
 	var fets = this.getFeaturesForFacet(this.facet);
 	return (fets.indexOf(which) != -1);
 }
+
+module.exports=PropertyRenderer
 

@@ -430,3 +430,5 @@ FrameHelper.loadDynamicCSS = function(cssid, src, callback) {
 	}
 	if (existingScript && callback) callback(cssid);
 };
+
+module.exports=FrameHelper

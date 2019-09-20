@@ -1,3 +1,6 @@
+const FrameHelper = require('../FrameHelper');
+const RenderingMap = require('../RenderingMap');
+
 function HTMLEntityViewer(options){}
 HTMLEntityViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();

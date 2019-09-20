@@ -1,3 +1,5 @@
+const FrameHelper = require('../FrameHelper');
+const RenderingMap = require('../RenderingMap');
 function HTMLNumberViewer(options){
 	this.commas = (options && options.commas ? options.commas : true);
 }

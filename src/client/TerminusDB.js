@@ -2,6 +2,13 @@
  * User Interface elements dealing with database level functions - view, delete, create, db
  * view document etc
  */
+const FrameHelper = require('../FrameHelper');
+const WOQLResultsViewer = require('../query/WOQLResultsViewer');
+const TerminusClassChooser = require('./TerminusClassChooser');
+const TerminusDocumentChooser = require('./TerminusDocumentChooser');
+const WOQLQuery=require('../query/WOQLQuery')
+const UTILS=require('../Utils')
+
 function TerminusDBController(ui){
 	 this.ui = ui;
 }
@@ -37,7 +44,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 			var item = this.getControlHTML("Database Home", "fa-home");
 			item.classList.add("terminus-selected");
 		    item.addEventListener("click", function(){
-				removeSelectedNavClass("terminus-selected");
+				UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
 				self.ui.showDBMainPage();
 			 });
@@ -51,7 +58,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		if(this.ui.showControl("woql_select")){
 			var item = this.getControlHTML("Query", "fa-search");
 		    item.addEventListener("click", function(){
-				removeSelectedNavClass("terminus-selected");
+				UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
 				self.ui.showQueryPage();
 			});
@@ -60,7 +67,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		if(this.ui.showControl("woql_update")){
 			var item = this.getControlHTML("Mapping", "fa-file-import");
 	        item.addEventListener("click", function(){
-				removeSelectedNavClass("terminus-selected");
+				UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
 				self.ui.showMappingPage();
 			})
@@ -69,7 +76,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		if(this.ui.showControl("get_schema")){
 			var item = this.getControlHTML("Schema", "fa-cog");
 	        item.addEventListener("click", function(){
-				removeSelectedNavClass("terminus-selected");
+				UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
 				self.ui.showSchemaPage();
 			})
@@ -276,9 +283,9 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	sth.appendChild(scd);
 	banner.appendChild(sth);
 	//pd.appendChild(sth);
-	pd.appendChild(getHeaderDom('Summary'));
+	pd.appendChild(UTILS.getHeaderDom('Summary'));
 	this.getDBSummary(pd);
-	pd.appendChild(pd.appendChild(getHeaderDom('List of Documents')));
+	pd.appendChild(pd.appendChild(UTILS.getHeaderDom('List of Documents')));
 	this.getClassesDOM(pd);
 	return pd;
 }
@@ -469,3 +476,7 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	mfd.appendChild(butfield);
 	return scd;
 }
+
+module.exports={TerminusDBViewer:TerminusDBViewer,
+	            TerminusDBController:TerminusDBController,
+	            TerminusDBCreator:TerminusDBCreator}

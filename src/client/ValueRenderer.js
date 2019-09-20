@@ -1,3 +1,6 @@
+const HTMLPropertyViewer = require('./PropertyViewer');
+const RenderingMap = require('./RenderingMap');
+
 function ValueRenderer(dataframe, index, parent, options){
 	this.frame = dataframe;
 	this.index = index;
@@ -340,3 +343,5 @@ ValueRenderer.prototype.redraw = function(){
 	this.viewer.clear();
 	this.render(this.viewer);
 }
+
+module.exports=ValueRenderer

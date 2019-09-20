@@ -1,3 +1,6 @@
+const WOQLQuery = require('./WOQLQuery');
+const WOQLTimePicker = require('./WOQLTimePicker');
+
 function WOQLGraphBrowserGenerator(tq, qman, ui){
 	this.query = tq;
 	this.wquery = qman.wquery;
@@ -658,4 +661,6 @@ DCOGBrowser.prototype.setUpIPGSpecials = function(){
 		i++;
 	}
 }
+
+module.exports=WOQLGraphBrowserGenerator
 

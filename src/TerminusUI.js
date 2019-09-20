@@ -5,6 +5,17 @@
  *
  * @param opts - options array
  */
+const FrameHelper = require('./FrameHelper');
+const ApiExplorer = require('./ApiExplorer');
+const TerminusDocumentViewer = require('./client/TerminusDocument');
+const TerminusDBsdk = require('./client/TerminusDB');
+const TerminusQueryViewer = require('./client/TerminusQuery');
+const TerminusMappingViewer = require('./client/TerminusMapping');
+const TerminusSchemaViewer = require('./client/TerminusSchema');
+const TerminusServersdk = require('./client/TerminusServer');
+const TerminusURLLoader = require('./client/TerminusURL');
+const TerminusPluginManager = require('./plugins/TerminusPlugin');
+
 function TerminusUI(opts){
 	this.client = new TerminusDB.WOQLClient();
 	this.controls = [];
@@ -257,7 +268,7 @@ TerminusUI.prototype.refreshDBList = function(){
 }
 
 TerminusUI.prototype.showServerMainPage = function(){
-	this.viewer = new TerminusServerViewer(this);
+	this.viewer = new TerminusServersdk.TerminusServerViewer(this);
 	this.redrawMainPage();
 }
 
@@ -267,12 +278,12 @@ TerminusUI.prototype.showLoadURLPage = function(val){
 }
 
 TerminusUI.prototype.showDBMainPage = function(){
-	this.viewer = new TerminusDBViewer(this);
+	this.viewer = new TerminusDBsdk.TerminusDBViewer(this);
 	this.redrawMainPage();
 }
 
 TerminusUI.prototype.showCreateDBPage = function(){
-	this.viewer = new TerminusDBCreator(this);
+	this.viewer = new TerminusDBsdk.TerminusDBCreator(this);
 	this.redrawMainPage();
 }
 
@@ -433,12 +444,12 @@ TerminusUI.prototype.drawExplorer = function(){
 
 TerminusUI.prototype.loadControls = function(){
 	if(this.showControl('server')){
-		var sc = new TerminusServerController(this);
+		var sc = new TerminusServersdk.TerminusServerController(this);
 		if(sc) {
 			this.controls.push(sc);
 		}
 		if(this.db() && this.showControl("db")){
-			var sc = new TerminusDBController(this);
+			var sc = new TerminusDBsdk.TerminusDBController(this);
 			if(sc) this.controls.push(sc);
 		}
 	}
@@ -541,3 +552,5 @@ TerminusUI.prototype.getDocCreatorOptions = function(){
 TerminusUI.prototype.getClassFrameOptions = function(){
 	return this.viewdoc_options;
 }
+
+module.exports=TerminusUI
