@@ -10,6 +10,7 @@
  */
 const PropertyRenderer = require('./PropertyRenderer');
 const RenderingMap = require('./RenderingMap');
+const FrameHelper = require('../FrameHelper');
 
 function ObjectRenderer(obj, parent, options){
 	this.objframe = obj;

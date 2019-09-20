@@ -1,5 +1,8 @@
 const HTMLPropertyViewer = require('./PropertyViewer');
 const RenderingMap = require('./RenderingMap');
+const HTMLDataViewer = require('./DataViewer');
+const HTMLStringViewer = require('./viewers/String');
+
 
 function ValueRenderer(dataframe, index, parent, options){
 	this.frame = dataframe;
@@ -256,7 +259,7 @@ ValueRenderer.prototype.clone = function(){
 }
 
 ValueRenderer.prototype.getViewerForValue = function(){
-	return new HTMLDataViewer(this);
+	return new HTMLDataViewer.HTMLDataViewer(this);
 }
 
 ValueRenderer.prototype.getFeaturesForFacet = function(facet){
@@ -303,7 +306,7 @@ ValueRenderer.prototype.extract = function(){
 } 
 
 ValueRenderer.prototype.getValueHeaderViewer = function(){
-	return new HTMLDataHeaderViewer();
+	return new HTMLDataViewer.HTMLDataHeaderViewer();
 }
 
 ValueRenderer.prototype.getDataValueViewer = function(){

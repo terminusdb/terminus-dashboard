@@ -1,8 +1,14 @@
 /**
  * Draws the property as header and body components
  */
-const IDParser = require('../FrameHelper');
+const FrameHelper = require('../FrameHelper');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
+const HTMLStringViewer = require('./viewers/String');
+
+function HTMLDataViewer(renderer){
+	this.renderer = renderer;
+	this.headerViewer = renderer.getValueHeaderViewer();
+}
 
 HTMLDataViewer.prototype.render = function(){
 	if(this.valDOM){

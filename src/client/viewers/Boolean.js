@@ -39,3 +39,4 @@ HTMLBooleanEditor.prototype.getDOM = function(renderer, dataviewer){
 
 RenderingMap.registerViewerForTypes("HTMLBooleanViewer", "Checkbox Viewer", ["xsd:boolean"]);
 RenderingMap.registerEditorForTypes("HTMLBooleanEditor", "Checkbox Editor", ["xsd:boolean"]);
+

@@ -2,6 +2,7 @@ const FrameHelper = require('../FrameHelper');
 const ObjectRenderer = require('./ObjectRenderer');
 const ValueRenderer = require('./ValueRenderer');
 const RenderingMap = require('./RenderingMap');
+const PropertyViewer = require('./PropertyViewer');
 
 function PropertyRenderer(prop, parent, options){
 	/*
@@ -558,7 +559,7 @@ PropertyRenderer.prototype.getViewerForProperty = function(ptype){
 }
 
 PropertyRenderer.prototype.getPropertyHeaderViewer = function(){
-	return new HTMLPropertyHeaderViewer();
+	return new PropertyViewer.HTMLPropertyHeaderViewer();
 }
 
 PropertyRenderer.prototype.getSummary = function(){
