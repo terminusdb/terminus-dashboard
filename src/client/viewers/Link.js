@@ -1,3 +1,4 @@
+const RenderingMap = require('../RenderingMap');
 function HTMLLinkViewer(options){
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
 }

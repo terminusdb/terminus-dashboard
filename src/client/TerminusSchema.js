@@ -2,6 +2,10 @@
  * Draws the screen for viewing and updating the schema
  * and provides wrappers around the client's schema API
  */
+const FrameHelper = require('../FrameHelper');
+const TerminusClassChooser = require('./TerminusClassChooser');
+const TerminusDocumentViewer = require('./TerminusDocument');
+const UTILS=require('../Utils')
 
 function TerminusSchemaViewer(ui){
 	this.ui = ui;
@@ -341,7 +345,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	}
 	this.schema_edit_dom = ipval;
 	np.appendChild(ipval);
-	stylizeEditor(this.ui, ipval, 'schema', 'turtle');
+	UTILS.stylizeEditor(this.ui, ipval, 'schema', 'turtle');
 	return np;
 }
 
@@ -362,7 +366,7 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 	else if(typeof (this.schema) == "object") {
 		ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
 	}
-	var cm = stylizeCodeDisplay(this.ui, ipval, np, 'turtle');
+	var cm = UTILS.stylizeCodeDisplay(this.ui, ipval, np, 'turtle');
 	if(!cm) np.appendChild(ipval);
 	return np;
 }
@@ -423,3 +427,5 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	}
 	return scd;
 }
+
+module.exports=TerminusSchemaViewer

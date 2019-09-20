@@ -56,3 +56,6 @@ TerminusURLLoader.prototype.getAsDOM = function(){
 	mfd.appendChild(loadbuts);
 	return scd;
 }
+
+
+module.exports=TerminusURLLoader

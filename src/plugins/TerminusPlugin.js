@@ -1,3 +1,5 @@
+const FrameHelper = require('../FrameHelper');
+
 function TerminusPluginManager(){
 	this.preloaded = [];
 	this.loaded = [];
@@ -467,3 +469,5 @@ TerminusPluginManager.prototype.showPlugins = function(a, ui){
 		a.appendChild(this.getPluginDOM(pid, this.plugins[pid], ui));
 	}
 }
+
+module.exports=TerminusPluginManager

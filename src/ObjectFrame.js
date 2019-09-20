@@ -11,7 +11,7 @@
  * @param parent parent object
  * @returns
  */
-
+const FrameHelper = require('./FrameHelper');
 
 function ObjectFrame(cls, dataframes, classframes, parent, parentframe) {
 	//the class of the frame - mandatory 
@@ -886,3 +886,5 @@ Restriction.prototype.loadRestriction = function(restriction){
 		}
 	}
 }
+
+module.exports=ObjectFrame

@@ -1,3 +1,4 @@
+
 function GoogleMapHelper(options){
 	this.polygon = false;
 	this.polyline = false;
@@ -173,7 +174,7 @@ function HTMLGoogleMapViewer(options){}
 
 HTMLGoogleMapViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusDB_SDK.FrameHelper.getShorthand(renderer.frame.range);
 	var map = document.createElement("div");
 	map.setAttribute('class', "gmap-window gmap-viewer");
 	var self = this;
@@ -186,7 +187,7 @@ function HTMLGoogleMapEditor(options){}
 
 HTMLGoogleMapEditor.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusDB_SDK.FrameHelper.getShorthand(renderer.frame.range);
 	var mapcontainer = document.createElement("div");
 	mapcontainer.setAttribute('class', "gmap-window gmap-editor");
 	var self = this;
@@ -217,5 +218,5 @@ HTMLGoogleMapEditor.prototype.getDOM = function(renderer, dataviewer){
     return mapcontainer;
 }
 
-RenderingMap.registerEditorForTypes("HTMLGoogleMapEditor", "Google Map Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
-RenderingMap.registerViewerForTypes("HTMLGoogleMapViewer", "Google Map Viewer", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
+TerminusDB_SDK.RenderingMap.registerEditorForTypes("HTMLGoogleMapEditor", "Google Map Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
+TerminusDB_SDK.RenderingMap.registerViewerForTypes("HTMLGoogleMapViewer", "Google Map Viewer", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);

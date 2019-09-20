@@ -1,3 +1,7 @@
+const FrameHelper = require('../FrameHelper');
+const HTMLPropertyViewer = require('./PropertyViewer');
+const ObjectViewer= require("./ObjectViewer")
+
 let RenderingMap = {
 	registeredDataViewers: {},
 	registeredDataEditors: {},	
@@ -242,7 +246,7 @@ RenderingMap.getViewerForObject = function(target, renderer){
 	if(target == "json"){
 		return new JSONObjectViewer(renderer);
 	}
-	return new HTMLObjectViewer(renderer);
+	return new ObjectViewer.HTMLObjectViewer(renderer);
 }
 
 RenderingMap.getEditorForObject = RenderingMap.getViewerForObject;
@@ -313,7 +317,7 @@ RenderingMap.decorateRenderer = function(options, renderer){
 	}
 	if(compiled_options && typeof compiled_options.header != "undefined"){}
 	else {
-		renderer.header_viewer = new HTMLObjectHeaderViewer();
+		renderer.header_viewer = new ObjectViewer.HTMLObjectHeaderViewer();
 	}
 	if(compiled_options && typeof compiled_options.filter != "undefined"){}
 	else {}
@@ -576,3 +580,5 @@ FramePattern.prototype.getRendererType = function(renderer){
 	console.log(new Error("frame configuration passed non-renderer type: " + renderer.constructor.name));
 	return false;
 }
+
+module.exports=RenderingMap

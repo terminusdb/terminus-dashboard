@@ -1,6 +1,8 @@
 /*
  * Utility Property which runs a query against the schema and presents the returned Propertyes as a drop-down / Property filter list
  */
+const FrameHelper = require('../FrameHelper');
+const WOQLQuery = require('../query/WOQLQuery');
 
 TerminusPropertyChooser = function(ui, filter){
 	this.ui = ui;
@@ -75,3 +77,5 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	}
 	return choices;
 }
+
+module.exports=TerminusPropertyChooser

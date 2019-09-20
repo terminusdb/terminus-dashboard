@@ -1,4 +1,4 @@
-
+const FrameHelper = require('../FrameHelper');
 
 function HTMLStringViewer(options){
 	this.size = ((options && options.size) ? options.size : false);

@@ -1,3 +1,5 @@
+const FrameHelper = require('../FrameHelper');
+const RenderingMap = require('../RenderingMap');
 function HTMLRangeViewer(options){
 	this.commas = (options && options.commas ? options.commas : true);
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");

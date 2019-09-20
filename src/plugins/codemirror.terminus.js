@@ -87,3 +87,5 @@ Codemirror.prototype.colorizePre = function(){
 Codemirror.prototype.jsonldCheck = function(format){
   if(format == 'jsonld') return true;
 }
+
+module.exports=Codemirror

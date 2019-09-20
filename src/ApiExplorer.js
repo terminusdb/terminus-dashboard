@@ -5,6 +5,9 @@
  *
  * @summary Displays a demo and description of api calls from WOQLCLient and what happens under the hood of api calls
  */
+const FrameHelper = require('./FrameHelper');
+const TerminusPluginManager = require('./plugins/TerminusPlugin');
+const UTILS= require('./Utils')
 
  function ApiExplorer(ui){
     this.ui = ui;
@@ -42,7 +45,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
     a.setAttribute('class', 'terminus-selected terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
+        UTILS.removeSelectedNavClass("terminus-selected");
         this.classList.add("terminus-selected");
         self.getApiExplorerDom('connect', viewer);
     })
@@ -58,7 +61,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
     a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
+        UTILS.removeSelectedNavClass("terminus-selected");
         this.classList.add("terminus-selected");
         self.getApiExplorerDom('create', viewer);
     })
@@ -74,7 +77,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
     a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
+        UTILS.removeSelectedNavClass("terminus-selected");
         this.classList.add("terminus-selected");
         self.getApiExplorerDom('schema', viewer);
     })
@@ -90,7 +93,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
     a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
+        UTILS.removeSelectedNavClass("terminus-selected");
         this.classList.add("terminus-selected");
         self.getApiExplorerDom('document', viewer);
     })
@@ -106,7 +109,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
     a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        removeSelectedNavClass("terminus-selected");
+        UTILS.removeSelectedNavClass("terminus-selected");
         this.classList.add("terminus-selected");
         self.getApiExplorerDom('query', viewer);
     })
@@ -150,11 +153,11 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
 
   var msg = 'API Explorer helps to understand api calls in depth.'
               + ' User can perform actions and view what happens in the background.'
-  var al = getInfoAlertDom('info', 'Info: ', msg);
+  var al = UTILS.getInfoAlertDom('info', 'Info: ', msg);
   api.appendChild(al);
 
   // header
-  api.appendChild(getHeaderDom('Api Explorer'));
+  api.appendChild(UTILS.getHeaderDom('Api Explorer'));
 
   // body
   var cont = document.createElement('div');
@@ -189,12 +192,12 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
 } // getApiExplorerDom
 
 ApiExplorer.prototype.setSelectedNavMenu = function(a){
-    removeSelectedNavClass("terminus-selected");
+    UTILS.removeSelectedNavClass("terminus-selected");
     a.classList.add("terminus-selected");
 }
 
 ApiExplorer.prototype.setSelectedSubMenu = function(a){
-    removeSelectedNavClass("terminus-submenu-selected");
+    UTILS.removeSelectedNavClass("terminus-submenu-selected");
     a.classList.add("terminus-submenu-selected");
 }
 
@@ -428,7 +431,7 @@ ApiExplorer.prototype.getConnectExplorer = function(body){
   body.appendChild(b);
 
   // get header Parameter
-  body.appendChild(getHeaderDom('Parameters'));
+  body.appendChild(UTILS.getHeaderDom('Parameters'));
 
   var br = document.createElement('BR');
   body.appendChild(br);
@@ -509,7 +512,7 @@ ApiExplorer.prototype.getServerForm = function(){
     self.client.connect(input.url, input.key)
     .then(function(response){
       FrameHelper.removeChildren(resd);
-      var resultDom = showHttpResult(response, 'connect', resd, self.ui);
+      var resultDom = UTILS.showHttpResult(response, 'connect', resd, self.ui);
     });
   }) // button click
   return form;
@@ -580,7 +583,7 @@ ApiExplorer.prototype.getDatabaseExplorer = function(cont){
   body.appendChild(b);
 
   // get header Parameter
-  body.appendChild(getHeaderDom('Parameters'));
+  body.appendChild(UTILS.getHeaderDom('Parameters'));
 
   var br = document.createElement('BR');
   body.appendChild(br);
@@ -639,7 +642,7 @@ ApiExplorer.prototype.getDBForm = function(mode){
     inpTxtAr.setAttribute('class', 'terminus-input-text');
     inpTxtAr.setAttribute('placeholder', 'Enter document to create database');
     cd.appendChild(inpTxtAr);
-    stylizeEditor(this.ui, inpTxtAr, 'document', 'javascript');
+    UTILS.stylizeEditor(this.ui, inpTxtAr, 'document', 'javascript');
     var icon = document.createElement('i');
     icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
     cd.appendChild(icon);
@@ -682,7 +685,7 @@ ApiExplorer.prototype.getDBForm = function(mode){
       self.client.createDatabase(input.id, input.doc, input.key)
       .then(function(response){
         var currForm = buttonSelf.parentNode;
-        var resultDom = showHttpResult(response, 'create', currForm, self.ui);
+        var resultDom = UTILS.showHttpResult(response, 'create', currForm, self.ui);
       });
     }) // button click
   } // if(mode == 'create')
@@ -693,7 +696,7 @@ ApiExplorer.prototype.getDBForm = function(mode){
       self.client.deleteDatabase(inpId.value, opts)
       .then(function(response){
         var currForm = buttonSelf.parentNode;
-        var resultDom = showHttpResult(response, 'delete', currForm, self.ui);
+        var resultDom = UTILS.showHttpResult(response, 'delete', currForm, self.ui);
       });
     }) // button click
   } // if(mode == 'delete')
@@ -712,7 +715,7 @@ ApiExplorer.prototype.getQueryApiDom = function(action, body){
   body.appendChild(b);
 
   // get header Parameter
-  body.appendChild(getHeaderDom('Parameters'));
+  body.appendChild(UTILS.getHeaderDom('Parameters'));
   var br = document.createElement('BR');
   body.appendChild(br);
 
@@ -759,7 +762,7 @@ ApiExplorer.prototype.getQueryApiDom = function(action, body){
   txtar.setAttribute('class', 'terminus-api-explorer-text-area');
   cd.appendChild(txtar);
   fd.appendChild(cd);
-  stylizeEditor(this.ui, txtar, 'query', 'javascript');
+  UTILS.stylizeEditor(this.ui, txtar, 'query', 'javascript');
   var br = document.createElement('BR');
   fd.appendChild(br);
 
@@ -774,7 +777,7 @@ ApiExplorer.prototype.getQueryApiDom = function(action, body){
     self.client.select(inpId.value, txtar.value, opts)
     .then(function(response){
       var currForm = buttonSelf.parentNode;
-      var resultDom = showHttpResult(response, 'select', currForm, self.ui);
+      var resultDom = UTILS.showHttpResult(response, 'select', currForm, self.ui);
     });
   }) // button click
   fd.appendChild(button);
@@ -864,7 +867,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
       self.client.getClassFrame(input.url, input.docUrl, opts)
       .then(function(response){
           var currForm = buttonSelf.parentNode;
-          var resultDom = showHttpResult(response, 'getClassFrames', currForm, self.ui);
+          var resultDom = UTILS.showHttpResult(response, 'getClassFrames', currForm, self.ui);
       });
     }) // button click
     form.appendChild(button);
@@ -883,7 +886,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
    body.appendChild(b);
 
    // get header Parameter
-   body.appendChild(getHeaderDom('Parameters'));
+   body.appendChild(UTILS.getHeaderDom('Parameters'));
    var br = document.createElement('BR');
    body.appendChild(br);
 
@@ -1066,6 +1069,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var cd = document.createElement('div');
        cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
+
        var inpKey = document.createElement('input');
        inpKey.setAttribute('type', 'text');
        inpKey.setAttribute('id', 'basicinput');
@@ -1202,7 +1206,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var txtar = document.createElement('textarea');
        cd.appendChild(txtar);
        txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-       stylizeEditor(this.ui, txtar, 'document', 'javascript');
+       UTILS.stylizeEditor(this.ui, txtar, 'document', 'javascript');
 
        /*var editor = codeMirrorFormat(txtar, 'javascript', true);
        // refresh load
@@ -1280,7 +1284,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var txtar = document.createElement('textarea');
        cd.appendChild(txtar);
        txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-       stylizeEditor(this.ui, txtar, 'document', 'turtle');
+       UTILS.stylizeEditor(this.ui, txtar, 'document', 'turtle');
 
        body.appendChild(formDoc);
 
@@ -1328,7 +1332,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         self.client.getSchema(schurl, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, 'getSchema', resd, self.ui);
+          var resultDom = UTILS.showHttpResult(response, 'getSchema', resd, self.ui);
         });
       }) // button click
     break;
@@ -1348,7 +1352,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
           gtxtar.innerHTML = response;
           var currForm = buttonSelf.parentNode;
           currForm.appendChild(gtxtar);
-          stylizeEditor(this.ui, txtar, 'schema', 'turtle');
+          UTILS.stylizeEditor(this.ui, txtar, 'schema', 'turtle');
         });
       }) // button click
     break;
@@ -1361,7 +1365,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       self.client.getDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
-        var resultDom = showHttpResult(response, action, resd, self.ui);
+        var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
       });
     }) // button click
     break;
@@ -1373,7 +1377,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       self.client.deleteDocument(dcurl, opts)
       .then(function(response){
         FrameHelper.removeChildren(resd);
-        var resultDom = showHttpResult(response, action, resd, self.ui);
+        var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
       });
     }) // button click
     break;
@@ -1386,7 +1390,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         self.client.createDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, action, resd, self.ui);
+          var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
         });
       }) // button click
     break;
@@ -1401,7 +1405,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         self.client.updateDocument(dcurl, payload, opts)
         .then(function(response){
           FrameHelper.removeChildren(resd);
-          var resultDom = showHttpResult(response, action, resd, self.ui);
+          var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
         });
       }) // button click
     break;
@@ -1434,7 +1438,7 @@ ApiExplorer.prototype.getSignature = function(action){
     var cl = document.createElement('div');
     cl.setAttribute('class', 'terminus-collapsible-content content');
 
-    var sig = getFunctionSignature(action);
+    var sig = UTILS.getFunctionSignature(action);
     var txt = document.createTextNode(sig.spec);
     var pre = document.createElement('pre');
     pre.setAttribute('class', 'terminus-api-signature-pre');
@@ -1453,7 +1457,7 @@ ApiExplorer.prototype.getSignature = function(action){
     api.appendChild(br);
 
     sg.addEventListener('click', function(){
-        tolggleContent(ic, cl);
+        UTILS.tolggleContent(ic, cl);
     });
 
     return api;
@@ -1465,3 +1469,5 @@ function tolggleSignatureContent(content){
         content.style.display = "none";
     else content.style.display = "block";
 }
+
+module.exports=ApiExplorer

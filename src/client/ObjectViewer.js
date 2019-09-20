@@ -1,6 +1,7 @@
 /**
  * Object for producing a HTML view of a given object in a frame
  */
+const HTMLFrameHelper = require('./HTMLFrameHelper');
 function HTMLObjectViewer(renderer){
 	this.renderer = renderer;
 	this.properties = [];
@@ -402,3 +403,5 @@ HTMLObjectHeaderViewer.prototype.getObjectUpdateDOM = function(renderer){
 	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("object", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
+
+module.exports={HTMLObjectViewer,HTMLObjectHeaderViewer}

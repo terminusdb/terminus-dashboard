@@ -1,3 +1,7 @@
+const FrameHelper = require('../../FrameHelper');
+const HTMLFrameHelper = require('../HTMLFrameHelper');
+const RenderingMap = require('../RenderingMap');
+
 function HTMLChoiceViewer(options){};
 
 HTMLChoiceViewer.prototype.getDOM = function(renderer, dataviewer){

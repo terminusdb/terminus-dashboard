@@ -16,3 +16,6 @@ WOQLResult.prototype.hasBindings = function(result){
 	if(result) return (result.bindings && result.bindings.length);
 	else return (this.bindings && this.bindings.length);
 }
+
+
+module.exports=WOQLResult

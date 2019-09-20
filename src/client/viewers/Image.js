@@ -1,3 +1,6 @@
+const FrameHelper = require('../FrameHelper');
+const RenderingMap = require('../RenderingMap');
+
 function HTMLImageViewer(options){
 }
 HTMLImageViewer.prototype.getDOM = function(renderer, dataviewer){
