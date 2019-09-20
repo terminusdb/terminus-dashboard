@@ -220,9 +220,18 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 	var self = this;
 	return this.ui.client.updateSchema(false, text, opts)
 	.then(function(response){
-		self.ui.showBusy("Retrieving updated schema");
-		self.mode = "view";
-		self.loadSchema("Successfully Updated Schema");
+		if(response['terminus:status'] && response['terminus:status'] == "terminus:success"){
+			self.ui.showBusy("Retrieving updated schema");
+			self.mode = "view";
+			self.loadSchema("Successfully Updated Schema");			
+		}
+		else if(response['terminus:status'] && response['terminus:status'] == "terminus:failure"){
+			self.ui.clearBusy();
+			self.ui.showViolations(response['terminus:witnesses'], "schema");
+		}
+		else {
+			throw new Error("Update Schema returned no terminus:status code");
+		}
 	})
 	.catch(function(error){
 		self.ui.clearBusy();

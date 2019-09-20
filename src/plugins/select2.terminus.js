@@ -7,7 +7,6 @@ S2EntityEditor.prototype.getDOM = function(renderer, dataviewer){
 	var ctl = renderer.getController();
 	var d2ch = new TerminusDocumentChooser(ctl.ui, cls, value);
 	d2ch.change = function(val){
-		alert("changed " + val); 
 		renderer.set(val);
 	}
 	d2ch.view = "label";
@@ -15,5 +14,5 @@ S2EntityEditor.prototype.getDOM = function(renderer, dataviewer){
 	return d2dom;
 }
 
-RenderingMap.registerEditorForFrameType("S2EntityEditor", "S2 Autocomplete Selector", "entity");
+RenderingMap.registerEditorForFrameType("S2EntityEditor", "S2 Autocomplete Selector", "document");
 

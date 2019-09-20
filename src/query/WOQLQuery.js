@@ -189,7 +189,7 @@ WOQLQuery.prototype.getInstanceMeta = function(url){
 	var vEl = "t(" + docid + ", rdfs/label, v('InstanceLabel'))";
 	vEl += ", t(" + docid + ", rdf/type, v('InstanceType'))" 
 	var opts = [];
-	opts.push("t(doc/" + docid + ", rdfs/comment, v('InstanceComment'))");
+	opts.push("t(" + docid + ", rdfs/comment, v('InstanceComment'))");
 	opts.push("t(v('InstanceType'), rdfs/label, v('ClassLabel'), schema)");
 	var woql = "select([v('InstanceLabel'), v('InstanceType'), v('InstanceComment'), v('ClassLabel')],(" + vEl;
 	for(var i = 0; i<opts.length; i++){

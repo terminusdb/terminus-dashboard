@@ -641,7 +641,8 @@ ObjectRenderer.prototype.extract = function(){
 		return false;
 	}
 	else {
-		return this.extractJSONLD(extracts);
+		var ext = this.extractJSONLD(extracts);
+		return ext;
 		//return this.extractLDO(extracts);
 	}
 }
