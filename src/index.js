@@ -17,6 +17,7 @@ terminator.draw(pconfig, nlocation);
 cssloader.addEventListener("change", function(){
 	terminator.piman.loadPageCSS(this.value);
 }); */
+
 function showPanel(mode){
 	toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
 }
