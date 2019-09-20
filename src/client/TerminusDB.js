@@ -75,28 +75,33 @@ TerminusDBController.prototype.getAsDOM = function(){
 			})
 	        ul.appendChild(item);
 		}
-		/*var li = document.createElement('li');
-		li.setAttribute("class", "terminus-control-button terminus-change-server-button terminus-doc-li active terminus-pointer");
-		ul.appendChild(li);*/
-		var a = document.createElement('a');
-		a.setAttribute('class', 'terminus-doc terminus-list-group-a terminus-list-group-a-action terminus-nav-width');
-		ul.appendChild(a);
-		var icon = document.createElement('i');
-		icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
-		a.appendChild(icon);
-		var txt = document.createTextNode('Documents');
-		a.appendChild(txt);
-		//li.appendChild(a);
-		var icon = document.createElement('i');
-		if(this.ui.showControl("get_document")){
-			a.appendChild(this.getDocumentChooserDOM());
+		if((this.ui.showControl("get_document") || this.ui.showControl("create_document"))){
+			var item = this.getControlHTML("Document", "fa-book");
+	        item.addEventListener("click", function(){
+				removeSelectedNavClass("terminus-selected");
+                this.classList.add("terminus-selected");
+				self.showDocumentSubMenus();
+			})
+	        ul.appendChild(item);
 		}
-		if(this.ui.showControl("create_document")){
-			a.appendChild(this.getDocumentCreatorDOM());
+		// hidden submenus
+		if(this.ui.showControl("get_document")) {
+			var a = document.createElement('a');
+			a.setAttribute('class', 'terminus-nav-in-focus terminus-hide terminus-get-doc');
+			a.appendChild(self.getDocumentChooserDOM());
+			ul.appendChild(a);
+		}
+		// hidden submenus
+		if(this.ui.showControl("create_document")) {
+			var a = document.createElement('a');
+			a.setAttribute('class', 'terminus-nav-in-focus terminus-hide terminus-create-doc');
+			a.appendChild(self.getDocumentCreatorDOM());
+			ul.appendChild(a);
 		}
 	}
 	return dbc;
 }
+
 
 TerminusDBController.prototype.getControlHTML = function(text, ic, css){
     var self = this;
@@ -108,6 +113,20 @@ TerminusDBController.prototype.getControlHTML = function(text, ic, css){
     var txt = document.createTextNode(text);
     a.appendChild(txt);
     return a;
+}
+
+TerminusDBController.prototype.showDocumentSubMenus = function(){
+	//display submenus on click of documents
+	if(this.ui.showControl("get_document")) {
+		var gd = document.getElementsByClassName('terminus-get-doc');
+		gd[0].classList.remove('terminus-hide');
+		gd[0].classList.add('terminus-display');
+	}
+	if(this.ui.showControl("create_document")) {
+		var cd = document.getElementsByClassName('terminus-create-doc');
+		cd[0].classList.remove('terminus-hide');
+		cd[0].classList.add('terminus-display');
+	}
 }
 
 TerminusDBController.prototype.getDocumentChooserDOM = function(){

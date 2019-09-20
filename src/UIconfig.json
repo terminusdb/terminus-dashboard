@@ -30,7 +30,7 @@ let TerminusConfig = {
 		jqueryui: true,
 		datatables: true,
 		quill: true,
-		select2: false,
+		select2: true,
 		jsoneditor: true,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor
@@ -174,4 +174,3 @@ var FrameConfig = {
 		viewer: "html"
 	}
 };
-
