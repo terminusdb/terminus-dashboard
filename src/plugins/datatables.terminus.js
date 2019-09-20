@@ -13,7 +13,6 @@ Datatables.prototype.convertToDatatable = function(tab){
          lengthMenu: [10, 25, 50, 75, 100],
          paging    : true,
          select    : true,
-         sDom      : 'Rlfrtip',
          columnDefs:[{targets:'_all',className:"truncate"}],
          createdRow: function(row){
                             var td = $(row).find(".truncate");
@@ -148,6 +147,7 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
          searching   : false,
          pageLength  : settings.pageLength,
          lengthMenu  : [5, 10, 25, 50, 75, 100],
+         dom         : 'Rlfrtip',
          paging      : true,
          select      : true,
          columnDefs  :[{targets:'_all',className:"truncate"}],
