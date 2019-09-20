@@ -116,7 +116,7 @@ TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
 		this.pagedom.appendChild(this.getClassFrameDOM());
 	}
 	if(msg){
-		this.ui.showMessage(msg)
+		this.ui.showMessage(msg, msgtype);
 	}
 }
 
@@ -140,6 +140,7 @@ TerminusSchemaViewer.prototype.getSchemaImportActionButtons = function(){
 TerminusSchemaViewer.prototype.getShowSchemaButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "view";
 		self.refreshPage();
 	}
@@ -149,6 +150,7 @@ TerminusSchemaViewer.prototype.getShowSchemaButton = function(){
 TerminusSchemaViewer.prototype.getImportPreviewButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "preview";
 		self.refreshPage();
 	}
@@ -158,6 +160,7 @@ TerminusSchemaViewer.prototype.getImportPreviewButton = function(){
 TerminusSchemaViewer.prototype.getCancelButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "view";
 		self.refreshPage();
 	}
@@ -167,6 +170,7 @@ TerminusSchemaViewer.prototype.getCancelButton = function(){
 TerminusSchemaViewer.prototype.getImportSaveButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		if(typeof self.doImport == "function"){
 			self.doImport();
 		}
@@ -177,6 +181,7 @@ TerminusSchemaViewer.prototype.getImportSaveButton = function(){
 TerminusSchemaViewer.prototype.getSaveButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		var text = self.schema_edit_dom.value;
 		if(typeof(self.schema) == "object"){
 			text = JSON.parse(text);
@@ -198,6 +203,7 @@ TerminusSchemaViewer.prototype.getSchemaEditButton = function(){
 TerminusSchemaViewer.prototype.getImportButton = function(){
 	var self = this;
 	var func = function(){
+		self.ui.clearMessages();
 		self.mode = "import";
 		self.refreshPage();
 	}
@@ -309,7 +315,6 @@ TerminusSchemaViewer.prototype.getClassFrameDOM = function(){
 	var docviewer = new TerminusDocumentViewer(this.ui, "model");
 	docviewer.loadCreateDocument(this.cls);
 	docviewer.page_config = "model";
-
 	np.appendChild(docviewer.getAsDOM());
 	return np;
 }
