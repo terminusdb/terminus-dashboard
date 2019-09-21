@@ -7,7 +7,7 @@
  */
 const FrameHelper = require('./FrameHelper');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
-const UTILS= require('./Utils')
+const UTILS = require('./Utils')
 
  function ApiExplorer(ui){
     this.ui = ui;
@@ -1056,7 +1056,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var schDoc = document.createElement('textarea');
        cd.appendChild(schDoc);
        schDoc.setAttribute('class', 'terminus-api-explorer-text-area');
-       stylizeEditor(this.ui, schDoc, 'schema', 'turtle');
+       UTILS.stylizeEditor(this.ui, schDoc, 'schema', 'turtle');
 
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');

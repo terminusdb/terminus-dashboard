@@ -5,7 +5,8 @@
  *
  * @summary Set of functions used across scripts
  */
-const Codemirror= require('./plugins/codemirror.terminus')
+const Codemirror= require('./plugins/codemirror.terminus');
+const FrameHelper = require('./FrameHelper');
 // function to read Files
 function readFile(file){
   if (window.XMLHttpRequest){
@@ -230,7 +231,7 @@ function getResponse(currForm, action, response, terminator){
   var rd = document.createElement('div');
 
   // get header result
-  rd.appendChild(UTILS.getHeaderDom('Result'));
+  rd.appendChild(getHeaderDom('Result'));
   var br = document.createElement('BR');
   rd.appendChild(br);
 
@@ -261,7 +262,7 @@ function showHttpResult(response, action, currForm, terminator){
     currForm.appendChild(br);
 
     // get header result
-    currForm.appendChild(UTILS.getHeaderDom('HTTP Header'));
+    currForm.appendChild(getHeaderDom('HTTP Header'));
 
     var br = document.createElement('BR');
     currForm.appendChild(br);

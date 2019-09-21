@@ -1,6 +1,10 @@
 const FrameHelper = require('../FrameHelper');
-const HTMLPropertyViewer = require('./PropertyViewer');
+const PropertyViewer = require('./PropertyViewer');
 const ObjectViewer= require("./ObjectViewer")
+const HTMLStringViewer = require('./viewers/String');
+const HTMLStringEditor = require('./viewers/StringEditor');
+const HTMLBooleanViewer = require('./viewers/Boolean');
+const HTMLBooleanEditor = require('./viewers/BooleanEditor');
 
 let RenderingMap = {
 	registeredDataViewers: {},
@@ -70,11 +74,11 @@ let RenderingMap = {
 		var vi = this.renderers[type];
 		options = (options ? options: {});
 		try {
-			var viewer = eval("new " + type + "(" + JSON.stringify(options) + ")");	
+			var viewer = eval("new " + type + "." + type + "(" + JSON.stringify(options) + ")");	
 			return viewer;
 		}
 		catch(e){
-			alert(e.toString());
+			alert("failed on create " + e.toString());
 		}
 	},
 	getAvailablePropertyViewers: function(type, renderer) {
@@ -234,11 +238,11 @@ let RenderingMap = {
 
 
 RenderingMap.getViewerForProperty = function(target, renderer){
-	return new HTMLPropertyViewer(renderer);
+	return new PropertyViewer.HTMLPropertyViewer(renderer);
 }
 
 RenderingMap.getEditorForProperty = function(target, renderer){
-	return new HTMLPropertyViewer(renderer);
+	return new PropertyViewer.HTMLPropertyViewer(renderer);
 }
 
 
@@ -582,3 +586,7 @@ FramePattern.prototype.getRendererType = function(renderer){
 }
 
 module.exports=RenderingMap
+
+RenderingMap.registerViewerForTypes("HTMLBooleanViewer", "Checkbox Viewer", ["xsd:boolean"]);
+RenderingMap.registerEditorForTypes("HTMLBooleanEditor", "Checkbox Editor", ["xsd:boolean"]);
+

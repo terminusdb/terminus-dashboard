@@ -2,6 +2,7 @@
  * Object for producing a HTML view of a given object in a frame
  */
 const HTMLFrameHelper = require('./HTMLFrameHelper');
+const FrameHelper = require('../FrameHelper');
 function HTMLObjectViewer(renderer){
 	this.renderer = renderer;
 	this.properties = [];
