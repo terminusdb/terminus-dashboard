@@ -1,4 +1,3 @@
-const RenderingMap = require('../RenderingMap');
 function SantizedHTMLViewer(options){
 	this.css = ((options && options.css) ? "literal-value " + options.css : "literal-value");
 }
@@ -12,4 +11,4 @@ SantizedHTMLViewer.prototype.getDOM = function(renderer, dataviewer){
 	return input;
 }
 
-RenderingMap.registerViewerForTypes("SantizedHTMLViewer", "Sanitized HTML", ["xsd:string", "xdd:html"]);
+module.exports={SantizedHTMLViewer}

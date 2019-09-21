@@ -1,8 +1,6 @@
-const FrameHelper = require('../FrameHelper');
-const RenderingMap = require('../RenderingMap');
+const FrameHelper = require('../../FrameHelper');
 
-function HTMLImageViewer(options){
-}
+function HTMLImageViewer(options){}
 HTMLImageViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
 	var ty = FrameHelper.getShorthand(renderer.frame.range);
@@ -17,24 +15,6 @@ HTMLImageViewer.prototype.getDOM = function(renderer, dataviewer){
 	return input;
 }
 
-function HTMLImageEditor(options){}
-HTMLImageEditor.prototype.getDOM = function(renderer, dataviewer){
-	var value = renderer.value();
-	var ty = FrameHelper.getShorthand(renderer.frame.range);
-	if(ty == "xsd:base64Binary"){
-		var input = document.createElement("textarea");
-		input.setAttribute('class', "terminus-literal-value terminus-literal-b64image-value");
-		input.value = value;
-		input.addEventListener("change", function(){
-			renderer.set(this.value);
-		});
-		return input;
-	}
-	return false;
-}
-
-RenderingMap.registerViewerForTypes("HTMLImageViewer", "Image Viewer", ["xdd:url", "xsd:anyURI", "xsd:base64Binary"]);
-RenderingMap.registerEditorForTypes("HTMLImageEditor", "Image Editor", ["xsd:base64Binary"]);
-
+module.exports={HTMLImageViewer}
 
 

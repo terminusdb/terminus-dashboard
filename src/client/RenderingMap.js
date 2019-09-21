@@ -5,6 +5,21 @@ const HTMLStringViewer = require('./viewers/String');
 const HTMLStringEditor = require('./viewers/StringEditor');
 const HTMLBooleanViewer = require('./viewers/Boolean');
 const HTMLBooleanEditor = require('./viewers/BooleanEditor');
+const HTMLChoiceViewer = require('./viewers/Choice');
+const HTMLChoiceEditor = require('./viewers/ChoiceEditor');
+const HTMLCoordinateViewer = require('./viewers/Coordinate');
+const HTMLCoordinateEditor = require('./viewers/CoordinateEditor');
+const HTMLDateViewer = require('./viewers/Date');
+const HTMLDateEditor = require('./viewers/DateEditor');
+const HTMLEntityViewer = require('./viewers/Entity');
+const HTMLEntityEditor = require('./viewers/EntityEditor');
+const HTMLImageViewer = require('./viewers/Image');
+const HTMLImageEditor = require('./viewers/ImageEditor');
+const HTMLLinkViewer = require('./viewers/Link');
+const HTMLNumberViewer = require('./viewers/Number');
+const HTMLRangeViewer = require('./viewers/Range');
+const HTMLRangeEditor = require('./viewers/RangeEditor');
+const SantizedHTMLViewer = require('./viewers/SanitizedHTML');
 
 let RenderingMap = {
 	registeredDataViewers: {},
@@ -585,8 +600,31 @@ FramePattern.prototype.getRendererType = function(renderer){
 	return false;
 }
 
-module.exports=RenderingMap
-
 RenderingMap.registerViewerForTypes("HTMLBooleanViewer", "Checkbox Viewer", ["xsd:boolean"]);
 RenderingMap.registerEditorForTypes("HTMLBooleanEditor", "Checkbox Editor", ["xsd:boolean"]);
+RenderingMap.registerViewerForFrameType("HTMLChoiceViewer", "Choice Viewer", "oneOf");
+RenderingMap.registerEditorForFrameType("HTMLChoiceEditor", "Choice Selector", "oneOf");
+RenderingMap.registerViewerForTypes("HTMLCoordinateViewer", "Coordinate Viewer", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
+RenderingMap.registerEditorForTypes("HTMLCoordinateEditor", "Coordinate Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
+RenderingMap.registerViewerForTypes("HTMLDateViewer", "Date Viewer", ["xsd:date", "xsd:dateTime", "xsd:gYear", 
+	"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
+RenderingMap.registerEditorForTypes("HTMLDateEditor", "Date Editor", ["xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear", 
+	"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
+RenderingMap.registerViewerForFrameType("HTMLEntityViewer", "Document Viewer", "document");
+RenderingMap.registerEditorForFrameType("HTMLEntityEditor", "Document Selector", "document");
+RenderingMap.registerViewerForTypes("HTMLImageViewer", "Image Viewer", ["xdd:url", "xsd:anyURI", "xsd:base64Binary"]);
+RenderingMap.registerEditorForTypes("HTMLImageEditor", "Image Editor", ["xsd:base64Binary"]);
+RenderingMap.registerViewerForTypes("HTMLImageViewer", "Image Viewer", ["xdd:url", "xsd:anyURI", "xsd:base64Binary"]);
+RenderingMap.registerEditorForTypes("HTMLImageEditor", "Image Editor", ["xsd:base64Binary"]);
+RenderingMap.registerViewerForTypes("HTMLLinkViewer", "Link Viewer", ["xdd:url", "xsd:anyURI"]);
+RenderingMap.registerViewerForTypes("HTMLNumberViewer", "Number with commas", 
+		["xsd:decimal", "xsd:double", "xsd:float", "xsd:short", "xsd:integer", "xsd:long", 
+			"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger", "xsd:nonPositiveInteger"]);
+RenderingMap.registerViewerForTypes("HTMLRangeViewer", "Range Viewer", ["xdd:integerRange", "xdd:decimalRange"]);
+RenderingMap.registerEditorForTypes("HTMLRangeEditor", "Range Editor", ["xdd:integerRange", "xdd:decimalRange"]);
+RenderingMap.registerViewerForTypes("SantizedHTMLViewer", "Sanitized HTML", ["xsd:string", "xdd:html"]);
+
+
+module.exports=RenderingMap
+
 
