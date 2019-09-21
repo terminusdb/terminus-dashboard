@@ -374,6 +374,17 @@ function checkDocumentSubMenus(terminator){
 	}
 }
 
+function toggleVisibility(el){
+	if(el.classList.contains('terminus-display')){
+		el.classList.remove('terminus-display');
+		el.classList.add('terminus-hide');
+	}
+    else if(el.classList.contains('terminus-hide')){
+        el.classList.remove('terminus-hide');
+		el.classList.add('terminus-display');
+	}
+}
+
 module.exports={tolggleContent,
                removeSelectedNavClass,
                stylizeCodeDisplay,
@@ -383,4 +394,5 @@ module.exports={tolggleContent,
                getHeaderDom,
                getInfoAlertDom,
                getFunctionSignature,
+               toggleVisibility,
                activateSelectedNav}

@@ -279,6 +279,22 @@ body [class^="icon-"], body [class*=" icon-"] {
     user-select: none;
 }
 
+.terminus-q-btn {
+	background-color: #00C08B;
+    border: 1px solid green;
+    color: #002856;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 4px 10px;
+    margin-left: 10px;
+	width: 220px;
+}
+
 .terminus-del-btn{
 	display: inline-block;
 	margin-bottom: 10px;
@@ -304,6 +320,11 @@ body [class^="icon-"], body [class*=" icon-"] {
     padding: 5px;
     margin-left: 4px;
 }
+
+.terminus-doc-btn:hover{
+	border: 1px solid green;
+}
+
 
 
 .terminus-delete-db-button {
@@ -910,12 +931,13 @@ div.terminus-property-frame{
 
 .CodeMirror {
 	border: 2px solid #eee;
-	height: auto;
-	margin: 50px;
-	font-size: 16px;
-	flex: 0 0 76.666667%;
-    max-width: 66.666667%;
-	overflow-wrap: break-word;
+    height: auto;
+    /* margin: 50px; */
+    font-size: 16px;
+    flex: 0 0 56.666667%;
+   /*  max-width: 56.666667%;*/
+    word-wrap: break-word;
+    overflow: hidden;
 }
 
 .cm-s-neo.CodeMirror{
@@ -1693,18 +1715,21 @@ a.terminus-submenu-selected{
 
 /* terminus query button grouping */
 .terminus-query-group-row {
-    display: flex;
+    display: grid;
     flex-wrap: wrap;
     margin-right: -15px;
-    margin-left: -15px;
+    margin-left: 10px;
 	/*background-color: whitesmoke;*/
 }
 
 .terminus-group-box {
 	margin-right: 15px;
 	margin-left: 15px;
-	background-color: #f5f5f5;
-	width: 358px;
+	/*background-color: #f5f5f5; */
+	background-color: #002856;
+	width: 308px;
+    border-radius: .2857rem;
+	text-align: left;
 }
 
 .terminus-group {
@@ -1743,23 +1768,25 @@ a.terminus-submenu-selected{
 	color: #494949 !important;
 	text-decoration: none;
 	background: #ffffff;
-	padding: 20px;
+	padding-top: 5px;
 	border: 2px solid #494949 !important;
 	display: inline-block;
 	transition: all 0.4s ease 0s;margin: 3px;
-	width: 348px;
+	width: 228px;
 }
 
 .terminus-query-text{
 	color: #494949 !important;
-	text-decoration: none;
-	background: #ffffff;
-	padding: 20px;
-	border: 2px solid #494949 !important;
-	display: inline-block;
-	transition: all 0.4s ease 0s;
-	margin: 3px;
-	width: 250px;
+    text-decoration: none;
+    background: #ffffff;
+    /* padding: 20px; */
+    padding: 4px 10px;
+    margin-left: 10px;
+    border: 2px solid #494949 !important;
+    display: inline-block;
+    transition: all 0.4s ease 0s;
+    /* margin: 3px; */
+    width: 200px;
 }
 
 .terminus-query-go-btn {
@@ -1970,10 +1997,22 @@ div.dataTables_info, div.dataTables_paginate {
 }
 
 .terminus-status-layout{
-	background: #27293d;
+	background: #27293d;{
 	border: 0;
     position: relative;
     width: 100%;
     margin-bottom: 30px;
     box-shadow: 0 1px 20px 0 rgba(0,0,0,.1);
+}
+
+.terminus-query-section {
+	border-bottom: 1px solid #002856;
+}
+
+.terminus-query-block-headers{
+	color: #fff;
+}
+
+.terminus-query-inp-layout {
+	display: flex !important;
 }

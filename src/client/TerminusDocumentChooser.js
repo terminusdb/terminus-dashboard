@@ -98,7 +98,7 @@ TerminusDocumentChooser.prototype.getIDDOM = function(){
 	docchooser.appendChild(dcip);
 	if(this.show_button){
 		var dbut = document.createElement("button");
-		dbut.setAttribute("class", "terminus-control-button terminus-query-go-btn");
+		dbut.setAttribute("class", "terminus-control-button terminus-btn");
 		var self = this;
 		dbut.addEventListener("click", function(){
 			if(dcip.value) {

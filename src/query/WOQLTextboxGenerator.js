@@ -27,7 +27,14 @@ WOQLTextboxGenerator.prototype.getQueryButtonGroups = function(qbox){
 }
 
 WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
-	var g = document.createElement('div');
+	var g = document.createElement('button');
+	g.setAttribute('class', 'terminus-pointer ');
+	g.addEventListener('click', function(){
+		for(var i=0; i<this.children.length ; i++){
+			UTILS.toggleVisibility(this.children[i]);
+		}
+	})
+
 	g.setAttribute('class', 'terminus-group-box');
 
 	var cd = document.createElement('div');
@@ -38,14 +45,18 @@ WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	ch.setAttribute('class', 'terminus-group-header');
 	cd.appendChild(ch);
 
-	var h = document.createElement('h3');
-	h.appendChild(document.createTextNode(header));
-	ch.appendChild(h);
+	var d = document.createElement('div');
+	d.setAttribute('class', 'terminus-query-block-headers')
+	d.appendChild(document.createTextNode(header));
+	ch.appendChild(d);
+	ic = document.createElement('i');
+    ic.setAttribute('class', 'terminus-cheveron-float fa fa-chevron-down');
+	d.appendChild(ic);
 
 	var t = document.createElement('h5');
-	t.setAttribute('class', 'terminus-group-sub-title');
+	t.setAttribute('class', 'terminus-group-sub-title terminus-hide');
 	t.appendChild(document.createTextNode(descr));
-	ch.appendChild(t);
+	g.appendChild(t);
 
 	qrow.appendChild(g);
 
@@ -64,8 +75,8 @@ WOQLTextboxGenerator.prototype.setDatatableSettings = function(query){
 }
 
 WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
-	var qbox = document.createElement("div");
-	qbox.setAttribute("class", "terminus-query-textbox-input");
+	var qbox = document.createElement("span");
+	qbox.setAttribute("class", "terminus-query-textbox-input terminus-query-section");
 
 	var eqh = document.createElement("H3");
 	eqh.appendChild(document.createTextNode("Enter Query"));
@@ -105,7 +116,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	//qbuts.appendChild(qbut);
 	qbox.appendChild(qbuts);
 	var qexs = document.createElement("div");
-	qexs.setAttribute("class", "terminus-query-examples terminus-db-list-title ");
+	qexs.setAttribute("class", "terminus-query-examples terminus-db-list-title");
 	var qh = document.createElement("H3");
 	qh.appendChild(document.createTextNode("Load query from examples"));
 	qh.setAttribute('class', 'terminus-full-css-margin-top terminus-module-head');
@@ -119,7 +130,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
-	nqbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
+	nqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	nqbut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
@@ -133,7 +144,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 
 	var aqbut = document.createElement("button");
 	aqbut.appendChild(document.createTextNode("Show Document Classes"));
-	aqbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
+	aqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	aqbut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'")
@@ -149,7 +160,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 
 	var ebut = document.createElement("button");
 	ebut.appendChild(document.createTextNode("Show All Schema Elements"));
-	ebut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
+	ebut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	var self = this;
 	ebut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
@@ -163,7 +174,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	})
 	var dbut = document.createElement("button");
 	dbut.appendChild(document.createTextNode("Show All Documents"));
-	dbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
+	dbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	dbut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
@@ -176,7 +187,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	})
 	var pbut = document.createElement("button");
 	pbut.appendChild(document.createTextNode("Show All Data"));
-	pbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
+	pbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	pbut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
@@ -190,7 +201,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 
 	var prbut = document.createElement("button");
 	prbut.appendChild(document.createTextNode("Show All Properties"));
-	prbut.setAttribute("class", "terminus-control-button terminus-query-btn terminus-query-btn-size");
+	prbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	prbut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		qip.value = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
@@ -264,32 +275,42 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	p.appendChild(d2dom);
 
 	/* class queries */
-	qcGroup.appendChild(ebut);
+	var clGroup = document.createElement('div');
+	clGroup.setAttribute('class', 'terminus-hide ');
+	clGroup.appendChild(ebut);
 	var br = document.createElement('BR');
-	qcGroup.appendChild(br);
-	qcGroup.appendChild(nqbut);
+	clGroup.appendChild(br);
+	clGroup.appendChild(nqbut);
 	var br = document.createElement('BR');
-	qcGroup.appendChild(br);
-	qcGroup.appendChild(aqbut);
+	clGroup.appendChild(br);
+	clGroup.appendChild(aqbut);
 	var br = document.createElement('BR');
-	qcGroup.appendChild(br);
-	qcGroup.appendChild(prbut);
+	clGroup.appendChild(br);
+	clGroup.appendChild(prbut);
 	var br = document.createElement('BR');
-	qcGroup.appendChild(br);
+	clGroup.appendChild(br);
+	qcGroup.appendChild(clGroup);
 
 	qbox.appendChild(qexs);
 
 	/* data queries */
-	qdGroup.appendChild(tcdom);
-	qdGroup.appendChild(pdom);
+	var dtGroup = document.createElement('div');
+	dtGroup.setAttribute('class', 'terminus-hide');
+	dtGroup.appendChild(tcdom);
+	dtGroup.appendChild(pdom);
 	var br = document.createElement('BR');
-	qdGroup.appendChild(br);
-	qdGroup.appendChild(pbut);
+	dtGroup.appendChild(br);
+	dtGroup.appendChild(pbut);
+	qdGroup.appendChild(dtGroup);
+
 
 	/* document queries */
-	qdocGroup.appendChild(docdom);
-	qdocGroup.appendChild(dbut);
-	qdocGroup.appendChild(p);
+	var docGroup = document.createElement('div');
+	docGroup.setAttribute('class', 'terminus-hide');
+	docGroup.appendChild(docdom);
+	docGroup.appendChild(dbut);
+	docGroup.appendChild(p);
+	qdocGroup.appendChild(docGroup);
 
 	return qbox;
 }

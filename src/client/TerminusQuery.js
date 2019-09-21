@@ -116,14 +116,20 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 		qbox.appendChild(this.getQueryCreatorChoiceDOM(q));
 	}
 	this.resultDOM = document.createElement("div");
-	this.resultDOM.setAttribute("class", "terminus-query-results");
-	this.qTextBox = this.getQueryTextAreaDOM(q, qbox);
-	//this.qTextBox.appendChild(this.getQueryTextAreaDOM(q));
-	this.buttonsDOM = document.createElement("div");
+	this.resultDOM.setAttribute("class", "terminus-query-results terminus-query-section");
+
+	var qtHolder = document.createElement('span');
+	qtHolder.setAttribute('style', 'display: flex;');
+
+	this.qTextBox = this.getQueryTextAreaDOM(q, qtHolder);
+	this.buttonsDOM = document.createElement("span");
 	this.buttonsDOM.setAttribute("class", "terminus-query-input");
 	this.buttonsDOM.appendChild(this.getQueryButtonsDOM(q, this.qTextBox));
+
+	qtHolder.appendChild(this.buttonsDOM);
+
+	qbox.appendChild(qtHolder);
 	qbox.appendChild(this.resultDOM);
-	qbox.appendChild(this.buttonsDOM);
 	return qbox;
 }
 
@@ -146,8 +152,6 @@ TerminusQueryViewer.prototype.getQueryCreatorChoiceDOM = function(){
 }
 
 TerminusQueryViewer.prototype.getQueryButtonsDOM = function(q, qip){
-	//input options ...
-	//this.inputDOM.appendChild(this.getQueryCreatorChoiceDOM());
 	return this.generator.getAsDOM(q, qip);
 }
 
