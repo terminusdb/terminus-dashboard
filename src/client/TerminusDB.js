@@ -97,14 +97,15 @@ TerminusDBController.prototype.getAsDOM = function(){
 		// hidden submenus
 		if(this.ui.showControl("get_document")) {
 			var a = document.createElement('a');
-			a.setAttribute('class', 'terminus-nav-in-focus terminus-hide terminus-get-doc');
+			a.setAttribute('class', 'terminus-hide terminus-get-doc');
 			a.appendChild(self.getDocumentChooserDOM());
+			a.classList.add();
 			ul.appendChild(a);
 		}
 		// hidden submenus
 		if(this.ui.showControl("create_document")) {
 			var a = document.createElement('a');
-			a.setAttribute('class', 'terminus-nav-in-focus terminus-hide terminus-create-doc');
+			a.setAttribute('class', 'terminus-hide terminus-create-doc');
 			a.appendChild(self.getDocumentCreatorDOM());
 			ul.appendChild(a);
 		}
@@ -202,19 +203,6 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	scd.appendChild(nbuts);
 	return scd;
 };
-
-TerminusDBController.prototype.getCreateDocumentOfTypeChooser = function(){
-	var termcc = new TerminusClassChooser(this.ui, filter);
-	termcc.empty_choice = "Create Document of Type";
-	var self = this;
-	termcc.change = function(new_class){
-		if(new_class){
-			self.ui.showCreateDocument(new_class);
-			termcc.choice = false;
-		}
-	}
-	return termcc.getAsDOM('terminus-class-select');
-}
 
 TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var self = this;

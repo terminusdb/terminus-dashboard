@@ -183,11 +183,11 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 		var controlsDOM = this.getObjectSummaryDOM(renderer);
 		if(controlsDOM) objDOM.appendChild(controlsDOM);
 	}
-	objDOM.addEventListener('click', function(){
-		if((this.nextSibling.style.display == 'block') || (this.nextSibling.style.display == '')) 
+	/*objDOM.addEventListener('click', function(){
+		if((this.nextSibling.style.display == 'block') || (this.nextSibling.style.display == ''))
 			this.nextSibling.style.display = 'none';
 		else this.nextSibling.style.display = 'block';
-	});
+	});*/
 	return objDOM;
 }
 

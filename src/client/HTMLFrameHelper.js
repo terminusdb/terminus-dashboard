@@ -8,7 +8,7 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 	var dpropDOM = document.createElement("span");
 	dpropDOM.setAttribute("class", "terminus-action-control " + type + "-" + control);
 	var pman = new TerminusPluginManager();
-    if(pman.pluginAvailable("font-awesome")){
+    /*if(pman.pluginAvailable("font-awesome")){
 		var icon = document.createElement('icon');
 		var faic = this.getControlIcon(control);
 		if(disabled){
@@ -23,7 +23,7 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 		}
 		dpropDOM.appendChild(icon);
 	}
-	else{
+	else{*/
 		var button = document.createElement("button");
 		button.appendChild(document.createTextNode(label));
 		if(disabled){
@@ -37,7 +37,7 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 			});
 		}
 		dpropDOM.appendChild(button);
-	}
+	//}
 	return dpropDOM;
 }
 

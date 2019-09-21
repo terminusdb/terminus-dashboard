@@ -157,6 +157,7 @@ body [class^="icon-"], body [class*=" icon-"] {
 .terminus-doc-input-text{
 	width: 160px;
     padding: 6px 4px;
+	/*margin-left: 10px;*/
 }
 .terminus-input-text {
 	width: 100%;
@@ -261,6 +262,7 @@ body [class^="icon-"], body [class*=" icon-"] {
     white-space: nowrap;
     padding: 4px 10px;
     margin-left: 10px;
+	margin-right: 5px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -411,13 +413,15 @@ body [class^="icon-"], body [class*=" icon-"] {
 /* terminus frames */
 div.terminus-object-frame div.terminus-object-header, .terminus-application-header {
 	margin-bottom: 1em;
-	margin-right: 10px;
-	color: white;
+    margin-right: 10px;
+    color: #002856;
+    background-color: #00C08B;
 }
 
 div.terminus-object-frame div.terminus-object-header {
 	margin-top: 1em;
 	padding: 4px;
+	margin-right: 20px;
 }
 
 div.terminus-object-properties {
@@ -433,7 +437,7 @@ div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
 	width: 230px;
-	margin-left: 10px;
+	margin-right: 10px;
 }
 
 div.terminus-object-frame select {
@@ -1845,11 +1849,11 @@ a.terminus-submenu-selected{
 }*/
 
 .terminus-text{
-	/*border: 1px solid green;*/
-	/*margin-left: 100px;*/
-	width: 200px;
-	display: block;
-	text-align: right;
+	/*border: 1px solid green; */
+    /* margin-left: 100px; */
+    width: 300px;
+    display: block;
+    /* text-align: right;
 }
 
 .terminus-property-frame-display{
@@ -2009,4 +2013,9 @@ div.dataTables_info, div.dataTables_paginate {
 .terminus-form-doc-value{
 	width: 220px;
 	padding: 6px 4px;
+}
+
+.terminus-doc-nav {
+	border-left: 4px solid #00C08B;
+	background-color: #0055B8!important;
 }

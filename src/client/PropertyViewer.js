@@ -322,16 +322,16 @@ HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM,
 	var popup = document.createElement('div');
 	popup.setAttribute('class', 'terminus-hide terminus-popup');
 	popup.appendChild(document.createTextNode('blah blah'));
-	sControl.appendChild(popup);
-	sControl.addEventListener('click', function(){
+	//sControl.appendChild(popup);
+	/*sControl.addEventListener('click', function(){
 		if(this.children[0].style.display == 'none') this.children[0].style.display = 'block';
 		else this.children[0].style.display = 'block';
 
-	});
-    settings.appendChild(sControl);
+	});*/
+    //settings.appendChild(sControl);
 	controlsDOM.appendChild(settings);
 	// append action controls to pop up
-	this.getActionControlDOM(popup, renderer);
+	this.getActionControlDOM(controlsDOM, renderer);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
