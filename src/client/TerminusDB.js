@@ -151,7 +151,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	lab.setAttribute("class", "terminus-document-chooser-label terminus-control-label terminus-control-label-padding");
 	//lab.appendChild(document.createTextNode("ID "));
 	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-chooser terminus-doc-input-text");
+	dcip.setAttribute("class", "terminus-form-doc-value terminus-document-chooser terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document ID");
 	var nbut = document.createElement("button");
 	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-doc-btn")
@@ -222,7 +222,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	scd.setAttribute("class", "terminus-document-creator terminus-form-horizontal terminus-control-group terminus-choose-by-id");
 
 	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-value terminus-document-creator terminus-doc-input-text");
+	dcip.setAttribute("class", "terminus-form-doc-value terminus-document-creator terminus-doc-input-text");
 	dcip.setAttribute("placeholder", "Enter Document Type");
 	var nbut = document.createElement("button");
 	var lab = document.createElement("span");

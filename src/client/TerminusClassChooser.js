@@ -27,7 +27,7 @@ TerminusClassChooser.prototype.getAsDOM = function(style){
 	var ccdom = document.createElement("span");
 	ccdom.setAttribute("class", "terminus-class-chooser");
 	var ccsel = document.createElement("select");
-	ccsel.setAttribute("class", style + " terminus-type-select");
+	ccsel.setAttribute("class", style + " terminus-type-select terminus-class-select");
 	// ccsel.setAttribute("class", "terminus-class-select terminus-type-select terminus-query-select");
 	var self = this;
 	ccsel.addEventListener("change", function(){

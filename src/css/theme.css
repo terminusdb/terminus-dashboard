@@ -155,20 +155,8 @@ body [class^="icon-"], body [class*=" icon-"] {
 }
 
 .terminus-doc-input-text{
-  /*padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-	font-size: 16px;
-  box-sizing: border-box;
-	width: 235px;
-	margin-left: 15px*/
-	border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 12px;
-    box-sizing: border-box;
-    width: 170px;
+	width: 160px;
+    padding: 6px 4px;
 }
 .terminus-input-text {
 	width: 100%;
@@ -445,6 +433,7 @@ div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
 	width: 230px;
+	margin-left: 10px;
 }
 
 div.terminus-object-frame select {
@@ -461,7 +450,7 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
-	/*width: 400px;*/
+	width: 400px;
 }
 
 .terminus-headings{
@@ -2015,4 +2004,9 @@ div.dataTables_info, div.dataTables_paginate {
 
 .terminus-query-inp-layout {
 	display: flex !important;
+}
+
+.terminus-form-doc-value{
+	width: 220px;
+	padding: 6px 4px;
 }

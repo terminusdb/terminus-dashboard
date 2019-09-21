@@ -1,7 +1,7 @@
 let TerminusConfig = {
 	controls: [
 		"server", "db", "api_explorer", "change-server", "class_frame",	"import_schema", "create_database",
-		"create_document", "schema_format", "get_document", "get_schema", "update_schema", "woql_select", "woql_update"
+		"create_document", "schema_format", "get_document", "get_schema", "update_schema"
 	],
 	document: {
 		view: {

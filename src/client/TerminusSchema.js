@@ -233,7 +233,7 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 		if(response['terminus:status'] && response['terminus:status'] == "terminus:success"){
 			self.ui.showBusy("Retrieving updated schema");
 			self.mode = "view";
-			self.loadSchema("Successfully Updated Schema");			
+			self.loadSchema("Successfully Updated Schema");
 		}
 		else if(response['terminus:status'] && response['terminus:status'] == "terminus:failure"){
 			self.ui.clearBusy();
@@ -292,7 +292,7 @@ TerminusSchemaViewer.prototype.appendSchema = function(s2){
 
 TerminusSchemaViewer.prototype.getClassFrameChooser = function(){
 	var np = document.createElement("span");
-	np.setAttribute("class", "terminus-classframe-chooser");
+	np.setAttribute("class", "terminus-class frame-chooser");
 	var termcc = new TerminusClassChooser(this.ui);
 	termcc.empty_choice = "View Individual Class Frames";
 	var self = this;

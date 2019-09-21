@@ -298,6 +298,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	dtGroup.setAttribute('class', 'terminus-hide');
 	dtGroup.appendChild(tcdom);
 	dtGroup.appendChild(pdom);
+
 	var br = document.createElement('BR');
 	dtGroup.appendChild(br);
 	dtGroup.appendChild(pbut);
