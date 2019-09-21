@@ -913,6 +913,17 @@ div.terminus-property-frame{
 	height: auto;
 	margin: 50px;
 	font-size: 16px;
+	flex: 0 0 76.666667%;
+    max-width: 66.666667%;
+	overflow-wrap: break-word;
+}
+
+.cm-s-neo.CodeMirror{
+	padding: 15px;
+}
+
+.cm-s-erlang-dark.CodeMirror{
+	padding: 15px;
 }
 
 .terminus-db-info-box {
@@ -1644,6 +1655,11 @@ a.terminus-submenu-selected{
     color: #888888;
 }
 
+.terminus-table-size{
+	flex: 0 0 76.666667%;
+    max-width: 76.666667%;
+}
+
 /* terminus table */
 .terminus-db-size {
 	table-layout: fixed;
@@ -1883,13 +1899,16 @@ div.dataTables_info, div.dataTables_paginate {
   margin-top: 1em;
 }
 
+
 .terminus-expandable {
-  background: #fff;
+  /*background: #fff;*/
   overflow: hidden;
   color: #000;
   /*line-height: 50px;*/
   transition: all .5s ease-in-out;
   transform-origin: left top;
+  flex: 0 0 76.666667%;
+    max-width: 76.666667%;
   /*transform: scaleY(0);*/
  }
 

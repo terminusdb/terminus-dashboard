@@ -72,11 +72,11 @@ WOQLQuery.prototype.getSubclassQueryPattern = function(varname, clsname){
 WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 	limit = limit ? limit : this.default_limit ;
 	start = start ? start : 0;
-	var woql = "limit( " + limit + ", start(" + start + ","
-	var vdoc = "t(v('Document'), rdf/type, v('Type'))";
-	woql += "select([v('Document'), v('Type')],(" + vdoc;
-	woql += ", (v('Type') << (dcog/'Document'))";
-	if(constraint) woql += ", " + constraint;
+	var woql = "limit( " + limit + ",\n\t start(" + start + ","
+	var vdoc = "\n\t\tt(v('Document'), rdf/type, v('Type'))";
+	woql += "\n\t\tselect([v('Document'), v('Type')],(" + vdoc;
+	woql += ", \n\t\t(v('Type') << (dcog/'Document'))";
+	if(constraint) woql += ", \n" + constraint;
 	woql += "))))";
 	return woql;
 }
@@ -84,16 +84,16 @@ WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 	limit = limit ? limit : this.default_limit ;
 	start = start ? start : 0;
-	var woql = "limit( " + limit + ", start(" + start + ","
-	var vdoc = "t(v('Subject'), v('Predicate'), v('Object'))";
-	woql += "select([v('Subject'), v('Predicate'), v('Object')],(" + vdoc;
+	var woql = "limit( " + limit + ", \n\tstart(" + start + ","
+	var vdoc = "\n\t\tt(v('Subject'), v('Predicate'), v('Object'))";
+	woql += "\n\t\tselect([v('Subject'), v('Predicate'), v('Object')],(" + vdoc;
 	if(constraint) woql += ", " + constraint;
 	woql += "))))";
 	return woql;
 }
 
 WOQLQuery.prototype.getPropertyListQuery = function(constraint){
-	var vEl = "t(v('Property'), rdfs/range, v('Range'), schema)";
+	var vEl = "\n\tt(v('Property'), rdfs/range, v('Range'), schema)";
 	var opts = [];
 	opts.push("t(v('Property'), rdf/type, v('Type'), schema)");
 	opts.push("t(v('Property'), rdfs/label, v('Label'), schema)");
@@ -102,7 +102,7 @@ WOQLQuery.prototype.getPropertyListQuery = function(constraint){
 	var woql = "select([v('Property'), v('Label'), v('Comment'), v('Domain'), v('Type'), v('Range')],(" + vEl;
 	if(constraint) woql += ", " + constraint;
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ", \n\topt(" + opts[i] + ")";
 	}
 	woql += "))";
 	return woql;
@@ -112,33 +112,33 @@ WOQLQuery.prototype.getPropertyListQuery = function(constraint){
 WOQLQuery.prototype.getElementMetaDataQuery = function(constraint, limit, start){
 	limit = (limit ? limit : this.default_limit);
 	start = (start ? start : 0);
-	var vEl = "t(v('Element'), rdf/type, v('Type'), schema)";
+	var vEl = "\n\t\tt(v('Element'), rdf/type, v('Type'), schema)";
 	var opts = [];
 	opts.push("t(v('Element'), rdfs/label, v('Label'), schema)");
 	opts.push("t(v('Element'), rdfs/comment, v('Comment'), schema)");
 	opts.push("t(v('Element'), dcog/tag, v('Abstract'), schema)");
 	opts.push("t(v('Element'), rdfs/domain, v('Domain'), schema)");
 	opts.push("t(v('Element'), rdfs/range, v('Range'), schema)");
-	var woql ="limit( " + limit + ", start(" + start + ",";
-	woql += "select([v('Element'), v('Type'), v('Label'), v('Comment'), v('Domain'), v('Range'), v('Abstract')],(" + vEl;
+	var woql ="limit( " + limit + ", \n\tstart(" + start + ",";
+	woql += "\n\t\tselect([v('Element'), v('Type'), v('Label'), v('Comment'), v('Domain'), v('Range'), v('Abstract')],(" + vEl;
 	if(constraint) woql += ", " + constraint;
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ", opt(\n\t\t" + opts[i] + ")";
 	}
 	woql += "))))";
 	return woql;
 }
 
 WOQLQuery.prototype.getClassListMetaDataQuery = function(constraint){
-	var vClass = "t(v('Class'), rdf/type, owl/'Class', schema)";
+	var vClass = "\n\tt(v('Class'), rdf/type, owl/'Class', schema)";
 	var opts = [];
 	opts.push("t(v('Class'), rdfs/label, v('Label'), schema)");
 	opts.push("t(v('Class'), rdfs/comment, v('Comment'), schema)");
 	opts.push("t(v('Class'), dcog/tag, v('Abstract'), schema)");
-	var woql = "select([v('Class'), v('Label'), v('Comment'), v('Abstract')],(" + vClass;
+	var woql = "\nselect([v('Class'), v('Label'), v('Comment'), v('Abstract')],(" + vClass;
 	if(constraint) woql += ", " + constraint;
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ", \t\nopt(" + opts[i] + ")";
 	}
 	woql += "))";
 	return woql;
@@ -147,16 +147,16 @@ WOQLQuery.prototype.getClassListMetaDataQuery = function(constraint){
 WOQLQuery.prototype.getClassMetaDataQuery = function(constraint, limit, start){
 	limit = (limit ? limit : this.default_limit);
 	start = (start ? start : 0);
-	var vClass = "t(v('Class'), rdf/type, owl/'Class', schema)";
+	var vClass = "\n\t\tt(v('Class'), rdf/type, owl/'Class', schema)";
 	var opts = [];
 	opts.push("t(v('Class'), rdfs/label, v('Label'), schema)");
 	opts.push("t(v('Class'), rdfs/comment, v('Comment'), schema)");
 	opts.push("t(v('Class'), dcog/tag, v('Abstract'), schema)");
-	var woql ="limit( " + limit + ", start(" + start + ",";
-	woql += "select([v('Class'), v('Label'), v('Comment'), v('Abstract')],(" + vClass;
+	var woql ="limit( " + limit + ", \n\tstart(" + start + ",";
+	woql += "\n\t\tselect([v('Class'), v('Label'), v('Comment'), v('Abstract')],(" + vClass;
 	if(constraint) woql += ", " + constraint;
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ", \n\t\topt(" + opts[i] + ")";
 	}
 	woql += "))))";
 	return woql;
@@ -166,10 +166,10 @@ WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen, limit, start){
 	limit = (limit ? limit : this.default_limit);
 	start = (start ? start : 0);
 	var gLink = "'"+chosen+"'";//"g/'" + chosen.substring(this.sid.length, chosen.length) + "'";
-	var vEl = "t(v('Document'), rdf/type, " + gLink + ")";
-	var opts = "t(v('Document'),  v('Property'), v('Value'))";
-	var woql = "limit( " + limit + ", start(" + start + ",";
-	woql += "select([v('Document'), v('Property'), v('Value')],(" + vEl + ",";
+	var vEl = "\n\t\tt(v('Document'), rdf/type, " + gLink + ")";
+	var opts = "\n\t\tt(v('Document'),  v('Property'), v('Value'))";
+	var woql = "limit( " + limit + ",\n\t start(" + start + ",";
+	woql += "\n\t\tselect([v('Document'), v('Property'), v('Value')],(" + vEl + ",";
 	woql += opts;
 	woql += "))))";
 	return woql;
@@ -179,27 +179,27 @@ WOQLQuery.prototype.getDataOfChosenPropertyQuery = function(chosen, limit, start
 	limit = (limit ? limit : this.default_limit);
 	start = (start ? start : 0);
 	var gLink = "'"+chosen+"'";//"g/'" + chosen.substring(this.sid.length, chosen.length) + "'";
-	var vdoc = "t(v('Document'), " + gLink + ", v('Value')),";
-	var ldoc = "opt(t(v('Document'), rdfs/label, v('Label')))";
-	var woql = "limit( " + limit + ", start(" + start + ",";
-	woql += "select([v('Document'), v('Label'), v('Value')],(" + vdoc + ldoc;
+	var vdoc = "\n\t\tt(v('Document'), " + gLink + ", v('Value')),";
+	var ldoc = "\n\t\topt(t(v('Document'), rdfs/label, v('Label')))";
+	var woql = "limit( " + limit + ",\n\t start(" + start + ",";
+	woql += "\n\t\tselect([v('Document'), v('Label'), v('Value')],(" + vdoc + ldoc;
 	woql += "))))";
 	return woql;
 }
 
 WOQLQuery.prototype.getInstanceMeta = function(url){
 	var docid = "'" + url + "'";
-	var vEl = "t(" + docid + ", rdfs/label, v('InstanceLabel'))";
-	vEl += ", t(" + docid + ", rdf/type, v('InstanceType'))" 
+	var vEl = "\n\tt(" + docid + ", rdfs/label, v('InstanceLabel'))";
+	vEl += ", \n\tt(" + docid + ", rdf/type, v('InstanceType'))"
 	var opts = [];
 	opts.push("t(" + docid + ", rdfs/comment, v('InstanceComment'))");
 	opts.push("t(v('InstanceType'), rdfs/label, v('ClassLabel'), schema)");
 	var woql = "select([v('InstanceLabel'), v('InstanceType'), v('InstanceComment'), v('ClassLabel')],(" + vEl;
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ",\n\t opt(" + opts[i] + ")";
 	}
 	woql += "))";
-	return woql;	
+	return woql;
 }
 
 
@@ -207,21 +207,21 @@ WOQLQuery.prototype.getDocumentQuery = function(id, limit, start){
 	limit = (limit ? limit : this.default_limit);
 	start = (start ? start : 0);
 	var docid = "'" + id + "'";
-	var vEl = "t(doc/" + docid + ", v('Property'), v('Property Value'))";
+	var vEl = "\n\t\tt(doc/" + docid + ", v('Property'), v('Property Value'))";
 	var opts = [];
 	opts.push("t(v('Property'), rdfs/label, v('Property Label'), schema)");
 	opts.push("t(v('Property'), rdf/type, v('Property Type'), schema)");
-	var woql = "limit( " + limit + ", start(" + start + ",";
-	woql += "select([v('Property Label'), v('Property'), v('Property Value'), v('Property Type')],(" + vEl;
+	var woql = "limit( " + limit + ",\n\t start(" + start + ",";
+	woql += "\n\t\tselect([v('Property Label'), v('Property'), v('Property Value'), v('Property Type')],(" + vEl;
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ", \n\t\topt(" + opts[i] + ")";
 	}
 	woql += "))))";
 	return woql;
 }
 
 WOQLQuery.prototype.getClassesQuery = function(){
-	var vEl = "t(v('ID'), rdf/type, v('Class'))";
+	var vEl = "\n\tt(v('ID'), rdf/type, v('Class'))";
 	var opts = [];
 	opts.push("t(v('ID'), rdfs/label, v('Label'))");
 	opts.push("t(v('ID'), rdfs/comment, v('Comment'))");
@@ -229,7 +229,7 @@ WOQLQuery.prototype.getClassesQuery = function(){
 	var woql = "select([v('Label'),v('Comment'),v('ID'),v('Type'),v('Class')],(" + vEl;
 	woql += ", (v('Class') << (dcog/'Document'))";
 	for(var i = 0; i<opts.length; i++){
-		woql += ", opt(" + opts[i] + ")";
+		woql += ", \n\topt(" + opts[i] + ")";
 	}
 	woql += "))";
 	return woql;

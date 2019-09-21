@@ -388,10 +388,9 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 			//self.result.newResult(result);
 		}
 		if(self.result){
-			var nd = self.result.getAsDOM();
+			var nd = self.result.getAsDOM(d, false);
 			if(nd){
 				nd.setAttribute('class', 'terminus-margin-box');
-				d.appendChild(nd);
 	        }
 			else d.appendChild(document.createTextNode("No results returned"));
 		}

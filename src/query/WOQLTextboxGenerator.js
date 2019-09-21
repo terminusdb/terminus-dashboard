@@ -9,7 +9,7 @@ function WOQLTextboxGenerator(tq, qman, ui){
 	this.ui = ui;
 	// default datatable settings if datatable plug in available
 	this.datatable = {};
-	this.datatable.pageLength = 5;
+	this.datatable.pageLength = 25;
 	this.datatable.start = 0;
 }
 
@@ -81,11 +81,11 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	UTILS.stylizeEditor(this.ui, qip, 'query', 'javascript');
 	var self = this;
 	var qbut = document.createElement("button");
-	qbut.setAttribute("class", "terminus-control-button terminus-query-btn")
+	qbut.setAttribute("class", "terminus-control-button terminus-btn")
 	qbut.appendChild(document.createTextNode("Send Query"));
 	qbut.addEventListener("click", function(){
 		if(self.ui.pluginAvailable("datatables")){
-			// pass current Example query scope while editing the text editor 
+			// pass current Example query scope while editing the text editor
 			self.gatherDatatableSettings(qip, self.datatable.query);
 			self.setDatatableSettings(qip.value);
 			self.query(qip.value, self.datatable);

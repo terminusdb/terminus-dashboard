@@ -93,7 +93,7 @@ TerminusQueryViewer.prototype.query = function(val, settings, tab){
 		else {
 			//self.result.newResult(result);
 		}
-		var nd = self.result.getAsDOM(self.resultDOM);
+		var nd = self.result.getAsDOM(self.resultDOM, true);
 		if(nd){
 			 self.resultDOM.appendChild(nd);
 		}

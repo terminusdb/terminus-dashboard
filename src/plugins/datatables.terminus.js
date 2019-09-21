@@ -14,16 +14,15 @@ Datatables.prototype.convertToDatatable = function(tab){
          paging    : true,
          select    : true,
          columnDefs:[{targets:'_all',className:"truncate"}],
-         createdRow: function(row){
+         createdRow: function(row) {
                             var td = $(row).find(".truncate");
-                            td.attr("title", td.html());},
-         dom       : 'lrtip'
+                            td.attr("title", td.html());}
     }); //jQuery(tab)
 
     //styling
     tab.setAttribute('class'      , 'stripe dataTable terminus-db-size terminus-db-border');
     tab.setAttribute('cellpadding', '1');
-    tab.setAttribute('cellspacing', '1');
+    tab.setAttribute('cellspacing', '0');
     tab.setAttribute('border'     , '0');
     return tab;
 }
@@ -154,7 +153,9 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
          createdRow  : function(row){
                             var td = $(row).find(".truncate");
                             td.attr("title", td.html());},
-         dom         : 'lrtip',
+         dom         : 'Rlfrtip',
+         colReorder  : {addFixed : false, liveDrag:true},
+         scrollX     : true,
          drawCallback: function(settings) {
                              // on change of page length
                              $(this).on( 'length.dt', function (e, settings, len){

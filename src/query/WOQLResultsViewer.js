@@ -26,12 +26,14 @@ WOQLResultsViewer.prototype.orderColumns = function(sample){
 	return ordered;
 }
 
-WOQLResultsViewer.prototype.getAsDOM = function(resultDOM){
+WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 	var rs = document.createElement('div');
-	var rh = document.createElement('div');
-	rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
-	rh.appendChild(document.createTextNode("Results"));
-	rs.appendChild(rh);
+	if(displayResultHeader){
+		var rh = document.createElement('div');
+		rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
+		rh.appendChild(document.createTextNode("Results"));
+		rs.appendChild(rh);
+	}
 	if(this.result && this.result.hasBindings() && this.showTable()){
 		this.getTableDOM(this.result.bindings, rs);
 		return rs;

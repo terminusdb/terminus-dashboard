@@ -176,7 +176,6 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 TerminusServerViewer.prototype.getDBListDOM = function(){
 	var self = this;
 	var sec = document.createElement("div");
-	sec.setAttribute("class", "terminus-db-list-section");
 	var lihed = document.createElement("h3");
 	lihed.setAttribute("class", "terminus-db-list-title terminus-module-head");
 	lihed.appendChild(document.createTextNode("Available Databases"));
