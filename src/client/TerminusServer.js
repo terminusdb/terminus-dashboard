@@ -30,8 +30,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
             a.addEventListener("click", function(){
-                UTILS.removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
+                UTILS.activateSelectedNav(this, self);
                 self.ui.showLoadURLPage();
             })
             var icon = document.createElement('i');
@@ -47,8 +46,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
             a.addEventListener("click", function(){
-                UTILS.removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
+                UTILS.activateSelectedNav(this, self);
                 if(self.ui.db()){
                     //self.ui.clearDB();
                 }
@@ -66,8 +64,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
             a.addEventListener("click", function(){
-                UTILS.removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
+               UTILS.activateSelectedNav(this, self);
                 if(self.ui.db()){
                     //self.ui.clearDB();
                 }

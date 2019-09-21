@@ -349,6 +349,31 @@ function tolggleContent(icon, content){
     }
 }
 
+// controls current selected nav bar
+function activateSelectedNav(nav, terminator){
+    removeSelectedNavClass("terminus-selected");
+	checkDocumentSubMenus(terminator);
+	nav.classList.add("terminus-selected");
+}
+
+function hideDocumentSubMenus(el){
+	if(el.classList.contains('terminus-display')){
+		el.classList.remove('terminus-display');
+		el.classList.add('terminus-hide');
+	}
+}
+
+function checkDocumentSubMenus(terminator){
+	if(terminator.ui.showControl("get_document")) {
+		var gd = document.getElementsByClassName('terminus-get-doc');
+		hideDocumentSubMenus(gd[0]);
+	}
+	if(terminator.ui.showControl("create_document")) {
+		var cd = document.getElementsByClassName('terminus-create-doc');
+		hideDocumentSubMenus(cd[0]);
+	}
+}
+
 module.exports={tolggleContent,
                removeSelectedNavClass,
                stylizeCodeDisplay,
@@ -357,4 +382,5 @@ module.exports={tolggleContent,
                showHttpResult,
                getHeaderDom,
                getInfoAlertDom,
-               getFunctionSignature}
+               getFunctionSignature,
+               activateSelectedNav}
