@@ -373,8 +373,23 @@ TerminusSchemaViewer.prototype.getSchemaViewDOM = function(){
 
 TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-schema-page terminus-schema-import-page");
+	scd.setAttribute("class", "terminus-form-border terminus-schema-page terminus-schema-import-page");
+
+
 	var sci = document.createElement("div");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	var slab = document.createElement("span");
+	slab.setAttribute("class", "terminus-url-loader-input terminus-form-label terminus-control-label");
+	slab.appendChild(document.createTextNode("URL"));
+	sci.appendChild(slab);
+	var inpUrl  = document.createElement("input");
+	inpUrl.setAttribute("type", "text");
+	inpUrl.setAttribute("class", "terminus-form-value terminus-input-text terminus-form-url terminus-url-connect");
+	inpUrl.setAttribute("placeholder", "Enter url to import schema from");
+	sci.appendChild(inpUrl);
+	scd.appendChild(sci);
+
+	/*var sci = document.createElement("div");
 	sci.setAttribute("class", "terminus-form-field");
 	var lab = document.createElement("span");
 	lab.setAttribute("class", "terminus-form-label terminus-url-loader-input");
@@ -387,12 +402,19 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	}
 	sci.appendChild(lab);
 	sci.appendChild(ip);
-	scd.appendChild(sci);
+	scd.appendChild(sci); */
+
 	var sci = document.createElement("div");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	var klab = document.createElement("span");
+	klab.setAttribute("class", "terminus-url-loader-input terminus-form-label  terminus-control-label terminus-import_mode-input");
+	klab.appendChild(document.createTextNode("Import Mode"));
+	sci.appendChild(klab);
+	/*var sci = document.createElement("div");
 	sci.setAttribute("class", "terminus-form-field");
 	var klab = document.createElement("span");
 	klab.setAttribute("class", "terminus-form-label terminus-import_mode-input");
-	klab.appendChild(document.createTextNode("Import Mode"))
+	klab.appendChild(document.createTextNode("Import Mode")) */
 	var modes = document.createElement("select");
 	modes.setAttribute("class", "terminus-form-select");
 
@@ -408,21 +430,25 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	sci.appendChild(klab);
 	sci.appendChild(modes);
 	scd.appendChild(sci);
+
 	var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var klab = document.createElement("span");
-	klab.setAttribute("class", "terminus-form-label terminus-url-key-input");
+	klab.setAttribute("class", "terminus-form-label terminus-url-key-input terminus-control-label");
 	klab.appendChild(document.createTextNode("Key"))
 	var key = document.createElement("input");
 	key.setAttribute("type", "text");
-	key.setAttribute("class", "terminus-form-value terminus-url-key");
+	key.setAttribute("class", "terminus-form-value terminus-input-text terminus-url-key");
 	sci.appendChild(klab);
 	sci.appendChild(key);
 	scd.appendChild(sci);
 	var self = this;
 	this.doImport = function(){
-		if(ip.value){
-			self.load(ip.value, key.value, modes.value);
+		if(inpUrl.value){
+			console.log(inpUrl.value);
+			console.log(key.value);
+			console.log(modes.value);
+			self.load(inpUrl.value, key.value, modes.value);
 		}
 	}
 	return scd;

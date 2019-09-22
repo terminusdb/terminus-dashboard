@@ -397,6 +397,10 @@ function TerminusDBCreator(ui){
 
 TerminusDBCreator.prototype.getAsDOM = function(selected){
 	var scd = document.createElement("div");
+	/* test delete when over var txtHolder = document.createElement("div");
+	txtHolder.appendChild(document.createTextNode('expecting laoder herer'));
+	scd.appendChild(txtHolder);
+	this.ui.getLoader(scd);*/
 	scd.setAttribute("class", "terminus-db-creator");
 	var sct = document.createElement("h3");
 	sct.setAttribute("class", "terminus-db-creator-title terminus-module-head");
@@ -494,6 +498,7 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	butfield.appendChild(cancbut);
 	butfield.appendChild(loadbut);
 	mfd.appendChild(butfield);
+
 	return scd;
 }
 module.exports={TerminusDBViewer:TerminusDBViewer,
