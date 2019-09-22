@@ -1,5 +1,5 @@
-const FrameHelper = require('../FrameHelper');
-const RenderingMap = require('../RenderingMap');
+const FrameHelper = require('../../FrameHelper');
+
 function HTMLNumberViewer(options){
 	this.commas = (options && options.commas ? options.commas : true);
 }
@@ -15,6 +15,4 @@ HTMLNumberViewer.prototype.getDOM = function(renderer, dataviewer){
 	return input;
 }
 
-RenderingMap.registerViewerForTypes("HTMLNumberViewer", "Number with commas", 
-		["xsd:decimal", "xsd:double", "xsd:float", "xsd:short", "xsd:integer", "xsd:long", 
-			"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger", "xsd:nonPositiveInteger"]);
+module.exports={HTMLNumberViewer}

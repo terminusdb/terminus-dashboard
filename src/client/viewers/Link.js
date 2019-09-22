@@ -1,4 +1,3 @@
-const RenderingMap = require('../RenderingMap');
 function HTMLLinkViewer(options){
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
 }
@@ -18,4 +17,5 @@ HTMLLinkViewer.prototype.getDOM = function(renderer, dataviewer){
 	return input;
 }
 
-RenderingMap.registerViewerForTypes("HTMLLinkViewer", "Link Viewer", ["xdd:url", "xsd:anyURI"]);
+module.exports={HTMLLinkViewer}
+

@@ -1,7 +1,3 @@
-const FrameHelper = require('../../FrameHelper');
-const HTMLFrameHelper = require('../HTMLFrameHelper');
-const RenderingMap = require('../RenderingMap');
-
 function HTMLChoiceViewer(options){};
 
 HTMLChoiceViewer.prototype.getDOM = function(renderer, dataviewer){
@@ -26,21 +22,6 @@ HTMLChoiceViewer.prototype.getDOM = function(renderer, dataviewer){
 	return input;
 }
 
-function HTMLChoiceEditor(options){};
+module.exports={HTMLChoiceViewer}
 
-HTMLChoiceEditor.prototype.getDOM = function(renderer, dataviewer){
-	var value = renderer.value();
-	var optInput = document.createElement("select");
-	optInput.setAttribute('class', "terminus-choice-picker");
-	var foptions = renderer.frame.getChoiceOptions();
-	foptions.unshift({ value: "", label: "Not Specified"});
-	var callback = function(val){
-		renderer.set(val);
-	}
-	var sel = HTMLFrameHelper.getSelectionControl("select-choice", foptions, value, callback);
-	return sel;
-}
-
-RenderingMap.registerViewerForFrameType("HTMLChoiceViewer", "Choice Viewer", "oneOf");
-RenderingMap.registerEditorForFrameType("HTMLChoiceEditor", "Choice Selector", "oneOf");
 
