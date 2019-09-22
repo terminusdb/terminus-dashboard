@@ -154,10 +154,10 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
   var msg = 'API Explorer helps to understand api calls in depth.'
               + ' User can perform actions and view what happens in the background.'
   var al = UTILS.getInfoAlertDom('info', 'Info: ', msg);
-  api.appendChild(al);
+  //api.appendChild(al);
 
   // header
-  api.appendChild(UTILS.getHeaderDom('Api Explorer'));
+  //api.appendChild(UTILS.getHeaderDom('Api Explorer'));
 
   // body
   var cont = document.createElement('div');
@@ -237,7 +237,7 @@ ApiExplorer.prototype.getDocumentApi = function(cont){
     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        self.setSelectedNavMenu(this);
+        self.setSelectedSubMenu(this);
         self.changeApiDom('createDocument', cont, body);
     })
     var icon = document.createElement('i');
@@ -252,7 +252,7 @@ ApiExplorer.prototype.getDocumentApi = function(cont){
     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        self.setSelectedNavMenu(this);
+        self.setSelectedSubMenu(this);
         self.changeApiDom('updateDocument', cont, body);
     })
     var icon = document.createElement('i');
@@ -267,7 +267,7 @@ ApiExplorer.prototype.getDocumentApi = function(cont){
     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     var self = this;
     a.addEventListener("click", function(){
-        self.setSelectedNavMenu(this);
+        self.setSelectedSubMenu(this);
         self.changeApiDom('deleteDocument', cont, body);
     })
     var icon = document.createElement('i');
@@ -468,9 +468,6 @@ ApiExplorer.prototype.getServerForm = function(){
   inpId.setAttribute('placeholder', 'URL : server_url');
   if(this.val) inpId.value = this.val;
   cd.appendChild(inpId);
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-  cd.appendChild(icon);
 
   var fd = document.createElement('div');
   fd.setAttribute('class', 'terminus-control-group');
@@ -621,9 +618,6 @@ ApiExplorer.prototype.getDBForm = function(mode){
   inpId.setAttribute('placeholder', 'URL : server/database_id');
   if(this.val) inpId.value = this.val;
   cd.appendChild(inpId);
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-  cd.appendChild(icon);
 
   if(mode == 'create'){
     var fd = document.createElement('div');
@@ -642,10 +636,7 @@ ApiExplorer.prototype.getDBForm = function(mode){
     inpTxtAr.setAttribute('class', 'terminus-input-text');
     inpTxtAr.setAttribute('placeholder', 'Enter document to create database');
     cd.appendChild(inpTxtAr);
-    UTILS.stylizeEditor(this.ui, inpTxtAr, 'document', 'javascript');
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-    cd.appendChild(icon);
+    UTILS.stylizeEditor(this.ui, inpTxtAr, 'api-doc', 'javascript');
   } // if(mode == 'create')
 
   var fd = document.createElement('div');
@@ -740,9 +731,6 @@ ApiExplorer.prototype.getQueryApiDom = function(action, body){
   inpId.setAttribute('placeholder', 'URL : server/database_id');
   if (this.value) inpId.value = this.val;
   cd.appendChild(inpId);
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-  cd.appendChild(icon);
   fd.appendChild(cd);
 
   var fd = document.createElement('div');
@@ -807,9 +795,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
     inpUrl.setAttribute('placeholder', 'URL : database_url');
     if(this.val) inpUrl.value = this.val;
     cd.appendChild(inpUrl);
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-    cd.appendChild(icon);
     var fd = document.createElement('div');
     fd.setAttribute('class', 'terminus-control-group');
     form.appendChild(fd);
@@ -827,9 +812,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
     inpDocUrl.setAttribute('class', 'span8 terminus-input-text');
     inpDocUrl.setAttribute('placeholder', 'Url or ID of document class');
     cd.appendChild(inpDocUrl);
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-    cd.appendChild(icon);
     var fd = document.createElement('div');
     fd.setAttribute('class', 'terminus-control-group');
     form.appendChild(fd);
@@ -915,9 +897,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id');
        cd.appendChild(inpId);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        //encoding
        var fd = document.createElement('div');
@@ -932,7 +911,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpEnc = document.createElement('select');
-       inpEnc.setAttribute('type', 'text');
+       inpEnc.setAttribute('style', 'height: 50px;width: 300px;padding: 10px;');
        inpEnc.setAttribute('placeholder', 'turtle');
        var optTurt = document.createElement('option');
        optTurt.setAttribute('value', 'terminus:turtle');
@@ -943,9 +922,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        optJld.appendChild(document.createTextNode('jsonLD'));
        inpEnc.appendChild(optJld);
        cd.appendChild(inpEnc);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
@@ -964,9 +940,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpKey.setAttribute('class', 'terminus-input-text');
        inpKey.setAttribute('placeholder', 'Key');
        cd.appendChild(inpKey);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        // gather the dom objects
        var gatherips = {};
@@ -1010,9 +983,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id');
        cd.appendChild(inpId);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        //encoding
        var fd = document.createElement('div');
@@ -1027,6 +997,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        cd.setAttribute('class', 'terminus-controls');
        fd.appendChild(cd);
        var inpEnc = document.createElement('select');
+       inpEnc.setAttribute('style', 'height: 50px;width: 300px;padding: 10px;');
        inpEnc.setAttribute('type', 'text');
        inpEnc.setAttribute('placeholder', 'turtle');
        var optTurt = document.createElement('option');
@@ -1038,9 +1009,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        optJld.appendChild(document.createTextNode('jsonLD'));
        inpEnc.appendChild(optJld);
        cd.appendChild(inpEnc);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
@@ -1056,7 +1024,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        var schDoc = document.createElement('textarea');
        cd.appendChild(schDoc);
        schDoc.setAttribute('class', 'terminus-api-explorer-text-area');
-       UTILS.stylizeEditor(this.ui, schDoc, 'schema', 'turtle');
+       UTILS.stylizeEditor(this.ui, schDoc, 'api-doc', 'turtle');
 
        var fd = document.createElement('div');
        fd.setAttribute('class', 'terminus-control-group');
@@ -1076,9 +1044,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpKey.setAttribute('class', 'terminus-input-text');
        inpKey.setAttribute('placeholder', 'Key');
        cd.appendChild(inpKey);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        // gather the dom objects
        var gatherips = {};
@@ -1114,9 +1079,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        body.appendChild(formDoc);
 
@@ -1147,9 +1109,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        body.appendChild(formDoc);
 
@@ -1179,9 +1138,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        body.appendChild(formDoc);
 
@@ -1257,9 +1213,6 @@ ApiExplorer.prototype.getClassFramesForm = function(){
        inpId.setAttribute('class', 'span8 terminus-input-text');
        inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
        cd.appendChild(inpId);
-       var icon = document.createElement('i');
-       icon.setAttribute('class', 'fa fa-asterisk terminus-mandatory-icon');
-       cd.appendChild(icon);
 
        body.appendChild(formDoc);
 

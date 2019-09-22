@@ -63,14 +63,14 @@ pre, code {
 form {
 	margin: 0
 }
-select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input, label, input, button, select, textarea {
+/*select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input, label, input, button, select, textarea {
 	/*-webkit-border-radius: 3px; */
 	/*-moz-border-radius: 3px;
 	border-radius: 3px;
 	font-size: small;
-	font-family: 'Open Sans', Tahoma, Arial, sans-serif*/
-}
-.input-append input, .input-prepend input, .input-append select, .input-prepend select, .input-append .uneditable-input, .input-prepend .uneditable-input {
+	font-family: 'Open Sans', Tahoma, Arial, sans-serif
+}*/
+/*.input-append input, .input-prepend input, .input-append select, .input-prepend select, .input-append .uneditable-input, .input-prepend .uneditable-input {
 	-webkit-border-radius: 0 3px 3px 0;
 	-moz-border-radius: 0 3px 3px 0;
 	border-radius: 0 3px 3px 0
@@ -99,7 +99,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 .radio.inline, .checkbox.inline {
 	white-space: nowrap
-}
+}*/
 body [class^="icon-"], body [class*=" icon-"] {
 	font-size: 14px;
 	line-height: 20px;
@@ -169,7 +169,7 @@ body [class^="icon-"], body [class*=" icon-"] {
 	font-size: 18px;
   box-sizing: border-box;
 	width: 800px;
-	margin-left: 15px
+	/*margin-left: 15px*/
 }
 .terminus-textarea {
   width: 100%;
@@ -343,7 +343,8 @@ body [class^="icon-"], body [class*=" icon-"] {
 	outline-offset: -2px
 }
 .terminus-btn:focus, .terminus-btn:hover {
-	color: #767676;
+	/*color: #767676;*/
+	color: #002856 ;
 	text-decoration: none;
 }
 .terminus-btn.active, .terminus-btn:active {
@@ -386,21 +387,22 @@ body [class^="icon-"], body [class*=" icon-"] {
 
 /* Terminus Collapsible */
 .terminus-collapsible {
-  background-color: #f6f6f6;
-  border-color: #e9e9e9;
-  color: black;
-  cursor: pointer;
-  padding: 10px 15px;
-  width: 100%;
-  border: 1px solid transparent;
-  font-size: large;
-  font-weight: 600;
-  margin: 0;
-  text-align: left;
+	background-color: #002856;
+	border-color: #e9e9e9;
+	color: #fff;
+	cursor: pointer;
+	padding: 10px 15px;
+	width: 100%;
+	border: 1px solid transparent;
+	font-size: large;
+	font-weight: 600;
+	margin: 0;
+	text-align: left;
 }
 
 .active, .terminus-collapsible:hover {
-  background-color: lightgrey;
+  background-color: #00C08B;
+  color: #002856;
 }
 
 .terminus-collapsible-content {
@@ -851,7 +853,7 @@ div.terminus-property-frame{
 
 .terminus-cheveron-float{
 	float: right;
-	color: #00C08B;
+	color: #0055B8;
 }
 
 .terminus-header-cheveron{
@@ -1017,6 +1019,7 @@ div.terminus-property-frame{
     border-radius: 4px;
 	margin-bottom: 10px;
 }
+
 
 .ico{
     display: inline-block;
@@ -1819,34 +1822,7 @@ a.terminus-submenu-selected{
     margin-bottom: 5px;
     width: 345px;
 }
-/*
-.terminus-frame-row {
-	display: flex;
-	flex-wrap: wrap;
-	margin-right: -15px;
-	margin-left: -15px;
-	box-sizing: border-box;
-}
 
-.terminus-frame-length {
-	flex: 0 0 41.666667%;
-    max-width: 41.666667%;
-	position: relative;
-	width: 100%;
-	padding-right: 15px;
-	padding-left: 15px;
-}
-
-.terminus-frame-group {
-	margin-bottom: 10px;
-    position: relative;
-	box-sizing: border-box;
-}
-
-.terminus-frame-label {
-	font-size: .75rem;
-    margin-bottom: 5px;
-}*/
 
 .terminus-text{
 	/*border: 1px solid green; */
@@ -2018,4 +1994,10 @@ div.dataTables_info, div.dataTables_paginate {
 .terminus-doc-nav {
 	border-left: 4px solid #00C08B;
 	background-color: #0055B8!important;
+}
+
+.terminus-api-enc-select{
+	height: 50px;
+    width: 300px;
+    padding: 10px;
 }

@@ -54,6 +54,9 @@ Codemirror.prototype.setCodemirrorSize = function(editor, mode){
     case 'document':
      editor.setSize('800', 'auto');
     break;
+    case 'api-doc':
+        editor.setSize('800', 'auto');
+    break;
   } // switch(mode)
 } // setCodemirrorSize()
 
@@ -78,7 +81,7 @@ output (DOM node): The tokens will be converted to spans as in an editor,
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
   if(this.darkMode)
-    var theme = 'cm-s-erlang-dark';
+      var theme = 'cm-s-erlang-dark';
   else var theme = 'cm-s-neo';
   this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap ' + theme + ' terminus-wrap-text terminus-wrapper-height ');
   return this.textdom;
