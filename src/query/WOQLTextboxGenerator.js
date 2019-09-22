@@ -29,7 +29,12 @@ WOQLTextboxGenerator.prototype.getQueryButtonGroups = function(qbox){
 WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	var g = document.createElement('button');
 	g.setAttribute('class', 'terminus-pointer ');
-	g.addEventListener('click', function(){
+	g.addEventListener('click', function(e){
+		if(header == 'Data Queries'){
+			var target = e.target || e.srcElement,
+        	text = target.textContent || target.innerText;
+			if(target.nodeName == 'SELECT') return;
+		}
 		for(var i=0; i<this.children.length ; i++){
 			UTILS.toggleVisibility(this.children[i]);
 		}
@@ -255,6 +260,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	var qdocGroup = this.qGroupQueries(qrow, 'Document Queries', 'descr blah blah');
 
 	var pdom = termpc.getAsDOM();
+
 	var docch = new TerminusDocumentChooser(this.ui);
 	docch.change = function(val){
 		UTILS.deleteStylizedEditor(self.ui, qip);
