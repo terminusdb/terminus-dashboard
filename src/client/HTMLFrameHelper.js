@@ -41,11 +41,12 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 	return dpropDOM;
 }
 
-HTMLFrameHelper.getSettingsControl = function(){
+HTMLFrameHelper.getSettingsControl = function(view){
 	var pman = new TerminusPluginManager();
 	if(pman.pluginAvailable("font-awesome")){
 		var icon = document.createElement('icon');
-		icon.setAttribute('class', 'fa fa-bars terminus-pointer terminus-frame-bar-icon');
+		if(view == 'property') icon.setAttribute('class', 'fa fa-cog terminus-pointer');
+		else if(view == 'data') icon.setAttribute('class', 'fa fa-edit terminus-pointer');
 		icon.setAttribute('style', 'margin: 10px;')
 		return icon;
 	}

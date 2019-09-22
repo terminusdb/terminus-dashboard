@@ -70,10 +70,11 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
     }
     if(vdom) vholder.appendChild(vdom);
 	if(this.renderer.currentFacet() == "page"){
-		var sControl = HTMLFrameHelper.getSettingsControl();
+		var sControl = HTMLFrameHelper.getSettingsControl('data');
 		var menu = document.createElement('div');
 		menu.setAttribute('class', 'terminus-hide terminus-popup');
-		menu.appendChild(document.createTextNode('blah blah'));
+		menu.appendChild(document.createTextNode('Edit property value'));
+		menu.appendChild(document.createElement('BR'));
 		sControl.appendChild(menu);
 		sControl.addEventListener('click', function(e){
 			var target = e.target || e.srcElement,

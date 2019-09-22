@@ -278,16 +278,18 @@ TerminusDocumentViewer.prototype.refreshPage = function(){
 TerminusDocumentViewer.prototype.getAsDOM = function(){
 	var holder = document.createElement("div");
 	holder.setAttribute("class", "terminus-document-holder");
-	this.controldom = document.createElement("div");
-	this.controldom.setAttribute("class", "terminus-document-controller");
-	this.controldom.appendChild(this.getDocumentPageControls());
+	if(this.mode !== 'edit'){ // dont provide drop down on create mode
+		this.controldom = document.createElement("div");
+		this.controldom.setAttribute("class", "terminus-document-controller");
+		this.controldom.appendChild(this.getDocumentPageControls());
+		holder.appendChild(this.controldom);
+	}
 	this.pagedom = document.createElement("div");
 	this.pagedom.setAttribute("class", "terminus-document-page");
 	var rends = this.render();
 	if(rends){
 		this.pagedom.appendChild(rends);
 	}
-	holder.appendChild(this.controldom);
 	holder.appendChild(this.pagedom);
 	return holder;
 }
@@ -296,6 +298,7 @@ TerminusDocumentViewer.prototype.getDocumentPageControls = function(){
 	var dpc = document.createElement("select");
 	dpc.setAttribute("class", "terminus-form-select terminus-document-config");
 	for(var i in this.config_options){
+		if(i === 'create') continue; // create docuemnt option from config is not taken in edit mode 
 		var opt = document.createElement("option");
 		opt.value = i;
 		if(this.page_config == i){

@@ -333,10 +333,11 @@ HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM,
 	controlsDOM.appendChild(settings);
 	var orientation = renderer.getContentOrientation();
 	if(orientation == 'page'){ // expert mode
-		var sControl = HTMLFrameHelper.getSettingsControl();
+		var sControl = HTMLFrameHelper.getSettingsControl('property');
 		var menu = document.createElement('div');
 		menu.setAttribute('class', 'terminus-hide terminus-popup');
-		menu.appendChild(document.createTextNode('blah blah'));
+		menu.appendChild(document.createTextNode('Edit property'));
+		menu.appendChild(document.createElement('BR'));
 		sControl.appendChild(menu);
 		sControl.addEventListener('click', function(e){
 			var target = e.target || e.srcElement,
