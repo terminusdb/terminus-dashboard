@@ -110,7 +110,7 @@ FrameHelper.urlFragment = function(url){
 	}
 	if(bits.length >= 1){
 		url = bits[1];
-		url = url.split("?")[0];
+		if(url) url = url.split("?")[0];
 	}
 	return url;
 }

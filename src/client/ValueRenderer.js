@@ -10,7 +10,7 @@ function ValueRenderer(dataframe, index, parent, options){
 	this.parent = parent;
 	this.options = this.setOptions(options);
 	this.originalValue = this.value();
-} 
+}
 
 ValueRenderer.prototype.depth = function(){return (this.parent ? this.parent.depth() : false);};
 ValueRenderer.prototype.property = function(){ return (this.parent ? this.parent.property() : false);};
@@ -28,7 +28,7 @@ ValueRenderer.prototype.copy = function(nf){
 	nvr.view = this.view;
 	return nvr;
 }
- 
+
 ValueRenderer.prototype.setFacet = function(facet){
 	this.facet = facet;
 	this.parent.redraw();
@@ -55,19 +55,19 @@ ValueRenderer.prototype.getAvailableFacets = function(){
 ValueRenderer.prototype.getDefaultFacets = function(){
 	var defs = {
 		page: {
-			label: "Full Page", value: "page", 
-			features: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"], 
-			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"] 
+			label: "Full Page", value: "page",
+			features: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"],
+			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		line: {
 			label: "Single Line", value: "line",
-			features: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"], 
-			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"] 
+			features: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"],
+			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		inline: {
 			label: "Inline", value: "inline",
-			features: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"], 
-			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"] 
+			features: ["facet", "type", "cardinality", "body", "status", "facet", "viewer", "control"],
+			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		label: {
 			label: "Label", value: "label",
@@ -121,14 +121,14 @@ ValueRenderer.prototype.getAPIURL = function(a, b){
 ValueRenderer.prototype.getClient = function(){
 	if(this.parent && this.parent.parent){
 		return this.parent.parent.getClient();
-	}	
+	}
 	return false;
 }
 
 ValueRenderer.prototype.getController = function(){
 	if(this.parent && this.parent.parent){
 		return this.parent.parent.getController();
-	}	
+	}
 	return false;
 }
 
@@ -137,7 +137,7 @@ ValueRenderer.prototype.DBURL = function(){
 		if(client = this.parent.parent.getClient()){
 			return client.dbURL();
 		}
-	}	
+	}
 	return false;
 }
 
@@ -179,7 +179,7 @@ ValueRenderer.prototype.getSummary = function(){
 	var val = this.frame.get();
 	if(val){
 		if(val.length && val.length > this.text_summary_length){
-			ret.long = val.substring(0, this.text_summary_length) + "..." + " (" + val.length + " characters)"; 	
+			ret.long = val.substring(0, this.text_summary_length) + "..." + " (" + val.length + " characters)";
 		}
 		else {
 			ret.long = val;
@@ -243,7 +243,7 @@ ValueRenderer.prototype.save = function(){
 
 ValueRenderer.prototype.reset = function(){
 	this.set(this.originalValue);
-	this.redraw();	
+	this.redraw();
 }
 
 ValueRenderer.prototype.clone = function(){
@@ -265,7 +265,7 @@ ValueRenderer.prototype.getViewerForValue = function(){
 ValueRenderer.prototype.getFeaturesForFacet = function(facet){
 	return this.facets[facet].features.concat(this.facets[facet].controls);
 }
- 
+
 ValueRenderer.prototype.showFeature = function(which){
 	if(this.features.indexOf(which) == -1 && this.controls.indexOf(which) == -1) {
 		return false;
@@ -290,20 +290,20 @@ ValueRenderer.prototype.showFeature = function(which){
 ValueRenderer.prototype.render = function(viewer){
 	this.viewer = (viewer ? viewer : this.getViewerForValue());
 	return this.viewer.render();
-} 
+}
 
 ValueRenderer.prototype.extract = function(){
 	var val = this.value();
 	if(val !== "" && val !== false && this.frame.isDatatypeProperty()){
 		var objlit = { "@value": this.value()}
-		
+
 		//var objlit = { data: this.value()}
 		if(this.frame.isString()) objlit["@language"] = this.frame.lang();
 		else objlit["@type"] = this.type();
 		return objlit;
 	}
 	else return val;
-} 
+}
 
 ValueRenderer.prototype.getValueHeaderViewer = function(){
 	return new HTMLDataViewer.HTMLDataHeaderViewer();
@@ -313,19 +313,19 @@ ValueRenderer.prototype.getDataValueViewer = function(){
 	if(!this.viewerType) {
 		this.viewerType = this.getViewerForDataValue();
 	}
-	return RenderingMap.getViewer(this.viewerType, this.viewerOptions);		
+	return RenderingMap.getViewer(this.viewerType, this.viewerOptions);
 }
 
 ValueRenderer.prototype.getAvailableViewers = function(){
 	var dt = this.frame.getTypeShorthand();
 	if(!dt){
-		alert("here");
+		//alert("here");
 	}
 	var ft = this.frame.ftype();
 	if(this.mode == "view"){
-		return RenderingMap.getAvailableDataViewers(dt, ft);		
+		return RenderingMap.getAvailableDataViewers(dt, ft);
 	}
-	return RenderingMap.getAvailableDataEditors(dt, ft);				
+	return RenderingMap.getAvailableDataEditors(dt, ft);
 }
 
 ValueRenderer.prototype.setViewer = function(viewer){
@@ -337,9 +337,9 @@ ValueRenderer.prototype.getViewerForDataValue = function(){
 	var dt = this.frame.getTypeShorthand();
 	var ft = this.frame.ftype();
 	if(this.mode == "edit"){
-		return RenderingMap.getEditorForDataFrame(dt, ft);				
+		return RenderingMap.getEditorForDataFrame(dt, ft);
 	}
-	return RenderingMap.getViewerForDataFrame(dt, ft);		
+	return RenderingMap.getViewerForDataFrame(dt, ft);
 }
 
 ValueRenderer.prototype.redraw = function(){

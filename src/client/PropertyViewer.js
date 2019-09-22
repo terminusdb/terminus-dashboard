@@ -154,8 +154,9 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	var wrapper = document.createElement("span");
 	wrapper.setAttribute("class", "terminus-property-header-wrapper");
 	if(renderer.showFeature("control")){
-		var controlsDOM = this.getPropertyControlsDOM(renderer);
-		if(controlsDOM) wrapper.appendChild(controlsDOM);
+		var expModeMenu = this.getPropertyControlsDOM(wrapper, renderer);
+		if(orientation == 'page') this.expModeMenu = expModeMenu;
+		else this.expModeMenu = null;
 	}
 	if(renderer.showFeature("label")){
 		var sumDOM = this.getPropertyLabelDOM(renderer);
@@ -173,31 +174,42 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 		var sumDOM = this.getPropertySummaryDOM(renderer);
 		if(sumDOM) wrapper.appendChild(sumDOM);
 	}
+
 	var prelude = document.createElement("span");
 	prelude.setAttribute("class", "terminus-property-header-info terminus-property-header-info-"+renderer.currentFacet());
+
 	if(renderer.showFeature("facet")){
 		var facetDOM = this.getPropertyFacetDOM(renderer);
-		if(facetDOM) prelude.appendChild(facetDOM);
+		if(facetDOM) this.expModeMenu.appendChild(facetDOM);//prelude.appendChild(facetDOM);
 	}
 	if(renderer.showFeature("view")){
 		var viewDOM = this.getViewValueDOM(renderer);
-		if(viewDOM) prelude.appendChild(viewDOM);
+		if(viewDOM) this.expModeMenu.appendChild(viewDOM); //prelude.appendChild(viewDOM);
 	}
 	if(renderer.showFeature("id")){
 		var idDOM = this.getPropertyIDDOM(renderer);
-		if(idDOM) prelude.appendChild(idDOM);
+		if(idDOM) this.expModeMenu.appendChild(idDOM); //prelude.appendChild(idDOM);
 	}
 	if(renderer.showFeature("type")){
 		var typeDOM = this.getPropertyRangeDOM(renderer);
-		if(typeDOM) prelude.appendChild(typeDOM);
+		if(typeDOM){
+			this.expModeMenu.appendChild(typeDOM);//prelude.appendChild(typeDOM);
+			typeDOM.style.display = 'block';
+		}
 	}
 	if(renderer.showFeature("cardinality") && renderer.hasCardinalityRestriction()){
 		var hideDOM = this.getPropertyCardinalityDOM(renderer);
-		if(hideDOM) prelude.appendChild(hideDOM);
+		if(hideDOM){
+			this.expModeMenu.appendChild(hideDOM); //prelude.appendChild(hideDOM);
+			hideDOM.style.display = 'block';
+		}
 	}
 	if(renderer.showFeature("comment")){
 		var sumDOM = this.getPropertyCommentDOM(renderer);
-		if(sumDOM) prelude.appendChild(sumDOM);
+		if(sumDOM){
+			this.expModeMenu.appendChild(sumDOM); //prelude.appendChild(sumDOM);
+			sumDOM.style.display = 'block';
+		}
 	}
 	wrapper.appendChild(prelude);
 	objDOM.appendChild(wrapper);
@@ -318,28 +330,37 @@ HTMLPropertyHeaderViewer.prototype.getActionControlDOM = function(settingsDOM, r
 
 HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM, renderer){
 	var settings = document.createElement("div");
-	var sControl = HTMLFrameHelper.getSettingsControl();
-	var popup = document.createElement('div');
-	popup.setAttribute('class', 'terminus-hide terminus-popup');
-	popup.appendChild(document.createTextNode('blah blah'));
-	//sControl.appendChild(popup);
-	/*sControl.addEventListener('click', function(){
-		if(this.children[0].style.display == 'none') this.children[0].style.display = 'block';
-		else this.children[0].style.display = 'block';
-
-	});*/
-    //settings.appendChild(sControl);
 	controlsDOM.appendChild(settings);
-	// append action controls to pop up
-	this.getActionControlDOM(controlsDOM, renderer);
+	var orientation = renderer.getContentOrientation();
+	if(orientation == 'page'){ // expert mode
+		var sControl = HTMLFrameHelper.getSettingsControl();
+		var menu = document.createElement('div');
+		menu.setAttribute('class', 'terminus-hide terminus-popup');
+		menu.appendChild(document.createTextNode('blah blah'));
+		sControl.appendChild(menu);
+		sControl.addEventListener('click', function(e){
+			var target = e.target || e.srcElement,
+        	text = target.textContent || target.innerText;
+			if((target.nodeName == 'ICON') || (target.nodeName == 'BUTTON')){
+				if(this.children[0].style.display == 'none') this.children[0].style.display = 'block';
+				else this.children[0].style.display = 'none';
+			}
+		});
+		this.getActionControlDOM(menu, renderer);
+	    settings.appendChild(sControl);
+		return menu;
+	}
+	else this.getActionControlDOM(controlsDOM, renderer);
 }
 
-HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(renderer){
+HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(wrapper, renderer){
 	var controlsDOM = document.createElement("span");
 	controlsDOM.setAttribute("class", "terminus-property-controls");
+	controlsDOM.setAttribute("style", "display: table-cell;");
 	// get settings icon or button
-	this.getSettingsControlDOM(controlsDOM, renderer);
-	return controlsDOM;
+	var expModeMenu = this.getSettingsControlDOM(controlsDOM, renderer);
+	wrapper.appendChild(controlsDOM);
+	return expModeMenu;
 }
 
 HTMLPropertyHeaderViewer.prototype.getAddValueDOM = function(renderer){

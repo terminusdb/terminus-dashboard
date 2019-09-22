@@ -44,7 +44,7 @@ TerminusDocumentViewer.prototype.getInstanceMeta = function(elid){
 	var self = this;
 	if(self.instancemeta && typeof self.instancemeta[elid] != "undefined") return self.instancemeta[elid] ;
 	var wq = new WOQLQuery(this.ui.client, this.options);
-	var woql = wq.getInstanceMeta(elid);	
+	var woql = wq.getInstanceMeta(elid);
 	return wq.execute(woql).then(function(wresult){
 		if(wresult && wresult.hasBindings()){
 			var res = wresult.bindings[0];
@@ -102,7 +102,7 @@ TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 		self.setLabel();
 		self.refreshPage();
 		if(self.load_schema){
-			return self.loadDocumentSchema(self.document.cls).then(function(){ self.refreshPage()}).catch(function(e){console.error(e)});			
+			return self.loadDocumentSchema(self.document.cls).then(function(){ self.refreshPage()}).catch(function(e){console.error(e)});
 		}
 		return response;
 	})
@@ -118,7 +118,7 @@ TerminusDocumentViewer.prototype.loadDocumentSchema = function(cls){
 	return this.ui.client.getClassFrame(false, cls)
 	.then(function(response){
 		self.loadSchemaFrames(response, cls);
-		self.refreshPage();		
+		self.refreshPage();
 	});
 }
 
@@ -132,7 +132,7 @@ TerminusDocumentViewer.prototype.deleteDocument = function(URL){
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-	});	
+	});
 }
 
 TerminusDocumentViewer.prototype.createDocument = function(id){
@@ -147,7 +147,7 @@ TerminusDocumentViewer.prototype.createDocument = function(id){
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-	});	
+	});
 }
 
 TerminusDocumentViewer.prototype.updateDocument = function(){
@@ -163,7 +163,7 @@ TerminusDocumentViewer.prototype.updateDocument = function(){
 	}).catch(function(error){
 		self.ui.clearBusy();
 		self.ui.showError(error);
-	});	
+	});
 }
 
 TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
@@ -173,7 +173,7 @@ TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
 			if(dataframes && dataframes.length && dataframes[0] && dataframes[0].domain){
 				cls = dataframes[0].domain;
 			}
-		}		
+		}
 	}
 	if(cls){
 		if(!this.document){
@@ -215,7 +215,7 @@ TerminusDocumentViewer.prototype.loadSchemaFrames = function(classframes, cls){
 TerminusDocumentViewer.prototype.render = function(){
 	if(!this.renderer && this.document){
 		if(this.page_config){
-			this.options = this.getOptionsFromPageConfig(this.page_config);	
+			this.options = this.getOptionsFromPageConfig(this.page_config);
 		}
 		this.renderer = new ObjectRenderer(this.document, false, this.options);
 		this.renderer.mode = this.mode;
@@ -260,14 +260,14 @@ TerminusDocumentViewer.prototype.setLabel = function(){
 			var lab = dfs[i].get();
 			if(lab) {
 				this.labdom.appendChild(document.createTextNode(lab));
-			} 
+			}
 		}
 	}
 }
 
 TerminusDocumentViewer.prototype.refreshPage = function(){
 	if(this.pagedom){
-		FrameHelper.removeChildren(this.pagedom); 
+		FrameHelper.removeChildren(this.pagedom);
 		var rends = this.render();
 		if(rends){
 			this.pagedom.appendChild(rends);
@@ -314,4 +314,3 @@ TerminusDocumentViewer.prototype.getDocumentPageControls = function(){
 }
 
 module.exports=TerminusDocumentViewer
-

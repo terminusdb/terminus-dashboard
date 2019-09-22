@@ -24,7 +24,13 @@ HTMLDataViewer.prototype.render = function(){
 	if(this.body) this.valDOM.appendChild(this.body);
 	if(this.headerViewer){
 		this.header = this.headerViewer.getAsDOM(this.renderer);
-		if(this.header) this.valDOM.appendChild(this.header);
+		if(this.renderer.facet == 'page'){ //expert mode
+			if(this.header) {
+				this.expModeMenu.appendChild(this.header);
+				//this.valDOM.appendChild(this.expModeMenu);
+			}
+		}
+		else if(this.header) this.valDOM.appendChild(this.header);
 	}
 	return this.valDOM;
 }
@@ -50,8 +56,9 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
 	else {
 		var vholder = document.createElement("span");
 	}
-    vholder.setAttribute('class', 'terminus-property-body property-value-body property-value-body-'+this.renderer.currentFacet() + ' terminus-property-body-align');
-    if(this.renderer.showFeature("body")){
+    vholder.setAttribute('class', ' terminus-property-body property-value-body property-value-body-'+this.renderer.currentFacet() + ' terminus-property-body-align');
+	vholder.setAttribute('style', 'display: flex;');
+	if(this.renderer.showFeature("body")){
         var valueViewer = this.renderer.getDataValueViewer();
     	var vdom = valueViewer.getDOM(this.renderer, this);
     }
@@ -62,6 +69,23 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
     	return false;
     }
     if(vdom) vholder.appendChild(vdom);
+	if(this.renderer.currentFacet() == "page"){
+		var sControl = HTMLFrameHelper.getSettingsControl();
+		var menu = document.createElement('div');
+		menu.setAttribute('class', 'terminus-hide terminus-popup');
+		menu.appendChild(document.createTextNode('blah blah'));
+		sControl.appendChild(menu);
+		sControl.addEventListener('click', function(e){
+			var target = e.target || e.srcElement,
+			text = target.textContent || target.innerText;
+			if((target.nodeName == 'ICON') || (target.nodeName == 'BUTTON')){
+				if(this.children[0].style.display == 'none') this.children[0].style.display = 'block';
+				else this.children[0].style.display = 'none';
+			}
+		});
+		this.expModeMenu = menu;
+		vholder.appendChild(sControl);
+	}
 	return vholder;
 }
 

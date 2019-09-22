@@ -45,11 +45,13 @@ HTMLFrameHelper.getSettingsControl = function(){
 	var pman = new TerminusPluginManager();
 	if(pman.pluginAvailable("font-awesome")){
 		var icon = document.createElement('icon');
-		icon.setAttribute('class', 'fa fa-bars');
+		icon.setAttribute('class', 'fa fa-bars terminus-pointer terminus-frame-bar-icon');
+		icon.setAttribute('style', 'margin: 10px;')
 		return icon;
 	}
 	else{
 		var button = document.createElement("button");
+		button.setAttribute('class', 'terminus-btn');
 		button.appendChild(document.createTextNode('Settings'));
 		return button;
 	}
