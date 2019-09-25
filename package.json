@@ -1,7 +1,7 @@
 {
-  "name": "terminus-javascript-sdk",
-  "version": "0.1.0",
-  "description": "Terminus DB Javascript Client and SDK",
+  "name": "terminus-dashboard",
+  "version": "0.1.1",
+  "description": "Terminus DB Management Dashboard",
   "main": "WOQLClient.js",
   "scripts": {
     "clean": "rimraf -r dist/*",
@@ -41,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/terminusdb/terminus-javascript-sdk.git"
+    "url": "git+https://github.com/terminusdb/terminus-dashboard.git"
   },
   "keywords": [
     "Terminus",
@@ -52,10 +52,11 @@
   "author": "kevin@datachemist.com",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/terminusdb/terminus-javascript-sdk/issues"
+    "url": "https://github.com/terminusdb/terminus-dashboard/issues"
   },
-  "homepage": "https://github.com/terminusdb/terminus-javascript-sdk#readme",
+  "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
-    "copy-webpack-plugin": "^5.0.4"
+    "copy-webpack-plugin": "^5.0.4",
+    "terminus-client": "^0.0.1"
   }
 }

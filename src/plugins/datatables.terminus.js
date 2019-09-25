@@ -76,7 +76,7 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
             return wq.getElementMetaDataQuery(null, settings.pageLength, settings.start);
         break;
         case 'Show_Document_Classes':
-            return wq.getClassMetaDataQuery(wq.getSubclassQueryPattern("Class", "dcog/'Document'")
+            return wq.getClassMetaDataQuery(wq.getSubclassQueryPattern("Class", "tcs/'Document'")
     										  + ", not(" + wq.getAbstractQueryPattern("Class") + ")",
                                                  settings.pageLength, settings.start);
         break;

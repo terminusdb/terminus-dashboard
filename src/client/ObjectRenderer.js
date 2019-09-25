@@ -33,7 +33,6 @@ PropertyRenderer.prototype.getOptionsForChild = function(){
 	var opts = {};
 	if(this.options.features){ opts.features = this.options.features };
 	if(this.options.controls){ opts.controls = this.options.controls};
-	//return opts;
 	return this.options;
 }
 

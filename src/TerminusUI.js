@@ -165,7 +165,7 @@ TerminusUI.prototype.generateNewDatabaseDocument = function(dets){
 	var doc = {
 		"@context" : {
 			rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-			terminus: "https://datachemist.net/ontology/terminus#"
+			terminus: "http://terminusdb.com/schema/terminus#"
 		},
 		"@type": "terminus:Database"
 	}
