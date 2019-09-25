@@ -111,10 +111,10 @@ Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageIn
     dt: Datatable reference
     len : current number of records to display
 */
-Datatables.prototype.getCallbackSettings = function(dt, len){
+Datatables.prototype.getCallbackSettings = function(dt, len, start){
     var pageInfo = {};
     pageInfo.pageLength = len;
-    pageInfo.start      = 0;
+    pageInfo.start      = start;
     pageInfo.qTextDom   = dt.qTextDom;
     pageInfo.query      = dt.query;
     pageInfo.chosenValue = dt.chosenValue;
@@ -138,37 +138,57 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.chosenValue = settings.chosenValue;
 }
 
-Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
+
+
+Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
+    var tab = dtResult.tab;
+    console.log('dtResult', dtResult.result.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
          searching   : false,
          pageLength  : settings.pageLength,
+         processing  : true,
          lengthMenu  : [5, 10, 25, 50, 75, 100],
-         dom         : 'Rlfrtip',
+         dom         : 'Blfrtip',
+         columns     : dtResult.result.columns,
+        /* ajax        : {
+                        //url: '/api/myData',
+                        dataSrc: dtResult.result.data
+                    },*/
          paging      : true,
          select      : true,
+         data        : dtResult.result.data.data,
+         buttons     : ['copy', 'excel'],
          columnDefs  :[{targets:'_all',className:"truncate"}],
          createdRow  : function(row){
                             var td = $(row).find(".truncate");
                             td.attr("title", td.html());},
-         dom         : 'Rlfrtip',
-         colReorder  : {addFixed : false, liveDrag:true},
+         colReorder  : {addFixed : true, liveDrag:true},
          scrollX     : true,
          drawCallback: function(settings) {
+                             //console.log('draw call back ', this.api().page.info());
                              // on change of page length
                              $(this).on( 'length.dt', function (e, settings, len){
-                                  var pageInfo = dt.getCallbackSettings(dt, len);
+                                  var info = table.page.info();
+                                  var pageInfo = dt.getCallbackSettings(dt, len, info.start);
                                   var query = dt.generateNewQueryOnPageChange(this, ui, dt, pageInfo);
                                   return dt.executeQuery(this, ui, dt, query, pageInfo, resultDOM);
                              });
-
+                             // pagination
+                             $(this).on( 'page.dt', function () {
+                                var info = table.page.info();
+                                var pageInfo = dt.getCallbackSettings(dt, info.length, info.start);
+                                var query = dt.generateNewQueryOnPageChange(this, ui, dt, pageInfo);
+                                return dt.executeQuery(this, ui, dt, query, pageInfo, resultDOM);
+                             });
         }
     }); //jQuery(tab)
 
     //styling
     tab.setAttribute('class'      , 'stripe dataTable');
+    //tab.setAttribute('style'       , 'table-layout: fixed;')
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');
@@ -179,10 +199,10 @@ Datatables.prototype.getDataFromServer = function(tab, settings, ui, resultDOM){
 /*
 serverside: true or false
 */
-Datatables.prototype.draw = function(serverside, tab, settings, ui, resultDOM){
+Datatables.prototype.draw = function(serverside, dtResult, settings, ui, resultDOM){
     if(serverside)
-        return(this.getDataFromServer(tab, settings, ui, resultDOM));
-    else return(this.convertToDatatable(tab));
+        return(this.getDataFromServer(dtResult, settings, ui, resultDOM));
+    else return(this.convertToDatatable(dtResult));
 }
 
 module.exports=Datatables

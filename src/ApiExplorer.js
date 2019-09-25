@@ -9,188 +9,132 @@ const FrameHelper = require('./FrameHelper');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils')
 
- function ApiExplorer(ui){
+let apiNavConfig = {
+    mainNav: {
+        connect: {
+    		navText: 'Connect Server Api',
+            action : 'connect',
+            icon   : 'link',
+            defaultSelected: true
+    	},
+        database: {
+            navText: 'Database Api',
+            action : 'create',
+            icon   : 'database'
+        },
+        schema: {
+            navText: 'Schema Api',
+            action : 'schema',
+            icon   : 'cog'
+        },
+        document: {
+            navText: 'Document Api',
+            action : 'document',
+            icon   : 'file'
+        },
+        query: {
+            navText: 'Query Api',
+            action : 'query',
+            icon   : 'search'
+        }
+    },
+    subNav: {
+        database: {
+            createDatabase: {
+                navText: 'Create database',
+                action : 'create',
+                icon   : 'plus',
+                defaultSelected: true
+            },
+            deleteDatabase: {
+                navText: 'Delete database',
+                action : 'delete',
+                icon   : 'trash-alt'
+            }
+        },
+        schema: {
+            getSchema: {
+                navText: 'View Schema',
+                action : 'getSchema',
+                icon   : 'eye',
+                defaultSelected: true
+            },
+            updateSchema: {
+                navText: 'Update Schema',
+                action : 'updateSchema',
+                icon   : 'arrow-up'
+            },
+            getClassFrames: {
+                navText: 'Get Class Frames',
+                action : 'getClassFrames',
+                icon   : 'share-alt'
+            }
+        },
+        document: {
+            viewDocument: {
+        		navText: 'View Document',
+                action : 'viewDocument',
+                icon   : 'eye',
+                defaultSelected: true
+        	},
+            createDocument: {
+                navText: 'Create Document',
+                action : 'createDocument',
+                icon   : 'plus'
+            },
+            updateDocument: {
+                navText: 'Update Document',
+                action : 'updateDocument',
+                icon   : 'arrow-up'
+            },
+            deleteDocument:{
+                navText: 'Delete Document',
+                action : 'deleteDocument',
+                icon   : 'trash-alt'
+            }
+        },
+        query: {
+            select: {
+                navText: 'Select',
+                action : 'select',
+                icon   : 'mouse-pointer',
+                defaultSelected: true
+            },
+            update: {
+                navText: 'Update',
+                action : 'update',
+                icon   : 'arrow-up'
+            },
+            mapping:{
+                navText: 'Mapping',
+                action : 'lookup',
+                icon   : 'random'
+            }
+        }
+    }
+}
+
+function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
     this.client = new TerminusDB.WOQLClient();
     this.client.use_fetch = true;
     this.client.return_full_response = true;
     this.pman = new TerminusPluginManager();
- }
+}
 
-
-// Controller provides access to the Api explorer functions
+// Controller provides access to Api explorer functions
 ApiExplorer.prototype.getAsDOM = function(){
  	var aec = document.createElement("div");
     aec.setAttribute("class", "terminus-db-controller");
     if(this.ui){
        this.getApiNav(aec, this.viewer);
+       this.getApiExplorerDom('connect', this.viewer);
     } // if this.ui
     return aec;
  }
 
-// gets api nav bar
-ApiExplorer.prototype.getApiNav = function(navDom, viewer){
-    // list view of apis
-    var nav = document.createElement('div');
-    navDom.appendChild(nav);
-
-    // connect to server api
-    var ul = document.createElement('ul');
-    ul.setAttribute('class', 'terminus-ul');
-    nav.appendChild(ul);
-
-    // connect api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-selected terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        UTILS.removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('connect', viewer);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-link');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Connect Server Api');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    // database api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        UTILS.removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('create', viewer);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-database');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Database Api');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    // schema api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        UTILS.removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('schema', viewer);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-cog');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Schema Api');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    // documents api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        UTILS.removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('document', viewer);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-file');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Document Api');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    // query api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        UTILS.removeSelectedNavClass("terminus-selected");
-        this.classList.add("terminus-selected");
-        self.getApiExplorerDom('query', viewer);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-search');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Query Api');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    this.getApiExplorerDom('connect', viewer);
-
-    return navDom;
-} // getApiNav()
-
-// get schema api explorer - nav bar, alert msg, headers ...
-ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
-
-  // clear of viewer
-  FrameHelper.removeChildren(viewer);
-
-  // wrapper
-  var wrap = document.createElement('div');
-  //wrap.setAttribute('class', 'terminus-wrapper terminus-wrapper-height');
-  viewer.appendChild(wrap);
-  var cont = document.createElement('div');
-  cont.setAttribute('class', 'container-fluid');
-  wrap.appendChild(cont);
-  var row = document.createElement('div');
-  row.setAttribute('class', 'row-fluid');
-  cont.appendChild(row);
-
-  var body = document.createElement('div');
-  body.setAttribute('class', 'terminus-module-body');
-  row.appendChild(body);
-
-  var api = document.createElement('div');
-  api.setAttribute('class', 'terminus-module-body span9 terminus-module-body-white-bg terminus-module-body-width');
-
-  body.appendChild(api);
-
-  var msg = 'API Explorer helps to understand api calls in depth.'
-              + ' User can perform actions and view what happens in the background.'
-  var al = UTILS.getInfoAlertDom('info', 'Info: ', msg);
-  //api.appendChild(al);
-
-  // header
-  //api.appendChild(UTILS.getHeaderDom('Api Explorer'));
-
-  // body
-  var cont = document.createElement('div');
-  //cont.setAttribute('class', 'terminus-module-body');
-
-  var self = this;
-  switch(view){
-    case 'connect':
-      var apiCont = self.getConnectExplorer(cont);
-      api.appendChild(apiCont);
-    break;
-    case 'create':
-      var apiCont = self.getDatabaseExplorer(cont);
-      api.appendChild(apiCont);
-    break;
-    case 'schema':
-      var apiCont = self.getSchemaApi(cont);
-      api.appendChild(apiCont);
-    break;
-    case 'document':
-      var apiCont = self.getDocumentApi(cont);
-      api.appendChild(apiCont);
-    break;
-    case 'query':
-      var apiCont = self.getQueryApi(cont);
-      api.appendChild(apiCont);
-    break;
-
-  }// switch(api)
-
-  return wrap;
-} // getApiExplorerDom
-
+// Toggle selected nav bars
 ApiExplorer.prototype.setSelectedNavMenu = function(a){
     UTILS.removeSelectedNavClass("terminus-selected");
     a.classList.add("terminus-selected");
@@ -201,247 +145,211 @@ ApiExplorer.prototype.setSelectedSubMenu = function(a){
     a.classList.add("terminus-submenu-selected");
 }
 
+ApiExplorer.prototype.navOnSelect = function(action, nav, viewer){
+    UTILS.removeSelectedNavClass("terminus-selected");
+    nav.classList.add("terminus-selected");
+    this.getApiExplorerDom(action, viewer);
+}
+
+// create nav bars
+ApiExplorer.prototype.createNavs = function(navConfig, viewer, ul){
+    var a = document.createElement('a');
+    a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+    if(navConfig.defaultSelected) a.classList.add('terminus-selected');
+    var self = this;
+    a.addEventListener("click", function(){
+        self.navOnSelect(navConfig.action, this, viewer);
+    })
+    var icon = document.createElement('i');
+    icon.setAttribute('class', 'terminus-menu-icon fa fa-' + navConfig.icon);
+    a.appendChild(icon);
+    var txt = document.createTextNode(navConfig.navText);
+    a.appendChild(txt);
+    ul.appendChild(a);
+}
+
+// gets api nav bar
+ApiExplorer.prototype.getApiNav = function(navDom, viewer){
+    // list view of apis
+    var nav = document.createElement('div');
+    navDom.appendChild(nav);
+    // connect to server api
+    var ul = document.createElement('ul');
+    ul.setAttribute('class', 'terminus-ul');
+    nav.appendChild(ul);
+    // loop over apiNavConfig
+    for (var key in apiNavConfig.mainNav){
+        if (apiNavConfig.mainNav.hasOwnProperty(key)) {
+            this.createNavs(apiNavConfig.mainNav[key], viewer, ul);
+        }
+    } // for apiNavConfig
+
+    return navDom;
+} // getApiNav()
+
+// get schema api explorer - nav bar, alert msg, headers ...
+ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
+    // clear of viewer
+    FrameHelper.removeChildren(viewer);
+    // wrapper
+    var wrap = document.createElement('div');
+    //wrap.setAttribute('class', 'terminus-wrapper terminus-wrapper-height');
+    viewer.appendChild(wrap);
+    var cont = document.createElement('div');
+    cont.setAttribute('class', 'container-fluid');
+    wrap.appendChild(cont);
+    var row = document.createElement('div');
+    row.setAttribute('class', 'row-fluid');
+    cont.appendChild(row);
+    var body = document.createElement('div');
+    body.setAttribute('class', 'terminus-module-body');
+    row.appendChild(body);
+    var api = document.createElement('div');
+    api.setAttribute('class', 'terminus-module-body span9 terminus-module-body-white-bg terminus-module-body-width');
+    body.appendChild(api);
+    // body
+    var cont = document.createElement('div');
+    var self = this;
+    switch(view){
+        case 'connect':
+            var apiCont = self.getConnectExplorer(cont);
+            api.appendChild(apiCont);
+        break;
+        case 'create':
+            var apiCont = self.getDatabaseExplorer(cont);
+            api.appendChild(apiCont);
+        break;
+        case 'schema':
+            var apiCont = self.getSchemaApi(cont);
+            api.appendChild(apiCont);
+        break;
+        case 'document':
+            var apiCont = self.getDocumentApi(cont);
+            api.appendChild(apiCont);
+        break;
+        case 'query':
+            var apiCont = self.getQueryApi(cont);
+            api.appendChild(apiCont);
+        break;
+    }// switch(api)
+    return wrap;
+} // getApiExplorerDom
+
 // on trigger of click event - change dom
-ApiExplorer.prototype.changeApiDom = function(action, cont, body){
+ApiExplorer.prototype.changeSubApiDom = function(curSubMenu, action, cont, body){
     FrameHelper.removeChildren(body);
-    var dom = this.getShowApiDom(action, body);
+    switch(curSubMenu){
+        case 'database':
+            var dom = this.getDatabaseDom(action, body);
+        break;
+        case 'schema':  // getShowApiDom() deals with schema and document
+             var dom = this.getShowApiDom(action, body);
+        break;
+        case 'document': // getShowApiDom() deals with schema and document
+             var dom = this.getShowApiDom(action, body);
+        break;
+        case 'query':
+            var dom = this.getQueryApiDom(action, body);
+        break;
+        default:
+            console.log('Invalid Api Config');
+        break;
+    }
     cont.appendChild(dom);
+}
+
+ApiExplorer.prototype.subNavOnSelect = function(curSubMenu, subMenuConfig, subNav, cont, body){
+    this.setSelectedSubMenu(subNav);
+    this.changeSubApiDom(curSubMenu, subMenuConfig.action, cont, body);
+}
+
+// create sub nav bars
+ApiExplorer.prototype.createSubNavs = function(curSubMenu, subMenuConfig, cont, body, ul){
+    var a = document.createElement('a');
+    a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+    if(subMenuConfig.defaultSelected) a.classList.add('terminus-submenu-selected');
+    var self = this;
+    a.addEventListener("click", function() {
+        self.subNavOnSelect(curSubMenu, subMenuConfig, this, cont, body);
+    })
+    var icon = document.createElement('i');
+    icon.setAttribute('class', 'terminus-menu-icon fa fa-' + subMenuConfig.icon);
+    a.appendChild(icon);
+    var txt = document.createTextNode(subMenuConfig.navText);
+    a.appendChild(txt);
+    ul.appendChild(a);
 }
 
 // get document api calls - on click of DocumentAPI nav bar
 ApiExplorer.prototype.getDocumentApi = function(cont){
-
-  var body = document.createElement('div');
-
-  // list view of Databse tools
-  var ul = document.createElement('ul');
-  ul.setAttribute('class','terminus-ul-horizontal');
-
-  // view document api
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-submenu-selected terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedNavMenu(this);
-      self.changeApiDom('viewDocument', cont, body);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
-  a.appendChild(icon);
-  var txt = document.createTextNode('View Document');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  // create document api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        self.setSelectedSubMenu(this);
-        self.changeApiDom('createDocument', cont, body);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Create Document');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    // update document api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        self.setSelectedSubMenu(this);
-        self.changeApiDom('updateDocument', cont, body);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-arrow-up');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Update Document');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
-    // delete document api
-    var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-    var self = this;
-    a.addEventListener("click", function(){
-        self.setSelectedSubMenu(this);
-        self.changeApiDom('deleteDocument', cont, body);
-    })
-    var icon = document.createElement('i');
-    icon.setAttribute('class', 'terminus-menu-icon fa fa-trash-alt');
-    a.appendChild(icon);
-    var txt = document.createTextNode('Delete Document');
-    a.appendChild(txt);
-    ul.appendChild(a);
-
+    var body = document.createElement('div');
+    // list view of Databse tools
+    var ul = document.createElement('ul');
+    ul.setAttribute('class','terminus-ul-horizontal');
+    // loop over apiNavConfig
+    for (var key in apiNavConfig.subNav.document){
+        if (apiNavConfig.subNav.document.hasOwnProperty(key)) {
+            this.createSubNavs('document', apiNavConfig.subNav.document[key], cont, body, ul);
+        }
+    } // for apiNavConfig
     cont.appendChild(ul);
-
-    var dom = self.getShowApiDom('viewDocument', body);
+    var dom = this.getShowApiDom(apiNavConfig.subNav.document.viewDocument.action, body);
     cont.appendChild(dom);
-
     return cont;
 } // getDocumentApi
 
 // get query api calls - on click of QueryAPI nav bar - submenus of Query Api defined here
 ApiExplorer.prototype.getQueryApi  = function(cont){
-  var body = document.createElement('div');
-
-  // list view of Databse tools
-  var ul = document.createElement('ul');
-  ul.setAttribute('class','terminus-ul-horizontal');
-
-  //woql select
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-submenu-selected terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getQueryApiDom('select', body);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-mouse-pointer');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Select');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  //update select
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getQueryApiDom('update', body);
-      cont.appendChild(dom);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-arrow-up');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Update');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  //mapping
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getQueryApiDom('lookup', body);
-      cont.appendChild(dom);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-random');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Look up');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  cont.appendChild(ul);
-
-  var dom = self.getQueryApiDom('select', body);
-  cont.appendChild(dom);
-
-  return cont;
+    var body = document.createElement('div');
+    // list view of Databse tools
+    var ul = document.createElement('ul');
+    ul.setAttribute('class','terminus-ul-horizontal');
+    // loop over apiNavConfig
+    for (var key in apiNavConfig.subNav.query){
+        if (apiNavConfig.subNav.query.hasOwnProperty(key)) {
+            this.createSubNavs('query', apiNavConfig.subNav.query[key], cont, body, ul);
+        }
+    } // for apiNavConfig
+    cont.appendChild(ul);
+    var dom = this.getQueryApiDom(apiNavConfig.subNav.query.select.action, body);
+    cont.appendChild(dom);
+    return cont;
 } //getQueryApi
 
 // get schema api calls - on click of SchemaAPI nav bar - submenus of schema Api defined here
 ApiExplorer.prototype.getSchemaApi = function(cont){
-
-  var body = document.createElement('div');
-
-  // list view of Databse tools
-  var ul = document.createElement('ul');
-  ul.setAttribute('class','terminus-ul-horizontal');
-
-  var body = document.createElement('div');
-
-  // list view of Databse tools
-  var ul = document.createElement('ul');
-  ul.setAttribute('class','terminus-ul-horizontal');
-
-  //get schema
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-submenu-selected terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      self.changeApiDom('getSchema', cont, body);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-eye');
-  a.appendChild(icon);
-  var txt = document.createTextNode('View Schema');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  //update schema
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      self.changeApiDom('updateSchema', cont, body);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-arrow-up');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Update Schema');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  //get class frames
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      self.changeApiDom('getClassFrames', cont, body);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-share-alt');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Get Class Frames');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  cont.appendChild(ul);
-
-  var dom = self.getShowApiDom('getSchema', body);
-  cont.appendChild(dom);
-
-  return cont;
+    var body = document.createElement('div');
+    // list view of Databse tools
+    var ul = document.createElement('ul');
+    ul.setAttribute('class','terminus-ul-horizontal');
+    // loop over apiNavConfig
+    for (var key in apiNavConfig.subNav.schema){
+        if (apiNavConfig.subNav.schema.hasOwnProperty(key)) {
+            this.createSubNavs('schema', apiNavConfig.subNav.schema[key], cont, body, ul);
+        }
+    } // for apiNavConfig
+    cont.appendChild(ul);
+    var dom = this.getShowApiDom(apiNavConfig.subNav.schema.getSchema.action, body);
+    cont.appendChild(dom);
+    return cont;
 } // getSchemaApi
 
 // get connect to server api calls - on click of connectAPI nav bar
 ApiExplorer.prototype.getConnectExplorer = function(body){
-  var self = this;
-
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
-  // get signature
-  var b = this.getSignature('connect');
-  body.appendChild(b);
-
-  // get header Parameter
-  body.appendChild(UTILS.getHeaderDom('Parameters'));
-
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
-  //form to get server url
-  var form = this.getServerForm();
-
-  body.appendChild(form);
-  return body;
-
+    var self = this;
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    // get signature
+    var b = this.getSignature('connect');
+    body.appendChild(b);
+    // get header Parameter
+    body.appendChild(UTILS.getHeaderDom('Parameters'));
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    //form to get server url
+    var form = this.getServerForm();
+    body.appendChild(form);
+    return body;
 } // getConnectExplorer
 
 //get create & delete db form
@@ -464,7 +372,7 @@ ApiExplorer.prototype.getServerForm = function(){
   var inpId = document.createElement('input');
   inpId.setAttribute('type', 'text');
   inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'span8 terminus-input-text');
+  inpId.setAttribute('class', 'terminus-input-text');
   inpId.setAttribute('placeholder', 'URL : server_url');
   if(this.val) inpId.value = this.val;
   cd.appendChild(inpId);
@@ -504,7 +412,7 @@ ApiExplorer.prototype.getServerForm = function(){
   var self = this;
   button.addEventListener("click", function(){
     var buttonSelf = this;
-    opts = {};
+    //opts = {};
     var input = gatherips();
     self.client.connect(input.url, input.key)
     .then(function(response){
@@ -517,81 +425,41 @@ ApiExplorer.prototype.getServerForm = function(){
 
 // get database api calls - on click of databaseAPI nav bar - submenus of database Api defined here
 ApiExplorer.prototype.getDatabaseExplorer = function(cont){
-
   var body = document.createElement('div');
-
   // list view of Databse tools
   var ul = document.createElement('ul');
   ul.setAttribute('class','terminus-ul-horizontal');
-
-  //create db
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-submenu-selected terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getDatabaseDom('create', body);
-      cont.appendChild(dom);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-plus');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Create database');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
-  //delete db
-  var a = document.createElement('a');
-  a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-  var self = this;
-  a.addEventListener("click", function(){
-      self.setSelectedSubMenu(this);
-      FrameHelper.removeChildren(body);
-      var dom = self.getDatabaseDom('delete', body);
-      cont.appendChild(dom);
-  })
-  var icon = document.createElement('i');
-  icon.setAttribute('class', 'terminus-menu-icon fa fa-trash-alt');
-  a.appendChild(icon);
-  var txt = document.createTextNode('Delete database');
-  a.appendChild(txt);
-  ul.appendChild(a);
-
+  // loop over apiNavConfig
+  for (var key in apiNavConfig.subNav.database){
+      if (apiNavConfig.subNav.database.hasOwnProperty(key)) {
+          this.createSubNavs('database', apiNavConfig.subNav.database[key], cont, body, ul);
+      }
+  } // for apiNavConfig
   cont.appendChild(ul);
-
   // landing page
-  var dom = self.getDatabaseDom('create', body);
+  var dom = this.getDatabaseDom(apiNavConfig.subNav.database.createDatabase.action, body);
   cont.appendChild(dom);
-
   return cont;
 } // getDatabaseExplorer
 
 
 // get database dom
- ApiExplorer.prototype.getDatabaseDom = function(mode, body){
-  var self = this;
-
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
-  // get signature
-  var b = this.getSignature(mode);
-  body.appendChild(b);
-
-  // get header Parameter
-  body.appendChild(UTILS.getHeaderDom('Parameters'));
-
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
-  //form to get database id
-  if(mode == 'create') var form = this.getDBForm(mode);
-  else var form = this.getDBForm(mode);
-
-  body.appendChild(form);
-  return body;
-
+ApiExplorer.prototype.getDatabaseDom = function(mode, body){
+    var self = this;
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    // get signature
+    var b = this.getSignature(mode);
+    body.appendChild(b);
+    // get header Parameter
+    body.appendChild(UTILS.getHeaderDom('Parameters'));
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    //form to get database id
+    if(mode == 'create') var form = this.getDBForm(mode);
+    else var form = this.getDBForm(mode);
+    body.appendChild(form);
+    return body;
 }// getDatabaseDom()
 
 //get create & delete db form
@@ -1296,7 +1164,6 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         opts['terminus:encoding'] = input.enc.value;
         opts['terminus:user_key'] = input.key.value;
         var schurl = input.url.value;
-        console.log('opts', opts);
         self.client.connectionConfig.connected_mode = false;
         self.client.updateSchema(schurl, input.doc.value, opts)
         .then(function(response){

@@ -28,6 +28,7 @@ WOQLResultsViewer.prototype.orderColumns = function(sample){
 
 WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 	var rs = document.createElement('div');
+	resultDOM.appendChild(rs);
 	if(displayResultHeader){
 		var rh = document.createElement('div');
 		rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
@@ -44,30 +45,53 @@ WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 }
 
 WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
-	var tab = this.getTable(bindings);
 	if(this.pman.pluginAvailable("datatables")){
+		var dtResult = this.getTable(bindings, true);
+		resultDOM.appendChild(dtResult.tab);
     	var dt = new Datatables();
-		var tab = dt.draw(true, tab, this.settings, this.ui, resultDOM);
-		resultDOM.setAttribute('class', 'terminus-expandable');
+		dt.draw(true, dtResult, this.settings, this.ui, resultDOM);
+		resultDOM.classList.add('terminus-expandable');
+		resultDOM.classList.add('terminus-dt-result-cont');
 		return tab;
     }
-	else resultDOM.appendChild(tab);
+	else{
+		var tab = this.getTable(bindings, false);
+		resultDOM.appendChild(tab);
+	}
 }
 
-WOQLResultsViewer.prototype.getTable = function(bindings){
-	var tab = document.createElement("table");
-	tab.setAttribute("class", "terminus-query-results-table");
-	var thead = document.createElement("thead");
-	var thr = document.createElement("tr");
-	var ordered_headings = this.orderColumns(bindings[0]);
+WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings){
+    var columns = [], colDataData = {}, data = [], formattedResult = {};
+	var dtResult = {};
+    var ordered_headings = this.orderColumns(bindings[0]);
+	// get columns
 	for(var i = 0; i<ordered_headings.length; i++){
-		var th = document.createElement("th");
-		th.setAttribute('class', 'terminus-table-header-full-css');
-		th.appendChild(document.createTextNode(ordered_headings[i]));
-		thr.appendChild(th);
+        columns.push({data: ordered_headings[i]});
 	}
-	thead.appendChild(thr);
-	tab.appendChild(thead);
+	// get data for respective columns
+	for(var i = 0; i<bindings.length; i++){
+		colDataData = {};
+		for(var j = 0; j<ordered_headings.length; j++){
+			if(typeof bindings[i][ordered_headings[j]] == "object"){
+				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "Object?");
+			}
+			else if(typeof bindings[i][ordered_headings[j]] == "string") {
+				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
+				if(lab == "unknown") lab = "";
+			}
+			colDataData[ordered_headings[j]] = lab;
+		}
+		data.push(colDataData);
+	}
+	dtResult.columns = columns;
+	//formattedResult.push({data: data, recordsTotal: '65'});
+	formattedResult.data = data;
+	formattedResult.recordsTotal = '65';
+	dtResult.data = formattedResult;
+	return dtResult;
+}
+
+WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 	var tbody = document.createElement("tbody");
 	for(var i = 0; i<bindings.length; i++){
 		var tr = document.createElement("tr");
@@ -86,8 +110,36 @@ WOQLResultsViewer.prototype.getTable = function(bindings){
 		}
 		tbody.appendChild(tr);
 	}
-	tab.appendChild(tbody);
-	return tab;
+	return tbody;
+}
+
+WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
+	var tab = document.createElement("table");
+	tab.setAttribute("class", "terminus-query-results-table");
+	var thead = document.createElement("thead");
+	var thr = document.createElement("tr");
+	var ordered_headings = this.orderColumns(bindings[0]);
+	for(var i = 0; i<ordered_headings.length; i++){
+		var th = document.createElement("th");
+		th.setAttribute('class', 'terminus-table-header-full-css');
+		th.appendChild(document.createTextNode(ordered_headings[i]));
+		thr.appendChild(th);
+	}
+	thead.appendChild(thr);
+	tab.appendChild(thead);
+	if(dtPlugin){
+		var tbody = document.createElement("tbody");
+		tab.appendChild(tbody);
+		var dtResult ={};
+		dtResult.result = this.formatResultsForDatatableDisplay(bindings);
+		dtResult.tab = tab;
+		return dtResult;
+	}
+	else {
+		var tbody = this.getTableBody(bindings , ordered_headings);
+		tab.appendChild(tbody);
+		return tab;
+	}
 }
 
 

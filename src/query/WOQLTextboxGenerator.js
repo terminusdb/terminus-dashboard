@@ -28,9 +28,8 @@ WOQLTextboxGenerator.prototype.getQueryButtonGroups = function(qbox){
 
 WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	var g = document.createElement('button');
-	g.setAttribute('class', 'terminus-pointer ');
 	g.addEventListener('click', function(e){
-		if(header == 'Data Queries'){
+		if(header == 'Data Queries'){ // to ensure click event is not on button but on select instead so no need to hide
 			var target = e.target || e.srcElement,
         	text = target.textContent || target.innerText;
 			if(target.nodeName == 'SELECT') return;
@@ -38,9 +37,20 @@ WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 		for(var i=0; i<this.children.length ; i++){
 			UTILS.toggleVisibility(this.children[i]);
 		}
+		var qeb = document.getElementsByClassName('query-example-buttons');
+		for(var i=0; i<qeb.length ; i++){
+			if(this != qeb[i]){
+				for(var j=0; j<qeb[i].children.length ; j++){
+					if(qeb[i].children[j].classList.contains('terminus-display')){
+						qeb[i].children[j].classList.remove('terminus-display');
+						qeb[i].children[j].classList.add('terminus-hide');
+				    }
+				}
+			}
+		}
 	})
 
-	g.setAttribute('class', 'terminus-group-box');
+	g.setAttribute('class', 'terminus-group-box terminus-pointer query-example-buttons');
 
 	var cd = document.createElement('div');
 	cd.setAttribute('class', 'terminus-group');
