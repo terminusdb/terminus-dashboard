@@ -1,5 +1,5 @@
 const FrameHelper = require('../FrameHelper');
-const WOQLResult = require('./WOQLResult');
+const WOQLResult = require('./WOQLResultsViewer');
 
 function WOQLQuery(client, options){
 	this.client = client;
@@ -48,7 +48,7 @@ WOQLQuery.prototype.execute = function(woql){
 	var self = this;
 	return this.client.select(false, wrapped)
 	.then(function(response){
-		var res = new WOQLResult(response, self, self.options);
+		var res = new WOQLResult.WOQLResult(response, self, self.options);
 		return res;
 	});
 }

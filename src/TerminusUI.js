@@ -17,7 +17,7 @@ const TerminusURLLoader = require('./client/TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 
 function TerminusUI(opts){
-	this.client = new TerminusDB.WOQLClient();
+	this.client = new TerminusClient.WOQLClient();
 	this.controls = [];
 	this.setOptions(opts);
 }
