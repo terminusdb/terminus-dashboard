@@ -725,7 +725,7 @@ ApiExplorer.prototype.getClassFramesForm = function(){
 }
 
 // get schema & document dom
- ApiExplorer.prototype.getShowApiDom = function(action, body){
+ApiExplorer.prototype.getShowApiDom = function(action, body){
    var self = this;
 
    var br = document.createElement('BR');

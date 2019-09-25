@@ -6,7 +6,7 @@ const UTILS= require('../Utils')
 
 function Datatables(){}
 
-Datatables.prototype.convertToDatatable = function(tab){
+Datatables.prototype.convertToDatatable = function(tab, ui){
     var table = jQuery(tab).DataTable({
          searching : false,
          pageLength: 25,
@@ -19,7 +19,17 @@ Datatables.prototype.convertToDatatable = function(tab){
                             td.attr("title", td.html());}
     }); //jQuery(tab)
 
-    //styling
+    // on click of row connect to db, on click of 5th column delete db
+    jQuery(tab, 'tbody').on('click', 'td', function(){
+        if(table.cell(this).index().column == 5){
+            var dbInfo = table.row(jQuery(this).parents('tr')).data();
+            var dbId = UTILS.extractValueFromCell(dbInfo[0]);
+            ui.deleteDatabase(dbId);
+            return;
+        }
+        else ui.showDBMainPage();
+     }); // on click
+
     tab.setAttribute('class'      , 'stripe dataTable terminus-db-size terminus-db-border');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '0');
@@ -153,10 +163,6 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
          lengthMenu  : [5, 10, 25, 50, 75, 100],
          dom         : 'Blfrtip',
          columns     : dtResult.result.columns,
-        /* ajax        : {
-                        //url: '/api/myData',
-                        dataSrc: dtResult.result.data
-                    },*/
          paging      : true,
          select      : true,
          data        : dtResult.result.data.data,
@@ -202,7 +208,7 @@ serverside: true or false
 Datatables.prototype.draw = function(serverside, dtResult, settings, ui, resultDOM){
     if(serverside)
         return(this.getDataFromServer(dtResult, settings, ui, resultDOM));
-    else return(this.convertToDatatable(dtResult));
+    else return(this.convertToDatatable(dtResult, ui));
 }
 
 module.exports=Datatables

@@ -385,6 +385,11 @@ function toggleVisibility(el){
 	}
 }
 
+function extractValueFromCell(cellValue){
+    var ihtml = new DOMParser().parseFromString(cellValue, "text/xml");
+    return ihtml.firstChild.innerHTML;
+}
+
 module.exports={tolggleContent,
                removeSelectedNavClass,
                stylizeCodeDisplay,
@@ -395,4 +400,5 @@ module.exports={tolggleContent,
                getInfoAlertDom,
                getFunctionSignature,
                toggleVisibility,
+               extractValueFromCell,
                activateSelectedNav}
