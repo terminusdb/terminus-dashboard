@@ -119,9 +119,13 @@ PropertyRenderer.prototype.buildValueRenderers = function(){
  		var kids = this.getChildrenToRender();
  		if(kids && kids.length){
  			for(var i = this.values.length; i<kids.length; i++){
- 				var kidf = new ObjectRenderer(kids[i], this, this.getOptionsForObject(kids[i]));
- 				if(adorig) this.originalValues.push(kidf.subject());
- 				this.values.push(kidf);
+ 				try{
+	 				var kidf = new ObjectRenderer(kids[i], this, this.getOptionsForObject(kids[i]));
+	 				if(adorig) this.originalValues.push(kidf.subject());
+	 				this.values.push(kidf);
+	 			}catch(e){
+	 				console.error('PropertyRenderer buildValueRenderers',e.toString())
+	 			}
  			}
  		}
  	}
