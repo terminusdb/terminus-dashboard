@@ -1,6 +1,4 @@
 const FrameHelper = require('../FrameHelper');
-const WOQLQuery = require('../query/WOQLQuery');
-const WOQLResult = require('../query/WOQLResult');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const UTILS= require('../Utils')
 
@@ -50,7 +48,7 @@ Datatables.prototype.executeQuery = function(dcb, ui, dt, query, pageInfo, resul
     dcb.wquery.execute(query)
       .then(function(result){
           if(true || !self.result){
-              self.result = new WOQLResultsViewer(ui, result, null, pageInfo);
+              self.result = new WOQLResultsViewer.WOQLResultsViewer(ui, result, null, pageInfo);
           }
           var rtab = self.result.getTable(result.bindings);
           if(rtab){
