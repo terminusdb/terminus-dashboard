@@ -1,23 +1,10 @@
 const FrameHelper = require('../FrameHelper');
-const ObjectRenderer = require('./ObjectRenderer');
 const ValueRenderer = require('./ValueRenderer');
 const RenderingMap = require('./RenderingMap');
 const PropertyViewer = require('./PropertyViewer');
+const ObjectRenderer = require('./ObjectRenderer');
 
 function PropertyRenderer(prop, parent, options){
-	/*
-	if(options && options.features){
-		this.features = options.features;
-	}
-	else {
-		this.features = ["body", "type", "cardinality", "summary", "label", "status", "facet", "control", "viewer", "view", "comment", "id", "toolbox", "help	"];
-	}
-	if(options && options.controls){
-		this.controls = options.controls;
-	}
-	else {
-		this.controls = ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"];
-	}*/
 	this.predicate = prop;
 	this.parent = parent;
 	this.cframe = this.parent.objframe.getPropertyClassFrame(this.predicate);
@@ -29,36 +16,6 @@ function PropertyRenderer(prop, parent, options){
 
 PropertyRenderer.prototype.setOptions = function(options){
 	return RenderingMap.decorateRenderer(options, this);
-	/*options = (options ? options : {});
-	if(options.mode) this.mode = options.mode;
-	else {
-		this.mode = (this.parent && this.parent.mode ? this.parent.mode : "view");
-		options.mode = this.mode;
-	}
-	if(options.view) this.view = options.view;
-	else {
-		this.view = (this.parent && this.parent.view ? this.parent.view : "full");
-		options.view = this.view;
-	}
-	if(options.viewer) this.viewerType = options.viewer;
-	else this.viewerType = this.getViewerForDataValue();
-	if(options.facet) this.facet = options.facet;
-	else this.facet = this.getDefaultFacet();
-	this.hide_disabled_controls = (options && options.hide_disabled_controls ? options.hide_disabled_controls : true);
-	this.facets = {
-		icon: 	["facet", "summary"],
-		label: 	["facet", "status", "label", "summary"],
-		summary: ["facet", "satus", "label", "type", "cardinality", "body", "status", "facet", "viewer"],
-		line: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "viewer"].concat(this.controls),
-		multiline: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "view", "viewer"].concat(this.controls),
-		page: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "view", "viewer"].concat(this.controls)
-	}
-	if(options && options.facets){
-		for(var facet in options.facets){
-			this.facets[facet] = options.facets[facet];
-		}
-	}*/
-	return options;
 }
 
 
@@ -119,9 +76,16 @@ PropertyRenderer.prototype.buildValueRenderers = function(){
  		var kids = this.getChildrenToRender();
  		if(kids && kids.length){
  			for(var i = this.values.length; i<kids.length; i++){
- 				var kidf = new ObjectRenderer(kids[i], this, this.getOptionsForObject(kids[i]));
- 				if(adorig) this.originalValues.push(kidf.subject());
- 				this.values.push(kidf);
+ 				try {
+	 				var kidf = new ObjectRenderer(kids[i], this, this.getOptionsForObject(kids[i]));
+	 				if(adorig) this.originalValues.push(kidf.subject());
+	 				this.values.push(kidf);
+ 				}
+ 				catch(e){
+ 					alert(JSON.stringify(ObjectRenderer));
+ 					alert(e.toString() + " " + i);
+ 					alert(typeof ObjectRenderer);
+ 				}
  			}
  		}
  	}
@@ -515,25 +479,6 @@ PropertyRenderer.prototype.getAvailableViewers = function(){
 		return RenderingMap.getAvailablePropertyViewers(this);		
 	}
 	return RenderingMap.getAvailablePropertyEditors(this);				
-}
-
-PropertyRenderer.prototype.getViewerForDataValue = function(){
-	/*if(this.cframe && this.cframe.isData()){
-		var dt = this.cframe.getTypeShorthand();
-		var ft = this.cframe.ftype();
-		if(this.mode == "edit"){
-			return RenderingMap.getEditorForFrame(dt, ft);				
-		}
-		return RenderingMap.getViewerForFrame(dt, ft);		
-	}*/
-}
-
-PropertyRenderer.prototype.setViewer = function(viewer){
-	//this.viewerType = viewer;
-	//for(var i = 0; i<this.values.length; i++){
-	//	this.values[i].setViewer(viewer);
-	//}
-	//this.redraw();
 }
 
 PropertyRenderer.prototype.nukeViewer = function(){

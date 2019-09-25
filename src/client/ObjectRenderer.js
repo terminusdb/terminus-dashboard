@@ -24,48 +24,7 @@ function ObjectRenderer(obj, parent, options){
 //options has to include mode, viewer, facet, controls, features, hide_disabled_controls
 
 ObjectRenderer.prototype.setOptions = function(options){
-	//var rendconf = new RendererConfigurationMatcher(options);
 	return RenderingMap.decorateRenderer(options, this);
-	/*rendconf.setObjectRenderingConfiguration(this);
-	options = (options ? options : {});
-	if(options.mode) this.mode = options.mode;
-	else {
-		this.mode = (this.parent && this.parent.mode ? this.parent.mode : "view");
-		options.mode = this.mode;
-	}
-	if(options.view) this.view = options.view;
-	else {
-		this.view = (this.parent && this.parent.view ? this.parent.view : "full");
-		options.view = this.view;
-	}
-	if(options.facet) this.facet = options.facet;
-	else this.facet = this.getDefaultFacet();
-	this.hide_disabled_controls = (options && options.hide_disabled_controls ? options.hide_disabled_controls : true);
-	this.facets = {
-		label: 	["facet", "status", "label"],
-		summary: ["facet", "satus", "label", "type", "summary", "status", "facet"],
-		line: ["facet", "label", "comment", "id", "type", "body", "status", "facet"],
-		page: ["facet", "label", "comment", "id", "control", "type", "body", "status", "facet", "view", "viewer"].concat(this.controls)
-	}
-	if(options && options.facets){
-		for(var facet in options.facets){
-			this.facets[facet] = options.facets[facet];
-		}
-	}
-	//this.loadConfigurationFromOptions(options);
-	if(options && options.features){
-		this.features = options.features;
-	}
-	else {
-		this.features = ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"];
-	}
-	if(options && options.controls){
-		this.controls = options.controls;
-	}
-	else {
-		this.controls = ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"];
-	}
-	return options;*/
 }
 
 ObjectRenderer.prototype.getOptionsForProperty = function(prop){

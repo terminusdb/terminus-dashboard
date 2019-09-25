@@ -180,19 +180,19 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 
 	if(renderer.showFeature("facet")){
 		var facetDOM = this.getPropertyFacetDOM(renderer);
-		if(facetDOM) this.expModeMenu.appendChild(facetDOM);//prelude.appendChild(facetDOM);
+		if(facetDOM && this.expModeMenu) this.expModeMenu.appendChild(facetDOM);//prelude.appendChild(facetDOM);
 	}
 	if(renderer.showFeature("view")){
 		var viewDOM = this.getViewValueDOM(renderer);
-		if(viewDOM) this.expModeMenu.appendChild(viewDOM); //prelude.appendChild(viewDOM);
+		if(viewDOM && this.expModeMenu) this.expModeMenu.appendChild(viewDOM); //prelude.appendChild(viewDOM);
 	}
 	if(renderer.showFeature("id")){
 		var idDOM = this.getPropertyIDDOM(renderer);
-		if(idDOM) this.expModeMenu.appendChild(idDOM); //prelude.appendChild(idDOM);
+		if(idDOM && this.expModeMenu) this.expModeMenu.appendChild(idDOM); //prelude.appendChild(idDOM);
 	}
 	if(renderer.showFeature("type")){
 		var typeDOM = this.getPropertyRangeDOM(renderer);
-		if(typeDOM){
+		if(typeDOM && this.expModeMenu){
 			this.expModeMenu.appendChild(typeDOM);//prelude.appendChild(typeDOM);
 			typeDOM.style.display = 'block';
 		}
@@ -206,7 +206,7 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 	}
 	if(renderer.showFeature("comment")){
 		var sumDOM = this.getPropertyCommentDOM(renderer);
-		if(sumDOM){
+		if(sumDOM && this.expModeMenu){
 			this.expModeMenu.appendChild(sumDOM); //prelude.appendChild(sumDOM);
 			sumDOM.style.display = 'block';
 		}
