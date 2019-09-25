@@ -314,7 +314,6 @@ RenderingMap.decorateRenderer = function(options, renderer){
 	}
 	else if(renderer.parent) renderer.hide_disabled_buttons = parent.hide_disabled_buttons;
 	else renderer.hide_disabled_buttons = true;
-	
 	if(compiled_options && typeof compiled_options.features == "object"){
 		renderer.features = compiled_options.features;
 	}

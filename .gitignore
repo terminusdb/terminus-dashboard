@@ -41,3 +41,5 @@ yarn.lock
 
 others
 .DS_Store
+
+cypress/integration/examples01

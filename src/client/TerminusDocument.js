@@ -217,9 +217,14 @@ TerminusDocumentViewer.prototype.render = function(){
 		if(this.page_config){
 			this.options = this.getOptionsFromPageConfig(this.page_config);
 		}
-		this.renderer = new ObjectRenderer(this.document, false, this.options);
-		this.renderer.mode = this.mode;
-		this.renderer.controller = this;
+		try{
+			this.renderer = new ObjectRenderer(this.document, false, this.options);
+			this.renderer.mode = this.mode;
+			this.renderer.controller = this;
+			//this.renderer.setPropertyRenderer(PropertyRenderer)
+		}catch(e){
+	 		console.error('TerminusDocumentViewer render',e.toString())
+	 	}
 	}
 	if(this.renderer){
 		return this.renderer.render();
