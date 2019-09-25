@@ -221,6 +221,7 @@ TerminusDocumentViewer.prototype.render = function(){
 			this.renderer = new ObjectRenderer(this.document, false, this.options);
 			this.renderer.mode = this.mode;
 			this.renderer.controller = this;
+			//this.renderer.setPropertyRenderer(PropertyRenderer)
 		}catch(e){
 	 		console.error('TerminusDocumentViewer render',e.toString())
 	 	}
