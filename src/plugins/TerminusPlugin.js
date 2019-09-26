@@ -1,4 +1,4 @@
-const FrameHelper = require('../FrameHelper');
+//const FrameHelper = require('../FrameHelper');
 
 function TerminusPluginManager(){
 	this.preloaded = [];
@@ -287,7 +287,7 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 	if(pug.css){
 		for(var i=0; i<pug.css.length; i++){
 			var cssid = plugin + "_css_" + i;
-			FrameHelper.loadDynamicCSS(cssid, pug.css[i]);
+			TerminusClient.FrameHelper.loadDynamicCSS(cssid, pug.css[i]);
 		}
 	}
 	var scripts = (pug.js ? pug.js : []);
@@ -305,7 +305,7 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 		var cback = function(){
 			self.loadPluginScripts(plugin, scripts, then);
 		}
-		FrameHelper.loadDynamicScript(sid, cm, cback);
+		TerminusClient.FrameHelper.loadDynamicScript(sid, cm, cback);
 	}
 	else {
 		this.loadPluginScripts(plugin, scripts, then);
@@ -335,7 +335,7 @@ TerminusPluginManager.prototype.loadPluginScripts = function(plugin, scripts, th
 	}
 	for(var i = 0; i<scripts.length; i++){
 		var sid = plugin + "_js_" + i;
-		FrameHelper.loadDynamicScript(sid, scripts[i], cback);
+		TerminusClient.FrameHelper.loadDynamicScript(sid, scripts[i], cback);
 	}
 }
 
@@ -347,7 +347,7 @@ TerminusPluginManager.prototype.loadPageCSS = function(css){
 	}
 	if(css){
 		cssurl = "css/" + css + ".css";
-		FrameHelper.loadDynamicCSS(cssfid, cssurl);
+		TerminusClient.FrameHelper.loadDynamicCSS(cssfid, cssurl);
 	}
 }
 
@@ -416,7 +416,7 @@ TerminusPluginManager.prototype.togglePlugin = function(plugid, ui){
 	else {
 		this.unloadPlugin(plugid);
 	}
-	FrameHelper.removeChildren(ui.plugins);
+	TerminusClient.FrameHelper.removeChildren(ui.plugins);
 	ui.drawPlugins();
 }
 

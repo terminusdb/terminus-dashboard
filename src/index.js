@@ -1,5 +1,4 @@
 const TerminusUI = require('./TerminusUI');
-const FrameHelper = require('./FrameHelper');
 const RenderingMap = require('./client/RenderingMap');
 
 var terminator = new TerminusUI(TerminusConfig);
@@ -23,5 +22,4 @@ function showPanel(mode){
 }
 
 module.exports={TerminusUI:TerminusUI,
-                FrameHelper:FrameHelper,
                 RenderingMap:RenderingMap}

@@ -5,7 +5,6 @@
  *
  * @param opts - options array
  */
-const FrameHelper = require('./FrameHelper');
 const ApiExplorer = require('./ApiExplorer');
 const TerminusDocumentViewer = require('./client/TerminusDocument');
 const TerminusDBsdk = require('./client/TerminusDB');
@@ -248,7 +247,7 @@ TerminusUI.prototype.clearServer = function(){
 
 TerminusUI.prototype.connectToDB = function(dbid){
 	this.client.connectionConfig.dbid = dbid;
-	FrameHelper.standard_urls['doc'] = this.client.connectionConfig.dbURL() + "/document/";
+	TerminusClient.FrameHelper.standard_urls['doc'] = this.client.connectionConfig.dbURL() + "/document/";
 }
 
 TerminusUI.prototype.clearDB = function(){
@@ -316,7 +315,7 @@ TerminusUI.prototype.showCreateDocument = function(durl){
 }
 
 TerminusUI.prototype.redrawMainPage = function(){
-	FrameHelper.removeChildren(this.main);
+	TerminusClient.FrameHelper.removeChildren(this.main);
 	if(this.viewer){
 		this.main.appendChild(this.viewer.getAsDOM());
 	}
@@ -331,11 +330,11 @@ TerminusUI.prototype.showError = function(response){
 };
 
 TerminusUI.prototype.clearMessages = function(response){
-	if(this.messages) FrameHelper.removeChildren(this.messages);
+	if(this.messages) TerminusClient.FrameHelper.removeChildren(this.messages);
 };
 
 TerminusUI.prototype.clearMainPage = function(){
-	if(this.main) FrameHelper.removeChildren(this.main);
+	if(this.main) TerminusClient.FrameHelper.removeChildren(this.main);
 }
 
 TerminusUI.prototype.setMessageDOM = function(dom){
@@ -393,11 +392,11 @@ TerminusUI.prototype.draw = function(comps, slocation){
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();
 	if(this.controller){
-		FrameHelper.removeChildren(this.controller);
+		TerminusClient.FrameHelper.removeChildren(this.controller);
 		this.drawControls();
 	}
 	if(this.explorer){
-		FrameHelper.removeChildren(this.explorer);
+		TerminusClient.FrameHelper.removeChildren(this.explorer);
 		//this.drawExplorer();
 	}
 	if(this.viewer){
@@ -409,14 +408,14 @@ TerminusUI.prototype.redraw = function(msg){
 TerminusUI.prototype.toggleControl = function(){
   var self = this;
   this.buttons.client.addEventListener('click', function(){
-    FrameHelper.removeChildren(self.controller);
-    FrameHelper.removeChildren(self.explorer);
+    TerminusClient.FrameHelper.removeChildren(self.controller);
+    TerminusClient.FrameHelper.removeChildren(self.explorer);
     self.drawControls();
     self.showServerMainPage();
   })
   this.buttons.explorer.addEventListener('click', function(){
-    FrameHelper.removeChildren(self.controller);
-    FrameHelper.removeChildren(self.explorer);
+    TerminusClient.FrameHelper.removeChildren(self.controller);
+    TerminusClient.FrameHelper.removeChildren(self.explorer);
     self.drawExplorer();
   })
 }
@@ -497,7 +496,7 @@ TerminusUI.prototype.getLoader = function(bsyDom){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
-		FrameHelper.removeChildren(this.messages);
+		TerminusClient.FrameHelper.removeChildren(this.messages);
 		var md = document.createElement('div');
         var clsstr = ' terminus-show-msg';
         if(type) clsstr += ' terminus-msg-' + type;
@@ -520,7 +519,7 @@ TerminusUI.prototype.showViolations = function(vios, type){
 	var nvios = new TerminusViolations(vios, this);
 	if(this.messages){
 		var cmsg = (type == "schema" ? " in Schema" : " in Document");
-		FrameHelper.removeChildren(this.messages);
+		TerminusClient.FrameHelper.removeChildren(this.messages);
 		this.messages.appendChild(nvios.getAsDOM(cmsg));
 	}
 }

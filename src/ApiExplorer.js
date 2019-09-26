@@ -5,7 +5,6 @@
  *
  * @summary Displays a demo and description of api calls from WOQLCLient and what happens under the hood of api calls
  */
-const FrameHelper = require('./FrameHelper');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils')
 
@@ -117,7 +116,7 @@ let apiNavConfig = {
 function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
-    this.client = new TerminusDB.WOQLClient();
+    this.client = new TerminusClient.WOQLClient();
     this.client.use_fetch = true;
     this.client.return_full_response = true;
     this.pman = new TerminusPluginManager();
@@ -190,7 +189,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
 // get schema api explorer - nav bar, alert msg, headers ...
 ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
     // clear of viewer
-    FrameHelper.removeChildren(viewer);
+    TerminusClient.FrameHelper.removeChildren(viewer);
     // wrapper
     var wrap = document.createElement('div');
     //wrap.setAttribute('class', 'terminus-wrapper terminus-wrapper-height');
@@ -237,7 +236,7 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
 
 // on trigger of click event - change dom
 ApiExplorer.prototype.changeSubApiDom = function(curSubMenu, action, cont, body){
-    FrameHelper.removeChildren(body);
+    TerminusClient.FrameHelper.removeChildren(body);
     switch(curSubMenu){
         case 'database':
             var dom = this.getDatabaseDom(action, body);
@@ -416,7 +415,7 @@ ApiExplorer.prototype.getServerForm = function(){
     var input = gatherips();
     self.client.connect(input.url, input.key)
     .then(function(response){
-      FrameHelper.removeChildren(resd);
+      TerminusClient.FrameHelper.removeChildren(resd);
       var resultDom = UTILS.showHttpResult(response, 'connect', resd, self.ui);
     });
   }) // button click
@@ -1152,7 +1151,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var buttonSelf = this;
         self.client.getSchema(schurl, opts)
         .then(function(response){
-          FrameHelper.removeChildren(resd);
+          TerminusClient.FrameHelper.removeChildren(resd);
           var resultDom = UTILS.showHttpResult(response, 'getSchema', resd, self.ui);
         });
       }) // button click
@@ -1184,7 +1183,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       opts.format = 'turtle';
       self.client.getDocument(dcurl, opts)
       .then(function(response){
-        FrameHelper.removeChildren(resd);
+        TerminusClient.FrameHelper.removeChildren(resd);
         var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
       });
     }) // button click
@@ -1196,7 +1195,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       var opts = {};
       self.client.deleteDocument(dcurl, opts)
       .then(function(response){
-        FrameHelper.removeChildren(resd);
+        TerminusClient.FrameHelper.removeChildren(resd);
         var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
       });
     }) // button click
@@ -1209,7 +1208,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         opts = {};
         self.client.createDocument(dcurl, payload, opts)
         .then(function(response){
-          FrameHelper.removeChildren(resd);
+          TerminusClient.FrameHelper.removeChildren(resd);
           var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
         });
       }) // button click
@@ -1224,7 +1223,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         opts.format = 'json';
         self.client.updateDocument(dcurl, payload, opts)
         .then(function(response){
-          FrameHelper.removeChildren(resd);
+          TerminusClient.FrameHelper.removeChildren(resd);
           var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
         });
       }) // button click

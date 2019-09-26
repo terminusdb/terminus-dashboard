@@ -1,5 +1,3 @@
-const FrameHelper = require('../FrameHelper');
-const ObjectFrame = require('../ObjectFrame');
 const WOQLQuery = require('../query/WOQLQuery');
 //const FrameConfig = require('./FrameConfig');
 const ObjectRenderer = require('./ObjectRenderer');
@@ -177,7 +175,7 @@ TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
 	}
 	if(cls){
 		if(!this.document){
-			this.document = new ObjectFrame(cls, dataframes);
+			this.document = new TerminusClient.ObjectFrame(cls, dataframes);
 		}
 		else {
 			this.document.loadDataFrames(dataframes);
@@ -197,7 +195,7 @@ TerminusDocumentViewer.prototype.loadSchemaFrames = function(classframes, cls){
 	}
 	if(cls){
 		if(!this.document){
-			this.document = new ObjectFrame(cls);
+			this.document = new TerminusClient.ObjectFrame(cls);
 		}
 		if(classframes){
 			this.document.loadClassFrames(classframes);
@@ -259,8 +257,8 @@ TerminusDocumentViewer.prototype.getLabel = function(){
 
 TerminusDocumentViewer.prototype.setLabel = function(){
 	if(this.document && this.labdom){
-		FrameHelper.removeChildren(this.labdom);
-		var dfs = this.document.getDataFrames(FrameHelper.getStdURL("rdfs", "label"));
+		TerminusClient.FrameHelper.removeChildren(this.labdom);
+		var dfs = this.document.getDataFrames(TerminusClient.FrameHelper.getStdURL("rdfs", "label"));
 		for(var i = 0; i< dfs.length; i++){
 			var lab = dfs[i].get();
 			if(lab) {
@@ -272,7 +270,7 @@ TerminusDocumentViewer.prototype.setLabel = function(){
 
 TerminusDocumentViewer.prototype.refreshPage = function(){
 	if(this.pagedom){
-		FrameHelper.removeChildren(this.pagedom);
+		TerminusClient.FrameHelper.removeChildren(this.pagedom);
 		var rends = this.render();
 		if(rends){
 			this.pagedom.appendChild(rends);

@@ -1,4 +1,3 @@
-const FrameHelper = require('../FrameHelper');
 const WOQLResult = require('./WOQLResult');
 
 function WOQLQuery(client, options){
@@ -24,8 +23,8 @@ function WOQLQuery(client, options){
 		this.prefixes['db'] = client.connectionConfig.dbURL() + "/";
 		this.prefixes['g'] = client.connectionConfig.serverURL();
 	}
-	for(var pref in FrameHelper.standard_urls){
-		this.prefixes[pref] = FrameHelper.standard_urls[pref];
+	for(var pref in TerminusClient.FrameHelper.standard_urls){
+		this.prefixes[pref] = TerminusClient.FrameHelper.standard_urls[pref];
 	}
 }
 

@@ -1,4 +1,3 @@
-const FrameHelper = require('../../FrameHelper');
 const DateHelper = require('./DateHelper');
 
 function HTMLDateViewer(options){
@@ -12,13 +11,13 @@ function HTMLDateViewer(options){
 }
 
 HTMLDateViewer.prototype.getDOM = function(renderer, dataviewer){
-	var ty = FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
 	var value = renderer.value();
 	var input = document.createElement("span");
 	input.setAttribute('class', "terminus-literal-value terminus-literal-date");
 	input.setAttribute('data-value', value);
 	if(value){
-		var parsed = FrameHelper.parseDate(ty, value);
+		var parsed = TerminusClient.FrameHelper.parseDate(ty, value);
 		var datepart = this.getDateComponentDOM(parsed);
 		var timepart = this.getTimeComponentDOM(parsed);
 		if(timepart) input.appendChild(timepart);

@@ -1,7 +1,7 @@
 /*
  * Utility class which runs a query against the schema and presents the returned classes as a drop-down / class filter list
  */
-const FrameHelper = require('../FrameHelper');
+//const FrameHelper = require('../FrameHelper');
 const WOQLQuery = require('../query/WOQLQuery');
 
 TerminusClassChooser = function(ui, filter, chosen){
@@ -79,7 +79,7 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 				}
 				var lab = clist.bindings[i].Label;
 				if(!lab || lab == "unknown"){
-					lab = FrameHelper.labelFromURL(clist.bindings[i].Class);
+					lab = TerminusClient.FrameHelper.labelFromURL(clist.bindings[i].Class);
 				}
 				if(lab["@value"]) lab = lab["@value"];
 				opt.appendChild(document.createTextNode(lab));

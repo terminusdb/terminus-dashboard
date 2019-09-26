@@ -6,7 +6,6 @@
  * @summary Set of functions used across scripts
  */
 const Codemirror= require('./plugins/codemirror.terminus');
-const FrameHelper = require('./FrameHelper');
 // function to read Files
 function readFile(file){
   if (window.XMLHttpRequest){
@@ -295,7 +294,7 @@ function deleteStylizedEditor(ui, qip){
     if(ui.pluginAvailable("codemirror")){
 		var cm = qip.nextElementSibling;
 		cm.setAttribute('class', 'terminus-hide');
-		FrameHelper.removeChildren(cm);
+		TerminusClient.FrameHelper.removeChildren(cm);
 	}
 }
 

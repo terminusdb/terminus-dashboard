@@ -1,9 +1,7 @@
-const FrameHelper = require('../../FrameHelper');
-
 function HTMLEntityViewer(options){}
 HTMLEntityViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var value = FrameHelper.unshorten(value);
+	var value = TerminusClient.FrameHelper.unshorten(value);
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-literal-value terminus-entity-reference-value");
 	var self = this;
@@ -26,7 +24,7 @@ HTMLEntityViewer.prototype.getEntityViewHTML = function(value, renderer, datavie
 		controller.getInstanceMeta(value).then(function(response){
 			var lab = self.getEntityLabel(value, response, dataviewer);
 			if(lab){ 
-				FrameHelper.removeChildren(span);
+				TerminusClient.FrameHelper.removeChildren(span);
 				span.appendChild(lab);
 			}	
 		});

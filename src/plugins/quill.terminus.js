@@ -1,10 +1,7 @@
-//const FrameHelper = require('../FrameHelper');
-//const RenderingMap = require('../RenderingMap');
-
 function HTMLMarkupEditor(options){}
 HTMLMarkupEditor.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = TerminusDB_SDK.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
 	var input = document.createElement("div");
 	input.setAttribute('class', "html-wysiwyg");
 	var inner = document.createElement("span");
@@ -19,4 +16,4 @@ HTMLMarkupEditor.prototype.getDOM = function(renderer, dataviewer){
 	}
 	return input;
 }
-TerminusDB_SDK.RenderingMap.registerEditorForTypes("HTMLMarkupEditor", "Quill WYSIWIG HTML Editor", ["xdd:html"]);
+TerminusDashboard.RenderingMap.registerEditorForTypes("HTMLMarkupEditor", "Quill WYSIWIG HTML Editor", ["xdd:html"]);

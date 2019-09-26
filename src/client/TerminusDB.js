@@ -2,7 +2,6 @@
  * User Interface elements dealing with database level functions - view, delete, create, db
  * view document etc
  */
-const FrameHelper = require('../FrameHelper');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const TerminusClassChooser = require('./TerminusClassChooser');
 const TerminusDocumentChooser = require('./TerminusDocumentChooser');
@@ -161,7 +160,7 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		if(dcip.value) self.ui.showDocument(dcip.value);
 	})
 	if(this.ui.client.connectionConfig.platformEndpoint() && this.ui.pluginAvailable("select2")){
-		var mcls = FrameHelper.unshorten("dcog:Document");
+		var mcls = TerminusClient.FrameHelper.unshorten("dcog:Document");
 		var d2ch = new TerminusDocumentChooser(this.ui, mcls);
 		d2ch.change = function(val){
 			alert("changed to " + val);
@@ -256,8 +255,8 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	ccDOM.appendChild(tcdom);
 	var which = "select";
 	bt.addEventListener("click", function(){
-		// create document of FrameHelper.removeChildren(nlabs);
-		FrameHelper.removeChildren(ccDOM);
+		// create document of TerminusClient.FrameHelper.removeChildren(nlabs);
+		TerminusClient.FrameHelper.removeChildren(ccDOM);
 		UTILS.removeSelectedNavClass("terminus-doc-btn-selected");
 		this.classList.add("terminus-doc-btn-selected");
 		ccDOM.appendChild(dcip);
@@ -266,7 +265,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 
 	bi.addEventListener("click", function(){
 		// create document from dropdown
-		FrameHelper.removeChildren(ccDOM);
+		TerminusClient.FrameHelper.removeChildren(ccDOM);
 		UTILS.removeSelectedNavClass("terminus-doc-btn-selected");
 		this.classList.add("terminus-doc-btn-selected");
 		ccDOM.appendChild(tcdom);

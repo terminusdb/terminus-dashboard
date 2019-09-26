@@ -10,10 +10,10 @@ const config = {
   // Output
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'terminus-javascript-sdk.min.js',
-    sourceMapFilename: 'terminus-javascript-sdk.min.js.map',
+    filename: 'terminus-dashboard-sdk.min.js',
+    sourceMapFilename: 'terminus-dashboard-sdk.min.js.map',
     libraryTarget: 'var',
-    library: 'TerminusDB_SDK',
+    library: 'TerminusDashboard',
   },
   node: {
     process: false
