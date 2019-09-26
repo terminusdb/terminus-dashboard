@@ -117,7 +117,7 @@ let apiNavConfig = {
 function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
-    this.client = new TerminusDB.WOQLClient();
+    this.client = new TerminusClient.WOQLClient();
     this.client.use_fetch = true;
     this.client.return_full_response = true;
     this.pman = new TerminusPluginManager();

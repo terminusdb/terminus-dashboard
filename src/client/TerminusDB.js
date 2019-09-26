@@ -44,6 +44,12 @@ TerminusDBController.prototype.getAsDOM = function(){
 		var ul = document.createElement('ul');
 		ul.setAttribute('class','terminus-ul' );
 		nav.appendChild(ul);
+		// connected to db
+		var a = document.createElement('a');
+        a.setAttribute('class', 'terminus-dashboard-info terminus-list-group-a terminus-nav-width');
+        var txt = 'Database: ' + this.ui.db();
+        a.appendChild(document.createTextNode(txt));
+        ul.appendChild(a);
 		if(this.ui.showControl("db")){
 			var item = this.getControlHTML("Database Home", "fa-home");
 			item.classList.add("terminus-selected");

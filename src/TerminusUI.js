@@ -15,6 +15,7 @@ const TerminusSchemaViewer = require('./client/TerminusSchema');
 const TerminusServersdk = require('./client/TerminusServer');
 const TerminusURLLoader = require('./client/TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
+const UTILS=require('./Utils');
 
 function TerminusUI(opts){
 	this.client = new TerminusClient.WOQLClient();
@@ -406,17 +407,23 @@ TerminusUI.prototype.redraw = function(msg){
 	if(msg) this.showMessage(msg);
 };
 
+
+TerminusUI.prototype.toggleDashboardWidget = function(widget){
+    FrameHelper.removeChildren(this.controller);
+    FrameHelper.removeChildren(this.explorer);
+    UTILS.removeSelectedNavClass('terminus-dashboard-selected');
+    widget.classList.add('terminus-dashboard-selected');
+}
+
 TerminusUI.prototype.toggleControl = function(){
   var self = this;
   this.buttons.client.addEventListener('click', function(){
-    FrameHelper.removeChildren(self.controller);
-    FrameHelper.removeChildren(self.explorer);
+    self.toggleDashboardWidget(this);
     self.drawControls();
     self.showServerMainPage();
   })
   this.buttons.explorer.addEventListener('click', function(){
-    FrameHelper.removeChildren(self.controller);
-    FrameHelper.removeChildren(self.explorer);
+    self.toggleDashboardWidget(this);
     self.drawExplorer();
   })
 }
