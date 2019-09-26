@@ -61,11 +61,11 @@ TerminusSchemaViewer.prototype.resetControlDOM = function(){
 		}
 	}
 	else if(this.mode == "view"){
-		if(this.ui.showControl("import_schema")){
-			this.controldom.appendChild(this.getImportButton());
-		}
 		if(this.ui.showControl("update_schema")){
 			this.controldom.appendChild(this.getSchemaEditButton());
+		}
+		if(this.ui.showControl("import_schema")){
+			this.controldom.appendChild(this.getImportButton());
 		}
 		if(this.ui.showControl("schema_format")){
 			this.controldom.appendChild(this.getFormatChoices());
@@ -211,7 +211,7 @@ TerminusSchemaViewer.prototype.getImportButton = function(){
 		self.mode = "import";
 		self.refreshPage();
 	}
-	return this.getSchemaButton("Import Schema", "import_schema", func);
+	return this.getSchemaButton("Import New Schema", "import_schema", func);
 }
 
 TerminusSchemaViewer.prototype.getSchemaButton = function(label, action, func){

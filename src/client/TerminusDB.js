@@ -47,7 +47,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		// connected to db
 		var a = document.createElement('a');
         a.setAttribute('class', 'terminus-dashboard-info terminus-list-group-a terminus-nav-width');
-        var txt = 'Database: ' + this.ui.db();
+        var txt = 'Database: ' + nm;
         a.appendChild(document.createTextNode(txt));
         ul.appendChild(a);
 		if(this.ui.showControl("db")){
