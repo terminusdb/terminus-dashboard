@@ -1,9 +1,10 @@
 const FrameHelper = require('../FrameHelper');
 const WOQLResult = require('./WOQLResultsViewer');
 
-function WOQLQuery(client, options){
+function WOQLQuery(client, options, ui){
 	this.client = client;
 	this.options = options;
+	this.ui = ui;
 	this.default_limit = 1000;
 	this.prefixes = {};
 	if(client.connectionConfig.platformEndpoint()){
@@ -48,7 +49,7 @@ WOQLQuery.prototype.execute = function(woql){
 	var self = this;
 	return this.client.select(false, wrapped)
 	.then(function(response){
-		var res = new WOQLResult.WOQLResult(response, self, self.options);
+		var res = new WOQLResult.WOQLResult(response, self, self.options, self.ui);
 		return res;
 	});
 }
@@ -62,7 +63,6 @@ WOQLQuery.prototype.wrap = function(woql){
 		]
 	};
 	return wjson;
-	//return JSON.stringify(wjson);
 }
 
 WOQLQuery.prototype.getConcreteDocumentClassPattern = function(varc){
@@ -88,9 +88,6 @@ WOQLQuery.prototype.getAbstractQueryPattern = function(varname){
 WOQLQuery.prototype.getSubclassQueryPattern = function(varname, clsname){
 	var sqp = {sub: [varname, clsname]};
 	return sqp;
-
-	//var sqp = "(v('" + varname + "') << (" + clsname + "))";
-	//return sqp;
 }
 
 WOQLQuery.prototype.queryWrappedWithLimit = function(query, limit, start){
@@ -118,14 +115,6 @@ WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 		query.and.push(constraint);
 	}
 	return this.queryWrappedWithLimit(query, limit, start);
-	/*
-	var woql = "limit( " + limit + ",\n\t start(" + start + ","
-	var vdoc = "\n\t\tt(v('Document'), rdf/type, v('Type'))";
-	woql += "\n\t\tselect([v('Document'), v('Type')],(" + vdoc;
-	woql += ", \n\t\t(v('Type') << (dcog/'Document'))";
-	if(constraint) woql += ", \n" + constraint;
-	woql += "))))";
-	return woql;*/
 }
 
 WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
@@ -134,12 +123,6 @@ WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 		wjson = {and: [wjson, constraint]};
 	}
 	return this.queryWrappedWithLimit(wjson, limit, start);
-	/*var woql = "limit( " + limit + ", \n\tstart(" + start + ","
-	var vdoc = "\n\t\tt(v('Subject'), v('Predicate'), v('Object'))";
-	woql += "\n\t\tselect([v('Subject'), v('Predicate'), v('Object')],(" + vdoc;
-	if(constraint) woql += ", " + constraint;
-	woql += "))))";
-	return woql;*/
 }
 
 WOQLQuery.prototype.getPropertyListQuery = function(constraint, limit, start){
@@ -163,22 +146,6 @@ WOQLQuery.prototype.getPropertyListQuery = function(constraint, limit, start){
 		wjson = {and: [wjson, constraint]};
 	}
 	return this.queryWrappedWithLimit(wjson, limit, start);
-	
-	
-	/*
-	var vEl = "\n\tt(v('Property'), rdfs/range, v('Range'), schema)";
-	var opts = [];
-	opts.push("t(v('Property'), rdf/type, v('Type'), schema)");
-	opts.push("t(v('Property'), rdfs/label, v('Label'), schema)");
-	opts.push("t(v('Property'), rdfs/comment, v('Comment'), schema)");
-	opts.push("t(v('Property'), rdfs/domain, v('Domain'), schema)");
-	var woql = "select([v('Property'), v('Label'), v('Comment'), v('Domain'), v('Type'), v('Range')],(" + vEl;
-	if(constraint) woql += ", " + constraint;
-	for(var i = 0; i<opts.length; i++){
-		woql += ", \n\topt(" + opts[i] + ")";
-	}
-	woql += "))";*/
-	return woql;
 }
 
 

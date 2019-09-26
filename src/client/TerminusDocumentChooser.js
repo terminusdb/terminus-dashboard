@@ -35,7 +35,7 @@ TerminusDocumentChooser.prototype.getAsDOM = function(style){
 TerminusDocumentChooser.prototype.getS2DOM = function(style){
 	var docchooser = document.createElement("span");
 	docchooser.setAttribute("class", "terminus-document-chooser terminus-doc-holder");
-	var wq = new WOQLQuery(this.ui.client, {});
+	var wq = new WOQLQuery(this.ui.client, {}, this.ui);
 	var cfilter = wq.getSubclassQueryPattern("v:Class", "'"+this.root+"'");
 	var termcc = new TerminusClassChooser(this.ui, cfilter);
 	termcc.empty_choice = "Filter by Type";

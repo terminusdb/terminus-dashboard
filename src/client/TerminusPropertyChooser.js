@@ -35,7 +35,7 @@ TerminusPropertyChooser.prototype.getAsDOM = function(){
 		}
 	});
 	ccdom.appendChild(ccsel);
-	var wq = new WOQLQuery(this.ui.client);
+	var wq = new WOQLQuery(this.ui.client, false, this.ui);
 	var woql = wq.getPropertyListQuery(this.filter);
 	var self = this;
 	wq.execute(woql)

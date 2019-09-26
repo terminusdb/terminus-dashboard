@@ -74,9 +74,8 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
             return wq.getElementMetaDataQuery(null, settings.pageLength, settings.start);
         break;
         case 'Show_Document_Classes':
-            return wq.getClassMetaDataQuery(wq.getSubclassQueryPattern("Class", "tcs/'Document'")
-    										  + ", not(" + wq.getAbstractQueryPattern("Class") + ")",
-                                                 settings.pageLength, settings.start);
+        	var sqp = wq.getConcreteDocumentClassPattern("Class");
+            return wq.getClassMetaDataQuery(sqp);
         break;
         case 'Show_All_Properties':
             return wq.getPropertyListQuery(null, settings.pageLength, settings.start);
@@ -145,8 +144,6 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.query = settings.query;
     this.chosenValue = settings.chosenValue;
 }
-
-
 
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;

@@ -104,11 +104,6 @@ let apiNavConfig = {
                 navText: 'Update',
                 action : 'update',
                 icon   : 'arrow-up'
-            },
-            mapping:{
-                navText: 'Mapping',
-                action : 'lookup',
-                icon   : 'random'
             }
         }
     }
@@ -128,12 +123,13 @@ ApiExplorer.prototype.getAsDOM = function(){
  	var aec = document.createElement("div");
     aec.setAttribute("class", "terminus-db-controller");
     if(this.ui){
-       this.getApiNav(aec, this.viewer);
-       this.getApiExplorerDom('connect', this.viewer);
+       this.getApiNav(aec, this.viewer); // nav
+       this.getApiExplorerDom('connect', this.viewer); // content dom
     } // if this.ui
     return aec;
  }
 
+/***** Api Nav bar *****/
 // Toggle selected nav bars
 ApiExplorer.prototype.setSelectedNavMenu = function(a){
     UTILS.removeSelectedNavClass("terminus-selected");
@@ -183,10 +179,10 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
             this.createNavs(apiNavConfig.mainNav[key], viewer, ul);
         }
     } // for apiNavConfig
-
     return navDom;
 } // getApiNav()
 
+/***** Api sub navs  *****/
 // get schema api explorer - nav bar, alert msg, headers ...
 ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
     // clear of viewer
@@ -205,7 +201,7 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
     body.setAttribute('class', 'terminus-module-body');
     row.appendChild(body);
     var api = document.createElement('div');
-    api.setAttribute('class', 'terminus-module-body span9 terminus-module-body-white-bg terminus-module-body-width');
+    api.setAttribute('class', 'terminus-module-body terminus-module-body-white-bg terminus-module-body-width');
     body.appendChild(api);
     // body
     var cont = document.createElement('div');
@@ -280,6 +276,60 @@ ApiExplorer.prototype.createSubNavs = function(curSubMenu, subMenuConfig, cont, 
     ul.appendChild(a);
 }
 
+// get connect to server api calls - on click of connectAPI nav bar
+ApiExplorer.prototype.getConnectExplorer = function(body){
+    var self = this;
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    // get signature
+    var b = this.getSignature('connect');
+    body.appendChild(b);
+    // get header Parameter
+    body.appendChild(UTILS.getHeaderDom('Parameters'));
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    //form to get server url
+    this.getForm( '', body, true, 'connect', 'URL : server_url');
+    //body.appendChild(form);
+    return body;
+} // getConnectExplorer
+
+// get database api calls - on click of databaseAPI nav bar - submenus of database Api defined here
+ApiExplorer.prototype.getDatabaseExplorer = function(cont){
+    var body = document.createElement('div');
+    // list view of Databse tools
+    var ul = document.createElement('ul');
+    ul.setAttribute('class','terminus-ul-horizontal');
+    // loop over apiNavConfig
+    for (var key in apiNavConfig.subNav.database){
+        if (apiNavConfig.subNav.database.hasOwnProperty(key))
+            this.createSubNavs('database', apiNavConfig.subNav.database[key], cont, body, ul);
+    } // for apiNavConfig
+    cont.appendChild(ul);
+    // landing page
+    var dom = this.getDatabaseDom(apiNavConfig.subNav.database.createDatabase.action, body);
+    cont.appendChild(dom);
+    return cont;
+} // getDatabaseExplorer
+
+// get schema api calls - on click of SchemaAPI nav bar - submenus of schema Api defined here
+ApiExplorer.prototype.getSchemaApi = function(cont){
+    var body = document.createElement('div');
+    // list view of Databse tools
+    var ul = document.createElement('ul');
+    ul.setAttribute('class','terminus-ul-horizontal');
+    // loop over apiNavConfig
+    for (var key in apiNavConfig.subNav.schema){
+        if (apiNavConfig.subNav.schema.hasOwnProperty(key)) {
+            this.createSubNavs('schema', apiNavConfig.subNav.schema[key], cont, body, ul);
+        }
+    } // for apiNavConfig
+    cont.appendChild(ul);
+    var dom = this.getShowApiDom(apiNavConfig.subNav.schema.getSchema.action, body);
+    cont.appendChild(dom);
+    return cont;
+} // getSchemaApi
+
 // get document api calls - on click of DocumentAPI nav bar
 ApiExplorer.prototype.getDocumentApi = function(cont){
     var body = document.createElement('div');
@@ -316,133 +366,7 @@ ApiExplorer.prototype.getQueryApi  = function(cont){
     return cont;
 } //getQueryApi
 
-// get schema api calls - on click of SchemaAPI nav bar - submenus of schema Api defined here
-ApiExplorer.prototype.getSchemaApi = function(cont){
-    var body = document.createElement('div');
-    // list view of Databse tools
-    var ul = document.createElement('ul');
-    ul.setAttribute('class','terminus-ul-horizontal');
-    // loop over apiNavConfig
-    for (var key in apiNavConfig.subNav.schema){
-        if (apiNavConfig.subNav.schema.hasOwnProperty(key)) {
-            this.createSubNavs('schema', apiNavConfig.subNav.schema[key], cont, body, ul);
-        }
-    } // for apiNavConfig
-    cont.appendChild(ul);
-    var dom = this.getShowApiDom(apiNavConfig.subNav.schema.getSchema.action, body);
-    cont.appendChild(dom);
-    return cont;
-} // getSchemaApi
-
-// get connect to server api calls - on click of connectAPI nav bar
-ApiExplorer.prototype.getConnectExplorer = function(body){
-    var self = this;
-    var br = document.createElement('BR');
-    body.appendChild(br);
-    // get signature
-    var b = this.getSignature('connect');
-    body.appendChild(b);
-    // get header Parameter
-    body.appendChild(UTILS.getHeaderDom('Parameters'));
-    var br = document.createElement('BR');
-    body.appendChild(br);
-    //form to get server url
-    var form = this.getServerForm();
-    body.appendChild(form);
-    return body;
-} // getConnectExplorer
-
-//get create & delete db form
-ApiExplorer.prototype.getServerForm = function(){
-  // form
-  var form = document.createElement('form');
-  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-  var fd = document.createElement('div');
-  fd.setAttribute('class', 'terminus-control-group');
-  form.appendChild(fd);
-  var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'terminus-control-label');
-  inpLabel.setAttribute('for', 'basicinput');
-  inpLabel.innerHTML = 'Url:';
-  fd.appendChild(inpLabel);
-  var cd = document.createElement('div');
-  cd.setAttribute('class', 'terminus-controls');
-  fd.appendChild(cd);
-  var inpId = document.createElement('input');
-  inpId.setAttribute('type', 'text');
-  inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'terminus-input-text');
-  inpId.setAttribute('placeholder', 'URL : server_url');
-  if(this.val) inpId.value = this.val;
-  cd.appendChild(inpId);
-
-  var fd = document.createElement('div');
-  fd.setAttribute('class', 'terminus-control-group');
-  form.appendChild(fd);
-  var keyLabel = document.createElement('label');
-  keyLabel.setAttribute('class', 'terminus-control-label');
-  keyLabel.setAttribute('for', 'basicinput');
-  keyLabel.innerHTML = 'Key:';
-  fd.appendChild(keyLabel);
-  var cd = document.createElement('div');
-  cd.setAttribute('class', 'terminus-controls');
-  fd.appendChild(cd);
-  var key = document.createElement('input');
-  key.setAttribute('type', 'text');
-  key.setAttribute('id', 'basicinput');
-  key.setAttribute('class', 'span8 terminus-input-text');
-  key.setAttribute('placeholder', 'Key : key');
-  if(this.val) key.value = this.val;
-  cd.appendChild(key);
-
-  var button = document.createElement('button');
-  button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
-  button.setAttribute('type', 'button');
-  button.innerHTML = 'Send Api';
-  var gatherips = function(){
-    var input = {};
-    input.url = inpId.value;
-    input.key = key.value;
-    return input;
-  }
-  var resd = document.createElement('div');
-  form.appendChild(button);
-  form.appendChild(resd);
-  var self = this;
-  button.addEventListener("click", function(){
-    var buttonSelf = this;
-    //opts = {};
-    var input = gatherips();
-    self.client.connect(input.url, input.key)
-    .then(function(response){
-      FrameHelper.removeChildren(resd);
-      var resultDom = UTILS.showHttpResult(response, 'connect', resd, self.ui);
-    });
-  }) // button click
-  return form;
-} // getServerForm()
-
-// get database api calls - on click of databaseAPI nav bar - submenus of database Api defined here
-ApiExplorer.prototype.getDatabaseExplorer = function(cont){
-  var body = document.createElement('div');
-  // list view of Databse tools
-  var ul = document.createElement('ul');
-  ul.setAttribute('class','terminus-ul-horizontal');
-  // loop over apiNavConfig
-  for (var key in apiNavConfig.subNav.database){
-      if (apiNavConfig.subNav.database.hasOwnProperty(key)) {
-          this.createSubNavs('database', apiNavConfig.subNav.database[key], cont, body, ul);
-      }
-  } // for apiNavConfig
-  cont.appendChild(ul);
-  // landing page
-  var dom = this.getDatabaseDom(apiNavConfig.subNav.database.createDatabase.action, body);
-  cont.appendChild(dom);
-  return cont;
-} // getDatabaseExplorer
-
-
+/***** Api Content view  *****/
 // get database dom
 ApiExplorer.prototype.getDatabaseDom = function(mode, body){
     var self = this;
@@ -456,192 +380,70 @@ ApiExplorer.prototype.getDatabaseDom = function(mode, body){
     var br = document.createElement('BR');
     body.appendChild(br);
     //form to get database id
-    if(mode == 'create') var form = this.getDBForm(mode);
-    else var form = this.getDBForm(mode);
-    body.appendChild(form);
+    if(mode == 'create') this.getForm( null, body, false, mode, 'URL : server/database_id');
+    else this.getForm( null, body, true, mode, 'URL : server/database_id');
     return body;
 }// getDatabaseDom()
 
-//get create & delete db form
-ApiExplorer.prototype.getDBForm = function(mode){
-  // form
-  var form = document.createElement('form');
-  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
+// get schema & document dom
+ApiExplorer.prototype.getShowApiDom = function(action, body){
+    var self = this;
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    // signature
+    var b = this.getSignature(action);
+    body.appendChild(b);
+    // get header Parameter
+    body.appendChild(UTILS.getHeaderDom('Parameters'));
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    // get input
+    switch(action){
+        case 'getSchema':
+            this.getForm( 'schema', body, true, action, 'URL : server/database_id');
+        break;
+        case 'getClassFrames':
+            this.getForm( 'getClassFrames', body, true, action, 'URL : server/database_id');
+        break;
+        case 'updateSchema':
+            this.getForm( 'schema', body, false, action, 'URL : server/database_id');
+        break;
+        case 'viewDocument':
+            this.getForm('document', body, true, action, 'URL : server/database_id/document/document_id');
+        break;
+        case 'deleteDocument':
+            this.getForm('document', body, true, action, 'URL : server/database_id/document/document_id');
+        break;
+        case 'createDocument':
+            this.getForm('document', body, false, action, 'URL : server/database_id/document/document_id');
+        break;
+        case 'updateDocument':
+            this.getForm('document', body, false, action, 'URL : server/database_id/document/document_id');
+        break;
+        default:
+            console.log('Invalid Api Call on form');
+        break;
+   }// switch(action)
 
-  var fd = document.createElement('div');
-  fd.setAttribute('class', 'terminus-control-group');
-  form.appendChild(fd);
-  var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'terminus-control-label');
-  inpLabel.setAttribute('for', 'basicinput');
-  inpLabel.innerHTML = 'Url:';
-  fd.appendChild(inpLabel);
-  var cd = document.createElement('div');
-  cd.setAttribute('class', 'terminus-controls');
-  fd.appendChild(cd);
-  var inpId = document.createElement('input');
-  inpId.setAttribute('type', 'text');
-  inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'span8 terminus-input-text');
-  inpId.setAttribute('placeholder', 'URL : server/database_id');
-  if(this.val) inpId.value = this.val;
-  cd.appendChild(inpId);
-
-  if(mode == 'create'){
-    var fd = document.createElement('div');
-    fd.setAttribute('class', 'terminus-control-group');
-    form.appendChild(fd);
-    var inpLabel = document.createElement('label');
-    inpLabel.setAttribute('class', 'terminus-control-label');
-    inpLabel.setAttribute('for', 'basicinput');
-    inpLabel.innerHTML = 'Document:';
-    fd.appendChild(inpLabel);
-    var cd = document.createElement('div');
-    cd.setAttribute('class', 'terminus-controls');
-    fd.appendChild(cd);
-    var inpTxtAr = document.createElement('textarea');
-    inpTxtAr.setAttribute('type', 'text');
-    inpTxtAr.setAttribute('class', 'terminus-input-text');
-    inpTxtAr.setAttribute('placeholder', 'Enter document to create database');
-    cd.appendChild(inpTxtAr);
-    UTILS.stylizeEditor(this.ui, inpTxtAr, 'api-doc', 'javascript');
-  } // if(mode == 'create')
-
-  var fd = document.createElement('div');
-  fd.setAttribute('class', 'terminus-control-group');
-  form.appendChild(fd);
-  var keyLabel = document.createElement('label');
-  keyLabel.setAttribute('class', 'terminus-control-label');
-  keyLabel.setAttribute('for', 'basicinput');
-  keyLabel.innerHTML = 'Key:';
-  fd.appendChild(keyLabel);
-  var cd = document.createElement('div');
-  cd.setAttribute('class', 'terminus-controls');
-  fd.appendChild(cd);
-  var inpKey = document.createElement('input');
-  inpKey.setAttribute('type', 'text');
-  inpKey.setAttribute('id', 'basicinput');
-  inpKey.setAttribute('class', 'terminus-input-text');
-  inpKey.setAttribute('placeholder', 'key');
-  cd.appendChild(inpKey);
-
-  var button = document.createElement('button');
-  button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
-  button.setAttribute('type', 'button');
-  button.innerHTML = 'Send Api';
-  var gatherips = function(){
-    var input = {};
-    input.id = inpId.value;
-    input.doc = JSON.parse(inpTxtAr.value);
-    input.key = inpKey.value;
-    return input;
-  }
-  var self = this;
-  if(mode == 'create'){
-    button.addEventListener("click", function(form){
-      var input = gatherips();
-      var buttonSelf = this;
-      self.client.createDatabase(input.id, input.doc, input.key)
-      .then(function(response){
-        var currForm = buttonSelf.parentNode;
-        var resultDom = UTILS.showHttpResult(response, 'create', currForm, self.ui);
-      });
-    }) // button click
-  } // if(mode == 'create')
-  else{
-    button.addEventListener("click", function(){
-      var buttonSelf = this;
-      opts = {};
-      self.client.deleteDatabase(inpId.value, opts)
-      .then(function(response){
-        var currForm = buttonSelf.parentNode;
-        var resultDom = UTILS.showHttpResult(response, 'delete', currForm, self.ui);
-      });
-    }) // button click
-  } // if(mode == 'delete')
-  form.appendChild(button);
-  return form;
-} // getDBForm()
+   return body;
+ } // getShowApiDom()
 
 // get query api dom
 ApiExplorer.prototype.getQueryApiDom = function(action, body){
-
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
-  // signature
-  var b = this.getSignature(action);
-  body.appendChild(b);
-
-  // get header Parameter
-  body.appendChild(UTILS.getHeaderDom('Parameters'));
-  var br = document.createElement('BR');
-  body.appendChild(br);
-
-  var form = document.createElement('form');
-  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-  var fd = document.createElement('div');
-  fd.setAttribute('class', 'terminus-control-group');
-  form.appendChild(fd);
-  var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'terminus-control-label');
-  inpLabel.setAttribute('for', 'basicinput');
-  inpLabel.innerHTML = 'Url:';
-  fd.appendChild(inpLabel);
-  var cd = document.createElement('div');
-  cd.setAttribute('class', 'terminus-controls');
-  fd.appendChild(cd);
-  var inpId = document.createElement('input');
-  inpId.setAttribute('type', 'text');
-  inpId.setAttribute('id', 'basicinput');
-  inpId.setAttribute('class', 'span8 terminus-input-text');
-  inpId.setAttribute('placeholder', 'URL : server/database_id');
-  if (this.value) inpId.value = this.val;
-  cd.appendChild(inpId);
-  fd.appendChild(cd);
-
-  var fd = document.createElement('div');
-  fd.setAttribute('class', 'terminus-control-group');
-  form.appendChild(fd);
-  var inpLabel = document.createElement('label');
-  inpLabel.setAttribute('class', 'terminus-control-label');
-  inpLabel.setAttribute('for', 'basicinput');
-  inpLabel.innerHTML = 'Query:';
-  fd.appendChild(inpLabel);
-  var cd = document.createElement('div');
-  cd.setAttribute('class', 'terminus-controls');
-  fd.appendChild(cd);
-  var txtar = document.createElement('textarea');
-  if(this.value) txtar.value = this.val;
-  cd.appendChild(txtar);
-  txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-  cd.appendChild(txtar);
-  fd.appendChild(cd);
-  UTILS.stylizeEditor(this.ui, txtar, 'query', 'javascript');
-  var br = document.createElement('BR');
-  fd.appendChild(br);
-
-  var button = document.createElement('button');
-  button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
-  button.setAttribute('type', 'button');
-  button.innerHTML = 'Send Api';
-  var self = this;
-  button.addEventListener("click", function(){
-    var buttonSelf = this;
-    var opts = {};
-    self.client.select(inpId.value, txtar.value, opts)
-    .then(function(response){
-      var currForm = buttonSelf.parentNode;
-      var resultDom = UTILS.showHttpResult(response, 'select', currForm, self.ui);
-    });
-  }) // button click
-  fd.appendChild(button);
-  body.appendChild(form);
-  return body;
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    // signature
+    var b = this.getSignature(action);
+    body.appendChild(b);
+    // get header Parameter
+    body.appendChild(UTILS.getHeaderDom('Parameters'));
+    var br = document.createElement('BR');
+    body.appendChild(br);
+    this.getForm( 'query', body, false, action, 'URL : server/database_id');
+    return body;
 } // getQueryApiDom
 
-ApiExplorer.prototype.getClassFramesForm = function(){
+/*ApiExplorer.prototype.getClassFramesForm = function(){
     // form
     var form = document.createElement('form');
     form.setAttribute('class', 'terminus-form-horizontal row-fluid');
@@ -722,527 +524,299 @@ ApiExplorer.prototype.getClassFramesForm = function(){
     }) // button click
     form.appendChild(button);
     return form;
+}   */
+
+// get form for all Apis
+ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlaceholder){
+    // form
+    var formDoc = document.createElement('form');
+    formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
+    var fd = document.createElement('div');
+    fd.setAttribute('class', 'terminus-control-group');
+    formDoc.appendChild(fd);
+    var urlLabel = document.createElement('label');
+    urlLabel.setAttribute('class', 'terminus-control-label');
+    urlLabel.setAttribute('for', 'basicinput');
+    urlLabel.innerHTML = 'Url:';
+    fd.appendChild(urlLabel);
+    var cd = document.createElement('div');
+    cd.setAttribute('class', 'terminus-controls');
+    fd.appendChild(cd);
+    var inpUrl = document.createElement('input');
+    inpUrl.setAttribute('type', 'text');
+    inpUrl.setAttribute('id', 'basicinput');
+    inpUrl.setAttribute('class', 'span8 terminus-input-text');
+    inpUrl.setAttribute('placeholder', urlPlaceholder);
+    cd.appendChild(inpUrl);
+    // add extra form fields based on current api chosen
+    switch(curApi){
+        case 'getClassFrames':
+            var fd = document.createElement('div');
+            fd.setAttribute('class', 'terminus-control-group');
+            formDoc.appendChild(fd);
+            var docUrlLabel = document.createElement('label');
+            docUrlLabel.setAttribute('class', 'terminus-control-label');
+            docUrlLabel.setAttribute('for', 'basicinput');
+            docUrlLabel.innerHTML = 'Url/ ID:';
+            fd.appendChild(docUrlLabel);
+            var cd = document.createElement('div');
+            cd.setAttribute('class', 'terminus-controls');
+            fd.appendChild(cd);
+            var inpDocUrl = document.createElement('input');
+            inpDocUrl.setAttribute('type', 'text');
+            inpDocUrl.setAttribute('id', 'basicinput');
+            inpDocUrl.setAttribute('class', 'span8 terminus-input-text');
+            inpDocUrl.setAttribute('placeholder', 'Url or ID of document class');
+            cd.appendChild(inpDocUrl);
+        break;
+        case 'schema':
+            //encoding
+            var fd = document.createElement('div');
+            fd.setAttribute('class', 'terminus-control-group');
+            formDoc.appendChild(fd);
+            var encLabel = document.createElement('label');
+            encLabel.setAttribute('class', 'terminus-control-label');
+            encLabel.setAttribute('for', 'basicinput');
+            encLabel.innerHTML = 'Encoding:';
+            fd.appendChild(encLabel);
+            var cd = document.createElement('div');
+            cd.setAttribute('class', 'terminus-controls');
+            fd.appendChild(cd);
+            var inpEnc = document.createElement('select');
+            inpEnc.setAttribute('style', 'height: 50px;width: 300px;padding: 10px;');
+            inpEnc.setAttribute('placeholder', 'turtle');
+            var optTurt = document.createElement('option');
+            optTurt.setAttribute('value', 'terminus:turtle');
+            optTurt.appendChild(document.createTextNode('turtle'));
+            inpEnc.appendChild(optTurt);
+            var optJld = document.createElement('option');
+            optJld.setAttribute('value', 'terminus:jsonld');
+            optJld.appendChild(document.createTextNode('jsonLD'));
+            inpEnc.appendChild(optJld);
+            cd.appendChild(inpEnc);
+        break;
+    }
+    var fd = document.createElement('div');
+    fd.setAttribute('class', 'terminus-control-group');
+    formDoc.appendChild(fd);
+    var keyLabel = document.createElement('label');
+    keyLabel.setAttribute('class', 'terminus-control-label');
+    keyLabel.setAttribute('for', 'basicinput');
+    keyLabel.innerHTML = 'Key:';
+    fd.appendChild(keyLabel);
+    var cd = document.createElement('div');
+    cd.setAttribute('class', 'terminus-controls');
+    fd.appendChild(cd);
+    var inpKey = document.createElement('input');
+    inpKey.setAttribute('type', 'text');
+    inpKey.setAttribute('id', 'basicinput');
+    inpKey.setAttribute('class', 'span8 terminus-input-text');
+    inpKey.setAttribute('placeholder', 'Key');
+    cd.appendChild(inpKey);
+    if(!view){
+        // include text area only if call is type post
+        var fd = document.createElement('div');
+        fd.setAttribute('class', 'terminus-control-group');
+        formDoc.appendChild(fd);
+        var docLabel = document.createElement('label');
+        docLabel.setAttribute('class', 'terminus-control-label');
+        docLabel.setAttribute('for', 'basicinput');
+        if(curApi == 'query') docLabel.innerHTML = 'Query:';
+        docLabel.innerHTML = 'Document:';
+        fd.appendChild(docLabel);
+        var cd = document.createElement('div');
+        cd.setAttribute('class', 'terminus-controls');
+        fd.appendChild(cd);
+        var inpDoc = document.createElement('textarea');
+        cd.appendChild(inpDoc);
+        inpDoc.setAttribute('class', 'terminus-api-explorer-text-area');
+        UTILS.stylizeEditor(this.ui, inpDoc, 'document', 'javascript');
+    }
+    body.appendChild(formDoc);
+    // gather inputs
+    var inp ={};
+    inp.url = inpUrl;
+    inp.key = inpKey;
+    if(curApi == 'getClassFrames') inp.docUrl = inpDocUrl;
+    if(curApi == 'schema') inp.enc = inpEnc;
+    if(!view) inp.doc = inpDoc;
+    var form = this.getApiSendButton(action, inp);
+    body.appendChild(form);
 }
 
-// get schema & document dom
-ApiExplorer.prototype.getShowApiDom = function(action, body){
-   var self = this;
-
-   var br = document.createElement('BR');
-   body.appendChild(br);
-
-   // signature
-   var b = this.getSignature(action);
-   body.appendChild(b);
-
-   // get header Parameter
-   body.appendChild(UTILS.getHeaderDom('Parameters'));
-   var br = document.createElement('BR');
-   body.appendChild(br);
-
-   // get input
-   switch(action){
-     case 'getSchema':
-       // form to input schema url
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       // schema url
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Url:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpId = document.createElement('input');
-       inpId.setAttribute('type', 'text');
-       inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8 terminus-input-text');
-       inpId.setAttribute('placeholder', 'URL : server/database_id');
-       cd.appendChild(inpId);
-
-       //encoding
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var encLabel = document.createElement('label');
-       encLabel.setAttribute('class', 'terminus-control-label');
-       encLabel.setAttribute('for', 'basicinput');
-       encLabel.innerHTML = 'Encoding:';
-       fd.appendChild(encLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpEnc = document.createElement('select');
-       inpEnc.setAttribute('style', 'height: 50px;width: 300px;padding: 10px;');
-       inpEnc.setAttribute('placeholder', 'turtle');
-       var optTurt = document.createElement('option');
-       optTurt.setAttribute('value', 'terminus:turtle');
-       optTurt.appendChild(document.createTextNode('turtle'));
-       inpEnc.appendChild(optTurt);
-       var optJld = document.createElement('option');
-       optJld.setAttribute('value', 'terminus:jsonld');
-       optJld.appendChild(document.createTextNode('jsonLD'));
-       inpEnc.appendChild(optJld);
-       cd.appendChild(inpEnc);
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var keyLabel = document.createElement('label');
-       keyLabel.setAttribute('class', 'terminus-control-label');
-       keyLabel.setAttribute('for', 'basicinput');
-       keyLabel.innerHTML = 'Key:';
-       fd.appendChild(keyLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpKey = document.createElement('input');
-       inpKey.setAttribute('type', 'text');
-       inpKey.setAttribute('id', 'basicinput');
-       inpKey.setAttribute('class', 'terminus-input-text');
-       inpKey.setAttribute('placeholder', 'Key');
-       cd.appendChild(inpKey);
-
-       // gather the dom objects
-       var gatherips = {};
-       gatherips.url = inpId;
-       gatherips.enc = inpEnc;
-       gatherips.key  = inpKey;
-
-       body.appendChild(formDoc);
-
-       //form to get schema
-       var form = this.getApiForm(action, gatherips);
-       body.appendChild(form);
-     break;
-     case 'getClassFrames':
-        var form = this.getClassFramesForm();
-        body.appendChild(form);
-     break;
-     case 'updateSchema':
-       // form to input schema url
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       // schema url
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Url:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpId = document.createElement('input');
-       inpId.setAttribute('type', 'text');
-       inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8 terminus-input-text');
-       inpId.setAttribute('placeholder', 'URL : server/database_id');
-       cd.appendChild(inpId);
-
-       //encoding
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var encLabel = document.createElement('label');
-       encLabel.setAttribute('class', 'terminus-control-label');
-       encLabel.setAttribute('for', 'basicinput');
-       encLabel.innerHTML = 'Encoding:';
-       fd.appendChild(encLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpEnc = document.createElement('select');
-       inpEnc.setAttribute('style', 'height: 50px;width: 300px;padding: 10px;');
-       inpEnc.setAttribute('type', 'text');
-       inpEnc.setAttribute('placeholder', 'turtle');
-       var optTurt = document.createElement('option');
-       optTurt.setAttribute('value', 'terminus:turtle');
-       optTurt.appendChild(document.createTextNode('turtle'));
-       inpEnc.appendChild(optTurt);
-       var optJld = document.createElement('option');
-       optJld.setAttribute('value', 'terminus:jsonld');
-       optJld.appendChild(document.createTextNode('jsonLD'));
-       inpEnc.appendChild(optJld);
-       cd.appendChild(inpEnc);
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var schLabel = document.createElement('label');
-       schLabel.setAttribute('class', 'terminus-control-label');
-       schLabel.setAttribute('for', 'basicinput');
-       schLabel.innerHTML = 'Schema:';
-       fd.appendChild(schLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var schDoc = document.createElement('textarea');
-       cd.appendChild(schDoc);
-       schDoc.setAttribute('class', 'terminus-api-explorer-text-area');
-       UTILS.stylizeEditor(this.ui, schDoc, 'api-doc', 'turtle');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var keyLabel = document.createElement('label');
-       keyLabel.setAttribute('class', 'terminus-control-label');
-       keyLabel.setAttribute('for', 'basicinput');
-       keyLabel.innerHTML = 'Key:';
-       fd.appendChild(keyLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-
-       var inpKey = document.createElement('input');
-       inpKey.setAttribute('type', 'text');
-       inpKey.setAttribute('id', 'basicinput');
-       inpKey.setAttribute('class', 'terminus-input-text');
-       inpKey.setAttribute('placeholder', 'Key');
-       cd.appendChild(inpKey);
-
-       // gather the dom objects
-       var gatherips = {};
-       gatherips.url = inpId;
-       gatherips.enc = inpEnc;
-       gatherips.key = inpKey;
-       gatherips.doc = schDoc;
-
-       //form to update schema
-       var form = this.getApiForm(action, gatherips);
-       body.appendChild(formDoc);
-       body.appendChild(form);
-     break;
-     case 'viewDocument':
-       // form
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Url:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpId = document.createElement('input');
-       inpId.setAttribute('type', 'text');
-       inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8 terminus-input-text');
-       inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
-       cd.appendChild(inpId);
-
-       body.appendChild(formDoc);
-
-       var form = this.getApiForm(action, inpId);
-
-       body.appendChild(form);
-
-     break;//viewDocument
-     case 'deleteDocument':
-       // form
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Url:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpId = document.createElement('input');
-       inpId.setAttribute('type', 'text');
-       inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8 terminus-input-text');
-       inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
-       cd.appendChild(inpId);
-
-       body.appendChild(formDoc);
-
-       var form = this.getApiForm(action, inpId);
-
-       body.appendChild(form);
-     break;
-     case 'createDocument':
-       // form to input schema url
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Url:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpId = document.createElement('input');
-       inpId.setAttribute('type', 'text');
-       inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8 terminus-input-text');
-       inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
-       cd.appendChild(inpId);
-
-       body.appendChild(formDoc);
-
-       var br = document.createElement('BR');
-       body.appendChild(br);
-
-       // text area
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Document:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var txtar = document.createElement('textarea');
-       cd.appendChild(txtar);
-       txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-       UTILS.stylizeEditor(this.ui, txtar, 'document', 'javascript');
-
-       /*var editor = codeMirrorFormat(txtar, 'javascript', true);
-       // refresh load
-       setTimeout(function() {
-           editor.refresh();
-       },1);
-       // save changes of code mirror editor
-       function updateTextArea() {
-         editor.save();
-       }
-       editor.on('change', updateTextArea); */
-
-        body.appendChild(formDoc);
-
-        var br = document.createElement('BR');
-        body.appendChild(br);
-
-        // gather the dom objects
-        var gatherips = {};
-        gatherips.schemaUrlDom =  inpId;
-        gatherips.schemaTextDom =  txtar;
-        gatherips.htmlEditor =  editor;
-
-        //form to update schema
-        var form = this.getApiForm(action, gatherips);
-        body.appendChild(form);
-
-     break;
-     case 'updateDocument':
-       // form to input schema url
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Url:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var inpId = document.createElement('input');
-       inpId.setAttribute('type', 'text');
-       inpId.setAttribute('id', 'basicinput');
-       inpId.setAttribute('class', 'span8 terminus-input-text');
-       inpId.setAttribute('placeholder', 'URL : server/database_id/document/document_id');
-       cd.appendChild(inpId);
-
-       body.appendChild(formDoc);
-
-       var br = document.createElement('BR');
-       body.appendChild(br);
-
-       // text area
-       var formDoc = document.createElement('form');
-       formDoc.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-       var fd = document.createElement('div');
-       fd.setAttribute('class', 'terminus-control-group');
-       formDoc.appendChild(fd);
-       var inpLabel = document.createElement('label');
-       inpLabel.setAttribute('class', 'terminus-control-label');
-       inpLabel.setAttribute('for', 'basicinput');
-       inpLabel.innerHTML = 'Document:';
-       fd.appendChild(inpLabel);
-       var cd = document.createElement('div');
-       cd.setAttribute('class', 'terminus-controls');
-       fd.appendChild(cd);
-       var txtar = document.createElement('textarea');
-       cd.appendChild(txtar);
-       txtar.setAttribute('class', 'terminus-api-explorer-text-area');
-       UTILS.stylizeEditor(this.ui, txtar, 'document', 'turtle');
-
-       body.appendChild(formDoc);
-
-       var br = document.createElement('BR');
-       body.appendChild(br);
-
-       // gather the dom objects
-       var gatherips = {};
-       gatherips.schemaUrlDom =  inpId;
-       gatherips.schemaTextDom =  txtar;
-       gatherips.htmlEditor =  editor;
-
-       //form to update schema
-       var form = this.getApiForm(action, gatherips);
-       body.appendChild(form);
-
-     break;
-   }// switch(action)
-
-   return body;
- } // getShowApiDom()
-
 // define event listeners on send api of schema & documents
-ApiExplorer.prototype.getApiForm = function(action, input){
-  // form
-  var form = document.createElement('form');
-  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
-
-  var button = document.createElement('button');
-  button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
-  button.setAttribute('type', 'button');
-  button.innerHTML = 'Send Api';
-  form.appendChild(button);
-  var resd = document.createElement('div');
-  form.appendChild(resd);
-  var self = this;
-  switch(action){
-    case 'getSchema':
-      button.addEventListener("click", function(){
-        var opts = {};
-        opts['terminus:encoding'] = input.enc.value;
-        opts['terminus:user_key'] = input.key.value;
-        var schurl = input.url.value;
-        var buttonSelf = this;
-        self.client.getSchema(schurl, opts)
-        .then(function(response){
-          FrameHelper.removeChildren(resd);
-          var resultDom = UTILS.showHttpResult(response, 'getSchema', resd, self.ui);
-        });
-      }) // button click
-    break;
-    case 'updateSchema':
-      button.addEventListener("click", function(){
-        var buttonSelf = this;
-        opts = {};
-        opts['terminus:encoding'] = input.enc.value;
-        opts['terminus:user_key'] = input.key.value;
-        var schurl = input.url.value;
-        self.client.connectionConfig.connected_mode = false;
-        self.client.updateSchema(schurl, input.doc.value, opts)
-        .then(function(response){
-          var gtxtar = document.createElement('textarea');
-          gtxtar.setAttribute('readonly', true);
-          gtxtar.innerHTML = response;
-          var currForm = buttonSelf.parentNode;
-          currForm.appendChild(gtxtar);
-          UTILS.stylizeEditor(this.ui, txtar, 'schema', 'turtle');
-        });
-      }) // button click
-    break;
-    case 'viewDocument':
-      button.addEventListener("click", function(){
-      var dcurl = input.value;
-      var buttonSelf = this;
-      var opts = {};
-      opts.format = 'turtle';
-      self.client.getDocument(dcurl, opts)
-      .then(function(response){
-        FrameHelper.removeChildren(resd);
-        var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
-      });
-    }) // button click
-    break;
-    case 'deleteDocument':
-      button.addEventListener("click", function(){
-      var dcurl = input.value;
-      var buttonSelf = this;
-      var opts = {};
-      self.client.deleteDocument(dcurl, opts)
-      .then(function(response){
-        FrameHelper.removeChildren(resd);
-        var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
-      });
-    }) // button click
-    break;
-    case 'createDocument':
-      button.addEventListener("click", function(){
-        var dcurl = input.schemaUrlDom.value;
-        var payload = input.htmlEditor.getValue();
-        var buttonSelf = this;
-        opts = {};
-        self.client.createDocument(dcurl, payload, opts)
-        .then(function(response){
-          FrameHelper.removeChildren(resd);
-          var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
-        });
-      }) // button click
-    break;
-    case 'updateDocument':
-      button.addEventListener("click", function(){
-        var dcurl = input.schemaUrlDom.value;
-        var payload = input.htmlEditor.getValue();
-        var buttonSelf = this;
-        opts = {};
-        opts.editmode = 'replace';
-        opts.format = 'json';
-        self.client.updateDocument(dcurl, payload, opts)
-        .then(function(response){
-          FrameHelper.removeChildren(resd);
-          var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
-        });
-      }) // button click
-    break;
-  } // switch(action)
-
-  var br = document.createElement('BR');
-  form.appendChild(br);
-  var br = document.createElement('BR');
-  form.appendChild(br);
-
-  return form;
-} // getApiForm()
+ApiExplorer.prototype.getApiSendButton = function(action, input){
+    // form
+    var form = document.createElement('form');
+    form.setAttribute('class', 'terminus-form-horizontal row-fluid');
+    var button = document.createElement('button');
+    button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
+    button.setAttribute('type', 'button');
+    button.innerHTML = 'Send Api';
+    form.appendChild(button);
+    var resd = document.createElement('div');
+    form.appendChild(resd);
+    var self = this;
+    switch(action){
+        case 'connect':
+            button.addEventListener("click", function(){
+                var buttonSelf = this;
+                self.client.connect(input.url.value, input.key.value)
+                .then(function(response){
+                    FrameHelper.removeChildren(resd);
+                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+               });
+            }) // button click
+        break;
+        case 'create':
+            button.addEventListener("click", function(form){
+              self.client.createDatabase(input.url.value, input.doc.value, input.key.value)
+              .then(function(response){
+                FrameHelper.removeChildren(resd);
+                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+              });
+            }) // button click
+        break;
+        case 'delete':
+            button.addEventListener("click", function(){
+              opts = {};
+              opts.key = input.key.value;
+              self.client.deleteDatabase(input.url.value, opts)
+              .then(function(response){
+                  FrameHelper.removeChildren(resd);
+                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+              });
+            }) // button click
+        break
+        case 'getSchema':
+            button.addEventListener("click", function(){
+                var opts = {};
+                opts['terminus:encoding'] = input.enc.value;
+                opts['terminus:user_key'] = input.key.value;
+                var schurl = input.url.value;
+                self.client.getSchema(schurl, opts)
+                .then(function(response){
+                    FrameHelper.removeChildren(resd);
+                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+                });
+            }) // button click
+        break;
+        case 'updateSchema':
+            button.addEventListener("click", function(){
+                opts = {};
+                opts['terminus:encoding'] = input.enc.value;
+                opts['terminus:user_key'] = input.key.value;
+                var payload = input.doc.value;
+                var schurl = input.url.value;
+                self.client.connectionConfig.connected_mode = false;
+                self.client.updateSchema(schurl, payload, opts)
+                .then(function(response){
+                    FrameHelper.removeChildren(resd);
+                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+                });
+            }) // button click
+        break;
+        case 'getClassFrames':
+            button.addEventListener("click", function(form){
+                var schurl = input.url.value;
+                opts = {};
+                opts.explorer = true;
+                self.client.getClassFrame(input.url, input.docUrl.value, opts)
+                .then(function(response){
+                    var currForm = buttonSelf.parentNode;
+                    var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                });
+            }) // button click
+        break;
+        case 'viewDocument':
+          button.addEventListener("click", function(){
+              var dcurl = input.url.value;
+              var opts = {};
+              opts.key = input.key.value
+              self.client.getDocument(dcurl, opts)
+              .then(function(response){
+                    FrameHelper.removeChildren(resd);
+                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+              });
+        }) // button click
+        break;
+        case 'deleteDocument':
+          button.addEventListener("click", function(){
+              var dcurl = input.value;
+              var buttonSelf = this;
+              var opts = {};
+              self.client.deleteDocument(dcurl, opts)
+              .then(function(response){
+                  FrameHelper.removeChildren(resd);
+                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+              });
+          }) // button click
+        break;
+        case 'createDocument':
+          button.addEventListener("click", function(){
+              var dcurl = input.url.value;
+              var payload = input.doc.value;
+              opts = {};
+              opts.key = input.key.value;
+              self.client.createDocument(dcurl, payload, opts)
+              .then(function(response){
+                   FrameHelper.removeChildren(resd);
+                   var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+               });
+          }) // button click
+        break;
+        case 'updateDocument':
+          button.addEventListener("click", function(){
+            var dcurl = input.url.value;
+            var payload = input.doc.value;
+            var buttonSelf = this;
+            opts = {};
+            opts.editmode = 'replace';
+            opts.format = 'json';
+            opts.key = input.key.value;
+            self.client.updateDocument(dcurl, payload, opts)
+            .then(function(response){
+              FrameHelper.removeChildren(resd);
+              var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+            });
+          }) // button click
+        break;
+        case 'select':
+            button.addEventListener("click", function(){
+                var opts = {};
+                opts.key = input.key.value;
+                self.client.select(input.url.value, input.doc.value, opts)
+                .then(function(response){
+                   FrameHelper.removeChildren(resd);
+                   var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                });
+            }) // button click
+        break;
+        case 'update':
+            button.addEventListener("click", function(){
+              var opts = {};
+              opts.key = input.key.value;
+              self.client.update(input.url.value, input.doc.value, opts)
+              .then(function(response){
+                FrameHelper.removeChildren(resd);
+                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+              });
+            }) // button click
+        break;
+        default:
+            console.log('Invalid Api call on button');
+        break;
+    } // switch(action)
+    var br = document.createElement('BR');
+    form.appendChild(br);
+    var br = document.createElement('BR');
+    form.appendChild(br);
+    return form;
+} // getApiSendButton()
 
 // get signature of api calls
 ApiExplorer.prototype.getSignature = function(action){
     var api = document.createElement('div');
-
     // get header signature
     var sg = document.createElement('button');
     sg.appendChild(document.createTextNode('Click to read Api Signature'));
@@ -1251,13 +825,10 @@ ApiExplorer.prototype.getSignature = function(action){
     ic.setAttribute('class', 'terminus-cheveron-float fa fa-chevron-down');
     sg.appendChild(ic);
     api.appendChild(sg);
-
     var br = document.createElement('BR');
     api.appendChild(br);
-
     var cl = document.createElement('div');
     cl.setAttribute('class', 'terminus-collapsible-content content');
-
     var sig = UTILS.getFunctionSignature(action);
     var txt = document.createTextNode(sig.spec);
     var pre = document.createElement('pre');
@@ -1275,11 +846,9 @@ ApiExplorer.prototype.getSignature = function(action){
     api.appendChild(cl);
     var br = document.createElement('BR');
     api.appendChild(br);
-
     sg.addEventListener('click', function(){
         UTILS.tolggleContent(ic, cl);
     });
-
     return api;
 } // getSignature()
 

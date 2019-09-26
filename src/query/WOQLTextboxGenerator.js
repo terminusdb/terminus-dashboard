@@ -29,7 +29,9 @@ WOQLTextboxGenerator.prototype.getQueryButtonGroups = function(qbox){
 
 WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	var g = document.createElement('button');
+	var self = this;
 	g.addEventListener('click', function(e){
+		self.ui.clearMessages();
 		if(header == 'Data Queries'){ // to ensure click event is not on button but on select instead so no need to hide
 			var target = e.target || e.srcElement,
         	text = target.textContent || target.innerText;
@@ -116,6 +118,7 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qbut.setAttribute("class", "terminus-control-button terminus-btn")
 	qbut.appendChild(document.createTextNode("Send Query"));
 	qbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		try {
 			var qval = JSON.parse(qip.value);
 			if(self.ui.pluginAvailable("datatables")){
@@ -153,12 +156,13 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	qexs.appendChild(qrow);
 
 	/* grouping class queries */
-	var qcGroup = this.qGroupQueries(qrow, 'Schema Queries', 'Query the db schema');
+	var qcGroup = this.qGroupQueries(qrow, 'Schema Queries', '');
 
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
 	nqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	nqbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qval = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qval);
@@ -174,8 +178,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	aqbut.appendChild(document.createTextNode("Show Document Classes"));
 	aqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	aqbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		
 		var qvalue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern(),
 														self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qvalue);
@@ -192,6 +196,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	ebut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	var self = this;
 	ebut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qval = self.wquery.getElementMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qval);
@@ -206,6 +211,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	dbut.appendChild(document.createTextNode("Show All Documents"));
 	dbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	dbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qvalue);
@@ -220,6 +226,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	pbut.appendChild(document.createTextNode("Show All Data"));
 	pbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	pbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qvalue);
@@ -235,6 +242,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	prbut.appendChild(document.createTextNode("Show All Properties"));
 	prbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	prbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qvalue);
@@ -253,6 +261,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	termcc.empty_choice = "Show data of type";
 	var self = this;
 	termcc.change = function(new_class){
+		self.ui.clearMessages();
 		if(new_class){
 			UTILS.deleteStylizedEditor(self.ui, qip);
 			var qvalue = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
@@ -293,6 +302,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 
 	var docch = new TerminusDocumentChooser(this.ui);
 	docch.change = function(val){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qvalue);

@@ -19,7 +19,7 @@ function TerminusDocumentViewer(ui, action, options){
 }
 
 TerminusDocumentViewer.prototype.init = function(){
-	var wq = new WOQLQuery(this.ui.client, this.options);
+	var wq = new WOQLQuery(this.ui.client, this.options, this.ui);
 	var woql = wq.getClassMetaDataQuery();
 	var self = this;
 	self.classmeta = {};
@@ -43,7 +43,7 @@ TerminusDocumentViewer.prototype.init = function(){
 TerminusDocumentViewer.prototype.getInstanceMeta = function(elid){
 	var self = this;
 	if(self.instancemeta && typeof self.instancemeta[elid] != "undefined") return self.instancemeta[elid] ;
-	var wq = new WOQLQuery(this.ui.client, this.options);
+	var wq = new WOQLQuery(this.ui.client, this.options, this.ui);
 	var woql = wq.getInstanceMeta(elid);
 	return wq.execute(woql).then(function(wresult){
 		if(wresult && wresult.hasBindings()){

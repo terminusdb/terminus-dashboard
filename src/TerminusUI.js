@@ -104,7 +104,8 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 				self.showBusy("Updating database with new schema");
 				self.client.connectionConfig.server = myserver;
 				self.client.connectionConfig.dbid = dbid;
-				return self.client.updateSchema(false, response);
+				var nopts = {'terminus:encoding':  "terminus:turtle"};
+				return self.client.updateSchema(false, response, nopts);
 			})
 			.then(function(response){
 				self.clearBusy();
@@ -511,7 +512,6 @@ TerminusUI.prototype.getBusyLoader = function(bsyDom){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
-        console.log('type **', type);
 		FrameHelper.removeChildren(this.messages);
 		var md = document.createElement('div');
         //var clsstr = ' terminus-show-msg';
