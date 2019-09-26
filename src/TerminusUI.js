@@ -486,7 +486,7 @@ TerminusUI.prototype.clearBusy = function(response){
 	if(this.viewer && typeof this.viewer.busy == "function") this.viewer.busy(false);
 }
 
-TerminusUI.prototype.getLoader = function(bsyDom){
+TerminusUI.prototype.getBusyLoader = function(bsyDom){
      var pd = document.createElement('div');
      var pbc = document.createElement('div');
      pbc.setAttribute('class', 'term-progress-bar-container');
@@ -504,20 +504,27 @@ TerminusUI.prototype.getLoader = function(bsyDom){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
+        console.log('type **', type);
 		FrameHelper.removeChildren(this.messages);
 		var md = document.createElement('div');
-        var clsstr = ' terminus-show-msg';
-        if(type) clsstr += ' terminus-msg-' + type;
-        if(type == 'busy'){
-            var msgHolder = document.createElement('div');
-            msgHolder.setAttribute('class', 'terminus-busy-msg')
-            msgHolder.appendChild(document.createTextNode(msg));
-            md.appendChild(msgHolder);
-            this.getLoader(md);
-        }
-        else {
-            md.setAttribute('class', clsstr);
-            md.appendChild(document.createTextNode(msg));
+        //var clsstr = ' terminus-show-msg';
+        //if(type) clsstr += ' terminus-msg-' + type;
+        switch(type){
+            case 'busy':
+                var msgHolder = document.createElement('div');
+                msgHolder.setAttribute('class', 'terminus-busy-msg')
+                msgHolder.appendChild(document.createTextNode(msg));
+                md.appendChild(msgHolder);
+                this.getBusyLoader(md);
+            break;
+            case 'success':
+                md.setAttribute('class', 'terminus-show-msg-success');
+                md.appendChild(document.createTextNode(msg));
+            break;
+            case 'error':
+                md.setAttribute('class', 'terminus-show-msg-error');
+                md.appendChild(document.createTextNode(msg));
+            break;
         }
 		this.messages.appendChild(md);
 	}

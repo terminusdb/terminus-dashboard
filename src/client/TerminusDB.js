@@ -290,7 +290,7 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	pd.setAttribute("class", "terminus-db-home-page");
 	var sth = document.createElement('div');
 	var banner = document.createElement('div');
-	pd.appendChild(banner);
+	//pd.appendChild(banner);
 	banner.setAttribute('class', 'terminus-banner');
 	var dhp = document.createElement("span");
 	dhp.setAttribute('class', 'terminus-home-heading');
@@ -310,7 +310,8 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	sth.appendChild(scd);
 	banner.appendChild(sth);
 	//pd.appendChild(sth);
-	pd.appendChild(UTILS.getHeaderDom('Summary'));
+	//pd.appendChild(UTILS.getHeaderDom('Summary'));
+	this.getDeleteOnHomePage(pd);
 	this.getDBSummary(pd);
 	pd.appendChild(pd.appendChild(UTILS.getHeaderDom('List of Documents')));
 	this.getClassesDOM(pd);
@@ -345,12 +346,12 @@ TerminusDBViewer.prototype.getDbInfoBox = function(r, module){
     r.appendChild(sp);
 }
 
-TerminusDBViewer.prototype.getDBSummary = function(d){
+TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 	// delete database
     var del = document.createElement('button');
     del.setAttribute('class', 'terminus-del-btn');
     del.setAttribute('type', 'button');
-    del.innerHTML = 'Delete';
+    del.innerHTML = 'Delete Database';
 	var dbrec = this.ui.getDBRecord();
 	if(dbrec)
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
@@ -359,7 +360,9 @@ TerminusDBViewer.prototype.getDBSummary = function(d){
       self.ui.deleteDatabase(nm);
     });
     d.appendChild(del);
+}
 
+TerminusDBViewer.prototype.getDBSummary = function(d){
     var r = document.createElement('span');
     r.setAttribute('class', 'terminus-db-info-box-display');
     d.appendChild(r);
