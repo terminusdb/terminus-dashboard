@@ -146,12 +146,10 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.chosenValue = settings.chosenValue;
 }
 
-
-
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
-    console.log('dtResult', dtResult.result.data);
+    //console.log('dtResult', dtResult.result.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({

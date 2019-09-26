@@ -504,7 +504,6 @@ TerminusUI.prototype.getBusyLoader = function(bsyDom){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
-        console.log('type **', type);
 		FrameHelper.removeChildren(this.messages);
 		var md = document.createElement('div');
         //var clsstr = ' terminus-show-msg';
