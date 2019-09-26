@@ -96,7 +96,8 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 	.then(function(response){ //import schema into newly created DB
 		if(dbdets.schema){
 			self.showBusy("Fetching imported schema from " + dbdets.schema);
-			var opts = (dbdets.key ?  {key: dbdets.key } : {});
+			var opts = (dbdets.key ?  {"terminus:user_key": dbdets.key } : {});
+			opts['terminus:encoding'] = "terminus:turtle";
 			return self.client.getSchema(dbdets.schema, opts)
 			.then(function(response){
 				self.showBusy("Updating database with new schema");
@@ -372,23 +373,34 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	if(this.buttons){
 		this.toggleControl();
 	}
-	if(this.controller){
-		this.drawControls();
-	}
 	if(this.plugins){
 		this.drawPlugins();
 	}
+	var self = this;
 	if(slocation && slocation.server){
-		if(typeof this.client.connection.connection[slocation.server] == "undefined") this.connect(slocation)
-		.catch(function(error){
-			this.showLoadURLPage();
-			this.showError(error);
-		});
+		if(typeof this.client.connection.connection[slocation.server] == "undefined") {
+			this.connect(slocation)
+			.then(function(response){
+				if(self.controller){
+					self.drawControls();
+				}
+				return response;
+			})
+			.catch(function(error){
+				this.showLoadURLPage();
+				this.showError(error);
+			});
+		}
 	}
 	else {
+		if(this.controller){
+			this.drawControls();
+		}
 		this.showLoadURLPage();
 	};
 }
+
+
 
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();

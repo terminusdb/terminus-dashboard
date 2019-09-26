@@ -80,7 +80,7 @@ WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 	var woql = "limit( " + limit + ",\n\t start(" + start + ","
 	var vdoc = "\n\t\tt(v('Document'), rdf/type, v('Type'))";
 	woql += "\n\t\tselect([v('Document'), v('Type')],(" + vdoc;
-	woql += ", \n\t\t(v('Type') << (tcs/'Document'))";
+	woql += ", \n\t\t(v('Type') << (dcog/'Document'))";
 	if(constraint) woql += ", \n" + constraint;
 	woql += "))))";
 	return woql;
@@ -232,7 +232,7 @@ WOQLQuery.prototype.getClassesQuery = function(){
 	opts.push("t(v('ID'), rdfs/comment, v('Comment'))");
 	opts.push("t(v('Class'), rdfs/label, v('Type'),schema)");
 	var woql = "select([v('Label'),v('Comment'),v('ID'),v('Type'),v('Class')],(" + vEl;
-	woql += ", (v('Class') << (tcs/'Document'))";
+	woql += ", (v('Class') << (dcog/'Document'))";
 	for(var i = 0; i<opts.length; i++){
 		woql += ", \n\topt(" + opts[i] + ")";
 	}
