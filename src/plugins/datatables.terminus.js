@@ -28,7 +28,7 @@ Datatables.prototype.convertToDatatable = function(tab, ui){
         else ui.showDBMainPage();
      }); // on click
 
-    tab.setAttribute('class'      , 'stripe dataTable terminus-db-size terminus-db-border');
+    tab.setAttribute('class'      , 'stripe dataTable terminus-db-size');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '0');
     tab.setAttribute('border'     , '0');

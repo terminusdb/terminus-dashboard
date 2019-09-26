@@ -4,24 +4,30 @@
 	    <meta charset="utf-8">
 	    <title>Terminus Javascript SDK</title>
 	    <!-- <script src="https://unpkg.com/@terminusdb/woql-client/dist/woql-client.min.js"></script>-->
-	    <script src="http://localhost/terminus-client/dist/terminus-client.min.js"></script> 
+	    <script src="http://localhost/terminus-client/dist/terminus-client.min.js"></script>
 	    <!-- <script src="https://dev.datachemist.net/jslib/woql-client/dist/woql-client.min.js"></script>  -->
 		<script src="UIconfig.json"></script>
 	</head>
-	<BODY>	
+	<BODY>
 	<div class="terminus-client-ui">
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr class="main-table-height">
 				<td class='terminus-control-panel terminus-control-panel-table-layout'>
 					<table class="terminus-application-controls terminus-control-panel-layout" style='width: 350px;'>
 						<tr><th class="terminus-logo">
-							 TerminusDB</th></tr>
-						<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
-										id = "terminus-client-btn">Client</th></tr>
+							 <img src='css/img/TerminusDB_Logo_Original.png' class='terminus-logo-container'></img></th></tr>
+						<tr><th class='terminus-dashboard-btn-group' style='display:flex;'>
+							<button class='terminus-dashboard-btn terminus-dashboard-selected' id = "terminus-client-btn">
+									Dashboard</button>
+							<button class='terminus-dashboard-btn' id = "terminus-explorer-btn">
+								    Api Explorer</button>
+						</th></tr>
+						<!--<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
+										id = "terminus-client-btn">Client</th></tr> -->
 						<tr><td class="terminus-application-control terminus-client-body"
 								id="terminus-control-panel" ></td></tr>
-						<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
-									  id = "terminus-explorer-btn">Explorer</th></tr>
+						<!--<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
+									  id = "terminus-explorer-btn">Explorer</th></tr> -->
 						<tr><td class="terminus-application-control terminus-expolrer-body terminus-explorer-hide"
 										id="terminus-explorer"></td></tr>
 					</table>

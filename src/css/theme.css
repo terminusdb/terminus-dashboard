@@ -2,7 +2,6 @@
 */
 body {
 	font-family: 'Lexend Deca', sans-serif;
-    border-top: 2px solid #00C08B;
     margin: 0px;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -44,6 +43,14 @@ pre, code {
 	padding: 1px 2px;
 	font-weight: bold;
 	font-size: 16px
+}
+
+.terminus-logo-container {
+	display: inline-block;
+    width: 200px;
+    margin-right: 5px;
+    content: "";
+    background-size: 100%;
 }
 
 
@@ -170,6 +177,11 @@ body [class^="icon-"], body [class*=" icon-"] {
 	font-size: 14px;
 	line-height: 20px;
 	height: 20px
+}
+
+.terminus-dashboard-info {
+	background-color: #002856!important;
+    color: #fff;
 }
 
 .terminus-form-border {
@@ -851,8 +863,6 @@ div.terminus-property-frame{
 .terminus-control-panel-table-layout{
 	vertical-align: top;
 	background-color: #002856;
-	/*background-color: #f5f5f5;*/
-	box-shadow: 5px 10px 8px #888888;
 }
 
 .terminus-nav-body-span{
@@ -1082,7 +1092,7 @@ div.terminus-property-frame{
   margin-left: 50px;
 }
 
-.terminus-show-msg {
+/*.terminus-show-msg {
 	color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
@@ -1090,6 +1100,26 @@ div.terminus-property-frame{
     border: 1px solid transparent;
     border-radius: 4px;
 	margin-bottom: 10px;
+}*/
+
+.terminus-show-msg-success {
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	margin: 10px 0px 10px 0px;
+}
+
+.terminus-show-msg-error {
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	margin: 10px 0px 10px 0px;
 }
 
 
@@ -1277,7 +1307,6 @@ div.terminus-property-frame{
     /* margin-top: 2px; */
     max-width: 200px;
     /*display: inline-block;*/
-	font-family: 'Open Sans', Tahoma, Arial, sans-serif;
 	text-align: right;
 	vertical-align: top;
 }
@@ -1316,7 +1345,6 @@ div.terminus-property-frame{
 	font-style: bold;
     padding: 10px;
     background-color: #ccc;
-	font-family: 'Open Sans', Tahoma, Arial, sans-serif;
 }
 
 .ico-property-frame{
@@ -1361,7 +1389,6 @@ div.terminus-property-frame{
 .terminus-popup h2 {
   margin-top: 0;
   color: #333;
-  font-family: Tahoma, Arial, sans-serif;
 }
 .terminus-popup .close {
   position: absolute;
@@ -1399,7 +1426,6 @@ div.terminus-property-frame{
 .terminus-popup-property h2 {
   margin-top: 0;
   color: #333;
-  font-family: Tahoma, Arial, sans-serif;
 }
 .terminus-popup-property .close {
   position: absolute;
@@ -1623,7 +1649,6 @@ a.terminus-submenu-selected{
 
 /* ----- documentation headings -----*/
 .documentation-headings{
-    font-family: 'Poppins', sans-serif;
     font-size: 40px;
     font-weight: 500;
     letter-spacing: 1px;
@@ -1682,7 +1707,6 @@ a.terminus-submenu-selected{
 	margin-top: 0px;
 	color: #00C08B;
 	font-size: xx-large;
-	font-family: 'Poppins', sans-serif !important;
 	font-weight: 500;
 	align-items: center;
 	height: 70px;
@@ -1755,13 +1779,9 @@ a.terminus-submenu-selected{
 	table-layout: fixed;
 }
 
-.terminus-db-border{
-	border: 1px solid #00C08B;
-}
-
 .terminus-table-th{
-	color: #00C08B !important;
-	background-color: #002856;
+	color: #002856 !important;
+	background-color: #dcdcdc;
 	border-color: #eee;
 	padding: 10px 15px;
 	border-bottom: 1px solid transparent;
@@ -1796,7 +1816,7 @@ a.terminus-submenu-selected{
 	/*background-color: #f5f5f5; */
 	background-color: #002856;
 	width: 308px;
-    border-radius: .2857rem;
+    /*border-radius: .2857rem;*/
 	text-align: left;
 }
 
@@ -2014,6 +2034,37 @@ div.dataTables_info, div.dataTables_paginate {
 
 .terminus-doc-btn-gp-align{
 	margin-right: 10px;
+}
+
+.terminus-dashboard-btn{
+	width: 100%;
+	height: 45px;
+}
+
+.terminus-dashboard-selected {
+	background-color: #0055B8 !important;
+	color: #fff !important;
+}
+
+.terminus-dashboard-btn:hover{
+	border: 1px solid green;
+}
+
+.terminus-dashboard-btn-group button {
+	background-color: #00C08B;
+  	border: 1px solid green;
+  	color: #002856;
+  	/*padding: 10px 24px;*/
+  	font-weight: 900;
+  	cursor: pointer;
+  	float: right;
+	margin-top: 5px;
+}
+
+
+.terminus-dashboard-btn-group button:hover,  .terminus-dashboard-btn-selected{
+  background-color: #0055B8 !important;
+  color: #fff !important;
 }
 
 @media (min-width: 768px)

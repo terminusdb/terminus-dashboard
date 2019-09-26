@@ -24,6 +24,12 @@ TerminusServerController.prototype.getAsDOM = function(){
         ul.setAttribute('class', 'terminus-ul');
         nav.appendChild(ul);
         rsc.appendChild(nav);
+        // connected to server
+        var a = document.createElement('a');
+        a.setAttribute('class', 'terminus-dashboard-info terminus-list-group-a terminus-nav-width');
+        var txt = 'Server: ' + this.ui.server();
+        a.appendChild(document.createTextNode(txt));
+        ul.appendChild(a);
         // change server
         if(this.ui.showControl("change-server")){
             var a = document.createElement('a');
@@ -181,7 +187,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	lihed.appendChild(document.createTextNode("Available Databases"));
 	sec.appendChild(lihed);
 	var scd = document.createElement("table");
-	scd.setAttribute("class", "terminus-db-list terminus-db-size terminus-db-border");
+	scd.setAttribute("class", "terminus-db-list terminus-db-size");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var th1 = document.createElement("th");
