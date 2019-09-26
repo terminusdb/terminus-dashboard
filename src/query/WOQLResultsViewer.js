@@ -1,7 +1,8 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const Datatables = require('../plugins/datatables.terminus');
+const FrameHelper = require('../FrameHelper');
 
-function WOQLResult(res, query ,options){
+function WOQLResult(res, query, options){
 	this.query = query;
 	this.bindings = ((res && res.bindings) ? res.bindings : []);
 }
@@ -85,7 +86,8 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
     var ordered_headings = this.orderColumns(bindings[0]);
 	// get columns
 	for(var i = 0; i<ordered_headings.length; i++){
-        columns.push({data: ordered_headings[i]});
+		var clab = FrameHelper.validURL(ordered_headings[i]) ? FrameHelper.labelFromURL(ordered_headings[i]) : ordered_headings[i];
+        columns.push({data: clab});
 	}
 	// get data for respective columns
 	for(var i = 0; i<bindings.length; i++){
@@ -141,7 +143,8 @@ WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
 	for(var i = 0; i<ordered_headings.length; i++){
 		var th = document.createElement("th");
 		th.setAttribute('class', 'terminus-table-header-full-css');
-		th.appendChild(document.createTextNode(ordered_headings[i]));
+		var clab = (ordered_headings[i].indexOf("http") != -1) ? FrameHelper.labelFromURL(ordered_headings[i]) : ordered_headings[i];
+		th.appendChild(document.createTextNode(clab));
 		thr.appendChild(th);
 	}
 	thead.appendChild(thr);

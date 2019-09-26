@@ -60,12 +60,13 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	if(clist.bindings){
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
-			if(clist.bindings[i].Property && added.indexOf(clist.bindings[i].Property) == -1){
-				added.push(clist.bindings[i].Property);
+			var cprop = this.getVariableValueFromBinding("Property", clist.bindings[i]);
+			if(cprop && added.indexOf(cprop) == -1){
+				added.push(cprop);
 				var opt = document.createElement("option");
 				opt.setAttribute("Class", "terminus-class-choice");
-				opt.value = clist.bindings[i].Property;
-				var lab = clist.bindings[i].Label;
+				opt.value = cprop;
+				var lab = this.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
 					lab = FrameHelper.labelFromURL(clist.bindings[i].Property);
 				}
@@ -77,5 +78,16 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	}
 	return choices;
 }
+
+TerminusPropertyChooser.prototype.getVariableValueFromBinding = function(varname, bind){
+	for(var key in bind){
+		var skey = key.substring(key.lastIndexOf("/")+1);
+		if(skey == varname){
+			return bind[key];
+		}
+	}
+	return false;
+}
+
 
 module.exports=TerminusPropertyChooser

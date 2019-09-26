@@ -110,7 +110,7 @@ Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageIn
     dcb.wquery = new WOQLQuery(ui.client, null);
     UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
-    pageInfo.qTextDom.value = query;
+    pageInfo.qTextDom.value = JSON.stringify(query);
     UTILS.stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
     return query;
 }
@@ -151,7 +151,6 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
-    console.log('dtResult', dtResult.result.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({

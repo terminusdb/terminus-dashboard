@@ -170,7 +170,6 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		var mcls = FrameHelper.unshorten("tcs:Document");
 		var d2ch = new TerminusDocumentChooser(this.ui, mcls);
 		d2ch.change = function(val){
-			alert("changed to " + val);
 			self.ui.showDocument(val);
 		}
 		d2ch.view = "label";
@@ -230,8 +229,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var nbuts = document.createElement("div");
 	nbuts.setAttribute("class", "terminus-control-buttons terminus-document-creator-buttons");
 	var wq = new WOQLQuery(this.ui.client, {});
-	var filter = wq.getSubclassQueryPattern("Class", "tcs/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
-
+	var filter = wq.getConcreteDocumentClassPattern("v:Element");
 	var termcc = new TerminusClassChooser(this.ui, filter);
 	termcc.empty_choice = "Create Document of Type";
 	var self = this;

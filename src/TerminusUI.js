@@ -371,22 +371,14 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
-	if(this.buttons){
-		this.toggleControl();
-	}
 	if(this.plugins){
 		this.drawPlugins();
 	}
 	var self = this;
+	var cdrawn = false;
 	if(slocation && slocation.server){
 		if(typeof this.client.connection.connection[slocation.server] == "undefined") {
 			this.connect(slocation)
-			.then(function(response){
-				if(self.controller){
-					self.drawControls();
-				}
-				return response;
-			})
 			.catch(function(error){
 				this.showLoadURLPage();
 				this.showError(error);
@@ -399,6 +391,9 @@ TerminusUI.prototype.draw = function(comps, slocation){
 		}
 		this.showLoadURLPage();
 	};
+	if(this.buttons){
+		this.toggleControl();
+	}
 }
 
 
