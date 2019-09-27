@@ -12,7 +12,7 @@ function TerminusQueryViewer(ui, options){
 	this.init();
 	this.generator = false;
 	this.result = false;
-	this.wquery = new WOQLQuery(ui.client, this.options);
+	this.wquery = new WOQLQuery(ui.client, this.options, this.ui);
 	this.pman = new TerminusPluginManager();
 	this.gentype = (options && options.generator ? options.generator : "textbox");
 	this.generators = {
@@ -60,12 +60,12 @@ TerminusQueryViewer.prototype.loadGenerator = function(){
 }
 
 TerminusQueryViewer.prototype.init = function(){
-	var wq = new WOQLQuery(this.ui.client, this.options);
+	var wq = new WOQLQuery(this.ui.client, this.options, this.ui);
 	var woql = wq.getElementMetaDataQuery();
 	var self = this;
 	self.meta = {};
 	wq.execute(woql).then(function(wresult){
-		var wqlR = new WOQLResultsViewer.WOQLResult(wresult, null ,null);
+		var wqlR = new WOQLResultsViewer.WOQLResult(wresult, null ,null, self.ui);
 		if(wqlR.hasBindings(wresult)){
 			for(var i = 0; i<wresult.bindings.length; i++){
 				var el = wresult.bindings[i].Element;
@@ -86,19 +86,13 @@ TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	FrameHelper.removeChildren(this.resultDOM);
 	this.wquery.execute(val)
 	.then(function(result){
-		if(true || !self.result){
-			self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.options, settings);
-		}
-		else {
-			//self.result.newResult(result);
-		}
+		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.options, settings);
 		var nd = self.result.getAsDOM(self.resultDOM, true);
 		if(nd){
 			 self.resultDOM.appendChild(nd);
 		}
 	})
 	.catch(function(err){
-		console.error(err);
 		self.ui.showError(err);
 	});
 }

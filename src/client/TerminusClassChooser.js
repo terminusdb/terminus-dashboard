@@ -37,7 +37,7 @@ TerminusClassChooser.prototype.getAsDOM = function(style){
 		}
 	});
 	ccdom.appendChild(ccsel);
-	var wq = new WOQLQuery(this.ui.client);
+	var wq = new WOQLQuery(this.ui.client, {}, this.ui);
 	var woql = wq.getClassListMetaDataQuery(this.filter);
 	var self = this;
 	wq.execute(woql)
@@ -69,17 +69,19 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 		}
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
-			if(clist.bindings[i].Class && added.indexOf(clist.bindings[i].Class) == -1){
-				added.push(clist.bindings[i].Class);
+			var bclass = this.getVariableValueFromBinding("Element", clist.bindings[i]);
+			if(!bclass) bclass = this.getVariableValueFromBinding("Class", clist.bindings[i]);
+			if(bclass && added.indexOf(bclass) == -1){
+				added.push(bclass);
 				var opt = document.createElement("option");
 				opt.setAttribute("class", "terminus-class-choice");
-				opt.value = clist.bindings[i].Class;
+				opt.value = bclass;
 				if(opt.value == this.choice){
 					opt.selected = true;
 				}
-				var lab = clist.bindings[i].Label;
+				var lab = this.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
-					lab = FrameHelper.labelFromURL(clist.bindings[i].Class);
+					lab = FrameHelper.labelFromURL(bclass);
 				}
 				if(lab["@value"]) lab = lab["@value"];
 				opt.appendChild(document.createTextNode(lab));
@@ -88,6 +90,16 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 		}
 	}
 	return choices;
+}
+
+TerminusClassChooser.prototype.getVariableValueFromBinding = function(varname, bind){
+	for(var key in bind){
+		var skey = key.substring(key.lastIndexOf("/")+1);
+		if(skey == varname){
+			return bind[key];
+		}
+	}
+	return false;
 }
 
 module.exports=TerminusClassChooser

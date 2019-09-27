@@ -97,13 +97,15 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 	.then(function(response){ //import schema into newly created DB
 		if(dbdets.schema){
 			self.showBusy("Fetching imported schema from " + dbdets.schema);
-			var opts = (dbdets.key ?  {key: dbdets.key } : {});
+			var opts = (dbdets.key ?  {"terminus:user_key": dbdets.key } : {});
+			opts['terminus:encoding'] = "terminus:turtle";
 			return self.client.getSchema(dbdets.schema, opts)
 			.then(function(response){
 				self.showBusy("Updating database with new schema");
 				self.client.connectionConfig.server = myserver;
 				self.client.connectionConfig.dbid = dbid;
-				return self.client.updateSchema(false, response);
+				var nopts = {'terminus:encoding':  "terminus:turtle"};
+				return self.client.updateSchema(false, response, nopts);
 			})
 			.then(function(response){
 				self.clearBusy();
@@ -370,26 +372,32 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
 	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
-	if(this.buttons){
-		this.toggleControl();
-	}
-	if(this.controller){
-		this.drawControls();
-	}
 	if(this.plugins){
 		this.drawPlugins();
 	}
+	var self = this;
+	var cdrawn = false;
 	if(slocation && slocation.server){
-		if(typeof this.client.connection.connection[slocation.server] == "undefined") this.connect(slocation)
-		.catch(function(error){
-			this.showLoadURLPage();
-			this.showError(error);
-		});
+		if(typeof this.client.connection.connection[slocation.server] == "undefined") {
+			this.connect(slocation)
+			.catch(function(error){
+				this.showLoadURLPage();
+				this.showError(error);
+			});
+		}
 	}
 	else {
+		if(this.controller){
+			this.drawControls();
+		}
 		this.showLoadURLPage();
 	};
+	if(this.buttons){
+		this.toggleControl();
+	}
 }
+
+
 
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();

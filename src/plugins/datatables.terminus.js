@@ -74,9 +74,8 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
             return wq.getElementMetaDataQuery(null, settings.pageLength, settings.start);
         break;
         case 'Show_Document_Classes':
-            return wq.getClassMetaDataQuery(wq.getSubclassQueryPattern("Class", "tcs/'Document'")
-    										  + ", not(" + wq.getAbstractQueryPattern("Class") + ")",
-                                                 settings.pageLength, settings.start);
+        	var sqp = wq.getConcreteDocumentClassPattern("Class");
+            return wq.getClassMetaDataQuery(sqp);
         break;
         case 'Show_All_Properties':
             return wq.getPropertyListQuery(null, settings.pageLength, settings.start);
@@ -110,7 +109,7 @@ Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageIn
     dcb.wquery = new WOQLQuery(ui.client, null);
     UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
-    pageInfo.qTextDom.value = query;
+    pageInfo.qTextDom.value = JSON.stringify(query);
     UTILS.stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
     return query;
 }
@@ -149,7 +148,6 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
-    //console.log('dtResult', dtResult.result.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
