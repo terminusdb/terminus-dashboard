@@ -1,4 +1,3 @@
-const FrameHelper = require('../FrameHelper');
 const TerminusClassChooser = require('../client/TerminusClassChooser');
 const TerminusPropertyChooser = require('../client/TerminusPropertyChooser');
 const TerminusDocumentChooser = require('../client/TerminusDocumentChooser');
@@ -315,7 +314,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		else self.query(qvalue);
 	}
 	var docdom = docch.getAsDOM('terminus-query-select');
-	var d2ch = new TerminusDocumentChooser(this.ui, FrameHelper.unshorten("dcog:Document"));
+
+	var d2ch = new TerminusDocumentChooser(this.ui, TerminusClient.FrameHelper.unshorten("tcs:Document"));
 	d2ch.view = "label";
 	d2ch.change = docch.change;
 	var d2dom = d2ch.getAsDOM('terminus-query-select');

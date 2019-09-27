@@ -1,4 +1,4 @@
-const FrameHelper = require('../FrameHelper');
+//const FrameHelper = require('../FrameHelper');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
 
 /**
@@ -78,7 +78,7 @@ HTMLPropertyViewer.prototype.addRenderedValue = function(renderedval){
 }
 
 HTMLPropertyViewer.prototype.clear = function(){
-	FrameHelper.removeChildren(this.propDOM);
+	TerminusClient.FrameHelper.removeChildren(this.propDOM);
 	this.values = [];
 }
 
@@ -123,11 +123,11 @@ HTMLPropertyViewer.prototype.redrawBody = function(){
 HTMLPropertyViewer.prototype.getPropertyIDMarker = function(renderer){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-property-idmarker");
-	var subj = FrameHelper.getShorthand(renderer.subject());
+	var subj = TerminusClient.FrameHelper.getShorthand(renderer.subject());
 	if(!subj ) subj = renderer.subject();
 	var bits = subj .split(":");
 	if(bits.length > 1) subj = bits[1];
-	var prop = FrameHelper.getShorthand(renderer.property());
+	var prop = TerminusClient.FrameHelper.getShorthand(renderer.property());
 	if(!prop ) prop = renderer.property();
 	var bits = prop.split(":");
 	if(bits.length > 1) prop = bits[1];

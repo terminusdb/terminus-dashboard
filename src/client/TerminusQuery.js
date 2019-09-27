@@ -1,4 +1,3 @@
-const FrameHelper = require('../FrameHelper');
 const WOQLQuery = require('../query/WOQLQuery');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
@@ -42,7 +41,7 @@ TerminusQueryViewer.prototype.changeGenerator = function(ng){
 	}
 }
 TerminusQueryViewer.prototype.redrawGenerator = function(q){
-	FrameHelper.removeChildren(this.inputDOM);
+	TerminusClient.FrameHelper.removeChildren(this.inputDOM);
 	this.inputDOM.appendChild(this.getQueryButtonsDOM(q));
 }
 
@@ -83,7 +82,7 @@ TerminusQueryViewer.prototype.init = function(){
 
 TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	var self = this;
-	FrameHelper.removeChildren(this.resultDOM);
+	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
 	this.wquery.execute(val)
 	.then(function(result){
 		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.options, settings);

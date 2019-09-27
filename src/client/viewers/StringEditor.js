@@ -1,4 +1,4 @@
-const FrameHelper = require('../../FrameHelper');
+
 
 function HTMLStringEditor(options){
 	this.css = ((options && options.css) ? "terminus-literal-value " + options.css : "terminus-literal-value");
@@ -6,7 +6,7 @@ function HTMLStringEditor(options){
 }
 
 HTMLStringEditor.prototype.getDOM = function(renderer, dataviewer){
-	var ty = FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
 	var value = renderer.value();
 	var big = ((this.options && typeof this.options.big != "undefined") ? this.options.big : this.isBigType(ty, value));
 	if(big){

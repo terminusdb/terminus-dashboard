@@ -13,7 +13,7 @@ const config = {
     filename: 'terminus-dashboard.min.js',
     sourceMapFilename: 'terminus-dashboard.min.js.map',
     libraryTarget: 'var',
-    library: 'TerminusDB_SDK',
+    library: 'TerminusDashboard',
   },
   node: {
     process: false

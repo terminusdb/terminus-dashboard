@@ -1,4 +1,3 @@
-const FrameHelper = require('../FrameHelper');
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 
 let HTMLFrameHelper = {};
@@ -87,12 +86,12 @@ HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback
 		var opt = document.createElement("option");
 		if(typeof options[i] == "object"){
 			opt.value = options[i].value;
-			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(FrameHelper.labelFromURL(options[i].value)));
+			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(TerminusClient.FrameHelper.labelFromURL(options[i].value)));
 			opt.appendChild(label);
 		}
 		else {
 			opt.value = options[i];
-			label = FrameHelper.labelFromURL(opt.value);
+			label = TerminusClient.FrameHelper.labelFromURL(opt.value);
 			opt.appendChild(document.createTextNode(label));
 		}
 		if(selected == opt.value){
@@ -128,13 +127,13 @@ HTMLFrameHelper.goToName = function(s, p, i){
 	if(url){
 		var wbits = url.split("#");
 		var loc = wbits[0];
-		var sh = FrameHelper.getShorthand(s);
+		var sh = TerminusClient.FrameHelper.getShorthand(s);
 	    if(!sh) sh = s;
 		var bits = sh.split(":");
 		if(bits.length > 1) sh = bits[1];
 		var htmlid = sh;
 		if(p){
-			var prop = FrameHelper.getShorthand(p);
+			var prop = TerminusClient.FrameHelper.getShorthand(p);
 			if(!prop ) prop = p;
 			var bits = prop.split(":");
 			if(bits.length > 1) prop = bits[1];
@@ -192,7 +191,7 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 		lval.appendChild(input);
 	}
 	else if(value) {
-		var sh = FrameHelper.getShorthand(value);
+		var sh = TerminusClient.FrameHelper.getShorthand(value);
         if(sh){
     	   	var bits = sh.split(":");
             sh = bits[1];

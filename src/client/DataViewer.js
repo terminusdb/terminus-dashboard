@@ -1,7 +1,6 @@
 /**
  * Draws the property as header and body components
  */
-const FrameHelper = require('../FrameHelper');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
 const HTMLStringViewer = require('./viewers/String');
 
@@ -119,11 +118,11 @@ HTMLDataViewer.prototype.redrawBody = function(){
 HTMLDataViewer.prototype.getValueIDMarker = function(renderer){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-value-idmarker");
-	var subj = FrameHelper.getShorthand(renderer.subject());
+	var subj = TerminusClient.FrameHelper.getShorthand(renderer.subject());
 	if(!subj ) subj = renderer.subject();
 	var bits = subj .split(":");
 	if(bits.length > 1) subj = bits[1];
-	var prop = FrameHelper.getShorthand(renderer.property());
+	var prop = TerminusClient.FrameHelper.getShorthand(renderer.property());
 	if(!prop ) prop = renderer.property();
 	var bits = prop.split(":");
 	if(bits.length > 1) prop = bits[1];
@@ -133,7 +132,7 @@ HTMLDataViewer.prototype.getValueIDMarker = function(renderer){
 
 HTMLDataViewer.prototype.getSummaryDOM = function(){
 	var sum = this.renderer.getSummary();
-	return HTMLFrameHelper.getInfoboxDOM("value-summary", false, sum.long, sum.long);
+	return HTMLTerminusClient.FrameHelper.getInfoboxDOM("value-summary", false, sum.long, sum.long);
 }
 
 HTMLDataViewer.prototype.internalLink = function(link, label){
@@ -151,7 +150,7 @@ HTMLDataViewer.prototype.internalLink = function(link, label){
 		a.appendChild(document.createTextNode(label));
 	}
 	else {
-		var sh = FrameHelper.getShorthand(link);
+		var sh = TerminusClient.FrameHelper.getShorthand(link);
 		if(sh){
 			a.setAttribute("title", link);
 			a.appendChild(document.createTextNode(sh));
@@ -164,7 +163,7 @@ HTMLDataViewer.prototype.internalLink = function(link, label){
 }
 
 HTMLDataViewer.prototype.clear = function(){
-	FrameHelper.removeChildren(this.valDOM);
+	TerminusClient.FrameHelper.removeChildren(this.valDOM);
 }
 
 
