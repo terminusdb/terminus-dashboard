@@ -294,13 +294,17 @@ ValueRenderer.prototype.render = function(viewer){
 
 ValueRenderer.prototype.extract = function(){
 	var val = this.value();
-	if(val !== "" && val !== false && this.frame.isDatatypeProperty()){
-		var objlit = { "@value": this.value()}
-
-		//var objlit = { data: this.value()}
-		if(this.frame.isString()) objlit["@language"] = this.frame.lang();
-		else objlit["@type"] = this.type();
-		return objlit;
+	if(val !== "" && val !== false){
+		if(this.frame.isDatatypeProperty()){
+			var objlit = { "@value": this.value()}
+			//var objlit = { data: this.value()}
+			if(this.frame.isString()) objlit["@language"] = this.frame.lang();
+			else objlit["@type"] = this.type();
+			return objlit;
+		}
+		else if(this.frame.isChoice() || this.frame.isDocument()){
+			return {"@id": val}
+		}
 	}
 	else return val;
 }

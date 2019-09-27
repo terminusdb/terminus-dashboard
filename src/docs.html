@@ -3,10 +3,10 @@
 	<head>
 	    <meta charset="utf-8">
 	    <title>Terminus DB Management Dashboard</title>
-	    <!-- <script src="https://unpkg.com/@terminusdb/woql-client/dist/woql-client.min.js"></script>-->
-	    <script src="http://localhost/terminus-client/dist/terminus-client.min.js"></script> 
-
-		<script src="UIconfig.json"></script>
+	    <script src="DocsConfig.json"></script>
+	    <script src="https://terminusdb.com/terminus-client.min.js"></script>
+	    <script src="https://terminusdb.com/terminus-dashboard.min.js"></script>
+	    <link rel="shortcut icon" type="image/png" href="https://terminusdb.com/favicon.png"/>
 	</head>
 	<BODY>
 	<div class="terminus-client-ui">
@@ -22,12 +22,8 @@
 							<button class='terminus-dashboard-btn' id = "terminus-explorer-btn">
 								    Api Explorer</button>
 						</th></tr>
-						<!--<tr><th class="terminus-application-header terminus-client-header terminus-table-header-full-css"
-										id = "terminus-client-btn">Client</th></tr> -->
 						<tr><td class="terminus-application-control terminus-client-body"
 								id="terminus-control-panel" ></td></tr>
-						<!--<tr><th class="terminus-application-header terminus-explorer-header terminus-table-header-full-css"
-									  id = "terminus-explorer-btn">Explorer</th></tr> -->
 						<tr><td class="terminus-application-control terminus-expolrer-body terminus-explorer-hide"
 										id="terminus-explorer"></td></tr>
 					</table>
@@ -35,9 +31,27 @@
 				<td class='terminus-main-window terminus-main-window-full-css' style="width: 100%; vertical-align: top;">
 					<div class='terminus-user-messages' id='terminus-user-messages'></div>
                     <div class='terminus-content-layout'>
-				   	    <div class='terminus-main-content terminus-print' id='terminus-content-viewer'></div>
+				   	    <div class='terminus-main-content terminus-print' id='terminus-content-viewer'>
+				   	    </div>
                     </div>
 				</td>
 			</tr>
 	</table>
+		<script>
+			var terminator = new TerminusUI(TerminusConfig);
+			var pconfig = {};
+			pconfig.buttons = {'client'   : document.getElementById("terminus-client-btn"),
+							   'explorer' : document.getElementById("terminus-explorer-btn")}
+			pconfig.controller 	= document.getElementById("terminus-control-panel");
+			pconfig.messages = document.getElementById("terminus-user-messages");
+			pconfig.plugins = document.getElementById("terminus-plugin-loader");
+			pconfig.explorer = document.getElementById("terminus-explorer");
+			pconfig.viewer = document.getElementById("terminus-content-viewer");
+			var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
+			terminator.draw(pconfig, nlocation);
+	
+			function showPanel(mode){
+				toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
+			}
+		</script>	    
 </BODY>

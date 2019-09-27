@@ -251,17 +251,20 @@ TerminusPluginManager.prototype.fontAwesomeCheck = function(){
 	var span = document.createElement('span');
 	span.className = 'fa';
 	span.style.display = 'none';
-	document.body.insertBefore(span, document.body.firstChild);
-	function css(element, property) {
-	  return window.getComputedStyle(element, null).getPropertyValue(property);
+	if(document.body){
+		document.body.insertBefore(span, document.body.firstChild);
+		function css(element, property) {
+		  return window.getComputedStyle(element, null).getPropertyValue(property);
+		}
+		var loaded = false;
+		var fontAwsm = css(span, 'font-family');
+		if (fontAwsm.replace(/"/g, "") == 'Font Awesome 5 Free') { // remove double quotes
+			loaded = true;
+		}
+		document.body.removeChild(span);
+		return loaded;
 	}
-	var loaded = false;
-	var fontAwsm = css(span, 'font-family');
-	if (fontAwsm.replace(/"/g, "") == 'Font Awesome 5 Free') { // remove double quotes
-		loaded = true;
-	}
-	document.body.removeChild(span);
-	return loaded;
+	return false;
 }
 
 TerminusPluginManager.prototype.getDefaultPlugins = function(){
