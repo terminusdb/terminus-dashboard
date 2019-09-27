@@ -28,7 +28,7 @@ let TerminusConfig = {
 		},
 		jquery: true,
 		jqueryui: true,
-		datatables: false,
+		datatables: true,
 		quill: true,
 		select2: false,
 		jsoneditor: true,

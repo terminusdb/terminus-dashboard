@@ -9,6 +9,7 @@ const FrameHelper = require('./FrameHelper');
 const ApiExplorer = require('./ApiExplorer');
 const TerminusDocumentViewer = require('./client/TerminusDocument');
 const TerminusDBsdk = require('./client/TerminusDB');
+const TerminusViolations = require('./client/TerminusViolation');
 const TerminusQueryViewer = require('./client/TerminusQuery');
 const TerminusMappingViewer = require('./client/TerminusMapping');
 const TerminusSchemaViewer = require('./client/TerminusSchema');
@@ -109,6 +110,7 @@ TerminusUI.prototype.createDatabase = function(dbdets){
 			})
 			.then(function(response){
 				self.clearBusy();
+				self.redraw();
 				return response;
 			});
 		}

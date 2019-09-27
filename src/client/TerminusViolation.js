@@ -61,3 +61,5 @@ TerminusViolation.prototype.getPropertyAsDOM = function(prop, val){
 	pdom.appendChild(vdom);
 	return pdom;
 }
+
+module.exports=TerminusViolations
