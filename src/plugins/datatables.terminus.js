@@ -148,6 +148,7 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
+    console.log('dtResult.result.data.data', dtResult.result.data.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
@@ -159,7 +160,11 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
          columns     : dtResult.result.columns,
          paging      : true,
          select      : true,
-         data        : dtResult.result.data.data,
+         ajax        : function (data, callback, settings) {
+                        callback(
+                          JSON.parse(dtResult.result.data.data)
+                        );},
+         //data        : dtResult.result.data.data,
          buttons     : ['copy', 'excel'],
          columnDefs  :[{targets:'_all',className:"truncate"}],
          createdRow  : function(row){

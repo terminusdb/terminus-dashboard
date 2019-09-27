@@ -660,7 +660,6 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
     switch(action){
         case 'connect':
             button.addEventListener("click", function(){
-                var buttonSelf = this;
                 self.client.connect(input.url.value, input.key.value)
                 .then(function(response){
                     FrameHelper.removeChildren(resd);
@@ -670,10 +669,12 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'create':
             button.addEventListener("click", function(form){
-              self.client.createDatabase(input.url.value, input.doc.value, input.key.value)
+               console.log('typeof() create', typeof(input.doc.value));
+               console.log('input.doc.value', input.doc.value);
+              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
               .then(function(response){
                 FrameHelper.removeChildren(resd);
-                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
             }) // button click
         break;
@@ -684,7 +685,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               self.client.deleteDatabase(input.url.value, opts)
               .then(function(response){
                   FrameHelper.removeChildren(resd);
-                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
             }) // button click
         break
@@ -709,7 +710,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 var payload = input.doc.value;
                 var schurl = input.url.value;
                 self.client.connectionConfig.connected_mode = false;
-                self.client.updateSchema(schurl, payload, opts)
+                self.client.updateSchema(schurl, JSON.parse(input.doc.value), opts)
+                //self.client.updateSchema(schurl, input.doc.value, opts)
                 .then(function(response){
                     FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
@@ -721,7 +723,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 var schurl = input.url.value;
                 opts = {};
                 opts.explorer = true;
-                self.client.getClassFrame(input.url, input.docUrl.value, opts)
+                self.client.getClassFrame(input.url, JSON.parse(input.docUrl.value), opts)
                 .then(function(response){
                     var currForm = buttonSelf.parentNode;
                     var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
@@ -758,7 +760,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               var payload = input.doc.value;
               opts = {};
               opts.key = input.key.value;
-              self.client.createDocument(dcurl, payload, opts)
+              self.client.createDocument(dcurl, JSON.parse(payload), opts)
               .then(function(response){
                    FrameHelper.removeChildren(resd);
                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
@@ -774,7 +776,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             opts.editmode = 'replace';
             opts.format = 'json';
             opts.key = input.key.value;
-            self.client.updateDocument(dcurl, payload, opts)
+            self.client.updateDocument(dcurl, JSON.parse(payload), opts)
             .then(function(response){
               FrameHelper.removeChildren(resd);
               var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
@@ -785,7 +787,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 var opts = {};
                 opts.key = input.key.value;
-                self.client.select(input.url.value, input.doc.value, opts)
+                self.client.select(input.url.value, JSON.parse(input.doc.value), opts)
                 .then(function(response){
                    FrameHelper.removeChildren(resd);
                    var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
@@ -796,7 +798,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
               var opts = {};
               opts.key = input.key.value;
-              self.client.update(input.url.value, input.doc.value, opts)
+              self.client.update(input.url.value, JSON.parse(input.doc.value), opts)
               .then(function(response){
                 FrameHelper.removeChildren(resd);
                 var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
