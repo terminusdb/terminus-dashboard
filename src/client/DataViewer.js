@@ -24,7 +24,7 @@ HTMLDataViewer.prototype.render = function(){
 	if(this.headerViewer){
 		this.header = this.headerViewer.getAsDOM(this.renderer);
 		if(this.renderer.facet == 'page'){ //expert mode
-			if(this.header) {
+			if(this.header && this.expModeMenu) {
 				this.expModeMenu.appendChild(this.header);
 				//this.valDOM.appendChild(this.expModeMenu);
 			}

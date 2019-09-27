@@ -161,7 +161,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	aqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	aqbut.addEventListener("click", function(){
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "dcog/'Document'")
+		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "tcs/'Document'")
 														+ ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")",
 														self.datatable.pageLength, self.datatable.start);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
@@ -283,7 +283,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		else self.query(qip.value);
 	}
 	var docdom = docch.getAsDOM('terminus-query-select');
-	var d2ch = new TerminusDocumentChooser(this.ui, TerminusClient.FrameHelper.unshorten("dcog:Document"));
+
+	var d2ch = new TerminusDocumentChooser(this.ui, TerminusClient.FrameHelper.unshorten("tcs:Document"));
 	d2ch.view = "label";
 	var d2dom = d2ch.getAsDOM('terminus-query-select');
 	var p = document.createElement("p");

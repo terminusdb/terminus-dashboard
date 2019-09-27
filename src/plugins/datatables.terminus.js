@@ -1,11 +1,9 @@
-const WOQLQuery = require('../query/WOQLQuery');
-const WOQLResult = require('../query/WOQLResult');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const UTILS= require('../Utils')
 
 function Datatables(){}
 
-Datatables.prototype.convertToDatatable = function(tab){
+Datatables.prototype.convertToDatatable = function(tab, ui){
     var table = jQuery(tab).DataTable({
          searching : false,
          pageLength: 25,
@@ -18,8 +16,18 @@ Datatables.prototype.convertToDatatable = function(tab){
                             td.attr("title", td.html());}
     }); //jQuery(tab)
 
-    //styling
-    tab.setAttribute('class'      , 'stripe dataTable terminus-db-size terminus-db-border');
+    // on click of row connect to db, on click of 5th column delete db
+    jQuery(tab, 'tbody').on('click', 'td', function(){
+        if(table.cell(this).index().column == 5){
+            var dbInfo = table.row(jQuery(this).parents('tr')).data();
+            var dbId = UTILS.extractValueFromCell(dbInfo[0]);
+            ui.deleteDatabase(dbId);
+            return;
+        }
+        else ui.showDBMainPage();
+     }); // on click
+
+    tab.setAttribute('class'      , 'stripe dataTable terminus-db-size');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '0');
     tab.setAttribute('border'     , '0');
@@ -39,7 +47,7 @@ Datatables.prototype.executeQuery = function(dcb, ui, dt, query, pageInfo, resul
     dcb.wquery.execute(query)
       .then(function(result){
           if(true || !self.result){
-              self.result = new WOQLResultsViewer(ui, result, null, pageInfo);
+              self.result = new WOQLResultsViewer.WOQLResultsViewer(ui, result, null, pageInfo);
           }
           var rtab = self.result.getTable(result.bindings);
           if(rtab){
@@ -65,7 +73,7 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
             return wq.getElementMetaDataQuery(null, settings.pageLength, settings.start);
         break;
         case 'Show_Document_Classes':
-            return wq.getClassMetaDataQuery(wq.getSubclassQueryPattern("Class", "dcog/'Document'")
+            return wq.getClassMetaDataQuery(wq.getSubclassQueryPattern("Class", "tcs/'Document'")
     										  + ", not(" + wq.getAbstractQueryPattern("Class") + ")",
                                                  settings.pageLength, settings.start);
         break;
@@ -152,10 +160,6 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
          lengthMenu  : [5, 10, 25, 50, 75, 100],
          dom         : 'Blfrtip',
          columns     : dtResult.result.columns,
-        /* ajax        : {
-                        //url: '/api/myData',
-                        dataSrc: dtResult.result.data
-                    },*/
          paging      : true,
          select      : true,
          data        : dtResult.result.data.data,
@@ -201,7 +205,7 @@ serverside: true or false
 Datatables.prototype.draw = function(serverside, dtResult, settings, ui, resultDOM){
     if(serverside)
         return(this.getDataFromServer(dtResult, settings, ui, resultDOM));
-    else return(this.convertToDatatable(dtResult));
+    else return(this.convertToDatatable(dtResult, ui));
 }
 
 module.exports=Datatables

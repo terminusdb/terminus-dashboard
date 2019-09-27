@@ -1,5 +1,4 @@
 const WOQLQuery = require('../query/WOQLQuery');
-const WOQLResult = require('../query/WOQLResult');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
 const WOQLGraphBrowserGenerator = require('../query/WOQLGraphBrowserGenerator');
@@ -65,7 +64,7 @@ TerminusQueryViewer.prototype.init = function(){
 	var self = this;
 	self.meta = {};
 	wq.execute(woql).then(function(wresult){
-		var wqlR = new WOQLResult(wresult, null ,null);
+		var wqlR = new WOQLResultsViewer.WOQLResult(wresult, null ,null);
 		if(wqlR.hasBindings(wresult)){
 			for(var i = 0; i<wresult.bindings.length; i++){
 				var el = wresult.bindings[i].Element;
@@ -87,7 +86,7 @@ TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	this.wquery.execute(val)
 	.then(function(result){
 		if(true || !self.result){
-			self.result = new WOQLResultsViewer(self.ui, result, self.options, settings);
+			self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.options, settings);
 		}
 		else {
 			//self.result.newResult(result);

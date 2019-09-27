@@ -10,8 +10,8 @@ const config = {
   // Output
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'terminus-dashboard-sdk.min.js',
-    sourceMapFilename: 'terminus-dashboard-sdk.min.js.map',
+    filename: 'terminus-dashboard.min.js',
+    sourceMapFilename: 'terminus-dashboard.min.js.map',
     libraryTarget: 'var',
     library: 'TerminusDashboard',
   },

@@ -43,6 +43,12 @@ TerminusDBController.prototype.getAsDOM = function(){
 		var ul = document.createElement('ul');
 		ul.setAttribute('class','terminus-ul' );
 		nav.appendChild(ul);
+		// connected to db
+		var a = document.createElement('a');
+        a.setAttribute('class', 'terminus-dashboard-info terminus-list-group-a terminus-nav-width');
+        var txt = 'Database: ' + this.ui.db();
+        a.appendChild(document.createTextNode(txt));
+        ul.appendChild(a);
 		if(this.ui.showControl("db")){
 			var item = this.getControlHTML("Database Home", "fa-home");
 			item.classList.add("terminus-selected");
@@ -160,7 +166,8 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		if(dcip.value) self.ui.showDocument(dcip.value);
 	})
 	if(this.ui.client.connectionConfig.platformEndpoint() && this.ui.pluginAvailable("select2")){
-		var mcls = TerminusClient.FrameHelper.unshorten("dcog:Document");
+
+		var mcls = TerminusClient.FrameHelper.unshorten("tcs:Document");
 		var d2ch = new TerminusDocumentChooser(this.ui, mcls);
 		d2ch.change = function(val){
 			alert("changed to " + val);
@@ -223,7 +230,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	var nbuts = document.createElement("div");
 	nbuts.setAttribute("class", "terminus-control-buttons terminus-document-creator-buttons");
 	var wq = new WOQLQuery(this.ui.client, {});
-	var filter = wq.getSubclassQueryPattern("Class", "dcog/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
+	var filter = wq.getSubclassQueryPattern("Class", "tcs/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
 
 	var termcc = new TerminusClassChooser(this.ui, filter);
 	termcc.empty_choice = "Create Document of Type";
@@ -283,7 +290,7 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	pd.setAttribute("class", "terminus-db-home-page");
 	var sth = document.createElement('div');
 	var banner = document.createElement('div');
-	pd.appendChild(banner);
+	//pd.appendChild(banner);
 	banner.setAttribute('class', 'terminus-banner');
 	var dhp = document.createElement("span");
 	dhp.setAttribute('class', 'terminus-home-heading');
@@ -303,7 +310,8 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	sth.appendChild(scd);
 	banner.appendChild(sth);
 	//pd.appendChild(sth);
-	pd.appendChild(UTILS.getHeaderDom('Summary'));
+	//pd.appendChild(UTILS.getHeaderDom('Summary'));
+	this.getDeleteOnHomePage(pd);
 	this.getDBSummary(pd);
 	pd.appendChild(pd.appendChild(UTILS.getHeaderDom('List of Documents')));
 	this.getClassesDOM(pd);
@@ -338,12 +346,12 @@ TerminusDBViewer.prototype.getDbInfoBox = function(r, module){
     r.appendChild(sp);
 }
 
-TerminusDBViewer.prototype.getDBSummary = function(d){
+TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 	// delete database
     var del = document.createElement('button');
     del.setAttribute('class', 'terminus-del-btn');
     del.setAttribute('type', 'button');
-    del.innerHTML = 'Delete';
+    del.innerHTML = 'Delete Database';
 	var dbrec = this.ui.getDBRecord();
 	if(dbrec)
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
@@ -352,7 +360,9 @@ TerminusDBViewer.prototype.getDBSummary = function(d){
       self.ui.deleteDatabase(nm);
     });
     d.appendChild(del);
+}
 
+TerminusDBViewer.prototype.getDBSummary = function(d){
     var r = document.createElement('span');
     r.setAttribute('class', 'terminus-db-info-box-display');
     d.appendChild(r);
@@ -368,12 +378,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	var self = this;
 	this.wquery.execute(q)
 	.then(function(result){
-		if(true || !self.result){
-			self.result = new WOQLResultsViewer(this.ui, result, {}, {});
-		}
-		else {
-			//self.result.newResult(result);
-		}
+		self.result = new WOQLResultsViewer.WOQLResultsViewer(this.ui, result, {}, {});
 		if(self.result){
 			var nd = self.result.getAsDOM(d, false);
 			if(nd){

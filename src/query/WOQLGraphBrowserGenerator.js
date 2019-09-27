@@ -30,7 +30,7 @@ function DCOGBrowser(controller, model, config){
 	this.browserid = randomString(8);
 	this.query_timeslice = false;
 	this.current_result = false;
-	this.focus_node = false;//(config && config.focus_node ? config.focus_node : "https://datachemist.net/ipg/candidate/osoba_ipg11704456");
+	this.focus_node = false;
 	this.show_filter = false;
 	//this.relationships = model.mgraphs['main'].elements.relationships;
 	//this.entities = model.mgraphs['main'].elements.entities;
