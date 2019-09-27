@@ -1,4 +1,3 @@
-const FrameHelper = require('../FrameHelper');
 const PropertyViewer = require('./PropertyViewer');
 const ObjectViewer= require("./ObjectViewer")
 const HTMLStringViewer = require('./viewers/String');
@@ -558,7 +557,7 @@ FramePattern.prototype.checkLabel = function(rtype, renderer){
 }
 
 FramePattern.prototype.IDsMatch = function(ida, idb){
-	return FrameHelper.compareIDs(ida, idb);
+	return TerminusClient.FrameHelper.compareIDs(ida, idb);
 }
 
 FramePattern.prototype.classIDsMatch = function(ida, idb){

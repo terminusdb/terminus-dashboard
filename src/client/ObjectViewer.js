@@ -2,7 +2,7 @@
  * Object for producing a HTML view of a given object in a frame
  */
 const HTMLFrameHelper = require('./HTMLFrameHelper');
-const FrameHelper = require('../FrameHelper');
+//const FrameHelper = require('../FrameHelper');
 function HTMLObjectViewer(renderer){
 	this.renderer = renderer;
 	this.properties = [];
@@ -71,7 +71,7 @@ HTMLObjectViewer.prototype.getFeatureDOM = function(feature){
 }
 
 HTMLObjectViewer.prototype.redraw = function(){
-	FrameHelper.removeChildren(this.renderedDOM);
+	TerminusClient.FrameHelper.removeChildren(this.renderedDOM);
 	this.properties = [];
 	this.renderer.render(this);
 }
@@ -100,7 +100,7 @@ HTMLObjectViewer.prototype.addRenderedProperty = function(prop, renderedprop){
 }
 
 HTMLObjectViewer.prototype.clear = function(){
-	FrameHelper.removeChildren(this.renderedDOM);
+	TerminusClient.FrameHelper.removeChildren(this.renderedDOM);
 	this.properties = {};
 }
 
@@ -121,7 +121,7 @@ HTMLObjectViewer.prototype.goTo = function(subj, property){
 HTMLObjectViewer.prototype.getObjectIDMarker = function(renderer){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-object-idmarker");
-	var sh = FrameHelper.getShorthand(renderer.subject());
+	var sh = TerminusClient.FrameHelper.getShorthand(renderer.subject());
     if(!sh) sh = renderer.subject();
     if(sh){
 		var bits = sh.split(":");

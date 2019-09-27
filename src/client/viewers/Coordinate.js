@@ -1,11 +1,10 @@
-const FrameHelper = require('../../FrameHelper');
 
 function HTMLCoordinateViewer(options){
 	this.inputs = [];
 }
 
 HTMLCoordinateViewer.prototype.getDOM = function(renderer, dataviewer){
-	var ty = FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
 	var value = renderer.value();
 	var input = document.createElement("span");
 	input.setAttribute('class', "terminus-literal-value terminus-literal-coordinate");

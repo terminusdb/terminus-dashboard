@@ -2,7 +2,6 @@
  * Draws the screen for viewing and updating the schema
  * and provides wrappers around the client's schema API
  */
-const FrameHelper = require('../FrameHelper');
 const TerminusClassChooser = require('./TerminusClassChooser');
 const TerminusDocumentViewer = require('./TerminusDocument');
 const UTILS=require('../Utils')
@@ -45,7 +44,7 @@ TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 }
 
 TerminusSchemaViewer.prototype.resetControlDOM = function(){
-	FrameHelper.removeChildren(this.controldom);
+	TerminusClient.FrameHelper.removeChildren(this.controldom);
 	if(this.mode == "edit"){
 		this.controldom.appendChild(this.getSchemaSaveButtons());
 	}
@@ -106,7 +105,7 @@ TerminusSchemaViewer.prototype.refreshPage = function(msg, msgtype){
 }
 
 TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
-	FrameHelper.removeChildren(this.pagedom);
+	TerminusClient.FrameHelper.removeChildren(this.pagedom);
 	if(this.mode == 'view'){
 		this.pagedom.appendChild(this.getSchemaViewDOM());
 	}
@@ -136,7 +135,7 @@ TerminusSchemaViewer.prototype.getSchemaImportActionButtons = function(){
 	var ssb = document.createElement("span");
 	ssb.setAttribute("class", "terminus-schema-import-buttons");
 	ssb.appendChild(this.getCancelButton());
-	ssb.appendChild(this.getImportPreviewButton());
+	//ssb.appendChild(this.getImportPreviewButton());
 	ssb.appendChild(this.getImportSaveButton());
 	return ssb;
 }
@@ -257,7 +256,7 @@ TerminusSchemaViewer.prototype.load  = function(url, key, mode){
 	var self = this;
 	mode = (mode ? mode : "replace");
 	this.ui.showBusy("Loading schema from " + url);
-	return this.ui.client.getSchema(url, {key: key, format: this.format})
+	return this.ui.client.getSchema(url, {"terminus:user_key": key, "terminus:encoding" : "terminus:" + this.format})
 	.then(function(response){
 		var newschema = (mode == "append") ? self.appendSchema(response) : response;
 		if(self.confirm_before_update){
@@ -267,6 +266,7 @@ TerminusSchemaViewer.prototype.load  = function(url, key, mode){
 			self.ui.showBusy("Updating schema");
 			self.updateSchema(false, newschema).then(function(response){
 				self.ui.clearBusy();
+				self.ui.redraw();
 				self.ui.showResult("Successfully deployed new schema from " + url);
 				return response;
 			});
@@ -389,32 +389,12 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	sci.appendChild(inpUrl);
 	scd.appendChild(sci);
 
-	/*var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field");
-	var lab = document.createElement("span");
-	lab.setAttribute("class", "terminus-form-label terminus-url-loader-input");
-	lab.appendChild(document.createTextNode("URL"))
-	var ip = document.createElement("input");
-	ip.setAttribute("type", "text");
-	ip.setAttribute("class", "terminus-form-value terminus-form-url terminus-url-connect");
-	if(this.val){
-		ip.value = this.val;
-	}
-	sci.appendChild(lab);
-	sci.appendChild(ip);
-	scd.appendChild(sci); */
-
 	var sci = document.createElement("div");
 	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var klab = document.createElement("span");
 	klab.setAttribute("class", "terminus-url-loader-input terminus-form-label  terminus-control-label terminus-import_mode-input");
 	klab.appendChild(document.createTextNode("Import Mode"));
 	sci.appendChild(klab);
-	/*var sci = document.createElement("div");
-	sci.setAttribute("class", "terminus-form-field");
-	var klab = document.createElement("span");
-	klab.setAttribute("class", "terminus-form-label terminus-import_mode-input");
-	klab.appendChild(document.createTextNode("Import Mode")) */
 	var modes = document.createElement("select");
 	modes.setAttribute("class", "terminus-form-select");
 
@@ -445,9 +425,6 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	var self = this;
 	this.doImport = function(){
 		if(inpUrl.value){
-			console.log(inpUrl.value);
-			console.log(key.value);
-			console.log(modes.value);
 			self.load(inpUrl.value, key.value, modes.value);
 		}
 	}

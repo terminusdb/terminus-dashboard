@@ -5,7 +5,6 @@
  *
  * @summary Displays a demo and description of api calls from WOQLCLient and what happens under the hood of api calls
  */
-const FrameHelper = require('./FrameHelper');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils')
 
@@ -186,7 +185,7 @@ ApiExplorer.prototype.getApiNav = function(navDom, viewer){
 // get schema api explorer - nav bar, alert msg, headers ...
 ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
     // clear of viewer
-    FrameHelper.removeChildren(viewer);
+    TerminusClient.FrameHelper.removeChildren(viewer);
     // wrapper
     var wrap = document.createElement('div');
     //wrap.setAttribute('class', 'terminus-wrapper terminus-wrapper-height');
@@ -233,7 +232,7 @@ ApiExplorer.prototype.getApiExplorerDom = function(view, viewer){
 
 // on trigger of click event - change dom
 ApiExplorer.prototype.changeSubApiDom = function(curSubMenu, action, cont, body){
-    FrameHelper.removeChildren(body);
+    TerminusClient.FrameHelper.removeChildren(body);
     switch(curSubMenu){
         case 'database':
             var dom = this.getDatabaseDom(action, body);
@@ -383,7 +382,98 @@ ApiExplorer.prototype.getDatabaseDom = function(mode, body){
     if(mode == 'create') this.getForm( null, body, false, mode, 'URL : server/database_id');
     else this.getForm( null, body, true, mode, 'URL : server/database_id');
     return body;
-}// getDatabaseDom()
+} // getConnectExplorer
+
+//get create & delete db form
+ApiExplorer.prototype.getServerForm = function(){
+  // form
+  var form = document.createElement('form');
+  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
+
+  var fd = document.createElement('div');
+  fd.setAttribute('class', 'terminus-control-group');
+  form.appendChild(fd);
+  var inpLabel = document.createElement('label');
+  inpLabel.setAttribute('class', 'terminus-control-label');
+  inpLabel.setAttribute('for', 'basicinput');
+  inpLabel.innerHTML = 'Url:';
+  fd.appendChild(inpLabel);
+  var cd = document.createElement('div');
+  cd.setAttribute('class', 'terminus-controls');
+  fd.appendChild(cd);
+  var inpId = document.createElement('input');
+  inpId.setAttribute('type', 'text');
+  inpId.setAttribute('id', 'basicinput');
+  inpId.setAttribute('class', 'terminus-input-text');
+  inpId.setAttribute('placeholder', 'URL : server_url');
+  if(this.val) inpId.value = this.val;
+  cd.appendChild(inpId);
+
+  var fd = document.createElement('div');
+  fd.setAttribute('class', 'terminus-control-group');
+  form.appendChild(fd);
+  var keyLabel = document.createElement('label');
+  keyLabel.setAttribute('class', 'terminus-control-label');
+  keyLabel.setAttribute('for', 'basicinput');
+  keyLabel.innerHTML = 'Key:';
+  fd.appendChild(keyLabel);
+  var cd = document.createElement('div');
+  cd.setAttribute('class', 'terminus-controls');
+  fd.appendChild(cd);
+  var key = document.createElement('input');
+  key.setAttribute('type', 'text');
+  key.setAttribute('id', 'basicinput');
+  key.setAttribute('class', 'span8 terminus-input-text');
+  key.setAttribute('placeholder', 'Key : key');
+  if(this.val) key.value = this.val;
+  cd.appendChild(key);
+
+  var button = document.createElement('button');
+  button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
+  button.setAttribute('type', 'button');
+  button.innerHTML = 'Send Api';
+  var gatherips = function(){
+    var input = {};
+    input.url = inpId.value;
+    input.key = key.value;
+    return input;
+  }
+  var resd = document.createElement('div');
+  form.appendChild(button);
+  form.appendChild(resd);
+  var self = this;
+  button.addEventListener("click", function(){
+    var buttonSelf = this;
+    //opts = {};
+    var input = gatherips();
+    self.client.connect(input.url, input.key)
+    .then(function(response){
+      TerminusClient.FrameHelper.removeChildren(resd);
+      var resultDom = UTILS.showHttpResult(response, 'connect', resd, self.ui);
+    });
+  }) // button click
+  return form;
+} // getServerForm()
+
+// get database api calls - on click of databaseAPI nav bar - submenus of database Api defined here
+ApiExplorer.prototype.getDatabaseExplorer = function(cont){
+  var body = document.createElement('div');
+  // list view of Databse tools
+  var ul = document.createElement('ul');
+  ul.setAttribute('class','terminus-ul-horizontal');
+  // loop over apiNavConfig
+  for (var key in apiNavConfig.subNav.database){
+      if (apiNavConfig.subNav.database.hasOwnProperty(key)) {
+          this.createSubNavs('database', apiNavConfig.subNav.database[key], cont, body, ul);
+      }
+  } // for apiNavConfig
+  cont.appendChild(ul);
+  // landing page
+  var dom = this.getDatabaseDom(apiNavConfig.subNav.database.createDatabase.action, body);
+  cont.appendChild(dom);
+  return cont;
+} // getDatabaseExplorer
+
 
 // get schema & document dom
 ApiExplorer.prototype.getShowApiDom = function(action, body){
@@ -644,6 +734,117 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
     body.appendChild(form);
 }
 
+// define event listeners on send api of schema & documents
+
+ApiExplorer.prototype.getApiForm = function(action, input){
+  // form
+  var form = document.createElement('form');
+  form.setAttribute('class', 'terminus-form-horizontal row-fluid');
+
+  var button = document.createElement('button');
+  button.setAttribute('class', 'terminus-btn terminus-send-api-btn');
+  button.setAttribute('type', 'button');
+  button.innerHTML = 'Send Api';
+  form.appendChild(button);
+  var resd = document.createElement('div');
+  form.appendChild(resd);
+  var self = this;
+  switch(action){
+    case 'getSchema':
+      button.addEventListener("click", function(){
+        var opts = {};
+        opts['terminus:encoding'] = input.enc.value;
+        opts['terminus:user_key'] = input.key.value;
+        var schurl = input.url.value;
+        var buttonSelf = this;
+        self.client.getSchema(schurl, opts)
+        .then(function(response){
+          TerminusClient.FrameHelper.removeChildren(resd);
+          var resultDom = UTILS.showHttpResult(response, 'getSchema', resd, self.ui);
+        });
+      }) // button click
+    break;
+    case 'updateSchema':
+      button.addEventListener("click", function(){
+        var buttonSelf = this;
+        opts = {};
+        opts['terminus:encoding'] = input.enc.value;
+        opts['terminus:user_key'] = input.key.value;
+        var schurl = input.url.value;
+        self.client.connectionConfig.connected_mode = false;
+        self.client.updateSchema(schurl, input.doc.value, opts)
+        .then(function(response){
+          var gtxtar = document.createElement('textarea');
+          gtxtar.setAttribute('readonly', true);
+          gtxtar.innerHTML = response;
+          var currForm = buttonSelf.parentNode;
+          currForm.appendChild(gtxtar);
+          UTILS.stylizeEditor(this.ui, txtar, 'schema', 'turtle');
+        });
+      }) // button click
+    break;
+    case 'viewDocument':
+      button.addEventListener("click", function(){
+      var dcurl = input.value;
+      var buttonSelf = this;
+      var opts = {};
+      opts.format = 'turtle';
+      self.client.getDocument(dcurl, opts)
+      .then(function(response){
+        TerminusClient.FrameHelper.removeChildren(resd);
+        var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+      });
+    }) // button click
+    break;
+    case 'deleteDocument':
+      button.addEventListener("click", function(){
+      var dcurl = input.value;
+      var buttonSelf = this;
+      var opts = {};
+      self.client.deleteDocument(dcurl, opts)
+      .then(function(response){
+        TerminusClient.FrameHelper.removeChildren(resd);
+        var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+      });
+    }) // button click
+    break;
+    case 'createDocument':
+      button.addEventListener("click", function(){
+        var dcurl = input.schemaUrlDom.value;
+        var payload = input.htmlEditor.getValue();
+        var buttonSelf = this;
+        opts = {};
+        self.client.createDocument(dcurl, payload, opts)
+        .then(function(response){
+          TerminusClient.FrameHelper.removeChildren(resd);
+          var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+        });
+      }) // button click
+    break;
+    case 'updateDocument':
+      button.addEventListener("click", function(){
+        var dcurl = input.schemaUrlDom.value;
+        var payload = input.htmlEditor.getValue();
+        var buttonSelf = this;
+        opts = {};
+        opts.editmode = 'replace';
+        opts.format = 'json';
+        self.client.updateDocument(dcurl, payload, opts)
+        .then(function(response){
+          TerminusClient.FrameHelper.removeChildren(resd);
+          var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+        });
+      }) // button click
+    break;
+  } // switch(action)
+
+  var br = document.createElement('BR');
+  form.appendChild(br);
+  var br = document.createElement('BR');
+  form.appendChild(br);
+
+  return form;
+} // getApiForm()
 // define event listeners on send api of schema & documents
 ApiExplorer.prototype.getApiSendButton = function(action, input){
     // form

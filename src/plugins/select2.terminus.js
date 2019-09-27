@@ -14,5 +14,5 @@ S2EntityEditor.prototype.getDOM = function(renderer, dataviewer){
 	return d2dom;
 }
 
-TerminusDB_SDK.RenderingMap.registerEditorForFrameType("S2EntityEditor", "S2 Autocomplete Selector", "document");
+TerminusDashboard.RenderingMap.registerEditorForFrameType("S2EntityEditor", "S2 Autocomplete Selector", "document");
 

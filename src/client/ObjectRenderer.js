@@ -9,7 +9,6 @@
  * @returns
  */
 
-const FrameHelper = require('../FrameHelper');
 const ValueRenderer = require('./ValueRenderer');
 const RenderingMap = require('./RenderingMap');
 const PropertyViewer = require('./PropertyViewer');
@@ -123,7 +122,7 @@ PropertyRenderer.prototype.getChildrenToRender = function(options){
  		}
  	}
  	return sort(this.values, filter);*/
- 	if(FrameHelper.viewIncludesChildren(this.view, "property")){
+ 	if(TerminusClient.FrameHelper.viewIncludesChildren(this.view, "property")){
  		var allkids = this.parent.objframe.getChildren(this.property());
  	}
  	else {
@@ -189,7 +188,7 @@ PropertyRenderer.prototype.getAvailableClassChoices = function(){
 			var choices = [];
 			for(var i = 0; i < cf.length; i++){
 				var clsmeta = this.parent.getClassMeta(cf[i]);
-				var lab = ((clsmeta && clsmeta.Label && clsmeta.Label["@value"]) ? clsmeta.Label["@value"] : FrameHelper.labelFromURL(cf[i]));
+				var lab = ((clsmeta && clsmeta.Label && clsmeta.Label["@value"]) ? clsmeta.Label["@value"] : TerminusClient.FrameHelper.labelFromURL(cf[i]));
 				choices.push({value: cf[i], label: lab});
 			}
 			return choices;
@@ -670,7 +669,7 @@ ObjectRenderer.prototype.clone = function(){
 		this.setMode("edit");
 	}
 	else {
-		var nkid = this.objframe.clone(FrameHelper.genBNID());
+		var nkid = this.objframe.clone(TerminusClient.FrameHelper.genBNID());
 		var parentobj = this.parentObject();
 		var prop = this.property();
 		if(parentobj && prop){
@@ -930,7 +929,7 @@ ObjectRenderer.prototype.getContentOrientation = function(){
 
 ObjectRenderer.prototype.getLabel = function(){
 	for(var prop in this.properties){
-		if(FrameHelper.getShorthand(prop) == "rdfs:label"){
+		if(TerminusClient.FrameHelper.getShorthand(prop) == "rdfs:label"){
 			var prend = this.properties[prop];
 			var vrend = prend.values[0];
 			if(vrend){
@@ -942,7 +941,7 @@ ObjectRenderer.prototype.getLabel = function(){
 	var s = this.subject();
 	if(s && s.substring(0, 2) == "_:"){
 		var ty = this.subjectClass();
-		var sh = FrameHelper.getShorthand(ty);
+		var sh = TerminusClient.FrameHelper.getShorthand(ty);
 		if(sh){
 			var b = sh.split(":");
 			if(b.length > 1){
@@ -1101,11 +1100,11 @@ ObjectRenderer.prototype.getPropertiesToRender = function(options){
 
 ObjectRenderer.prototype.standardSort = function(objframe, filter){
 	var sorted = [];
-	var rdft = FrameHelper.getStdURL("rdfs", "label");
+	var rdft = TerminusClient.FrameHelper.getStdURL("rdfs", "label");
 	if(objframe.dataframes[rdft] && filter(objframe, rdft, objframe.dataframes[rdft])){
 		sorted.push(rdft);
 	}
-	var rdfc = FrameHelper.getStdURL("rdfs", "comment");
+	var rdfc = TerminusClient.FrameHelper.getStdURL("rdfs", "comment");
 	if(objframe.dataframes[rdfc]){
 		sorted.push(rdfc);
 	}
@@ -1142,11 +1141,11 @@ ObjectRenderer.prototype.extract = function(){
 	var extracts = {};
 	for(var i in this.properties){
 		var extracted = this.properties[i].extract();
-		if(!FrameHelper.empty(extracted)){
+		if(!TerminusClient.FrameHelper.empty(extracted)){
 			extracts[i] = extracted;
 		}
 	}
-	if(FrameHelper.empty(extracts) && this.parent){
+	if(TerminusClient.FrameHelper.empty(extracts) && this.parent){
 		return false;
 	}
 	else {

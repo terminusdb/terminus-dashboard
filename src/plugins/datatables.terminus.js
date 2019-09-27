@@ -1,4 +1,3 @@
-const FrameHelper = require('../FrameHelper');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const UTILS= require('../Utils')
 
@@ -135,7 +134,7 @@ Datatables.prototype.getCallbackSettings = function(dt, len, start){
 */
 Datatables.prototype.setUp = function(tab, settings, resultDOM){
     // delete previous datatable
-    FrameHelper.removeChildren(this.dtdom);
+    TerminusClient.FrameHelper.removeChildren(this.dtdom);
     this.dtdom = document.createElement('div');
     this.dtdom.appendChild(tab);
     resultDOM.appendChild(this.dtdom);

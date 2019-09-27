@@ -1,5 +1,3 @@
-const FrameHelper = require('../../FrameHelper');
-
 function HTMLRangeEditor(options){
 	this.commas = (options && options.commas ? options.commas : true);
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
@@ -8,7 +6,7 @@ function HTMLRangeEditor(options){
 
 HTMLRangeEditor.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var vals = FrameHelper.parseRangeValue(value, this.delimiter);
+	var vals = TerminusClient.FrameHelper.parseRangeValue(value, this.delimiter);
 	var d = document.createElement("span");
 	d.setAttribute("class", this.css);
 	var rvals = document.createElement("span");
@@ -45,7 +43,7 @@ HTMLRangeEditor.prototype.getDOM = function(renderer, dataviewer){
 		if(self.showing_range){
 			self.showing_range = false;
 			secondip.value = "";				
-			FrameHelper.removeChildren(svals);
+			TerminusClient.FrameHelper.removeChildren(svals);
 		}
 		else {
 			self.showing_range = true;

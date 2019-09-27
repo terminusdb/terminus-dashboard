@@ -1,5 +1,3 @@
-const FrameHelper = require('../../FrameHelper');
-
 function HTMLStringViewer(options){
 	this.size = ((options && options.size) ? options.size : false);
 	this.css = ((options && options.css) ? "terminus-literal-value " + options.css : "terminus-literal-value");
