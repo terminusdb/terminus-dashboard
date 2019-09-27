@@ -46,7 +46,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		// connected to db
 		var a = document.createElement('a');
         a.setAttribute('class', 'terminus-dashboard-info terminus-list-group-a terminus-nav-width');
-        var txt = 'Database: ' + this.ui.db();
+        var txt = 'Database: ' + nm;
         a.appendChild(document.createTextNode(txt));
         ul.appendChild(a);
 		if(this.ui.showControl("db")){
@@ -170,7 +170,6 @@ TerminusDBController.prototype.getDocumentChooserDOM = function(){
 		var mcls = TerminusClient.FrameHelper.unshorten("tcs:Document");
 		var d2ch = new TerminusDocumentChooser(this.ui, mcls);
 		d2ch.change = function(val){
-			alert("changed to " + val);
 			self.ui.showDocument(val);
 		}
 		d2ch.view = "label";
@@ -229,9 +228,8 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 	})
 	var nbuts = document.createElement("div");
 	nbuts.setAttribute("class", "terminus-control-buttons terminus-document-creator-buttons");
-	var wq = new WOQLQuery(this.ui.client, {});
-	var filter = wq.getSubclassQueryPattern("Class", "tcs/'Document'") + ", not(" + wq.getAbstractQueryPattern("Class") + ")";
-
+	var wq = new WOQLQuery(this.ui.client, {}, this.ui);
+	var filter = wq.getConcreteDocumentClassPattern("v:Element");
 	var termcc = new TerminusClassChooser(this.ui, filter);
 	termcc.empty_choice = "Create Document of Type";
 	var self = this;
@@ -282,7 +280,7 @@ TerminusDBController.prototype.getDocumentCreatorDOM = function(){
 
 function TerminusDBViewer(ui){
 	this.ui = ui;
-	this.wquery = new WOQLQuery(ui.client, this.options);
+	this.wquery = new WOQLQuery(ui.client, this.options, ui);
 }
 
 TerminusDBViewer.prototype.getAsDOM = function(selected){
@@ -472,7 +470,7 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	datip.setAttribute("placeholder", "Terminus DB URL");
 	datip.setAttribute("class", "terminus-form-value terminus-form-url terminus-input-text");
 	sci.appendChild(datip);
-	mfd.appendChild(sci);
+	//mfd.appendChild(sci);
 	var butfield = document.createElement("div");
 	butfield.setAttribute("class", "terminus-control-buttons");
 	var cancbut = document.createElement("button");

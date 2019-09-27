@@ -1017,6 +1017,15 @@ div.terminus-property-frame{
     overflow: hidden;
 }
 
+.terminus-print {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: auto;
+}
+
 .cm-s-neo.CodeMirror{
 	padding: 15px;
 }

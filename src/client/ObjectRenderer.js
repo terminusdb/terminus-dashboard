@@ -140,12 +140,13 @@ PropertyRenderer.prototype.extract = function(){
  	var extracts = [];
  	for(var i = 0; i<this.values.length; i++){
  		var val = this.values[i].extract();
- 		if(val !== "" && typeof val != "undefined") extracts.push(val);
+ 		if(val !== "" && val !== false && typeof val != "undefined") extracts.push(val);
  	}
  	if(this.cframe.isData()){
  		return extracts;
  	}
  	else {
+ 		return extracts;
  		var extr = {};
  		for(var i = 0; i<extracts.length; i++){
  			for(var subjid in extracts[i]){

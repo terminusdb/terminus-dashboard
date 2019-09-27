@@ -8,6 +8,7 @@ TerminusDocumentChooser = function(ui, root, value, view){
 	this.ui = ui;
 	this.root = root;
 	//this.filter = (currentcls ? TerminusClient.FrameHelper.unshorten(currentcls) : false);
+
 	this.choice = value;
 	this.view = (view ? view : "id");
 	this.show_button = true;
@@ -35,8 +36,8 @@ TerminusDocumentChooser.prototype.getAsDOM = function(style){
 TerminusDocumentChooser.prototype.getS2DOM = function(style){
 	var docchooser = document.createElement("span");
 	docchooser.setAttribute("class", "terminus-document-chooser terminus-doc-holder");
-	var wq = new WOQLQuery(this.ui.client, {});
-	var cfilter = wq.getSubclassQueryPattern("Class", "'"+this.root+"'");
+	var wq = new WOQLQuery(this.ui.client, {}, this.ui);
+	var cfilter = wq.getSubclassQueryPattern("v:Class", "'"+this.root+"'");
 	var termcc = new TerminusClassChooser(this.ui, cfilter);
 	termcc.empty_choice = "Filter by Type";
 	termcc.show_single = false;

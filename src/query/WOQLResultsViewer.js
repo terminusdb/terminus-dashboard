@@ -1,7 +1,9 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const Datatables = require('../plugins/datatables.terminus');
+const FrameHelper = require('../FrameHelper');
 
-function WOQLResult(res, query ,options){
+function WOQLResult(res, query, options, ui){
+	this.ui = ui;
 	this.query = query;
 	this.bindings = ((res && res.bindings) ? res.bindings : []);
 }
@@ -22,7 +24,7 @@ WOQLResult.prototype.hasBindings = function(result){
 
 
 function WOQLResultsViewer(ui, wresult, options, settings){
-	this.ui = ui;
+	//this.ui = ui;
 	this.result = wresult;
 	this.options = options;
 	//this.wqlRes = new WOQLResult();
@@ -85,7 +87,8 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
     var ordered_headings = this.orderColumns(bindings[0]);
 	// get columns
 	for(var i = 0; i<ordered_headings.length; i++){
-        columns.push({data: ordered_headings[i]});
+		var clab = FrameHelper.validURL(ordered_headings[i]) ? FrameHelper.labelFromURL(ordered_headings[i]) : ordered_headings[i];
+        columns.push({data: clab});
 	}
 	// get data for respective columns
 	for(var i = 0; i<bindings.length; i++){
@@ -97,13 +100,15 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
 				if(lab == "unknown") lab = "";
+				if(lab.substring(0, 4) == "doc:"){
+					lab = this.getDocumentLocalLink(lab);					
+				}
 			}
 			colDataData[ordered_headings[j]] = lab;
 		}
 		data.push(colDataData);
 	}
 	dtResult.columns = columns;
-	//formattedResult.push({data: data, recordsTotal: '65'});
 	formattedResult.data = data;
 	formattedResult.recordsTotal = '65';
 	dtResult.data = formattedResult;
@@ -112,6 +117,7 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 
 WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 	var tbody = document.createElement("tbody");
+	var self = this;
 	for(var i = 0; i<bindings.length; i++){
 		var tr = document.createElement("tr");
 		for(var j = 0; j<ordered_headings.length; j++){
@@ -123,13 +129,34 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
 				if(lab == "unknown") lab = "";
-				td.appendChild(document.createTextNode(lab));
+				if(lab.substring(0, 4) == "doc:"){
+					var a = this.getDocumentLocalLink(lab);
+					td.appendChild(a);
+				}
+				else {
+					td.appendChild(document.createTextNode(lab));
+				}
 			}
 			tr.appendChild(td);
 		}
 		tbody.appendChild(tr);
 	}
 	return tbody;
+}
+
+WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
+	var a = document.createElement("a");
+	a.setAttribute("title", lab);
+	a.setAttribute("href", '#');
+	var self = this;
+	a.addEventListener("click", function(){
+		if(self.result.ui) {
+			self.result.ui.showDocument(this.title);
+			self.result.ui.redraw();
+		}
+	});
+	a.appendChild(document.createTextNode(lab));
+	return a;
 }
 
 WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
@@ -141,7 +168,8 @@ WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
 	for(var i = 0; i<ordered_headings.length; i++){
 		var th = document.createElement("th");
 		th.setAttribute('class', 'terminus-table-header-full-css');
-		th.appendChild(document.createTextNode(ordered_headings[i]));
+		var clab = (ordered_headings[i].indexOf("http") != -1) ? FrameHelper.labelFromURL(ordered_headings[i]) : ordered_headings[i];
+		th.appendChild(document.createTextNode(clab));
 		thr.appendChild(th);
 	}
 	thead.appendChild(thr);

@@ -99,13 +99,15 @@ FrameHelper.validURL = function(str) {
 FrameHelper.labelFromURL = function(url){
 	var nurl = this.urlFragment(url);
 	nurl = (nurl ? nurl : url.substring(url.lastIndexOf("/")+1));
-	return nurl.charAt(0).toUpperCase() + nurl.slice(1);
+	nurl = nurl.replace("_", " ");
+	nurl = nurl.charAt(0).toUpperCase() + nurl.slice(1);
+	return nurl;
 }
 
 FrameHelper.urlFragment = function(url){
 	url = (typeof url != "string") ? window.location.href : url;
 	bits = url.split('#');
-	if(bits.length <= 1){
+	if(bits.length <= 1 && url.indexOf("http") == -1){
 		bits = url.split(":");
 	}
 	if(bits.length >= 1){

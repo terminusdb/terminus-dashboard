@@ -2,6 +2,7 @@ const TerminusClassChooser = require('../client/TerminusClassChooser');
 const TerminusPropertyChooser = require('../client/TerminusPropertyChooser');
 const TerminusDocumentChooser = require('../client/TerminusDocumentChooser');
 const UTILS= require('../Utils')
+
 function WOQLTextboxGenerator(tq, qman, ui){
 	this.query = tq;
 	this.wquery = qman.wquery;
@@ -27,7 +28,9 @@ WOQLTextboxGenerator.prototype.getQueryButtonGroups = function(qbox){
 
 WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	var g = document.createElement('button');
+	var self = this;
 	g.addEventListener('click', function(e){
+		self.ui.clearMessages();
 		if(header == 'Data Queries'){ // to ensure click event is not on button but on select instead so no need to hide
 			var target = e.target || e.srcElement,
         	text = target.textContent || target.innerText;
@@ -78,6 +81,11 @@ WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 }
 
 WOQLTextboxGenerator.prototype.setDatatableSettings = function(query){
+	if(query.limit){
+		this.datatable.pageLength = query.limit[0];
+		this.datatable.start = query.limit[1].start[0];
+	}
+	/*
 	var newQuery = query.replace(/\s/g,'');  // remove spaces
 	var searchStr = 'limit(';
 	if(newQuery.indexOf(searchStr) !== -1){
@@ -85,7 +93,7 @@ WOQLTextboxGenerator.prototype.setDatatableSettings = function(query){
 		var limit = remString.substr(0, remString.indexOf(','));
 		this.datatable.pageLength = limit;
 		this.datatable.start = 0;
-	}
+	}*/
 }
 
 WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
@@ -101,7 +109,7 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qip.setAttribute("class", "terminus-query-box");
 	qip.setAttribute("placeholder", "Enter new query or load queries from example buttons provided below ...");
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
-	if(q) qip.value = q;
+	if(q) qip.value = JSON.stringify(q);
 	qbox.appendChild(qip);
 	UTILS.stylizeEditor(this.ui, qip, 'query', 'javascript');
 	var self = this;
@@ -109,13 +117,20 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qbut.setAttribute("class", "terminus-control-button terminus-btn")
 	qbut.appendChild(document.createTextNode("Send Query"));
 	qbut.addEventListener("click", function(){
-		if(self.ui.pluginAvailable("datatables")){
-			// pass current Example query scope while editing the text editor
-			self.gatherDatatableSettings(qip, self.datatable.query);
-			self.setDatatableSettings(qip.value);
-			self.query(qip.value, self.datatable);
+		self.ui.clearMessages();
+		try {
+			var qval = JSON.parse(qip.value);
+			if(self.ui.pluginAvailable("datatables")){
+				// pass current Example query scope while editing the text editor
+				self.gatherDatatableSettings(qip, self.datatable.query);
+				self.setDatatableSettings(qval);
+				self.query(qval, self.datatable);
+			}
+			else self.query(qval);
 		}
-		else self.query(qip.value);
+		catch(e){
+			alert("Failed to parse Query " + e.toString());
+		}
 	})
 	qbox.appendChild(qbut);
 	box.appendChild(qbox);
@@ -132,7 +147,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	var qexs = document.createElement("div");
 	qexs.setAttribute("class", "terminus-query-examples terminus-db-list-title");
 	var qh = document.createElement("H3");
-	qh.appendChild(document.createTextNode("Load query from examples"));
+	qh.appendChild(document.createTextNode("Saved Queries"));
 	qh.setAttribute('class', 'terminus-full-css-margin-top terminus-module-head');
 	qexs.appendChild(qh);
 
@@ -140,36 +155,39 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	qexs.appendChild(qrow);
 
 	/* grouping class queries */
-	var qcGroup = this.qGroupQueries(qrow, 'Schema Queries', 'descr blah blah');
+	var qcGroup = this.qGroupQueries(qrow, 'Schema Queries', '');
 
 	var nqbut = document.createElement("button");
 	nqbut.appendChild(document.createTextNode("Show All Classes"));
 	nqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	nqbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
+		var qval = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qval);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Classes');
-			self.query(qip.value, self.datatable);
+			self.query(qval, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qval);
 	})
 
 	var aqbut = document.createElement("button");
 	aqbut.appendChild(document.createTextNode("Show Document Classes"));
 	aqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	aqbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getClassMetaDataQuery(self.wquery.getSubclassQueryPattern("Class", "tcs/'Document'")
-														+ ", not(" + self.wquery.getAbstractQueryPattern("Class") + ")",
+		var qvalue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern(),
 														self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qvalue);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Classes');
-			self.query(qip.value, self.datatable);
+			self.query(qvalue, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qvalue);
 	})
 
 	var ebut = document.createElement("button");
@@ -177,115 +195,129 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	ebut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	var self = this;
 	ebut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getElementMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
+		var qval = self.wquery.getElementMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qval);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Schema_Elements');
-			self.query(qip.value, self.datatable);
+			self.query(qval, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qval);
 	})
 	var dbut = document.createElement("button");
 	dbut.appendChild(document.createTextNode("Show All Documents"));
 	dbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	dbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
+		var qvalue = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qvalue);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Documents');
-			self.query(qip.value, self.datatable);
+			self.query(qvalue, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qvalue);
 	})
 	var pbut = document.createElement("button");
 	pbut.appendChild(document.createTextNode("Show All Data"));
 	pbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	pbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
+		var qvalue = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qvalue);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Data');
-			self.query(qip.value, self.datatable);
+			self.query(qvalue, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qvalue);
 	})
 
 	var prbut = document.createElement("button");
 	prbut.appendChild(document.createTextNode("Show All Properties"));
 	prbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	prbut.addEventListener("click", function(){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
+		var qvalue = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qvalue);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Properties');
-			self.query(qip.value, self.datatable);
+			self.query(qvalue, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qvalue);
 	})
 
 	/* grouping data queries */
-	var qdGroup = this.qGroupQueries(qrow, 'Data Queries', 'descr blah blah');
+	var qdGroup = this.qGroupQueries(qrow, 'Data Queries', '');
 
 	var termcc = new TerminusClassChooser(this.ui);
-	termcc.empty_choice = "View data of type...";
+	termcc.empty_choice = "Show data of type";
 	var self = this;
 	termcc.change = function(new_class){
+		self.ui.clearMessages();
 		if(new_class){
 			UTILS.deleteStylizedEditor(self.ui, qip);
-			qip.value = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
+			var qvalue = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
+			qip.value = JSON.stringify(qvalue);
 			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Data_Class');
 				self.datatable.chosenValue = new_class; // set chosen val from drop down
-				self.query(qip.value, self.datatable);
+				self.query(qvalue, self.datatable);
 			}
-			else self.query(qip.value);
+			else self.query(qvalue);
 		}
 	}
 	var tcdom = termcc.getAsDOM('terminus-query-select');
 
 	var termpc = new TerminusPropertyChooser(this.ui);
-	termpc.empty_choice = "Show data for property...";
+	termpc.empty_choice = "Show property data";
 	var self = this;
 	termpc.change = function(new_property){
 		if(new_property){
 			UTILS.deleteStylizedEditor(self.ui, qip);
-			qip.value = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
+			var qvalue = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
+			qip.value = JSON.stringify(qvalue);
 			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Property_Class');
 				self.datatable.chosenValue = new_property; // set chosen val from drop down
-				self.query(qip.value, self.datatable);
+				self.query(qvalue, self.datatable);
 			}
-			else self.query(qip.value);
+			else self.query(qvalue);
 		}
 	}
 
 	/* grouping document queries */
-	var qdocGroup = this.qGroupQueries(qrow, 'Document Queries', 'descr blah blah');
+	var qdocGroup = this.qGroupQueries(qrow, 'Document Queries', '');
 
 	var pdom = termpc.getAsDOM();
 
 	var docch = new TerminusDocumentChooser(this.ui);
 	docch.change = function(val){
+		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		qip.value = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
+		var qvalue = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qvalue);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Info_by_Id');
 			self.datatable.chosenValue = val;
-			self.query(qip.value, self.datatable);
+			self.query(qvalue, self.datatable);
 		}
-		else self.query(qip.value);
+		else self.query(qvalue);
 	}
 	var docdom = docch.getAsDOM('terminus-query-select');
 
 	var d2ch = new TerminusDocumentChooser(this.ui, TerminusClient.FrameHelper.unshorten("tcs:Document"));
 	d2ch.view = "label";
+	d2ch.change = docch.change;
 	var d2dom = d2ch.getAsDOM('terminus-query-select');
 	var p = document.createElement("p");
 	p.appendChild(d2dom);
