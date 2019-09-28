@@ -10,11 +10,12 @@ HTMLChoiceViewer.prototype.getDOM = function(renderer, dataviewer){
 		for(var i = 0; i<els.length; i++){
 			if(els[i].class == value){
 				if(els[i].label && els[i].label["@value"]){
-					input.appendChild(document.createTextNode(els[i].label["@value"]));
+					var lab = els[i].label["@value"];
 				}
 				else {
-					input.appendChild(FrameHelper.labelFromURL(value));					
+					lab = TerminusClient.FrameHelper.labelFromURL(value);					
 				}
+				input.appendChild(document.createTextNode(lab));
 				continue;
 			}				
 		}

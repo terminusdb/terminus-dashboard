@@ -112,7 +112,8 @@ TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 
 TerminusDocumentViewer.prototype.loadDocumentSchema = function(cls){
 	var self = this;
-	return this.ui.client.getClassFrame(false, cls)
+	var ncls = TerminusClient.FrameHelper.unshorten(cls);
+	return this.ui.client.getClassFrame(false, ncls)
 	.then(function(response){
 		self.loadSchemaFrames(response, cls);
 		self.refreshPage();

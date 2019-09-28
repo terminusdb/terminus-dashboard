@@ -253,6 +253,7 @@ TerminusUI.prototype.clearServer = function(){
 TerminusUI.prototype.connectToDB = function(dbid){
 	this.client.connectionConfig.dbid = dbid;
 	TerminusClient.FrameHelper.standard_urls['doc'] = this.client.connectionConfig.dbURL() + "/document/";
+	TerminusClient.FrameHelper.standard_urls['scm'] = this.client.connectionConfig.dbURL() + "/schema#";
 }
 
 TerminusUI.prototype.clearDB = function(){
@@ -513,12 +514,8 @@ TerminusUI.prototype.getBusyLoader = function(bsyDom){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
-        console.log('type **', type);
 		TerminusClient.FrameHelper.removeChildren(this.messages);
-
 		var md = document.createElement('div');
-        //var clsstr = ' terminus-show-msg';
-        //if(type) clsstr += ' terminus-msg-' + type;
         switch(type){
             case 'busy':
                 var msgHolder = document.createElement('div');
