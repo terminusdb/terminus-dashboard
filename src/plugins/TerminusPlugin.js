@@ -195,7 +195,10 @@ TerminusPluginManager.prototype.pluginAvailable = function(plugin, version_check
 				break;
 			}
 			case "jqueryui": {
-				if(typeof jQuery != "undefined" && jQuery.isFunction( jQuery.fn.slider )) return true;
+				try{
+					if(typeof jQuery != "undefined" && jQuery.isFunction( jQuery.fn.slider )) return true;
+				}
+				catch(e){}
 				return false;
 				break;
 			}

@@ -31,10 +31,9 @@ TerminusClassChooser.prototype.getAsDOM = function(style){
 	// ccsel.setAttribute("class", "terminus-class-select terminus-type-select terminus-query-select");
 	var self = this;
 	ccsel.addEventListener("change", function(){
-		if(this.value != this.choice){
-			this.choice = this.value;
-			self.change(this.value);
-		}
+		this.choice = this.value;
+		self.change(this.value);
+		this.value = "";
 	});
 	ccdom.appendChild(ccsel);
 	var wq = new WOQLQuery(this.ui.client, {}, this.ui);

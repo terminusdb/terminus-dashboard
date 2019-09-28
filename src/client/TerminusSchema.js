@@ -233,6 +233,7 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 			self.ui.showBusy("Retrieving updated schema");
 			self.mode = "view";
 			self.loadSchema("Successfully Updated Schema");
+			self.ui.redraw();
 		}
 		else if(response['terminus:status'] && response['terminus:status'] == "terminus:failure"){
 			self.ui.clearBusy();
@@ -244,7 +245,12 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 	})
 	.catch(function(error){
 		self.ui.clearBusy();
-		self.ui.showError(error);
+		if(error.data && error.data['terminus:witnesses']){
+			self.ui.showViolations(error.data['terminus:witnesses'], "schema");			
+		}
+		else {
+			self.ui.showError(error);
+		}
 	});
 }
 

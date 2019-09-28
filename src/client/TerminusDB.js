@@ -346,6 +346,7 @@ TerminusDBViewer.prototype.getDbInfoBox = function(r, module){
 
 TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 	// delete database
+	if(this.ui.db() == "terminus") return;
     var del = document.createElement('button');
     del.setAttribute('class', 'terminus-btn terminus-btn-float-right terminus-home-del');
     del.setAttribute('type', 'button');
