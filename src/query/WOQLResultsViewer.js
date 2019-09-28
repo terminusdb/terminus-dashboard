@@ -24,7 +24,7 @@ WOQLResult.prototype.hasBindings = function(result){
 
 
 function WOQLResultsViewer(ui, wresult, options, settings){
-	//this.ui = ui;
+	this.ui = ui;
 	this.result = wresult;
 	this.options = options;
 	//this.wqlRes = new WOQLResult();
@@ -112,6 +112,8 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 	dtResult.columns = columns;
 	formattedResult.data = data;
 	formattedResult.recordsTotal = '65';
+	formattedResult.recordsFiltered = '25';
+	formattedResult.draw = '1';
 	dtResult.data = formattedResult;
 	return dtResult;
 }

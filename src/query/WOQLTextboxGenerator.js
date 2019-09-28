@@ -34,7 +34,12 @@ WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 		if(header == 'Data Queries'){ // to ensure click event is not on button but on select instead so no need to hide
 			var target = e.target || e.srcElement,
         	text = target.textContent || target.innerText;
-			if(target.nodeName == 'SELECT') return;
+			if((target.nodeName == 'SELECT')) return;
+		}
+		else if(header == 'Document Queries'){
+			var target = e.target || e.srcElement,
+        	text = target.textContent || target.innerText;
+			if((target.nodeName == 'INPUT')) return;
 		}
 		for(var i=0; i<this.children.length ; i++){
 			UTILS.toggleVisibility(this.children[i]);
@@ -67,7 +72,7 @@ WOQLTextboxGenerator.prototype.qGroupQueries = function(qrow, header, descr){
 	d.appendChild(document.createTextNode(header));
 	ch.appendChild(d);
 	ic = document.createElement('i');
-    ic.setAttribute('class', 'terminus-cheveron-float fa fa-chevron-down');
+    ic.setAttribute('class', 'terminus-hand-pointer-float fa fa-hand-pointer');
 	d.appendChild(ic);
 
 	var t = document.createElement('h5');
@@ -358,7 +363,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	docGroup.setAttribute('class', 'terminus-hide');
 	docGroup.appendChild(docdom);
 	docGroup.appendChild(dbut);
-	docGroup.appendChild(p);
+	//docGroup.appendChild(p);
 	qdocGroup.appendChild(docGroup);
 
 	return qbox;

@@ -105,7 +105,7 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
     pageInfo: current drawCallBack page change info
 */
 Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageInfo){
-    dcb.wquery = new WOQLQuery(ui.client, null);
+    dcb.wquery = new WOQLQuery(ui.client, {}, ui);
     UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
     pageInfo.qTextDom.value = JSON.stringify(query);
@@ -148,13 +148,12 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
-    console.log('dtResult.result.columns', dtResult.result.columns);
-    console.log('dtResult.result.data.data', dtResult.result.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
          searching   : false,
          pageLength  : settings.pageLength,
+         serverSide  : true,
          processing  : true,
          lengthMenu  : [5, 10, 25, 50, 75, 100],
          dom         : 'Blfrtip',
@@ -164,10 +163,9 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
          ajax        : function (data, callback, settings) {
                         callback(
                             dtResult.result.data
-                          //JSON.parse(dtResult.result.data.data)
                         );},
-         //data        : dtResult.result.data.data,
-         buttons     : ['copy', 'excel'],
+         buttons     : [{ extend: 'copy', text: 'Copy to clipboard' },
+                        { extend: 'excel', text: 'Export to Excel' }],
          columnDefs  :[{targets:'_all',className:"truncate"}],
          createdRow  : function(row){
                             var td = $(row).find(".truncate");
@@ -175,7 +173,6 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
          colReorder  : {addFixed : true, liveDrag:true},
          scrollX     : true,
          drawCallback: function(settings) {
-                             //console.log('draw call back ', this.api().page.info());
                              // on change of page length
                              $(this).on( 'length.dt', function (e, settings, len){
                                   var info = table.page.info();
