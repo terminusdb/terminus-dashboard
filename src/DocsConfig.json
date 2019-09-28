@@ -14,19 +14,18 @@ let TerminusConfig = {
 			hide_disabled_buttons: true
 		}
 	},
- 	location: {server: "http://195.201.12.87:6363", key: "root"},
+ 	location: {server: "http://195.201.12.87:6363", db: "blah", document: "doc:fff", key: "root"},
  	plugins: {
 		"font-awesome": true,
 		gmaps: {
 			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI",
 			loaded: true
 		},
-		jquery: true,
-		jqueryui: true,
+		jquery: false,
+		jqueryui: false,
 		datatables: false,
-		quill: true,
+		quill: false,
 		select2: false,
-		jsoneditor: true,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor
 			loaded: true

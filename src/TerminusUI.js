@@ -575,7 +575,7 @@ TerminusUI.prototype.setOptions = function(opts){
 	this.piman = new TerminusPluginManager();
 	var self = this;
 	this.piman.init(opts.plugins, function(){
-		var pins = ["gmaps", "quill", "select2", "jsoneditor"];
+		var pins = ["gmaps", "quill", "select2"];
 		for(var i = 0; i<pins.length; i++){
 			if(self.piman.pluginAvailable(pins[i])){
 				RenderingMap.addPlugin(pins[i]);
