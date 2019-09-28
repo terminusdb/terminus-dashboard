@@ -1,15 +1,14 @@
 const HTMLPropertyViewer = require('./PropertyViewer');
 const RenderingMap = require('./RenderingMap');
 const HTMLDataViewer = require('./DataViewer');
-const HTMLStringViewer = require('./viewers/String');
-
 
 function ValueRenderer(dataframe, index, parent, options){
 	this.frame = dataframe;
 	this.index = index;
 	this.parent = parent;
-	this.options = this.setOptions(options);
 	this.originalValue = this.value();
+	this.renderer_type = "value";
+	this.options = this.setOptions(options);
 }
 
 ValueRenderer.prototype.depth = function(){return (this.parent ? this.parent.depth() : false);};
@@ -88,7 +87,7 @@ ValueRenderer.prototype.currentFacet = function(){
 }
 
 ValueRenderer.prototype.setOptions = function(options){
-	return RenderingMap.decorateRenderer(options, this);
+	return TerminusDashboard.RenderingMap.decorateRenderer(options, this);
 }
 
 ValueRenderer.prototype.hideDisabledControls = function(){
@@ -317,7 +316,7 @@ ValueRenderer.prototype.getDataValueViewer = function(){
 	if(!this.viewerType) {
 		this.viewerType = this.getViewerForDataValue();
 	}
-	return RenderingMap.getViewer(this.viewerType, this.viewerOptions);
+	return TerminusDashboard.RenderingMap.getViewer(this.viewerType, this.viewerOptions);
 }
 
 ValueRenderer.prototype.getAvailableViewers = function(){
@@ -327,9 +326,9 @@ ValueRenderer.prototype.getAvailableViewers = function(){
 	}
 	var ft = this.frame.ftype();
 	if(this.mode == "view"){
-		return RenderingMap.getAvailableDataViewers(dt, ft);
+		return TerminusDashboard.RenderingMap.getAvailableDataViewers(dt, ft);
 	}
-	return RenderingMap.getAvailableDataEditors(dt, ft);
+	return TerminusDashboard.RenderingMap.getAvailableDataEditors(dt, ft);
 }
 
 ValueRenderer.prototype.setViewer = function(viewer){
@@ -341,14 +340,18 @@ ValueRenderer.prototype.getViewerForDataValue = function(){
 	var dt = this.frame.getTypeShorthand();
 	var ft = this.frame.ftype();
 	if(this.mode == "edit"){
-		return RenderingMap.getEditorForDataFrame(dt, ft);
+		return TerminusDashboard.RenderingMap.getEditorForDataFrame(dt, ft);
 	}
-	return RenderingMap.getViewerForDataFrame(dt, ft);
+	return TerminusDashboard.RenderingMap.getViewerForDataFrame(dt, ft);
 }
 
 ValueRenderer.prototype.redraw = function(){
 	this.viewer.clear();
 	this.render(this.viewer);
 }
+
+
+
+
 
 module.exports=ValueRenderer

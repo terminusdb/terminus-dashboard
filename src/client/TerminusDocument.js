@@ -1,5 +1,5 @@
 const WOQLQuery = require('../query/WOQLQuery');
-const ObjectRenderer = require('./ObjectRenderer');
+const Renderers = require('./ObjectRenderer');
 
 function TerminusDocumentViewer(ui, action, options){
 	this.ui = ui;
@@ -216,10 +216,9 @@ TerminusDocumentViewer.prototype.render = function(){
 			this.options = this.getOptionsFromPageConfig(this.page_config);
 		}
 		try{
-			this.renderer = new ObjectRenderer(this.document, false, this.options);
+			this.renderer = new Renderers.ObjectRenderer(this.document, false, this.options);
 			this.renderer.mode = this.mode;
 			this.renderer.controller = this;
-			//this.renderer.setPropertyRenderer(PropertyRenderer)
 		}catch(e){
 	 		console.error('TerminusDocumentViewer render',e.toString())
 	 	}

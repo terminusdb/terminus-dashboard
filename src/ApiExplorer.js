@@ -864,7 +864,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 var buttonSelf = this;
                 self.client.connect(input.url.value, input.key.value)
                 .then(function(response){
-                    FrameHelper.removeChildren(resd);
+                	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                });
             }) // button click
@@ -873,7 +873,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(form){
               self.client.createDatabase(input.url.value, input.doc.value, input.key.value)
               .then(function(response){
-                FrameHelper.removeChildren(resd);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
                 var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
               });
             }) // button click
@@ -884,7 +884,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value;
               self.client.deleteDatabase(input.url.value, opts)
               .then(function(response){
-                  FrameHelper.removeChildren(resd);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
                   var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
               });
             }) // button click
@@ -897,7 +897,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 var schurl = input.url.value;
                 self.client.getSchema(schurl, opts)
                 .then(function(response){
-                    FrameHelper.removeChildren(resd);
+                	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                 });
             }) // button click
@@ -912,7 +912,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 self.client.connectionConfig.connected_mode = false;
                 self.client.updateSchema(schurl, payload, opts)
                 .then(function(response){
-                    FrameHelper.removeChildren(resd);
+                	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                 });
             }) // button click
@@ -936,7 +936,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value
               self.client.getDocument(dcurl, opts)
               .then(function(response){
-                    FrameHelper.removeChildren(resd);
+            	    TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
         }) // button click
@@ -948,7 +948,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               var opts = {};
               self.client.deleteDocument(dcurl, opts)
               .then(function(response){
-                  FrameHelper.removeChildren(resd);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
                   var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
           }) // button click
@@ -961,7 +961,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value;
               self.client.createDocument(dcurl, payload, opts)
               .then(function(response){
-                   FrameHelper.removeChildren(resd);
+            	   TerminusClient.FrameHelper.removeChildren(resd);
                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                });
           }) // button click
@@ -977,8 +977,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             opts.key = input.key.value;
             self.client.updateDocument(dcurl, payload, opts)
             .then(function(response){
-              FrameHelper.removeChildren(resd);
-              var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+            	TerminusClient.FrameHelper.removeChildren(resd);
+                var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
             });
           }) // button click
         break;
@@ -988,8 +988,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 opts.key = input.key.value;
                 self.client.select(input.url.value, input.doc.value, opts)
                 .then(function(response){
-                   FrameHelper.removeChildren(resd);
-                   var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                	TerminusClient.FrameHelper.removeChildren(resd);
+                    var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
                 });
             }) // button click
         break;
@@ -999,8 +999,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value;
               self.client.update(input.url.value, input.doc.value, opts)
               .then(function(response){
-                FrameHelper.removeChildren(resd);
-                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
+                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
               });
             }) // button click
         break;

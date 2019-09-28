@@ -3,7 +3,6 @@
 	<head>
 	    <meta charset="utf-8">
 	    <title>Terminus DB Management Dashboard</title>
-	    <script src="DocsConfig.json"></script>
 	    <link rel="shortcut icon" type="image/png" href="https://terminusdb.com/t/favicon.png"/>
 	    <link rel="stylesheet" type="text/css" href="https://terminusdb.com/t/terminus.css"/>
 	</head>
@@ -18,7 +17,7 @@
 						<tr><th class='terminus-dashboard-btn-group' style='display:flex;'>
 							<button class='terminus-dashboard-btn terminus-dashboard-selected' id = "terminus-client-btn">
 									Dashboard</button>
-							<button class='terminus-dashboard-btn' id = "terminus-explorer-btn">
+							<button class='terminus-dashboard-btn' id="terminus-explorer-btn">
 								    Api Explorer</button>
 						</th></tr>
 						<tr><td class="terminus-application-control terminus-client-body"
@@ -36,10 +35,23 @@
 				</td>
 			</tr>
 	</table>
-	    <script src="https://terminusdb.com/t/terminus-client.min.js"></script>
-	    <script src="https://terminusdb.com/t/terminus-dashboard.min.js"></script>
+	    <!-- <script src="https://terminusdb.com/t/terminus-client.min.js"></script>-->
+	    <script src="http://localhost/terminus-client/dist/terminus-client.min.js"></script>
+	    <script src="http://localhost/terminus-dashboard/dist/terminus-dashboard.min.js"></script>
+	    <script src="DocsConfig.json"></script>
+	    <!-- <script src="https://terminusdb.com/t/terminus-dashboard.min.js"></script> -->
 		<script>
-			var terminator = new TerminusUI(TerminusConfig);
+		function loadTerminatorWhenReady(){
+			if (typeof TerminusDashboard != "undefined"){
+				initTerminator();
+			}
+			else {
+		    	setTimeout(function() { alert("no"); loadTerminatorWhenReady() }, 50);
+			}
+		}
+		
+		function initTerminator(){
+			var terminator = new TerminusDashboard.TerminusUI(TerminusConfig);
 			var pconfig = {};
 			pconfig.buttons = {'client'   : document.getElementById("terminus-client-btn"),
 							   'explorer' : document.getElementById("terminus-explorer-btn")}
@@ -50,9 +62,8 @@
 			pconfig.viewer = document.getElementById("terminus-content-viewer");
 			var nlocation = (TerminusConfig && TerminusConfig.location) ? TerminusConfig.location : false;
 			terminator.draw(pconfig, nlocation);
-	
-			function showPanel(mode){
-				toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
-			}
+		}
+		
+		loadTerminatorWhenReady();
 		</script>	    
 </BODY>
