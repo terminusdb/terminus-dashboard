@@ -12,11 +12,10 @@ let TerminusConfig = {
 			loaded: true
 		},
 		jquery: true,
-		jqueryui: true,
-		datatables: false,
+		jqueryui: false,
+		datatables: true,
 		quill: true,
 		select2: false,
-		jsoneditor: true,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor
 			loaded: true
@@ -38,7 +37,6 @@ var FrameConfig = {
 				output: {
 					facet: "page",
 					features: ["body", "type", "id"],
-					controls: ["mode", "add"]
 				}
 			},
 			{
@@ -88,7 +86,15 @@ var FrameConfig = {
 					features: ["body", "control"],
  					controls: ["delete"]
  				}
+			},
+			{
+				pattern: { renderer: "value", property: "rdfs:comment"},
+				output: {
+					viewerType: "HTMLStringEditor",
+					viewerOptions: { big: true}
+				}
 			}
+			
 		],
 		mode: "edit",
 		viewer: "html"
@@ -138,47 +144,8 @@ var FrameConfig = {
 					features: ["body"],
 				}
 			}
-
-
 		],
 		editor: true,
-		mode: "edit",
-		viewer: "html"
-	},
-	model: {
-		label: "Class Frame Schema",
-		rules: [
-			{
-				pattern: { renderer: "object"},
-				output: {
-					facet: "page",
-					features: ["type", "comment", "body"]
-				}
-			},
-			{
-				pattern: { renderer: "property"},
-				output: {
-					features: ["label", "id", "type", "comment", "body"]
-				}
-			},
-			{
-				pattern: { renderer: "value"},
-				output: {
-					features: []
-				}
-			}
-		],
-		editor: true,
-		facet: "page",
-		mode: "view",
-		viewer: "html"
-	},
-	expert: {
-		label: "Expert Mode",
-		features: ["body", "id", "type", "summary", "status", "label", "facet", "control", "viewer", "view", "comment"],
-		controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"],
-		editor: true,
-		facet: "page",
 		mode: "edit",
 		viewer: "html"
 	}

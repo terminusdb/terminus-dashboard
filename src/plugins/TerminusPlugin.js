@@ -1,5 +1,3 @@
-//const FrameHelper = require('../FrameHelper');
-
 function TerminusPluginManager(){
 	this.preloaded = [];
 	this.loaded = [];
@@ -14,7 +12,6 @@ function TerminusPluginManager(){
 		label: "Quill",
 		js: ["https://cdn.quilljs.com/1.3.6/quill.min.js"],
 		css: ["https://cdn.quilljs.com/1.3.6/quill.snow.css"],
-		plugin: "quill.terminus.js",
 	};
 	this.plugins["codemirror"] = {
 		label : "Code Mirror",
@@ -65,7 +62,7 @@ function TerminusPluginManager(){
 	this.plugins["gmaps"] = {
 		label: "Google Maps",
 		js: ["https://maps.googleapis.com/maps/api/js"],
-		plugin: "gmaps.terminus.js"
+		//plugin: "gmaps.terminus.js"
 	};
 	this.plugins["d3"] = {
 		label: "d3",
@@ -76,16 +73,15 @@ function TerminusPluginManager(){
 		label: "Select 2",
 		js: ["https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"],
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css"],
-		plugin: "select2.terminus.js",
 		requires: ['jquery']
 	};
-	this.plugins["jsoneditor"] = {
+	/*this.plugins["jsoneditor"] = {
 		label: "JSON Editor",
-		js: ["plugins/libs/jsoneditor.min.js"],
-		css: ["plugins/libs/jsoneditor.min.css"],
-		plugin: "jsoneditor.terminus.js"
+		js: ["https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/7.0.4/jsoneditor.min.js"],
+		css: ["https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/7.0.4/jsoneditor.min.css"],
+		//plugin: "jsoneditor.terminus.js"
 	};
-	/*this.plugins["bootstrap"] = {
+	this.plugins["bootstrap"] = {
 		label: "Bootstrap",
 		js: ["https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"],
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css",
@@ -156,11 +152,13 @@ TerminusPluginManager.prototype.calculateRequiredInitPlugins = function(opts){
 	}
 	var loading_order = [[], []];
 	for(var i = 0; i<needed_pins.length; i++){
-		if(this.plugins[needed_pins[i]].requires && this.plugins[needed_pins[i]].requires.length){
-			loading_order[1].push(needed_pins[i]);
-		}
-		else {
-			loading_order[0].push(needed_pins[i]);
+		if(this.plugins[needed_pins[i]]){
+			if(this.plugins[needed_pins[i]].requires && this.plugins[needed_pins[i]].requires.length){
+				loading_order[1].push(needed_pins[i]);
+			}
+			else {
+				loading_order[0].push(needed_pins[i]);
+			}
 		}
 	}
 	return loading_order;
@@ -297,7 +295,7 @@ TerminusPluginManager.prototype.loadPlugin = function(plugin, then){
 		scripts[0] += "?key=" + pug.key;
 	}
 	if(pug.plugin){
-		scripts.push("plugins/" + pug.plugin);
+		//scripts.push("plugins/" + pug.plugin);
 	}
 	if(plugin == "codemirror"){
 		var cm = scripts[0];

@@ -16,6 +16,7 @@ const TerminusServersdk = require('./client/TerminusServer');
 const TerminusURLLoader = require('./client/TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS=require('./Utils');
+const RenderingMap = require('./client/RenderingMap');
 
 function TerminusUI(opts){
 	this.client = new TerminusClient.WOQLClient();
@@ -574,6 +575,12 @@ TerminusUI.prototype.setOptions = function(opts){
 	this.piman = new TerminusPluginManager();
 	var self = this;
 	this.piman.init(opts.plugins, function(){
+		var pins = ["gmaps", "quill", "select2", "jsoneditor"];
+		for(var i = 0; i<pins.length; i++){
+			if(self.piman.pluginAvailable(pins[i])){
+				RenderingMap.addPlugin(pins[i]);
+			}
+		}
 		self.redraw();
 	});
 	if(opts.css && this.piman){
