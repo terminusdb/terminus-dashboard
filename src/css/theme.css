@@ -279,7 +279,7 @@ body [class^="icon-"], body [class*=" icon-"] {
 }
 
 .terminus-type-select{
-	padding-bottom: 15px;
+	padding: 6px 4px;
 }
 
 .terminus-scheme-pre{
@@ -2046,7 +2046,7 @@ div.dataTables_info, div.dataTables_paginate {
 .terminus-main-content{
 	padding: 30px;
     overflow: hidden;
-    max-width: 1250px;
+    max-width: 1240px;
     overflow-x: overlay;
 }
 

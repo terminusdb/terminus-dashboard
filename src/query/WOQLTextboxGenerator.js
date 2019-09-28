@@ -114,7 +114,7 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qip.setAttribute("class", "terminus-query-box");
 	qip.setAttribute("placeholder", "Enter new query or load queries from example buttons provided below ...");
 	qip.setAttribute("style", "min-width: 400px; min-height: 60px;");
-	if(q) qip.value = JSON.stringify(q);
+	if(q) qip.value = JSON.stringify(q,undefined, 2);
 	qbox.appendChild(qip);
 	UTILS.stylizeEditor(this.ui, qip, 'query', 'javascript');
 	var self = this;
@@ -169,7 +169,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qval = self.wquery.getClassMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qval);
+		qip.value = JSON.stringify(qval,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Classes');
@@ -186,7 +186,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern(),
 														self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue);
+		qip.value = JSON.stringify(qvalue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Classes');
@@ -203,7 +203,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qval = self.wquery.getElementMetaDataQuery(null, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qval);
+		qip.value = JSON.stringify(qval,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Schema_Elements');
@@ -218,7 +218,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getAllDocumentQuery(null, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue);
+		qip.value = JSON.stringify(qvalue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Documents');
@@ -233,7 +233,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getEverythingQuery(null, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue);
+		qip.value = JSON.stringify(qvalue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Data');
@@ -249,7 +249,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getPropertyListQuery(null, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue);
+		qip.value = JSON.stringify(qvalue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_All_Properties');
@@ -269,7 +269,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		if(new_class){
 			UTILS.deleteStylizedEditor(self.ui, qip);
 			var qvalue = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
-			qip.value = JSON.stringify(qvalue);
+			qip.value = JSON.stringify(qvalue,undefined, 2);
 			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Data_Class');
@@ -288,7 +288,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		if(new_property){
 			UTILS.deleteStylizedEditor(self.ui, qip);
 			var qvalue = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
-			qip.value = JSON.stringify(qvalue);
+			qip.value = JSON.stringify(qvalue,undefined, 2);
 			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gatherDatatableSettings(qip, 'Show_Property_Class');
@@ -309,7 +309,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		var qvalue = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue);
+		qip.value = JSON.stringify(qvalue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gatherDatatableSettings(qip, 'Show_Document_Info_by_Id');

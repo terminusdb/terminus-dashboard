@@ -106,7 +106,7 @@ Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, wQuery
     //dcb.wquery = new WOQLQuery.WOQLQuery(ui.client, {}, ui);
     UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(wQuery, pageInfo)
-    pageInfo.qTextDom.value = JSON.stringify(query);
+    pageInfo.qTextDom.value = JSON.stringify(query,undefined, 2);
     UTILS.stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
     return query;
 }
