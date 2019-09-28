@@ -144,7 +144,12 @@ TerminusDocumentViewer.prototype.createDocument = function(id){
 		self.ui.showDocument(id);
 	}).catch(function(error){
 		self.ui.clearBusy();
-		self.ui.showError(error);
+		if(error.data && error.data['terminus:witnesses']){
+			self.ui.showViolations(error.data['terminus:witnesses'], "instance");			
+		}
+		else {
+			self.ui.showError(error);
+		}
 	});
 }
 
@@ -160,7 +165,12 @@ TerminusDocumentViewer.prototype.updateDocument = function(){
 		self.ui.showDocument(durl);
 	}).catch(function(error){
 		self.ui.clearBusy();
-		self.ui.showError(error);
+		if(error.data && error.data['terminus:witnesses']){
+			self.ui.showViolations(error.data['terminus:witnesses'], "instance");			
+		}
+		else {
+			self.ui.showError(error);
+		}
 	});
 }
 

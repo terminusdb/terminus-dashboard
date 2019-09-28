@@ -277,6 +277,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 }
 
 TerminusServerViewer.prototype.deleteDBPermitted = function(dbid){
+	if(dbid == "terminus") return false;
 	if(this.ui.client.connection.capabilitiesPermit("delete_database", dbid)) return true;
 	return false;
 }
