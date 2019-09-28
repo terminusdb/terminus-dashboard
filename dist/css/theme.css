@@ -594,6 +594,10 @@ div.terminus-property-frame{
 .terminus-table th, .terminus-table td {
 	border-color: #d5d5d5!important
 }
+
+
+
+
 .terminus-table.valign-middle td, .terminus-table.valign-middle th {
 	vertical-align: middle
 }
@@ -803,8 +807,22 @@ div.terminus-property-frame{
 }
 
 .terminus-application-controls{
- margin-top: 20px
+ /*margin-top: 20px*/
+ margin: 0;
+ border: 1px solid grey;
+ white-space: nowrap;
+ border-top-width: 0px;
 }
+.headcol {
+  position: absolute;
+  width: 5em;
+  left: 0;
+  top: auto;
+  border-top-width: 1px;
+  /*only relevant for first row*/
+  margin-top: -1px;
+}
+
 /* terminus module header for tab in full css style*/
 .terminus-module-head-tab {
 	/*color: #767676;
@@ -2084,7 +2102,9 @@ div.dataTables_info, div.dataTables_paginate {
 
 .terminus-main-content{
 	padding: 30px;
-	max-width: 1250px;
+    overflow: hidden;
+    max-width: 1250px;
+    overflow-x: overlay;
 }
 
 /*terminus status layout */

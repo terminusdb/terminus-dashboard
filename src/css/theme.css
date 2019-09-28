@@ -594,6 +594,10 @@ div.terminus-property-frame{
 .terminus-table th, .terminus-table td {
 	border-color: #d5d5d5!important
 }
+
+
+
+
 .terminus-table.valign-middle td, .terminus-table.valign-middle th {
 	vertical-align: middle
 }
@@ -805,6 +809,7 @@ div.terminus-property-frame{
 .terminus-application-controls{
  margin-top: 20px
 }
+
 /* terminus module header for tab in full css style*/
 .terminus-module-head-tab {
 	/*color: #767676;
@@ -1057,55 +1062,6 @@ div.terminus-property-frame{
 	color: #00C08B;
 	font-weight: 500
 }
-
-.terminus-plugin-nav {
-  font-size: 30px;
-  height: 100%;
-  width: 0;
-  z-index:99999;
-  top: 0;
-  right: 0;
-  color: black;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
-}
-
-.terminus-plugin-nav a {
-  padding: 8px 8px 8px 12px;
-  text-decoration: none;
-  font-size: 22px;
-  color: #818181;
-	background-color: #111;
-  display: block;
-  transition: 0.3s;
-}
-
-.terminus-plugin-nav a:hover {
-  /*color: #f1f1f1;*/
-	cursor: pointer;
-	background-color: #D3D3D3;
-  color: black;
-}
-
-.terminus-plugin-nav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
-/*.terminus-show-msg {
-	color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-	padding: 15px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-	margin-bottom: 10px;
-}*/
-
 .terminus-show-msg-success {
 	color: #3c763d;
 	background-color: #dff0d8;
@@ -1113,7 +1069,7 @@ div.terminus-property-frame{
 	padding: 15px;
 	border: 1px solid transparent;
 	border-radius: 4px;
-	margin: 10px 0px 10px 0px;
+	margin: 20px 0px 10px 0px;
 }
 
 .terminus-show-msg-error {
@@ -1123,7 +1079,7 @@ div.terminus-property-frame{
 	padding: 15px;
 	border: 1px solid transparent;
 	border-radius: 4px;
-	margin: 10px 0px 10px 0px;
+	margin: 20px 0px 10px 0px;
 }
 
 
@@ -2073,18 +2029,25 @@ div.dataTables_info, div.dataTables_paginate {
     max-width: 100%;
 }
 
+.terminus-home-del{
+	position: absolute;
+    top: 0px;
+    right: 0px;
+}
 .terminus-save-btn{
 	float: right;
 }
 .terminus-content-layout{
 	background-color: #f8f8ff;
 	box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);
-	height: 800px;
+	min-height: 800px;
 }
 
 .terminus-main-content{
 	padding: 30px;
-	max-width: 1250px;
+    overflow: hidden;
+    max-width: 1250px;
+    overflow-x: overlay;
 }
 
 /*terminus status layout */
@@ -2094,7 +2057,12 @@ div.dataTables_info, div.dataTables_paginate {
     padding-right: 15px;
     padding-left: 15px;
 }
-
+.terminus-query-results{
+	min-width: 100px;
+    max-width: 1250px;
+    overflow: hidden;
+    overflow-x: auto;
+}
 .terminus-status-layout{
 	background: #27293d;{
 	border: 0;

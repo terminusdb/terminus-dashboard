@@ -271,7 +271,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 
 	if(this.ui.pluginAvailable("datatables")){
         var dt = new Datatables();
-		var tab = dt.draw(false, scd, null, this.ui, null);
+		var tab = dt.draw(false, scd, null,  null, this.ui, null);
 	}
 	return sec;
 }

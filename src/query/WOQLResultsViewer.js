@@ -22,9 +22,10 @@ WOQLResult.prototype.hasBindings = function(result){
 
 
 
-function WOQLResultsViewer(ui, wresult, options, settings){
+function WOQLResultsViewer(ui, wresult, wQuery, options, settings){
 	this.ui = ui;
 	this.result = wresult;
+	this.wQuery = wQuery;
 	this.options = options;
 	//this.wqlRes = new WOQLResult();
 	this.pman = new TerminusPluginManager();
@@ -66,21 +67,27 @@ WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 
 WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
 	if(this.pman.pluginAvailable("datatables")){
-		var dtResult = this.getTable(bindings, true);
+		var dtResult = this.getTable(bindings, true, {});
 		resultDOM.appendChild(dtResult.tab);
     	var dt = new Datatables();
-		dt.draw(true, dtResult, this.settings, this.ui, resultDOM);
+		dt.draw(true, dtResult, this, this.ui, this.wQuery,resultDOM);
 		resultDOM.classList.add('terminus-expandable');
 		resultDOM.classList.add('terminus-dt-result-cont');
 		return tab;
     }
 	else{
-		var tab = this.getTable(bindings, false);
+		var tab = this.getTable(bindings, false, {});
 		resultDOM.appendChild(tab);
 	}
 }
 
-WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings){
+WOQLResultsViewer.prototype.getDtTableDOMOnChange = function(bindings, resultDOM, pageInfo){
+		var dtResult = this.getTable(bindings, true, pageInfo);
+		resultDOM.appendChild(dtResult.tab);
+		return dtResult;
+}
+
+WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings, pageInfo){
     var columns = [], colDataData = {}, data = [], formattedResult = {}, arr = [];
 	var dtResult = {};
     var ordered_headings = this.orderColumns(bindings[0]);
@@ -111,9 +118,13 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 	}
 	dtResult.columns = columns;
 	formattedResult.data = data;
-	formattedResult.recordsTotal = '65';
-	formattedResult.recordsFiltered = '25';
-	formattedResult.draw = '1';
+	formattedResult.recordsTotal = 65;
+	formattedResult.recordsFiltered = 65;
+
+	if(Object.entries(pageInfo).length > 0)
+	   formattedResult.start = pageInfo.pageLength;
+	else formattedResult.start = 0;
+	formattedResult.draw = 1;
 	dtResult.data = formattedResult;
 	return dtResult;
 }
@@ -162,7 +173,7 @@ WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
 	return a;
 }
 
-WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
+WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin, pageInfo){
 	var tab = document.createElement("table");
 	tab.setAttribute("class", "terminus-query-results-table terminus-pointer");
 	var thead = document.createElement("thead");
@@ -181,7 +192,7 @@ WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
 		var tbody = document.createElement("tbody");
 		tab.appendChild(tbody);
 		var dtResult ={};
-		dtResult.result = this.formatResultsForDatatableDisplay(bindings);
+		dtResult.result = this.formatResultsForDatatableDisplay(bindings, pageInfo);
 		dtResult.tab = tab;
 		return dtResult;
 	}
