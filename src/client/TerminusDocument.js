@@ -293,7 +293,7 @@ TerminusDocumentViewer.prototype.getAsDOM = function(){
 	if(this.mode !== 'edit'){ // dont provide drop down on create mode
 		this.controldom = document.createElement("div");
 		this.controldom.setAttribute("class", "terminus-document-controller");
-		if(this.config_options.length > 1)	this.controldom.appendChild(this.getDocumentPageControls());
+		if(Object.keys(this.config_options).length > 1)	this.controldom.appendChild(this.getDocumentPageControls());
 		holder.appendChild(this.controldom);
 	}
 	this.pagedom = document.createElement("div");
