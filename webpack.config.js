@@ -63,12 +63,6 @@ module.exports = function(env, argv){
       new CopyWebPackPlugin([
         { from: path.resolve(__dirname, 'src/css'), to: 'css' },
         { from: path.resolve(__dirname, 'src/UIconfig.json'), to:'./' },
-        { from: path.resolve(__dirname, 'src/plugins/libs/jsoneditor.min.css'), to: 'plugins/libs/jsoneditor.min.css' },
-        { from: path.resolve(__dirname, 'src/plugins/libs/jsoneditor.min.js'), to: 'plugins/libs/jsoneditor.min.js' },
-        { from: path.resolve(__dirname, 'src/plugins/quill.terminus.js'), to: 'plugins/quill.terminus.js' },
-        { from: path.resolve(__dirname, 'src/plugins/gmaps.terminus.js'), to: 'plugins/gmaps.terminus.js' },
-        { from: path.resolve(__dirname, 'src/plugins/select2.terminus.js'), to: 'plugins/select2.terminus.js' },
-        { from: path.resolve(__dirname, 'src/plugins/jsoneditor.terminus.js'), to: 'plugins/jsoneditor.terminus.js' }
       ])
 
     ]

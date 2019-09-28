@@ -18,6 +18,11 @@ const HTMLNumberViewer = require('./viewers/Number');
 const HTMLRangeViewer = require('./viewers/Range');
 const HTMLRangeEditor = require('./viewers/RangeEditor');
 const SantizedHTMLViewer = require('./viewers/SanitizedHTML');
+const GoogleMapEditor = require('./viewers/GoogleMapEditor');
+const GoogleMapViewer = require('./viewers/GoogleMapViewer');
+const HTMLMarkupEditor = require('./viewers/HTMLMarkupEditor');
+const S2EntityEditor = require('./viewers/S2EntityEditor');
+
 
 let RenderingMap = {
 	registeredDataViewers: {},
@@ -248,6 +253,23 @@ let RenderingMap = {
 		}
 	}
 }
+
+RenderingMap.addPlugin = function(plugin){
+	if(plugin == "gmaps"){
+		this.registerEditorForTypes("GoogleMapEditor", "Google Map Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
+		this.registerViewerForTypes("GoogleMapViewer", "Google Map Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
+	}
+	if(plugin == "quill"){
+		this.registerEditorForTypes("HTMLMarkupEditor", "Quill WYSIWIG HTML Editor", ["xdd:html"]);
+	}
+	if(plugin == "select2"){
+		RenderingMap.registerEditorForFrameType("S2EntityEditor", "S2 Autocomplete Selector", "document");
+	}
+	if(plugin == "jsoneditor"){
+		RenderingMap.registerEditorForFrameType("S2EntityEditor", "S2 Autocomplete Selector", "document");
+	}
+}
+
 
 RenderingMap.getAvailableObjectViewers = function(renderer){
 	var entries = ['html', 'json'];
@@ -605,7 +627,6 @@ FramePattern.prototype.getRendererType = function(renderer){
 	console.log(renderer);
 	return false;
 }
-
 
 
 module.exports=RenderingMap

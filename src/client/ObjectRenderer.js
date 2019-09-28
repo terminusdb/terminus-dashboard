@@ -46,7 +46,7 @@ PropertyRenderer.prototype.getOptionsForObject = function(objframe){
 }
 
 
-PropertyRenderer.prototype.render = function(viewer, x){
+PropertyRenderer.prototype.render = function(viewer){
  	this.buildValueRenderers();
  	if(this.cframe && this.cframe.property){
  		this.viewer = (viewer ? viewer : this.getViewerForProperty());
@@ -54,7 +54,7 @@ PropertyRenderer.prototype.render = function(viewer, x){
  			var renderedval = this.values[i].render();
  			if(renderedval && this.showFeature("body")) this.viewer.addRenderedValue(renderedval);
  		}
- 		return this.viewer.render(x);
+ 		return this.viewer.render();
  	}
 } 
 

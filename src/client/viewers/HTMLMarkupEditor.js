@@ -16,4 +16,5 @@ HTMLMarkupEditor.prototype.getDOM = function(renderer, dataviewer){
 	}
 	return input;
 }
-TerminusDashboard.RenderingMap.registerEditorForTypes("HTMLMarkupEditor", "Quill WYSIWIG HTML Editor", ["xdd:html"]);
+
+module.exports={HTMLMarkupEditor}

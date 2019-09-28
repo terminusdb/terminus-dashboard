@@ -12,11 +12,10 @@ let TerminusConfig = {
 			loaded: true
 		},
 		jquery: true,
-		jqueryui: true,
-		datatables: false,
+		jqueryui: false,
+		datatables: true,
 		quill: true,
 		select2: false,
-		jsoneditor: true,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor
 			loaded: true

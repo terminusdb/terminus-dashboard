@@ -11,7 +11,8 @@ function HTMLDateEditor(options){
 }
 
 HTMLDateEditor.prototype.getDOM = function(renderer, dataviewer){
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType())
 	var value = renderer.value();
 	var input = document.createElement("span");
 	input.setAttribute('class', "terminus-literal-value terminus-literal-date");
@@ -68,7 +69,7 @@ HTMLDateEditor.prototype.getDateComponentDOM = function(parsed, ty, renderer){
 			self.set("month", this.value, renderer, ty);
 		})
 	}	
-	if(["xsd:date", "xsd:dateTime", "xsd:dateTimeStamp", "xsd:gMonth", "xsd:gDay", "xsd:gMonthDay"].indexOf(ty) != -1){
+	if(["xsd:date", "xsd:dateTime", "xsd:dateTimeStamp", "xsd:gDay", "xsd:gMonthDay"].indexOf(ty) != -1){
 		var ddom = document.createElement("input");
 		ddom.setAttribute("class", "terminus-day-input terminus-day-"+ty);
 		ddom.setAttribute("size", 2);

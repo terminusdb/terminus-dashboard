@@ -1,5 +1,4 @@
 const HTMLFrameHelper = require('../HTMLFrameHelper');
-const RenderingMap = require('../RenderingMap');
 
 function HTMLChoiceEditor(options){};
 
