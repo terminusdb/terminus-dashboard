@@ -2,7 +2,7 @@
  * Object for producing a HTML view of a given object in a frame
  */
 const HTMLFrameHelper = require('./HTMLFrameHelper');
-//const FrameHelper = require('../FrameHelper');
+
 function HTMLObjectViewer(renderer){
 	this.renderer = renderer;
 	this.properties = [];
@@ -171,10 +171,6 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 		var hideDOM = this.getViewerSelectorDOM(renderer);
 		if(hideDOM) objDOM.appendChild(hideDOM);
 	}
-	if(renderer.showFeature("add")){
-		var addDOM = this.getAddPropertyDOM(renderer);
-		if(addDOM) objDOM.appendChild(addDOM);
-	}
 	if(renderer.showFeature("control")){
 		var controlsDOM = this.getObjectControlsDOM(renderer);
 		if(controlsDOM) objDOM.appendChild(controlsDOM);
@@ -183,11 +179,6 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 		var controlsDOM = this.getObjectSummaryDOM(renderer);
 		if(controlsDOM) objDOM.appendChild(controlsDOM);
 	}
-	/*objDOM.addEventListener('click', function(){
-		if((this.nextSibling.style.display == 'block') || (this.nextSibling.style.display == ''))
-			this.nextSibling.style.display = 'none';
-		else this.nextSibling.style.display = 'block';
-	});*/
 	return objDOM;
 }
 
@@ -199,6 +190,10 @@ HTMLObjectHeaderViewer.prototype.getObjectSummaryDOM = function(renderer){
 HTMLObjectHeaderViewer.prototype.getObjectControlsDOM = function(renderer){
 	var controlsDOM = document.createElement("span");
 	controlsDOM.setAttribute("class", "terminus-object-controls");
+	if(renderer.showFeature("add")){
+		var addDOM = this.getAddPropertyDOM(renderer);
+		if(addDOM) controlsDOM.appendChild(addDOM);
+	}
 	if(renderer.showFeature("mode")){
 		var viewsDOM = HTMLFrameHelper.getModeSelectorDOM("object", renderer);
 		if(viewsDOM) controlsDOM.appendChild(viewsDOM);

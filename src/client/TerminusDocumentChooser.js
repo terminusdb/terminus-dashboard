@@ -7,8 +7,6 @@ const TerminusClassChooser = require('./TerminusClassChooser');
 TerminusDocumentChooser = function(ui, root, value, view){
 	this.ui = ui;
 	this.root = root;
-	//this.filter = (currentcls ? TerminusClient.FrameHelper.unshorten(currentcls) : false);
-
 	this.choice = value;
 	this.view = (view ? view : "id");
 	this.show_button = true;

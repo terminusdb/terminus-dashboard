@@ -21,15 +21,17 @@ HTMLPropertyViewer.prototype.render = function(){
 	block.appendChild(br);
 	if(this.propDOM){
 		var npropDOM = this.getPropertyDOM();
-		block.appendChild(npropDOM);
+		npropDOM.setAttribute('style', 'display: flex; margin: 10px 10px 0px 0px;');
+			//block.appendChild(npropDOM);
 		this.propDOM.replaceWith(npropDOM);
-		//11092019 this.propDOM = npropDOM;
-		this.propDOM = block;
+		this.propDOM = npropDOM;
+		//this.propDOM = block;
 	}
 	else {
-		block.appendChild(this.getPropertyDOM());
-		this.propDOM = block;
-		//11092019 this.propDOM = this.getPropertyDOM();
+		//block.appendChild(this.getPropertyDOM());
+		//this.propDOM = block;
+		this.propDOM = this.getPropertyDOM();
+		this.propDOM.setAttribute('style', 'display: flex; margin: 10px 10px 0px 0px;');
 	}
 	this.propDOM.appendChild(this.getPropertyIDMarker(this.renderer));
 	if(this.headerViewer){
@@ -180,36 +182,40 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 
 	if(renderer.showFeature("facet")){
 		var facetDOM = this.getPropertyFacetDOM(renderer);
-		if(facetDOM && this.expModeMenu) this.expModeMenu.appendChild(facetDOM);//prelude.appendChild(facetDOM);
+		if(facetDOM) prelude.appendChild(facetDOM);
+		//if(facetDOM && this.expModeMenu) this.expModeMenu.appendChild(facetDOM);//
 	}
 	if(renderer.showFeature("view")){
 		var viewDOM = this.getViewValueDOM(renderer);
-		if(viewDOM && this.expModeMenu) this.expModeMenu.appendChild(viewDOM); //prelude.appendChild(viewDOM);
+		if(viewDOM) prelude.appendChild(viewDOM);
+		//if(viewDOM && this.expModeMenu) this.expModeMenu.appendChild(viewDOM); //prelude.appendChild(viewDOM);
 	}
 	if(renderer.showFeature("id")){
 		var idDOM = this.getPropertyIDDOM(renderer);
-		if(idDOM && this.expModeMenu) this.expModeMenu.appendChild(idDOM); //prelude.appendChild(idDOM);
+		if(idDOM) prelude.appendChild(idDOM);
+		//if(idDOM && this.expModeMenu) this.expModeMenu.appendChild(idDOM); //
 	}
 	if(renderer.showFeature("type")){
 		var typeDOM = this.getPropertyRangeDOM(renderer);
-		if(typeDOM && this.expModeMenu){
-			this.expModeMenu.appendChild(typeDOM);//prelude.appendChild(typeDOM);
+		if(typeDOM)	prelude.appendChild(typeDOM);
+		/*if(typeDOM && this.expModeMenu){
+			this.expModeMenu.appendChild(typeDOM);//
 			typeDOM.style.display = 'block';
-		}
+		}*/
 	}
 	if(renderer.showFeature("cardinality") && renderer.hasCardinalityRestriction()){
 		var hideDOM = this.getPropertyCardinalityDOM(renderer);
-		if(hideDOM){
-			this.expModeMenu.appendChild(hideDOM); //prelude.appendChild(hideDOM);
-			hideDOM.style.display = 'block';
-		}
+		if(hideDOM) prelude.appendChild(hideDOM);
+		//	this.expModeMenu.appendChild(hideDOM); 			hideDOM.style.display = 'block';
+		
 	}
 	if(renderer.showFeature("comment")){
 		var sumDOM = this.getPropertyCommentDOM(renderer);
-		if(sumDOM && this.expModeMenu){
-			this.expModeMenu.appendChild(sumDOM); //prelude.appendChild(sumDOM);
+		if(sumDOM) prelude.appendChild(sumDOM);
+		/*if(sumDOM && this.expModeMenu){
+			this.expModeMenu.appendChild(sumDOM); //
 			sumDOM.style.display = 'block';
-		}
+		}*/
 	}
 	wrapper.appendChild(prelude);
 	objDOM.appendChild(wrapper);
@@ -332,7 +338,7 @@ HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM,
 	var settings = document.createElement("div");
 	controlsDOM.appendChild(settings);
 	var orientation = renderer.getContentOrientation();
-	if(orientation == 'page'){ // expert mode
+	if(false && orientation == 'page'){ // expert mode
 		var sControl = HTMLFrameHelper.getSettingsControl('property');
 		var menu = document.createElement('div');
 		menu.setAttribute('class', 'terminus-hide terminus-popup');

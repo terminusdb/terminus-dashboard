@@ -9,24 +9,26 @@
  * @returns
  */
 
-const ValueRenderer = require('./ValueRenderer');
 const RenderingMap = require('./RenderingMap');
+const ValueRenderer = require('./ValueRenderer');
+const ObjectViewer = require('./ObjectViewer');
 const PropertyViewer = require('./PropertyViewer');
+const HTMLDataViewer = require('./DataViewer');
 
 function PropertyRenderer(prop, parent, options){
 	this.predicate = prop;
 	this.parent = parent;
 	this.cframe = this.parent.objframe.getPropertyClassFrame(this.predicate);
-	this.options = this.setOptions(options);
 	this.originalValues = false;
 	this.changed = false;
 	this.values = [];
+	this.renderer_type = "property";
+	this.options = this.setOptions(options);
 }
 
 PropertyRenderer.prototype.setOptions = function(options){
-	return RenderingMap.decorateRenderer(options, this);
+	return TerminusDashboard.RenderingMap.decorateRenderer(options, this);
 }
-
 
 PropertyRenderer.prototype.getOptionsForChild = function(){
 	var opts = {};
@@ -44,7 +46,7 @@ PropertyRenderer.prototype.getOptionsForObject = function(objframe){
 }
 
 
-PropertyRenderer.prototype.render = function(viewer){
+PropertyRenderer.prototype.render = function(viewer, x){
  	this.buildValueRenderers();
  	if(this.cframe && this.cframe.property){
  		this.viewer = (viewer ? viewer : this.getViewerForProperty());
@@ -52,7 +54,7 @@ PropertyRenderer.prototype.render = function(viewer){
  			var renderedval = this.values[i].render();
  			if(renderedval && this.showFeature("body")) this.viewer.addRenderedValue(renderedval);
  		}
- 		return this.viewer.render();
+ 		return this.viewer.render(x);
  	}
 } 
 
@@ -84,16 +86,9 @@ PropertyRenderer.prototype.buildValueRenderers = function(){
  		var kids = this.getChildrenToRender();
  		if(kids && kids.length){
  			for(var i = this.values.length; i<kids.length; i++){
- 				try {
-	 				var kidf = new ObjectRenderer(kids[i], this, this.getOptionsForObject(kids[i]));
-	 				if(adorig) this.originalValues.push(kidf.subject());
-	 				this.values.push(kidf);
- 				}
- 				catch(e){
- 					alert(JSON.stringify(ObjectRenderer));
- 					alert(e.toString() + " " + i);
- 					alert(typeof ObjectRenderer);
- 				}
+ 				var kidf = new ObjectRenderer(kids[i], this, this.getOptionsForObject(kids[i]));
+ 				if(adorig) this.originalValues.push(kidf.subject());
+ 				this.values.push(kidf);
  			}
  		}
  	}
@@ -111,17 +106,6 @@ PropertyRenderer.prototype.getDataFramesToRender = function(options){
  * Returns the array of child / objects that should be rendered (enables value filtering)
  */
 PropertyRenderer.prototype.getChildrenToRender = function(options){
- 	/*var sort = this.standardSort;
- 	var filter = function(){return true};
- 	for(var i = 0; i<options.map.patterns.length; i++){
- 		if(this.objframe.matchesPattern("sort", options.map.patterns[i])){
- 			sort = options.map.patterns[i].sort;
- 		}
- 		if(this.objframe.matchesPattern("filter", options.map.patterns[i])){
- 			filter = options.map.patterns[i].filter;
- 		}
- 	}
- 	return sort(this.values, filter);*/
  	if(TerminusClient.FrameHelper.viewIncludesChildren(this.view, "property")){
  		var allkids = this.parent.objframe.getChildren(this.property());
  	}
@@ -133,7 +117,8 @@ PropertyRenderer.prototype.getChildrenToRender = function(options){
 
 PropertyRenderer.prototype.redraw = function(){
  	this.viewer.clear();
- 	this.render(this.viewer);
+ 	this.render(this.viewer, "x");
+ 	//alert(this.values.length);
 }
 
 PropertyRenderer.prototype.extract = function(){
@@ -217,7 +202,6 @@ PropertyRenderer.prototype.add = function(view){
 		this.values[this.values.length-1].setNew();
 	}
 	this.redraw();
-	this.goToValue(this.values.length-1);
 }
 
 PropertyRenderer.prototype.goToValue = function(index){
@@ -485,9 +469,9 @@ PropertyRenderer.prototype.setView = function(view){
 
 PropertyRenderer.prototype.getAvailableViewers = function(){
 	if(this.mode == "view"){
-		return RenderingMap.getAvailablePropertyViewers(this);		
+		return TerminusDashboard.RenderingMap.getAvailablePropertyViewers(this);		
 	}
-	return RenderingMap.getAvailablePropertyEditors(this);				
+	return TerminusDashboard.RenderingMap.getAvailablePropertyEditors(this);				
 }
 
 PropertyRenderer.prototype.nukeViewer = function(){
@@ -507,9 +491,9 @@ PropertyRenderer.prototype.containsPage = function(){
 
 PropertyRenderer.prototype.getViewerForProperty = function(ptype){
 	if(this.mode == "edit"){
-		return RenderingMap.getEditorForProperty(ptype, this);				
+		return new PropertyViewer.HTMLPropertyViewer(this);
 	}
-	return RenderingMap.getViewerForProperty(ptype, this);	
+	return new PropertyViewer.HTMLPropertyViewer(this);
 }
 
 PropertyRenderer.prototype.getPropertyHeaderViewer = function(){
@@ -560,16 +544,17 @@ PropertyRenderer.prototype.showFeature = function(which){
 function ObjectRenderer(obj, parent, options){
 	this.objframe = obj;
 	this.parent = parent;
-	this.options = this.setOptions(options);
 	this.properties = {};
 	this.originalProperties = false;
 	this.newProperties = [];
+	this.renderer_type = "object";
+	this.options = this.setOptions(options);
 }
 
 //options has to include mode, viewer, facet, controls, features, hide_disabled_controls
 
 ObjectRenderer.prototype.setOptions = function(options){
-	return RenderingMap.decorateRenderer(options, this);
+	return TerminusDashboard.RenderingMap.decorateRenderer(options, this);
 }
 
 ObjectRenderer.prototype.getOptionsForProperty = function(prop){
@@ -970,7 +955,10 @@ ObjectRenderer.prototype.getObjectHeaderViewer = function(){
 }
 
 ObjectRenderer.prototype.getViewerForObject = function(format){
-	return RenderingMap.getViewerForObject(format, this);	
+	if(format == "json"){
+		return new ObjectViewer.JSONObjectViewer(this);
+	}
+	return new ObjectViewer.HTMLObjectViewer(this);
 }
 
 ObjectRenderer.prototype.getFeaturesForFacet = function(facet){
@@ -1086,14 +1074,14 @@ ObjectRenderer.prototype.getPropertiesToRender = function(options){
 	var sort = this.standardSort;
 	var filter = function(){return true};
 	if(options && options.map && options.map.patterns){
-		for(var i = 0; i<options.map.patterns.length; i++){
+		/*for(var i = 0; i<options.map.patterns.length; i++){
 			if(this.objframe.matchesPattern({property: this.property(), action: "sort"}, options.map.patterns[i])){
 				sort = options.map.patterns[i].sort;
 			}
 			if(this.objframe.matchesPattern({property: this.property(), action: "filter"}, options.map.patterns[i])){
 				filter = options.map.patterns[i].filter;
 			}
-		}
+		}*/
 	}
 	return sort(this.objframe, filter);
 }
@@ -1155,5 +1143,5 @@ ObjectRenderer.prototype.extract = function(){
 	}
 }
 
-module.exports=ObjectRenderer
+module.exports={ObjectRenderer,PropertyRenderer}
 

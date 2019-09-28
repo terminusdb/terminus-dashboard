@@ -863,7 +863,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 self.client.connect(input.url.value, input.key.value)
                 .then(function(response){
-                    FrameHelper.removeChildren(resd);
+                	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                });
             }) // button click
@@ -874,8 +874,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                console.log('input.doc.value', input.doc.value);
               self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
               .then(function(response){
-                FrameHelper.removeChildren(resd);
-                var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
+                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
               });
             }) // button click
         break;
@@ -885,8 +885,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value;
               self.client.deleteDatabase(input.url.value, opts)
               .then(function(response){
-                  FrameHelper.removeChildren(resd);
-                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
+                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
               });
             }) // button click
         break
@@ -898,7 +898,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 var schurl = input.url.value;
                 self.client.getSchema(schurl, opts)
                 .then(function(response){
-                    FrameHelper.removeChildren(resd);
+                	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                 });
             }) // button click
@@ -914,7 +914,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 self.client.updateSchema(schurl, JSON.parse(input.doc.value), opts)
                 //self.client.updateSchema(schurl, input.doc.value, opts)
                 .then(function(response){
-                    FrameHelper.removeChildren(resd);
+                	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                 });
             }) // button click
@@ -938,7 +938,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value
               self.client.getDocument(dcurl, opts)
               .then(function(response){
-                    FrameHelper.removeChildren(resd);
+            	    TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
         }) // button click
@@ -950,7 +950,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               var opts = {};
               self.client.deleteDocument(dcurl, opts)
               .then(function(response){
-                  FrameHelper.removeChildren(resd);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
                   var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
           }) // button click
@@ -963,7 +963,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value;
               self.client.createDocument(dcurl, JSON.parse(payload), opts)
               .then(function(response){
-                   FrameHelper.removeChildren(resd);
+            	   TerminusClient.FrameHelper.removeChildren(resd);
                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                });
           }) // button click
@@ -979,8 +979,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             opts.key = input.key.value;
             self.client.updateDocument(dcurl, JSON.parse(payload), opts)
             .then(function(response){
-              FrameHelper.removeChildren(resd);
-              var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
+            	TerminusClient.FrameHelper.removeChildren(resd);
+                var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
             });
           }) // button click
         break;
@@ -990,8 +990,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 opts.key = input.key.value;
                 self.client.select(input.url.value, JSON.parse(input.doc.value), opts)
                 .then(function(response){
-                   FrameHelper.removeChildren(resd);
-                   var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                	TerminusClient.FrameHelper.removeChildren(resd);
+                    var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
                 });
             }) // button click
         break;
@@ -1001,8 +1001,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               opts.key = input.key.value;
               self.client.update(input.url.value, JSON.parse(input.doc.value), opts)
               .then(function(response){
-                FrameHelper.removeChildren(resd);
-                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+            	  TerminusClient.FrameHelper.removeChildren(resd);
+                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
               });
             }) // button click
         break;

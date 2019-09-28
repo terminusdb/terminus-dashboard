@@ -68,7 +68,7 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
     	return false;
     }
     if(vdom) vholder.appendChild(vdom);
-	if(this.renderer.currentFacet() == "page"){
+	if(false && this.renderer.currentFacet() == "page"){
 		var sControl = HTMLFrameHelper.getSettingsControl('data');
 		var menu = document.createElement('div');
 		menu.setAttribute('class', 'terminus-hide terminus-popup');
