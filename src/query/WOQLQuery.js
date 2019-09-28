@@ -56,7 +56,7 @@ WOQLQuery.prototype.execute = function(woql){
 WOQLQuery.prototype.wrap = function(woql){
 	var wjson = {
 		"@context" : this.prefixes,
-		"from": [ 
+		"from": [
 			this.client.connectionConfig.dbURL(),
 			woql
 		]
@@ -68,9 +68,9 @@ WOQLQuery.prototype.getConcreteDocumentClassPattern = function(varc){
 	var varc = varc || "v:Class";
 	var pat = {
 		and: [
-			this.getSubclassQueryPattern(varc, "tcs:Document"), 
+			this.getSubclassQueryPattern(varc, "tcs:Document"),
 			{
-				not: [this.getAbstractQueryPattern(varc)] 
+				not: [this.getAbstractQueryPattern(varc)]
 			}
 		]
 	}
@@ -79,7 +79,7 @@ WOQLQuery.prototype.getConcreteDocumentClassPattern = function(varc){
 
 WOQLQuery.prototype.getAbstractQueryPattern = function(varname){
 	var qp = {
-		quad: [varname, "tcs:tag", "tcs:abstract", "db:schema"] 
+		quad: [varname, "tcs:tag", "tcs:abstract", "db:schema"]
 	}
 	return qp;
 }
@@ -107,7 +107,7 @@ WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 			{
 				triple: ["v:Document", "rdf:type", "v:Type"]
 			},
-			this.getSubclassQueryPattern("v:Type", "tcs:Document") 
+			this.getSubclassQueryPattern("v:Type", "tcs:Document")
 		]
 	}
 	if(constraint){
@@ -127,16 +127,16 @@ WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 WOQLQuery.prototype.getPropertyListQuery = function(constraint, limit, start){
 	var wjson = {
 		and: [{quad: ["v:Property", "rdfs:range", "v:Range", "db:schema"]},
-			{ 
+			{
 				opt: [{quad: ["v:Property", "rdf:type", "v:Type", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Property", "rdfs:label", "v:Label", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Property", "rdfs:comment", "v:Comment", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Property", "rdfs:domain", "v:Domain", "db:schema"]}]
 			},
 		]
@@ -151,19 +151,19 @@ WOQLQuery.prototype.getPropertyListQuery = function(constraint, limit, start){
 WOQLQuery.prototype.getElementMetaDataQuery = function(constraint, limit, start){
 	var wjson = {
 		and: [{quad: ["v:Element", "rdf:type", "v:Type", "db:schema"]},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "rdfs:label", "v:Label", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "rdfs:comment", "v:Comment", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "tcs:tag", "v:Abstract", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "rdfs:domain", "v:Domain", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "rdfs:range", "v:Range", "db:schema"]}]
 			},
 		]
@@ -177,13 +177,13 @@ WOQLQuery.prototype.getElementMetaDataQuery = function(constraint, limit, start)
 WOQLQuery.prototype.getClassListMetaDataQuery = function(constraint, limit, start){
 	var wjson = {
 		and: [{quad: ["v:Element", "rdf:type", "owl:Class", "db:schema"]},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "rdfs:label", "v:Label", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "rdfs:comment", "v:Comment", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Element", "tcs:tag", "v:Abstract", "db:schema"]}]
 			}
 		]
@@ -199,7 +199,7 @@ WOQLQuery.prototype.getClassMetaDataQuery = WOQLQuery.prototype.getClassListMeta
 WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen, limit, start){
 	var wjson = {
 		and: [{triple: ["v:Document", "rdf:type", chosen]},
-			{ 
+			{
 				opt: [{triple: ["v:Document", "v:Property", "v:Value"]}]
 			}
 		]
@@ -210,7 +210,7 @@ WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen, limit, start){
 WOQLQuery.prototype.getDataOfChosenPropertyQuery = function(chosen, limit, start){
 	var wjson = {
 		and: [{triple: ["v:Document", chosen, "v:Value"]},
-			{ 
+			{
 				opt: [{triple: ["v:Document", "rdfs:label", "v:Label"]}]
 			}
 		]
@@ -223,10 +223,10 @@ WOQLQuery.prototype.getInstanceMeta = function(url, limit, start){
 		and: [
 			{triple: [url, "rdfs:label", "v:InstanceLabel"]},
 			{triple: [url, "rdf:type", "v:InstanceType"]},
-			{ 
+			{
 				opt: [{triple: [url, "rdfs:comment", "v:InstanceComment"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:InstanceType", "rdfs:label", "v:ClassLabel", "db:schema"]}]
 			}
 		]
@@ -239,10 +239,10 @@ WOQLQuery.prototype.getDocumentQuery = function(id, limit, start){
 	var wjson = {
 		and: [
 			{triple: [id, "v:Property", "v:Property_Value"]},
-			{ 
+			{
 				opt: [{quad: ["v:Property", "rdfs:label", "v:Property_Label", "db:schema"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Property", "rdf:type", "v:Property_Type", "db:schema"]}]
 			}
 		]
@@ -254,13 +254,13 @@ WOQLQuery.prototype.getClassesQuery = function(){
 	var wjson = {
 		and: [
 			{triple: ["v:ID", "rdf:type", "v:Class"]},
-			{ 
+			{
 				opt: [{triple: ["v:ID", "rdfs:label", "v:Label"]}]
 			},
-			{ 
+			{
 				opt: [{triple: ["v:ID", "rdfs:comment", "v:Comment"]}]
 			},
-			{ 
+			{
 				opt: [{quad: ["v:Class", "rdfs:label", "v:Type", "db:schema"]}]
 			},
 			{

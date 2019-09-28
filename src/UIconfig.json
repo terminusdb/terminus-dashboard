@@ -95,7 +95,7 @@ var FrameConfig = {
 					viewerOptions: { big: true}
 				}
 			}
-			
+
 		],
 		mode: "edit",
 		viewer: "html"

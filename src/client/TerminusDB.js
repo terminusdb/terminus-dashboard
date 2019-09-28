@@ -347,7 +347,7 @@ TerminusDBViewer.prototype.getDbInfoBox = function(r, module){
 TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 	// delete database
     var del = document.createElement('button');
-    del.setAttribute('class', 'terminus-del-btn');
+    del.setAttribute('class', 'terminus-btn terminus-btn-float-right');
     del.setAttribute('type', 'button');
     del.innerHTML = 'Delete Database';
 	var dbrec = this.ui.getDBRecord();
@@ -376,7 +376,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	var self = this;
 	this.wquery.execute(q)
 	.then(function(result){
-		self.result = new WOQLResultsViewer.WOQLResultsViewer(this.ui, result, {}, {});
+		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, {}, {});
 		if(self.result){
 			var nd = self.result.getAsDOM(d, false);
 			if(nd){

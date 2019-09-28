@@ -103,7 +103,8 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 					lab = this.getDocumentLocalLink(lab);
 				}
 			}
-			var clab = TerminusClient.FrameHelper.validURL(ordered_headings[i]) ? TerminusClient.FrameHelper.labelFromURL(ordered_headings[i]) : ordered_headings[i];
+
+			var clab = TerminusClient.FrameHelper.validURL(ordered_headings[j]) ? TerminusClient.FrameHelper.labelFromURL(ordered_headings[j]) : ordered_headings[j];
 			colDataData[clab] = lab;
 		}
 		data.push(colDataData);
@@ -163,7 +164,7 @@ WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
 
 WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin){
 	var tab = document.createElement("table");
-	tab.setAttribute("class", "terminus-query-results-table");
+	tab.setAttribute("class", "terminus-query-results-table terminus-pointer");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var ordered_headings = this.orderColumns(bindings[0]);

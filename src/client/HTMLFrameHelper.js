@@ -5,7 +5,7 @@ let HTMLFrameHelper = {};
 HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled){
 	var pman = new TerminusPluginManager();
 	var dpropDOM = document.createElement("span");
-	dpropDOM.setAttribute("class", "terminus-action-control " + type + "-" + control);
+	dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
 	var pman = new TerminusPluginManager();
     /*if(pman.pluginAvailable("font-awesome")){
 		var icon = document.createElement('icon');

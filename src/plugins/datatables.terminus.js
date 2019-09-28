@@ -1,4 +1,5 @@
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
+const WOQLQuery = require('../query/WOQLQuery');
 const UTILS= require('../Utils')
 
 function Datatables(){}
@@ -105,7 +106,7 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
     pageInfo: current drawCallBack page change info
 */
 Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, pageInfo){
-    dcb.wquery = new WOQLQuery(ui.client, {}, ui);
+    dcb.wquery = new WOQLQuery.WOQLQuery(ui.client, {}, ui);
     UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
     var query = dt.getQueryOnPagination(dcb.wquery, pageInfo)
     pageInfo.qTextDom.value = JSON.stringify(query);
@@ -149,6 +150,8 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
     var dt = this;
     var tab = dtResult.tab;
     this.setUp(tab, settings, resultDOM);
+    console.log('columns',dtResult.result.columns);
+    console.log('dtResult.result.data',dtResult.result.data);
     // initialize datatables
     var table = jQuery(tab).DataTable({
          searching   : false,

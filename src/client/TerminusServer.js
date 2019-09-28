@@ -187,7 +187,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	lihed.appendChild(document.createTextNode("Available Databases"));
 	sec.appendChild(lihed);
 	var scd = document.createElement("table");
-	scd.setAttribute("class", "terminus-db-list terminus-db-size");
+	scd.setAttribute("class", "terminus-db-list terminus-db-size  terminus-pointer");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var th1 = document.createElement("th");

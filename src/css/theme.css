@@ -332,7 +332,7 @@ body [class^="icon-"], body [class*=" icon-"] {
     cursor: pointer;
     display: inline-block;
     margin-bottom: 10px;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
     cursor: pointer;
     white-space: nowrap;
     padding: 4px 10px;
@@ -342,6 +342,10 @@ body [class^="icon-"], body [class*=" icon-"] {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.terminus-btn-float-right{
+	float: right;
 }
 
 .terminus-q-btn {
@@ -2069,6 +2073,9 @@ div.dataTables_info, div.dataTables_paginate {
     max-width: 100%;
 }
 
+.terminus-save-btn{
+	float: right;
+}
 .terminus-content-layout{
 	background-color: #f8f8ff;
 	box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);

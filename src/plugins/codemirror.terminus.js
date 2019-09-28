@@ -10,33 +10,33 @@ txtar    : editor is attached to textar
 mode     : format for highlighting, ex: json, html etc.
 editable : readOnly false/ nocursor is special value in code editor to set readonly true */
 Codemirror.prototype.colorizeTextArea = function(mode){
-  //initize auto complete
-  /*CodeMirror.commands.autocomplete = function(cm) {
+    //initize auto complete
+    /*CodeMirror.commands.autocomplete = function(cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
-  }*/
+    }*/
 
-  // initialise code editor on text area
-  var editor = CodeMirror.fromTextArea(this.textdom, {
-    mode                : this.mode,
-    firstLineNumber     : 1,
-    lineNumbers         : true,
-    styleActiveLine     : true,
-    lineWrapping        : true,
-    smartIndent         : true,
-    indentWithTabs      : true,
-    newlineAndIndent    : true,
-    autoCloseBrackets   : true,
-    matchBrackets       : {afterCursor: true},
-    extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },
-    refresh             : true
-   });
+    // initialise code editor on text area
+    var editor = CodeMirror.fromTextArea(this.textdom, {
+        mode                : this.mode,
+        firstLineNumber     : 1,
+        lineNumbers         : true,
+        styleActiveLine     : true,
+        lineWrapping        : true,
+        smartIndent         : true,
+        indentWithTabs      : true,
+        newlineAndIndent    : true,
+        autoCloseBrackets   : true,
+        matchBrackets       : {afterCursor: true},
+        extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },
+        refresh             : true
+    });
 
-   this.setCodemirrorSize(editor, mode);
-   editor.defaultCharWidth('20px');
-   if(this.darkMode) editor.setOption("theme", 'erlang-dark');
-   else editor.setOption("theme", 'neo');
+    this.setCodemirrorSize(editor, mode);
+    editor.defaultCharWidth('20px');
+    if(this.darkMode) editor.setOption("theme", 'erlang-dark');
+    else editor.setOption("theme", 'neo');
 
-   return editor;
+    return editor;
 } // colorizeTextArea()
 
 /*
