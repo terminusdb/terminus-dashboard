@@ -82,13 +82,13 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
 }
 
 WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings){
-    var columns = [], colDataData = {}, data = [], formattedResult = {};
+    var columns = [], colDataData = {}, data = [], formattedResult = {}, arr = [];
 	var dtResult = {};
     var ordered_headings = this.orderColumns(bindings[0]);
 	// get columns
 	for(var i = 0; i<ordered_headings.length; i++){
 		var clab = FrameHelper.validURL(ordered_headings[i]) ? FrameHelper.labelFromURL(ordered_headings[i]) : ordered_headings[i];
-        columns.push({data: clab});
+		columns.push({data: clab});
 	}
 	// get data for respective columns
 	for(var i = 0; i<bindings.length; i++){
@@ -101,10 +101,11 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
 				if(lab == "unknown") lab = "";
 				if(lab.substring(0, 4) == "doc:"){
-					lab = this.getDocumentLocalLink(lab);					
+					lab = this.getDocumentLocalLink(lab);
 				}
 			}
-			colDataData[ordered_headings[j]] = lab;
+			var clab = FrameHelper.validURL(ordered_headings[j]) ? FrameHelper.labelFromURL(ordered_headings[j]) : ordered_headings[j];
+			colDataData[clab] = lab;
 		}
 		data.push(colDataData);
 	}

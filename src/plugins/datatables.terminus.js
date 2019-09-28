@@ -144,10 +144,12 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.chosenValue = settings.chosenValue;
 }
 
+
 Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
-    console.log('dtResult.result.data.data', dtResult.result.data.data);
+    console.log('dtResult.result.columns', dtResult.result.columns);
+    console.log('dtResult.result.data.data', dtResult.result.data);
     this.setUp(tab, settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
@@ -161,7 +163,8 @@ Datatables.prototype.getDataFromServer = function(dtResult, settings, ui, result
          select      : true,
          ajax        : function (data, callback, settings) {
                         callback(
-                          JSON.parse(dtResult.result.data.data)
+                            dtResult.result.data
+                          //JSON.parse(dtResult.result.data.data)
                         );},
          //data        : dtResult.result.data.data,
          buttons     : ['copy', 'excel'],
