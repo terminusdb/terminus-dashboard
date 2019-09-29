@@ -270,8 +270,8 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	sec.appendChild(scd);
 
 	if(this.ui.pluginAvailable("datatables")){
-        var dt = new Datatables();
-		var tab = dt.draw(false, scd, null,  null, this.ui, null);
+        var dt = new Datatables.CspDatatables();
+		var tab = dt.draw(scd);
 	}
 	return sec;
 }

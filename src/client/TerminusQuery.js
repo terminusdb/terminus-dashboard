@@ -85,7 +85,7 @@ TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
 	this.wquery.execute(val)
 	.then(function(result){
-		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.wquery, self.options, settings);
+		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.wquery, self.options, settings, true);
 		var nd = self.result.getAsDOM(self.resultDOM, true);
 		if(nd){
 			 self.resultDOM.appendChild(nd);
