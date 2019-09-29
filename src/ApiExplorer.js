@@ -722,7 +722,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
         var inpDoc = document.createElement('textarea');
         cd.appendChild(inpDoc);
         inpDoc.setAttribute('class', 'terminus-api-explorer-text-area');
-        UTILS.stylizeEditor(this.ui, inpDoc, 'document', 'javascript');
+        UTILS.stylizeEditor(this.ui, inpDoc, 'api-doc', 'javascript');
     }
     body.appendChild(formDoc);
     // gather inputs
