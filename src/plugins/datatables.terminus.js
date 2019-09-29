@@ -1,9 +1,12 @@
 const UTILS= require('../Utils')
 
 /*** client side processing ***/
-function CspDatatables(){}
+function CspDatatables(ui){
+    this.ui = ui;
+}
 
-CspDatatables.prototype.convertToDatatable = function(tab, ui){
+CspDatatables.prototype.convertToDatatable = function(tab){
+    var dt = this;
     var table = jQuery(tab).DataTable({
          searching : false,
          pageLength: 25,
@@ -21,10 +24,10 @@ CspDatatables.prototype.convertToDatatable = function(tab, ui){
         if(table.cell(this).index().column == 5){
             var dbInfo = table.row(jQuery(this).parents('tr')).data();
             var dbId = UTILS.extractValueFromCell(dbInfo[0]);
-            ui.deleteDatabase(dbId);
+            dt.ui.deleteDatabase(dbId);
             return;
         }
-        else ui.showDBMainPage();
+        else dt.ui.showDBMainPage();
      }); // on click
 
     tab.setAttribute('class'      , 'stripe dataTable terminus-db-size');
@@ -167,7 +170,7 @@ Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
          serverSide  : true,
          processing  : true,
          lengthMenu  : [5, 10, 25, 50, 75, 100],
-         dom         : 'Blfrtip',
+         dom         : 'RBlftip',
          columns     : dtResult.result.columns,
          paging      : true,
          select      : true,

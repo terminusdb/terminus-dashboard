@@ -1,5 +1,4 @@
-/**
- * User interface elements that relate to server context
+/* User interface elements that relate to server context
  *
  * TerminusServerController is a control widget that invokes server actions
  * TerminusServerViewer is a window that displays server actions and server screens
@@ -17,7 +16,7 @@ TerminusServerController.prototype.getAsDOM = function(){
 	var self = this;
 	if(this.ui && this.ui.server()){
 		var scd = document.createElement("div");
-		scd.setAttribute("class", "terminus-server-connection");
+		scd.setAttribute("class", "terminus-server-connectiAlso, the title / hover stuff should include the full entry when it is shortened (for urls / comments) so when I hover over it I should see the full texton");
         var nav = document.createElement('div');
         nav.setAttribute('class', 'span3');
         var ul = document.createElement('ul');
@@ -270,7 +269,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	sec.appendChild(scd);
 
 	if(this.ui.pluginAvailable("datatables")){
-        var dt = new Datatables.CspDatatables();
+        var dt = new Datatables.CspDatatables(this.ui);
 		var tab = dt.draw(scd);
 	}
 	return sec;

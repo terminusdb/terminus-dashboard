@@ -1,7 +1,7 @@
 const TerminusUI = require('./TerminusUI');
 const RenderingMap = require('./client/RenderingMap');
-/*
-var terminator = new TerminusUI(TerminusConfig);
+
+/*var terminator = new TerminusUI(TerminusConfig);
 var pconfig = {};
 pconfig.buttons = {'client'   : document.getElementById("terminus-client-btn"),
 				   'explorer' : document.getElementById("terminus-explorer-btn")}
@@ -15,7 +15,7 @@ terminator.draw(pconfig, nlocation);
 
 function showPanel(mode){
 	toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
-}
-*/
+} */
+
 module.exports={TerminusUI:TerminusUI,
                 RenderingMap:RenderingMap}
