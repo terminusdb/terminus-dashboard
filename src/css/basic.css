@@ -171,6 +171,9 @@ span.terminus-violation-property-label{
 div.terminus-violation{
 	border-bottom: 0.5px solid #856404;
 }
+.terminus-property-value{
+	display: flex;
+}
 
 table {
   /*width: 100%;*/

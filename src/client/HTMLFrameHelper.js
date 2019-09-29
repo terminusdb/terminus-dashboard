@@ -26,11 +26,11 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 		var button = document.createElement("button");
 		button.appendChild(document.createTextNode(label));
 		if(disabled){
-			button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
+			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
 			button.setAttribute("title", disabled);
 		}
 		else {
-			button.setAttribute("class", "terminus-frame-control terminus-btn frame-control-action " + type + "-" + control);
+			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action " + type + "-" + control);
 			button.addEventListener("click", function(){
 				callback(control);
 			});
