@@ -861,6 +861,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
     switch(action){
         case 'connect':
             button.addEventListener("click", function(){
+                console.log('input', input.url.value);
                 self.client.connect(input.url.value, input.key.value)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
@@ -870,8 +871,6 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'create':
             button.addEventListener("click", function(form){
-               console.log('typeof() create', typeof(input.doc.value));
-               console.log('input.doc.value', input.doc.value);
               self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);

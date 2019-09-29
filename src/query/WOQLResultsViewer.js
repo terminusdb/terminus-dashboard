@@ -22,11 +22,12 @@ WOQLResult.prototype.hasBindings = function(result){
 
 
 
-function WOQLResultsViewer(ui, wresult, wQuery, options, settings){
+function WOQLResultsViewer(ui, wresult, wQuery, options, settings, queryPage){
 	this.ui = ui;
 	this.result = wresult;
 	this.wQuery = wQuery;
 	this.options = options;
+	this.qPage = queryPage;
 	//this.wqlRes = new WOQLResult();
 	this.pman = new TerminusPluginManager();
 	this.settings = settings;
@@ -69,8 +70,8 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
 	if(this.pman.pluginAvailable("datatables")){
 		var dtResult = this.getTable(bindings, true, {});
 		resultDOM.appendChild(dtResult.tab);
-    	var dt = new Datatables();
-		dt.draw(true, dtResult, this, this.ui, this.wQuery,resultDOM);
+		var dt = new Datatables.Datatables(this, this.qPage);
+		dt.draw(dtResult, resultDOM);
 		resultDOM.classList.add('terminus-expandable');
 		resultDOM.classList.add('terminus-dt-result-cont');
 		return tab;
@@ -120,18 +121,6 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 	formattedResult.data = data;
 	formattedResult.recordsTotal = 65;
 	formattedResult.recordsFiltered = 65;
-console.log('length', pageInfo);
-	if(Object.entries(pageInfo).length > 0){
-
-		//formattedResult.recordsFiltered = pageInfo.pageLength;
-		//formattedResult.recordsFiltered = pageInfo.pageLength;
-		//formattedResult.draw += 1;
-	}
-	else { // intial
-		formattedResult.start = 0;
-		//formattedResult.draw = 1;
-		//formattedResult.recordsFiltered = 5;
-	}
 	formattedResult.draw = 1;
 	dtResult.data = formattedResult;
 	return dtResult;

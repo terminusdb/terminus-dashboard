@@ -1854,6 +1854,7 @@ a.terminus-submenu-selected{
     border: 0;
     color: hsla(0,0%,100%,.8);
 	background-color: transparent;
+	text-align: center;
 }
 
 .terminus-group-sub-title{

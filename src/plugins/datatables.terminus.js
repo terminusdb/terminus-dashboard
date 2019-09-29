@@ -1,10 +1,9 @@
-const WOQLResultsViewer = require('../query/WOQLResultsViewer');
-const WOQLQuery = require('../query/WOQLQuery');
 const UTILS= require('../Utils')
 
-function Datatables(ui){}
+/*** client side processing ***/
+function CspDatatables(){}
 
-Datatables.prototype.convertToDatatable = function(tab, ui){
+CspDatatables.prototype.convertToDatatable = function(tab, ui){
     var table = jQuery(tab).DataTable({
          searching : false,
          pageLength: 25,
@@ -35,22 +34,32 @@ Datatables.prototype.convertToDatatable = function(tab, ui){
     return tab;
 }
 
+CspDatatables.prototype.draw = function(dtResult){
+    return(this.convertToDatatable(dtResult));
+}
+
+/*** server side processing ***/
+function Datatables(wResViewer, qPage){
+   this.wrViewer = wResViewer;
+   this.wQuery = wResViewer.wQuery;
+   this.ui = wResViewer.ui;
+   this.qPage = qPage;
+}
+
 /*
-    dcb: datatable drawCallBack reference
-    ui: terminus ui reference
-    dt: datatable reference
     query: new woqlquery with current pagination changes
     pageInfo: current drawCallBack page change info
     resultDOM: result dom on veiwer page
 */
-Datatables.prototype.executeQuery = function(dcb, ui, dt, query, pageInfo, wQuery, wrViewer, resultDOM){
+Datatables.prototype.executeQuery = function(query, pageInfo, resultDOM){
     var self = this;
     //dcb.wquery.execute(query)
-    wQuery.execute(query)
+    this.wQuery.execute(query)
       .then(function(result){
           var dtResult = {};
-          dtResult = wrViewer.getDtTableDOMOnChange(result.bindings, resultDOM, pageInfo)
-          self.getDataFromServer(dtResult, wrViewer, ui, wQuery, resultDOM);
+          dtResult =self.wrViewer.getDtTableDOMOnChange(result.bindings, resultDOM, pageInfo);
+          return dtResult;
+          //self.getDataFromServer(dtResult, wrViewer, ui, wQuery, resultDOM);
       })
       .catch(function(err){
           console.error(err);
@@ -97,17 +106,15 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
 }
 
 /*
-    dcb: datatable drawCallBack reference
-    ui: terminus ui reference
-    dt: datatable reference
     pageInfo: current drawCallBack page change info
 */
-Datatables.prototype.generateNewQueryOnPageChange = function(dcb, ui, dt, wQuery, pageInfo){
-    //dcb.wquery = new WOQLQuery.WOQLQuery(ui.client, {}, ui);
-    UTILS.deleteStylizedEditor(ui, pageInfo.qTextDom);
-    var query = dt.getQueryOnPagination(wQuery, pageInfo)
-    pageInfo.qTextDom.value = JSON.stringify(query,undefined, 2);
-    UTILS.stylizeEditor(ui, pageInfo.qTextDom, 'query', 'javascript');
+Datatables.prototype.generateNewQueryOnPageChange = function(pageInfo){
+    if(this.qPage) UTILS.deleteStylizedEditor(this.ui, pageInfo.qTextDom);
+    var query = this.getQueryOnPagination(this.wQuery, pageInfo)
+    if(this.qPage) {
+        pageInfo.qTextDom.value = JSON.stringify(query,undefined, 2);
+        UTILS.stylizeEditor(this.ui, pageInfo.qTextDom, 'query', 'javascript');
+    }
     return query;
 }
 
@@ -142,15 +149,21 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.chosenValue = settings.chosenValue;
 }
 
+Datatables.prototype.getNewDataOnChange = function(drawnTab, aSettings, resultDOM){
+    var pageInfo = this.getCallbackSettings(this, aSettings._iDisplayLength, aSettings._iDisplayStart);
+    var query = this.generateNewQueryOnPageChange(pageInfo);
+    return this.executeQuery(query, pageInfo, resultDOM);
+    //return  dtResult.result.data;
+}
 
-Datatables.prototype.getDataFromServer = function(dtResult, wrViewer, ui, wQuery, resultDOM){
+Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
     var dt = this;
     var tab = dtResult.tab;
-    this.setUp(tab, wrViewer.settings, resultDOM);
+    this.setUp(tab, this.wrViewer.settings, resultDOM);
     // initialize datatables
     var table = jQuery(tab).DataTable({
          searching   : false,
-         pageLength  : wrViewer.settings.pageLength,
+         pageLength  : dt.wrViewer.settings.pageLength,
          serverSide  : true,
          processing  : true,
          lengthMenu  : [5, 10, 25, 50, 75, 100],
@@ -159,9 +172,16 @@ Datatables.prototype.getDataFromServer = function(dtResult, wrViewer, ui, wQuery
          paging      : true,
          select      : true,
          ajax        : function (data, callback, settings) {
-                        callback(
-                            dtResult.result.data
-                        );},
+                        if(Object.entries(dtResult.result.data).length > 0){
+                            // first draw is loaded
+                            var res = dtResult.result.data;
+                            dtResult.result.data = {};
+                        }
+                        else{
+                            var res = dt.getNewDataOnChange(this, settings, resultDOM);
+                            console.log('res', res);
+                        }
+                        callback(res);},
          buttons     : [{ extend: 'copy', text: 'Copy to clipboard' },
                         { extend: 'excel', text: 'Export to Excel' }],
          columnDefs  : [{targets:'_all',className:"truncate"}],
@@ -169,35 +189,7 @@ Datatables.prototype.getDataFromServer = function(dtResult, wrViewer, ui, wQuery
                             var td = $(row).find(".truncate");
                             td.attr("title", td.html());},
          colReorder  : {addFixed : true, liveDrag:true},
-         scrollX     : true,
-         /*infoCallback: function( settings, start, end, max, total, pre ) {
-                            console.log('start', start);
-                            console.log('end', end);
-                            console.log('max', max);
-                            console.log('total', total);
-                            console.log('pre', pre);
-                            var api = this.api();
-                            var pageInfo = api.page.info();
-                            return 'Page '+ (pageInfo.page+1) +' of '+ pageInfo.pages;
-                        },*/
-         drawCallback: function(settings) {
-                             //alert( 'DataTables has redrawn the table' );
-                             // on change of page length
-                             $(this).on( 'length.dt', function (e, settings, len){
-                                  var info = table.page.info();
-                                  var pageInfo = dt.getCallbackSettings(dt, len, info.start);
-                                  var query = dt.generateNewQueryOnPageChange(this, ui, dt, wQuery, pageInfo);
-                                  return dt.executeQuery(this, ui, dt, query, pageInfo, wQuery, wrViewer, resultDOM);
-                             });
-                             // pagination
-                             $(this).on( 'page.dt', function () {
-                                var info = table.page.info();
-                                //console.log('info', info); //info.page
-                                var pageInfo = dt.getCallbackSettings(dt, info.length, info.start);
-                                var query = dt.generateNewQueryOnPageChange(this, ui, dt, wQuery, pageInfo);
-                                return dt.executeQuery(this, ui, dt, query, pageInfo, wQuery, wrViewer, resultDOM);
-                             });
-        }
+         scrollX     : true
     }); //jQuery(tab)
 
     //styling
@@ -213,10 +205,8 @@ Datatables.prototype.getDataFromServer = function(dtResult, wrViewer, ui, wQuery
 /*
 serverside: true or false
 */
-Datatables.prototype.draw = function(serverside, dtResult, wrViewer, ui, wQuery, resultDOM){
-    if(serverside)
-        return(this.getDataFromServer(dtResult, wrViewer, ui, wQuery, resultDOM));
-    else return(this.convertToDatatable(dtResult, ui));
+Datatables.prototype.draw = function(dtResult, resultDOM){
+    return(this.getDataFromServer(dtResult, resultDOM));
 }
 
-module.exports=Datatables
+module.exports={Datatables, CspDatatables}
