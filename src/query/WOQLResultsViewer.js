@@ -133,19 +133,18 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 		for(var j = 0; j<ordered_headings.length; j++){
 			var td = document.createElement("td");
 			if(typeof bindings[i][ordered_headings[j]] == "object"){
-				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "Object?");
-				td.appendChild(this.getDocumentLocalLink(lab));
+				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "?");
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
-				if(lab == "unknown") lab = "";
-				if(lab.substring(0, 4) == "doc:"){
-					var a = this.getDocumentLocalLink(lab);
-					td.appendChild(a);
-				}
-				else {
-					td.appendChild(document.createTextNode(lab));
-				}
+			}
+			if(lab == "unknown") lab = "";
+			if(lab.substring(0, 4) == "doc:"){
+				var a = this.getDocumentLocalLink(lab);
+				td.appendChild(a);
+			}
+			else {
+				td.appendChild(document.createTextNode(lab));
 			}
 			tr.appendChild(td);
 		}

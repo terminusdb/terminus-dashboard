@@ -45,3 +45,7 @@ others
 .settings
 
 cypress/integration/examples01
+
+
+src/index.js
+# index.js is different for developers (8080) and production (no code)
