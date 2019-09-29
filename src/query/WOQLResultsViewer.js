@@ -134,7 +134,7 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 			var td = document.createElement("td");
 			if(typeof bindings[i][ordered_headings[j]] == "object"){
 				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "Object?");
-				td.appendChild(lab.lab);
+				td.appendChild(this.getDocumentLocalLink(lab));
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
