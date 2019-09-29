@@ -5,6 +5,7 @@
  *
  * @summary Displays a demo and description of api calls from WOQLCLient and what happens under the hood of api calls
  */
+const WOQLQuery = require('./query/WOQLQuery');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils')
 
@@ -112,6 +113,7 @@ function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
     this.client = new TerminusClient.WOQLClient();
+    this.wQuery = new WOQLQuery(this.client, {}, this.ui);
     this.client.use_fetch = true;
     this.client.return_full_response = true;
     this.pman = new TerminusPluginManager();
@@ -845,6 +847,8 @@ ApiExplorer.prototype.getApiForm = function(action, input){
 
   return form;
 } // getApiForm()
+
+
 // define event listeners on send api of schema & documents
 ApiExplorer.prototype.getApiSendButton = function(action, input){
     // form
@@ -871,7 +875,11 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'create':
             button.addEventListener("click", function(form){
-              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
+               /* var dbdoc = this.generateNewDatabaseDocument(input);
+                console.log(dbdoc);
+            	return this.client.createDatabase(dbid, dbdoc)*/
+
+              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value))
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
                 var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
@@ -987,7 +995,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 var opts = {};
                 opts.key = input.key.value;
-                self.client.select(input.url.value, JSON.parse(input.doc.value), opts)
+                var wrapped = self.wQuery.wrap(JSON.parse(input.doc.value));
+                self.client.select(input.url.value, wrapped)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);

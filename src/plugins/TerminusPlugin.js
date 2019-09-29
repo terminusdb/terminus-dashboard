@@ -49,8 +49,7 @@ function TerminusPluginManager(){
 	this.plugins["datatables"] = {
 		label: "Data Tables",
 		js: ["https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js",
-			 "https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.js",
-		 	 "https://legacy.datatables.net/extras/thirdparty/ColReorderWithResize/ColReorderWithResize.js"],
+			 "https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.js"],
 		css: ["https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"],
 		requires: ['jquery']
 	};

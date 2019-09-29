@@ -506,7 +506,7 @@ div.terminus-object-frame div.terminus-object-header, .terminus-application-head
 }
 
 div.terminus-object-frame div.terminus-object-header {
-	margin-top: 1em;
+	margin-top: 50px;
 	padding: 4px;
 	margin-right: 20px;
 }
@@ -593,7 +593,7 @@ div.terminus-property-frame{
 
 .terminus-property-body-align{
 	/*margin-left: 20px;*/
-	text-align: right;
+	text-align: left;
 }
 
 .terminus-property-values-align{

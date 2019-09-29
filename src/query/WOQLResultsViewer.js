@@ -108,10 +108,9 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
 				if(lab == "unknown") lab = "";
 				if(lab.substring(0, 4) == "doc:"){
-					lab = this.getDocumentLocalLink(lab);
+					lab = this.getDocumentLocalLink(lab).outerHTML;
 				}
 			}
-
 			var clab = TerminusClient.FrameHelper.validURL(ordered_headings[j]) ? TerminusClient.FrameHelper.labelFromURL(ordered_headings[j]) : ordered_headings[j];
 			colDataData[clab] = lab;
 		}
@@ -135,7 +134,7 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 			var td = document.createElement("td");
 			if(typeof bindings[i][ordered_headings[j]] == "object"){
 				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "Object?");
-				td.appendChild(document.createTextNode(lab));
+				td.appendChild(lab.lab);
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
@@ -194,7 +193,7 @@ WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin, pageInfo){
 		return dtResult;
 	}
 	else {
-		var tbody = this.getTableBody(bindings , ordered_headings);
+		var tbody = this.getTableBody(bindings, ordered_headings);
 		tab.appendChild(tbody);
 		return tab;
 	}

@@ -13,6 +13,11 @@ CspDatatables.prototype.convertToDatatable = function(tab){
          lengthMenu: [10, 25, 50, 75, 100],
          paging    : true,
          select    : true,
+         initComplete: function(settings) {
+                        var ict =settings.oInstance.api();
+                        ict.$('td').each(function(){
+                            this.setAttribute('title', $(this).html())
+                        })},
          columnDefs:[{targets:'_all',className:"truncate"}],
          createdRow: function(row) {
                             var td = $(row).find(".truncate");
@@ -174,6 +179,11 @@ Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
          columns     : dtResult.result.columns,
          paging      : true,
          select      : true,
+         initComplete: function(settings) {
+                        var ict =settings.oInstance.api();
+                        ict.$('td').each(function(){
+                            this.setAttribute('title', $(this).html())
+                        })},
          ajax        : function (data, callback, settings) {
                         if(Object.entries(dtResult.result.data).length > 0){
                             // first draw is loaded
@@ -191,7 +201,7 @@ Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
          createdRow  : function(row){
                             var td = $(row).find(".truncate");
                             td.attr("title", td.html());},
-         colReorder  : {addFixed : true, liveDrag:true},
+         //colReorder  : {addFixed : true, liveDrag:true},
          scrollX     : true
     }); //jQuery(tab)
 
