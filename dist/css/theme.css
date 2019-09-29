@@ -107,6 +107,8 @@ pre, code {
   animation-direction: reverse;
 }
 
+
+
 .term-progress-bar-inner {
   display: block;
   height: 15px;
@@ -136,6 +138,10 @@ pre, code {
 
 table tbody tr {
 	cursor: pointer;
+}
+
+.table.dataTable{
+	margin: 0px !important;
 }
 
 .dataTables_filter {
@@ -436,38 +442,6 @@ body [class^="icon-"], body [class*=" icon-"] {
 	-webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 	box-shadow: inset 0 3px 5px rgba(0,0,0,.125)
 }
-/*
-.terminus-btn.disabled, .terminus-btn[disabled], fieldset[disabled] .terminus-btn {
-	cursor: not-allowed;
-	pointer-events: none;
-	opacity: .65;
-	filter: alpha(opacity=65);
-	-webkit-box-shadow: none;
-	box-shadow: none
-}
-.terminus-btn-default {
-	color: #767676;
-	background-color: #fafafa;
-	border-color: #ededed
-}
-.terminus-btn-default.active, .terminus-btn-default:active, .terminus-btn-default:focus,
-.terminus-btn-default:hover, .open>.terminus-btn-default.dropdown-toggle {
-	color: #767676;
-	background-color: #e1e1e1;
-	border-color: #cfcfcf
-}
-.terminus-btn-default.active, .terminus-btn-default:active,
-.open>.terminus-btn-default.dropdown-toggle {
-	background-image: none
-}
-.terminus-btn-default.disabled, .terminus-btn-default.disabled.active,
-.terminus-btn-default.disabled:active, .terminus-btn-default.disabled:focus,
-.terminus-btn-default.disabled:hover, .terminus-btn-default[disabled],
-.terminus-btn-default[disabled].active, .terminus-btn-default[disabled]:active,
-.terminus-btn-default[disabled]:focus, .terminus-btn-default[disabled]:hover{
-	background-color: #fafafa;
-	border-color: #ededed
-}*/
 
 /* Terminus Collapsible */
 .terminus-collapsible {
@@ -618,7 +592,9 @@ div.terminus-property-frame{
 	border-color: #d5d5d5!important
 }
 
-
+.terminus-cheveron-float{
+	float: right;
+}
 
 
 .terminus-table.valign-middle td, .terminus-table.valign-middle th {
