@@ -13,7 +13,7 @@ let TerminusConfig = {
 		},
 		jquery: true,
 		jqueryui: false,
-		datatables: true,
+		datatables: false,
 		quill: true,
 		select2: false,
 		codemirror: {
