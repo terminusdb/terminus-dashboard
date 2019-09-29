@@ -19,10 +19,158 @@ div.terminus-object-properties {
 	padding-bottom: 4px;
 }
 
+.terminus-logo{
+	top: 0;
+	margin-top: 0px;
+	color: #00C08B;
+	font-size: xx-large;
+	font-weight: 500;
+	align-items: center;
+	height: 70px;
+	padding-top: 25px;
+	border-bottom: 1px solid #2a3547;
+	display: block;
+}
+
+.terminus-application-controls{
+ margin-top: 20px
+}
+.terminus-control-panel-layout {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+}
+.terminus-logo-container {
+	display: inline-block;
+    width: 200px;
+    margin-right: 5px;
+    content: "";
+    background-size: 100%;
+}
+.terminus-btn-float-right{
+	float: right;
+}
+
+/* terminus query button grouping */
+.terminus-query-group-row {
+    display: grid;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: 10px;
+	/*background-color: whitesmoke;*/
+}
+
+.terminus-group-box {
+    width: 242px;
+    text-align: left;
+}
+
+.terminus-group {
+    border: 0;
+    position: relative;
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border-radius: .2857rem;
+}
+
+.terminus-group:after, .terminus-group:before {
+    box-sizing: border-box;
+}
+
+.terminus-group-header {
+	padding: 15px 15px 0;
+    border: 0;
+	background-color: transparent;
+}
+
 .terminus-application-control {
 	padding-bottom: 1em;
 }
+.terminus-q-btn {
+	cursor: pointer;
+	display: inline-block;
+	margin: 5px;
+	cursor: pointer;
+	padding: 4px 10px;
+	width: 220px;
+}
 
+.terminus-query-select{
+	display: inline-block;
+    width: 220px;
+    margin-left: 5px;
+    padding: 6px 4px;
+}
+.CodeMirror {
+	border: 2px solid #eee;
+    height: auto;
+    font-size: 16px;
+    flex: 0 0 56.666667%;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+.terminus-menu-icon {
+	margin-right: 10px;
+	padding-right:10px;
+	padding-left: 30px;
+	color: #000;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+.terminus-show-msg-success {
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	margin: 20px 0px 10px 0px;
+}
+
+.terminus-show-msg-error {
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+	padding: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	margin: 20px 0px 10px 0px;
+}
+
+.terminus-show-msg-vio{
+	padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin: 20px 10px 10px 0px;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+div.terminus-violation-property{
+	margin: 10px;
+	display: flex;
+}
+span.terminus-violation-property-value{
+	margin-left: 30px;
+}
+span.terminus-violation-property-label{
+	font-weight: 600 !important;
+	width: 230px;
+	text-align: right;
+}
+.terminus-violations-heading{
+	font-weight: 600 !important;
+}
+div.terminus-violation{
+	border-bottom: 0.5px solid #856404;
+}
 
 table {
   /*width: 100%;*/
@@ -58,7 +206,7 @@ td, th {
 div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
-	width: 150px;
+	width: 223px;
 }
 
 div.terminus-object-frame select {

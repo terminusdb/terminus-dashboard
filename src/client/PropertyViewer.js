@@ -16,12 +16,12 @@ function HTMLPropertyViewer(renderer){
  */
 HTMLPropertyViewer.prototype.render = function(){
 	var block = document.createElement('div');
-	block.setAttribute('style', 'display: flex; margin: 10px 10px 0px 0px;');
+	block.setAttribute('style', 'display: flex; margin: 10px');
 	var br = document.createElement('br');
 	block.appendChild(br);
 	if(this.propDOM){
 		var npropDOM = this.getPropertyDOM();
-		npropDOM.setAttribute('style', 'display: flex; margin: 10px 10px 0px 0px;');
+		npropDOM.setAttribute('style', 'display: flex; margin: 10px;');
 			//block.appendChild(npropDOM);
 		this.propDOM.replaceWith(npropDOM);
 		this.propDOM = npropDOM;
@@ -31,7 +31,7 @@ HTMLPropertyViewer.prototype.render = function(){
 		//block.appendChild(this.getPropertyDOM());
 		//this.propDOM = block;
 		this.propDOM = this.getPropertyDOM();
-		this.propDOM.setAttribute('style', 'display: flex; margin: 10px 10px 0px 0px;');
+		this.propDOM.setAttribute('style', 'display: flex; margin: 10px;');
 	}
 	this.propDOM.appendChild(this.getPropertyIDMarker(this.renderer));
 	if(this.headerViewer){
@@ -54,7 +54,7 @@ HTMLPropertyViewer.prototype.getPropertyDOM = function(){
 	}
 	//terminus-property-frame-spacer
 
-	sp.setAttribute("class", "WHATER terminus-property-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
+	sp.setAttribute("class", "terminus-property-frame terminus-zebra-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
 	sp.setAttribute('data-property', this.renderer.property());
 	return sp;
 }
@@ -207,7 +207,7 @@ HTMLPropertyHeaderViewer.prototype.getAsDOM = function(renderer){
 		var hideDOM = this.getPropertyCardinalityDOM(renderer);
 		if(hideDOM) prelude.appendChild(hideDOM);
 		//	this.expModeMenu.appendChild(hideDOM); 			hideDOM.style.display = 'block';
-		
+
 	}
 	if(renderer.showFeature("comment")){
 		var sumDOM = this.getPropertyCommentDOM(renderer);
@@ -363,7 +363,7 @@ HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM,
 HTMLPropertyHeaderViewer.prototype.getPropertyControlsDOM = function(wrapper, renderer){
 	var controlsDOM = document.createElement("span");
 	controlsDOM.setAttribute("class", "terminus-property-controls");
-	controlsDOM.setAttribute("style", "display: table-cell;");
+	//controlsDOM.setAttribute("style", "display: table-cell;");
 	// get settings icon or button
 	var expModeMenu = this.getSettingsControlDOM(controlsDOM, renderer);
 	wrapper.appendChild(controlsDOM);

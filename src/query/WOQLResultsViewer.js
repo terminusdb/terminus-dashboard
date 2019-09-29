@@ -120,10 +120,18 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 	formattedResult.data = data;
 	formattedResult.recordsTotal = 65;
 	formattedResult.recordsFiltered = 65;
+console.log('length', pageInfo);
+	if(Object.entries(pageInfo).length > 0){
 
-	if(Object.entries(pageInfo).length > 0)
-	   formattedResult.start = pageInfo.pageLength;
-	else formattedResult.start = 0;
+		//formattedResult.recordsFiltered = pageInfo.pageLength;
+		//formattedResult.recordsFiltered = pageInfo.pageLength;
+		//formattedResult.draw += 1;
+	}
+	else { // intial
+		formattedResult.start = 0;
+		//formattedResult.draw = 1;
+		//formattedResult.recordsFiltered = 5;
+	}
 	formattedResult.draw = 1;
 	dtResult.data = formattedResult;
 	return dtResult;

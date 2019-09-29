@@ -10,15 +10,18 @@ function TerminusViolations(vios, ui){
 	}
 	for(var i = 0; i<nvios.length; i++){
 		this.vios.push(new TerminusViolation(nvios[i], this.ui));
-	}	
-} 
+	}
+}
 
 TerminusViolations.prototype.getAsDOM = function(context_msg){
 	var vdom = document.createElement("div");
-	vdom.setAttribute("class", "terminus-violations");
+	vdom.setAttribute("class", "terminus-violations terminus-show-msg-vio");
+	var vioHeading = document.createElement("div");
+	vioHeading.setAttribute('class', 'terminus-violations-heading');
+	vdom.appendChild(vioHeading);
 	var msg = this.vios.length + (this.vios.length > 1 ? " Violations Detected" : " Violation Detected");
 	if(context_msg) msg += " " + context_msg;
-	vdom.appendChild(document.createTextNode(msg));
+	vioHeading.appendChild(document.createTextNode(msg));
 	for(var i = 0; i<this.vios.length; i++){
 		vdom.appendChild(this.vios[i].getAsDOM());
 	}
@@ -31,7 +34,7 @@ TerminusViolations.prototype.getAsDOM = function(context_msg){
 function TerminusViolation(vio, ui){
 	this.ui = ui;
 	this.vio = vio;
-} 
+}
 
 TerminusViolation.prototype.getAsDOM = function(){
 	var vdom = document.createElement("div");

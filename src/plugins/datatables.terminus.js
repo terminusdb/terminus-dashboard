@@ -164,13 +164,24 @@ Datatables.prototype.getDataFromServer = function(dtResult, wrViewer, ui, wQuery
                         );},
          buttons     : [{ extend: 'copy', text: 'Copy to clipboard' },
                         { extend: 'excel', text: 'Export to Excel' }],
-         columnDefs  :[{targets:'_all',className:"truncate"}],
+         columnDefs  : [{targets:'_all',className:"truncate"}],
          createdRow  : function(row){
                             var td = $(row).find(".truncate");
                             td.attr("title", td.html());},
          colReorder  : {addFixed : true, liveDrag:true},
          scrollX     : true,
+         /*infoCallback: function( settings, start, end, max, total, pre ) {
+                            console.log('start', start);
+                            console.log('end', end);
+                            console.log('max', max);
+                            console.log('total', total);
+                            console.log('pre', pre);
+                            var api = this.api();
+                            var pageInfo = api.page.info();
+                            return 'Page '+ (pageInfo.page+1) +' of '+ pageInfo.pages;
+                        },*/
          drawCallback: function(settings) {
+                             //alert( 'DataTables has redrawn the table' );
                              // on change of page length
                              $(this).on( 'length.dt', function (e, settings, len){
                                   var info = table.page.info();
@@ -181,6 +192,7 @@ Datatables.prototype.getDataFromServer = function(dtResult, wrViewer, ui, wQuery
                              // pagination
                              $(this).on( 'page.dt', function () {
                                 var info = table.page.info();
+                                //console.log('info', info); //info.page
                                 var pageInfo = dt.getCallbackSettings(dt, info.length, info.start);
                                 var query = dt.generateNewQueryOnPageChange(this, ui, dt, wQuery, pageInfo);
                                 return dt.executeQuery(this, ui, dt, query, pageInfo, wQuery, wrViewer, resultDOM);

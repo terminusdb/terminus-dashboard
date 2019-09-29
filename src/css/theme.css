@@ -534,6 +534,14 @@ input.terminus-form-value {
 	width: 400px;
 }
 
+textarea.terminus-literal-value{
+	width: 406px;
+}
+
+span.terminus-property-controls{
+	float: left
+}
+
 .terminus-headings{
 	font-size: 30px;
 	height: 100%;
@@ -576,9 +584,7 @@ div.terminus-property-frame{
 }
 
 .terminus-property-values-align{
-	margin-left: 80px;
-	/*float: right;
-    width: 800px;*/
+	margin-top: 20px;
 }
 
 /* terminus table */
@@ -1082,6 +1088,35 @@ div.terminus-property-frame{
 	margin: 20px 0px 10px 0px;
 }
 
+.terminus-show-msg-vio{
+	padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin: 20px 10px 10px 0px;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+div.terminus-violation-property{
+	margin: 10px;
+	display: flex;
+}
+span.terminus-violation-property-value{
+	margin-left: 30px;
+}
+span.terminus-violation-property-label{
+	font-weight: 600 !important;
+	width: 230px;
+	text-align: right;
+}
+.terminus-violations-heading{
+	font-weight: 600 !important;
+}
+div.terminus-violation{
+	border-bottom: 0.5px solid #856404;
+}
+
 
 .ico{
     display: inline-block;
@@ -1235,14 +1270,18 @@ div.terminus-property-frame{
 
 
 /* frameviewer styling */
-.ico-property-frame:nth-child(odd) {
-	background-color: #eaedf9;
+.terminus-zebra-frame:nth-child(odd) {
+	/*background-color: #eaedf9;*/
+	background-color: #f5f5f5;
 	overflow:auto;
 	/*height: 250px !important;*/
 
 }
+div.terminus-property-frame{
+	margin: 10px;
+}
 
-.ico-property-frame:nth-child(even) {
+.terminus-zebra-frame:nth-child(even) {
 	background-color: #faf8f9;
 	overflow:auto;
 	/*height: 250px !important;*/
@@ -1307,9 +1346,9 @@ div.terminus-property-frame{
     background-color: #ccc;
 }
 
-.ico-property-frame{
+.terminus-zebra-frame{
     position: relative;
-    min-height: 100px;
+    min-height: 50px;
 	border-radius: 5px;
     border-top: 1px solid lightgrey;
 }
@@ -1873,60 +1912,10 @@ a.terminus-submenu-selected{
 
 
 .terminus-text{
-	/*border: 1px solid green; */
-    /* margin-left: 100px; */
     width: 300px;
     display: block;
-    /* text-align: right;
-}
-
-.terminus-property-frame-display{
-	display: inline-flex;
-}
-
-.terminus-object-frame-btn{
-	color: #494949 !important;
-	text-decoration: none;
-	background: #ffffff;
-	padding: 20px;
-	border: 2px solid #494949 !important;
-	display: inline-block;
-	transition: all 0.4s ease 0s;
-	margin-top: 3px;
-    padding: 4px;
-    width: 100%;
-	cursor: pointer;
-}
-
-
-.terminus-banner{
 	margin-top: 20px;
-    margin-bottom: 20px;
-	/*position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1030;
-	-ms-flex-direction: row;
-    flex-direction: row;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
-	background: #fff;
-    z-index: 999999;
-    top: 0px !important;
-    padding: 0;
-    box-shadow: 0px 3px 6px 3px rgba(0, 0, 0, 0.06);
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    -webkit-animation-name: fadeInDown;
-    animation-name: fadeInDown;
-    background: #fff !important; */
 }
-
 
 .terminus-control-panel-layout {
 	position: -webkit-sticky;
