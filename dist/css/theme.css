@@ -347,7 +347,16 @@ body [class^="icon-"], body [class*=" icon-"] {
 .terminus-btn-float-right{
 	float: right;
 }
-
+.terminus-frame-btn{
+	background-color: #dcdcdc;
+    border: 1px solid green;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0px 5px 0px 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 4px 10px;
+}
 .terminus-q-btn {
 	background-color: #002856;
     border: 1px solid green;
@@ -493,6 +502,7 @@ div.terminus-object-frame div.terminus-object-header, .terminus-application-head
     margin-right: 10px;
     color: #002856;
     background-color: #00C08B;
+	height: 32px;
 }
 
 div.terminus-object-frame div.terminus-object-header {
@@ -509,6 +519,9 @@ div.terminus-object-properties {
 	padding-bottom: 4px;
 }
 
+select.terminus-frame-selector{
+	width: 410px !important;
+}
 
 div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
@@ -532,6 +545,14 @@ div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
 	width: 400px;
+}
+
+textarea.terminus-literal-value{
+	width: 406px;
+}
+
+span.terminus-property-controls{
+	float: left
 }
 
 .terminus-headings{
@@ -576,9 +597,11 @@ div.terminus-property-frame{
 }
 
 .terminus-property-values-align{
-	margin-left: 80px;
-	/*float: right;
-    width: 800px;*/
+	margin-top: 20px;
+}
+
+.terminus-property-value{
+	display: flex;
 }
 
 /* terminus table */
@@ -1082,6 +1105,35 @@ div.terminus-property-frame{
 	margin: 20px 0px 10px 0px;
 }
 
+.terminus-show-msg-vio{
+	padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin: 20px 10px 10px 0px;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+div.terminus-violation-property{
+	margin: 10px;
+	display: flex;
+}
+span.terminus-violation-property-value{
+	margin-left: 30px;
+}
+span.terminus-violation-property-label{
+	font-weight: 600 !important;
+	width: 230px;
+	text-align: right;
+}
+.terminus-violations-heading{
+	font-weight: 600 !important;
+}
+div.terminus-violation{
+	border-bottom: 0.5px solid #856404;
+}
+
 
 .ico{
     display: inline-block;
@@ -1235,14 +1287,18 @@ div.terminus-property-frame{
 
 
 /* frameviewer styling */
-.ico-property-frame:nth-child(odd) {
-	background-color: #eaedf9;
+.terminus-zebra-frame:nth-child(odd) {
+	/*background-color: #eaedf9;*/
+	background-color: #f5f5f5;
 	overflow:auto;
 	/*height: 250px !important;*/
 
 }
+div.terminus-property-frame{
+	margin: 10px;
+}
 
-.ico-property-frame:nth-child(even) {
+.terminus-zebra-frame:nth-child(even) {
 	background-color: #faf8f9;
 	overflow:auto;
 	/*height: 250px !important;*/
@@ -1307,9 +1363,9 @@ div.terminus-property-frame{
     background-color: #ccc;
 }
 
-.ico-property-frame{
+.terminus-zebra-frame{
     position: relative;
-    min-height: 100px;
+    min-height: 50px;
 	border-radius: 5px;
     border-top: 1px solid lightgrey;
 }
@@ -1873,60 +1929,10 @@ a.terminus-submenu-selected{
 
 
 .terminus-text{
-	/*border: 1px solid green; */
-    /* margin-left: 100px; */
     width: 300px;
     display: block;
-    /* text-align: right;
-}
-
-.terminus-property-frame-display{
-	display: inline-flex;
-}
-
-.terminus-object-frame-btn{
-	color: #494949 !important;
-	text-decoration: none;
-	background: #ffffff;
-	padding: 20px;
-	border: 2px solid #494949 !important;
-	display: inline-block;
-	transition: all 0.4s ease 0s;
-	margin-top: 3px;
-    padding: 4px;
-    width: 100%;
-	cursor: pointer;
-}
-
-
-.terminus-banner{
 	margin-top: 20px;
-    margin-bottom: 20px;
-	/*position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1030;
-	-ms-flex-direction: row;
-    flex-direction: row;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
-	background: #fff;
-    z-index: 999999;
-    top: 0px !important;
-    padding: 0;
-    box-shadow: 0px 3px 6px 3px rgba(0, 0, 0, 0.06);
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    -webkit-animation-name: fadeInDown;
-    animation-name: fadeInDown;
-    background: #fff !important; */
 }
-
 
 .terminus-control-panel-layout {
 	position: -webkit-sticky;
@@ -1985,6 +1991,38 @@ div.dataTables_info, div.dataTables_paginate {
 .terminus-doc-btn-group button:hover,  .terminus-doc-btn-selected{
   background-color: #0055B8 !important;
   color: #fff !important;
+}
+
+.terminus-doc-toggle-btn .terminus-tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: lightyellow;
+	color: #000;
+	border: 1px solid #000;
+	text-align: center;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	left: 70%;
+	top: 89%;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.terminus-doc-btn .terminus-tooltiptext::after {
+  /*content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;*/
+}
+
+.terminus-doc-toggle-btn:hover .terminus-tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 
 
