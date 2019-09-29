@@ -207,7 +207,7 @@ Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
 
     //styling
     tab.setAttribute('class'      , 'stripe dataTable');
-    //tab.setAttribute('style'       , 'table-layout: fixed;')
+    tab.setAttribute('style'       , 'margin: 0!important');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');

@@ -8,18 +8,18 @@
 const Codemirror= require('./plugins/codemirror.terminus');
 // function to read Files
 function readFile(file){
-  if (window.XMLHttpRequest){
-    // code for IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp=new XMLHttpRequest();
-  }
-  else{
-    // code for IE6, IE5
-    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  xmlhttp.open("GET",file,false);
-  xmlhttp.send();
-  xmlDoc=xmlhttp.responseText;
-  return xmlDoc;
+    if (window.XMLHttpRequest){
+        // code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else{
+        // code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("GET",file,false);
+    xmlhttp.send();
+    xmlDoc=xmlhttp.responseText;
+    return xmlDoc;
 } // readFile()
 
 // function to write api call signatures from woql client
