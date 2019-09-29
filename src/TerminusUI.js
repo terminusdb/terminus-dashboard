@@ -262,7 +262,7 @@ TerminusUI.prototype.clearDB = function(){
 }
 
 TerminusUI.prototype.removeDB = function(db, url){
-	this.client.connection.removeDBFromConnection(db, url);
+	this.client.connection.removeDB(db, url);
 }
 
 TerminusUI.prototype.getDBRecord = function(db, url){
@@ -390,9 +390,6 @@ TerminusUI.prototype.draw = function(comps, slocation){
 		}
 	}
 	else {
-		if(this.controller){
-			this.drawControls();
-		}
 		this.showLoadURLPage();
 	};
 	if(this.buttons){

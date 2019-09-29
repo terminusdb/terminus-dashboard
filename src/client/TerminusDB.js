@@ -362,10 +362,11 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
     del.innerHTML = 'Delete Database';
 	var dbrec = this.ui.getDBRecord();
 	if(dbrec)
-		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.db);
+		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
     var self = this;
+    var dbdel = this.ui.db();
     del.addEventListener("click", function(){
-      self.ui.deleteDatabase(nm);
+      self.ui.deleteDatabase(dbdel);
     });
     d.appendChild(del);
 }
