@@ -236,12 +236,13 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	scd.appendChild(thead);
 	var tbody = document.createElement("tbody");
 	var dbrecs = this.ui.client.connection.getServerDBRecords();
-	for(var fullid in dbrecs){
-		var dbrec = dbrecs[fullid];
-		var dbid = fullid.split(":")[1];
-		var tr = document.createElement("tr");
+	for(let fullid in dbrecs){
+		let dbrec = dbrecs[fullid];
+		const dbid = fullid.split(":")[1];
+		let tr = document.createElement("tr");
 		tr.setAttribute("class", "terminus-db-pointer");
 		tr.addEventListener("click", function(){
+			//
 			self.ui.connectToDB(dbid);
 			self.ui.showDBMainPage();
 		})
@@ -280,7 +281,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 			// function to fix db in a closure
 			var delDB = function(db){ 
 				return function(){
-					var deleteConfirm = confirm(`Do you want to delete ${db} Database?`);
+					let deleteConfirm = confirm(`Do you want to delete ${db} Database?`);
 					if (deleteConfirm == true) {
 			  			self.ui.deleteDatabase(db);
 					}	 
