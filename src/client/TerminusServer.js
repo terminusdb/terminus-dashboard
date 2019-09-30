@@ -167,7 +167,7 @@ TerminusServerViewer.prototype.getServerDetailsDOM = function(){
 	return scd;
 }
 
-TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
+TerminusServerViewer.prototype.wrapTableLinkCell = function(tdElement,dbid, text){
 	var self = this;
 	var wrap = document.createElement("p");
 //	wrap.setAttribute("href", "#");
@@ -190,10 +190,10 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 		text = text.replace(k, replacements[k]);
 	}
 	wrap.appendChild(document.createTextNode(text));
-	/*wrap.addEventListener("click", function(){
+	tdElement.addEventListener("click", function(){
 		self.ui.connectToDB(dbid);
 		self.ui.showDBMainPage();
-	});*/
+	});
 	return wrap;
 }
 
@@ -240,32 +240,25 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		let dbrec = dbrecs[fullid];
 		const dbid = fullid.split(":")[1];
 		let tr = document.createElement("tr");
-		tr.setAttribute("class", "terminus-db-pointer");
-		tr.addEventListener("click", function(){
-			//
-			self.ui.connectToDB(dbid);
-			self.ui.showDBMainPage();
-		})
-
 		var td1 = document.createElement("td");
-		td1.appendChild(this.wrapTableLinkCell(dbid, dbid));
-		td1.setAttribute("class", "terminus-db-id");
+		td1.appendChild(this.wrapTableLinkCell(td1,dbid, dbid));
+		td1.setAttribute("class", "terminus-db-id terminus-db-pointer");
 		var td2 = document.createElement("td");
-		td2.setAttribute("class", "terminus-db-title");
+		td2.setAttribute("class", "terminus-db-title terminus-db-pointer");
 		var txt = (dbrec && dbrec['rdfs:label'] && dbrec['rdfs:label']['@value'] ? dbrec['rdfs:label']['@value'] : "");
-		td2.appendChild(this.wrapTableLinkCell(dbid, txt));
+		td2.appendChild(this.wrapTableLinkCell(td2,dbid, txt));
 		var td3 = document.createElement("td");
-		td3.setAttribute("class", "terminus-db-description");
+		td3.setAttribute("class", "terminus-db-description terminus-db-pointer");
 		var txt = (dbrec && dbrec['rdfs:comment'] && dbrec['rdfs:comment']['@value'] ? dbrec['rdfs:comment']['@value'] : "");
-		td3.appendChild(this.wrapTableLinkCell(dbid, txt));
+		td3.appendChild(this.wrapTableLinkCell(td3,dbid, txt));
 		var td4 = document.createElement("td");
-		td4.setAttribute("class", "terminus-db-size");
+		td4.setAttribute("class", "terminus-db-size terminus-db-pointer");
 		var txt = (dbrec && dbrec['terminus:size'] && dbrec['terminus:size']['@value'] ? dbrec['terminus:size']['@value'] : "");
-		td4.appendChild(this.wrapTableLinkCell(dbid, txt));
+		td4.appendChild(this.wrapTableLinkCell(td4,dbid, txt));
 		var td5 = document.createElement("td");
-		td5.setAttribute("class", "terminus-db-created");
+		td5.setAttribute("class", "terminus-db-created terminus-db-pointer");
 		var txt = (dbrec && dbrec['terminus:last_updated'] && dbrec['terminus:last_updated']['@value'] ? dbrec['terminus:last_updated']['@value'] : "");
-		td5.appendChild(this.wrapTableLinkCell(dbid, txt));
+		td5.appendChild(this.wrapTableLinkCell(td5,dbid, txt));
 		var td6 = document.createElement("td");
 		td6.setAttribute("class", "db-delete");
         if(this.deleteDBPermitted(dbid)){
