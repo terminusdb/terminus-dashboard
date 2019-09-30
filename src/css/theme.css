@@ -179,6 +179,10 @@ body [class^="icon-"], body [class*=" icon-"] {
 	height: 20px
 }
 
+.terminus-db-pointer{
+ cursor: pointer;
+}
+
 .terminus-dashboard-info {
 	background-color: #002856!important;
     color: #fff;
@@ -260,6 +264,7 @@ body [class^="icon-"], body [class*=" icon-"] {
     background-color: #f8f8f8;
     resize: none;
 	width: 400px;
+	font-size: 17px;
 }
 
 .terminus-query-textarea{
@@ -2043,8 +2048,12 @@ div.dataTables_info, div.dataTables_paginate {
 
 .terminus-home-del{
 	position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 20px;
+    right: 280px;
+    background-color: red;
+    color: white;
+    border: white;
+}
 }
 .terminus-save-btn{
 	float: right;
