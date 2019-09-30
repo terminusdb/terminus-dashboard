@@ -129,8 +129,8 @@ pre, code {
 	float: right;
 }
 
-button.terminus-change-range{
-	margin-right: 10px;
+button.terminus-change-range {
+	margin-left: 10px;
 }
 
 .dt-buttons.btn-group{
@@ -497,7 +497,7 @@ div.terminus-object-frame div.terminus-object-header, .terminus-application-head
     margin-right: 10px;
     color: #002856;
     background-color: #00C08B;
-	height: 32px;
+	height: 50px;
 }
 
 div.terminus-object-frame div.terminus-object-header {
@@ -518,7 +518,7 @@ select.terminus-frame-selector{
 	width: 410px !important;
 }
 
-div.terminus-object-frame select,
+
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
 	width: 223px;
@@ -528,6 +528,8 @@ select.terminus-class-select, select.terminus-form-select {
 div.terminus-object-frame select {
 	margin-left: 2px;
 	margin-right: 2px;
+	padding: 6px 4px;
+	width: 100px;
 }
 
 div.terminus-object-frame .terminus-frame-infobox-box {
@@ -539,7 +541,7 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
-	/*width: 400px;*/
+	margin: 0px 0px 10px 0px;
 }
 
 textarea.terminus-literal-big-value{
@@ -1037,7 +1039,6 @@ div.terminus-property-frame{
     position: relative;
     min-height: 70px;
 	border-radius: 5px;
-    border-top: 1px solid lightgrey;
 }
 
 .ico-value-facet{
@@ -1320,7 +1321,7 @@ a.terminus-submenu-selected{
 .terminus-db-list-del-icon {
 	margin-right: 50px;
     margin-left: 50px;
-    color: #00C08B;
+    color: #dc3545;
 	font-size: large;
 	cursor: pointer;
     -webkit-transition: all .2s ease-in-out;
