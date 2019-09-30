@@ -9,7 +9,7 @@ function WOQLTextboxGenerator(tq, qman, ui){
 	this.ui = ui;
 	// default datatable settings if datatable plug in available
 	this.datatable = {};
-	this.datatable.pageLength = 5;
+	this.datatable.pageLength = 20;
 	this.datatable.start = 0;
 }
 

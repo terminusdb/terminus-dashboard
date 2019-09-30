@@ -181,10 +181,10 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 	for(var i = 0; i < words.length; i++){
 		var word = words[i];
 		if(word.length > this.max_word_size){
-			wrap.setAttribute("title", text);			
+			wrap.setAttribute("title", text);
 			var newstr = word.substring(0, this.max_word_size) + "...";
 			replacements[word] = newstr;
-		}		
+		}
 	}
 	for(var k in replacements){
 		text = text.replace(k, replacements[k]);
@@ -205,27 +205,27 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	lihed.appendChild(document.createTextNode("Available Databases"));
 	sec.appendChild(lihed);
 	var scd = document.createElement("table");
-	scd.setAttribute("class", "terminus-db-list terminus-db-size  terminus-pointer");
+	scd.setAttribute("class", "terminus-db-list terminus-db-size terminus-hover-table");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var th1 = document.createElement("th");
 	th1.appendChild(document.createTextNode("ID"));
-	th1.setAttribute("class", "terminus-db-id terminus-table-th");
+	th1.setAttribute("class", "terminus-db-id terminus-table-header-full-css");
 	var th2 = document.createElement("th");
 	th2.appendChild(document.createTextNode("Title"));
-	th2.setAttribute("class", "terminus-db-title terminus-table-th");
+	th2.setAttribute("class", "terminus-db-title terminus-table-header-full-css");
 	var th3 = document.createElement("th");
 	th3.appendChild(document.createTextNode("Description"));
-	th3.setAttribute("class", "terminus-db-description terminus-table-th");
+	th3.setAttribute("class", "terminus-db-description terminus-table-header-full-css");
 	var th4 = document.createElement("th");
-	th4.setAttribute("class", "terminus-db-size terminus-table-th");
+	th4.setAttribute("class", "terminus-db-size terminus-table-header-full-css");
 	th4.appendChild(document.createTextNode("Size"));
 	var th5 = document.createElement("th");
-	th5.setAttribute("class", "terminus-db-created terminus-table-th");
+	th5.setAttribute("class", "terminus-db-created terminus-table-header-full-css");
 	th5.appendChild(document.createTextNode("Created"));
 	var th6 = document.createElement("th");
 	th6.appendChild(document.createTextNode("Delete"));
-	th6.setAttribute("class", "terminus-db-delete terminus-table-th");
+	th6.setAttribute("class", "terminus-db-delete terminus-table-header-full-css");
 	thr.appendChild(th1);
 	thr.appendChild(th2);
 	thr.appendChild(th3);

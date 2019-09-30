@@ -170,7 +170,7 @@ WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
 
 WOQLResultsViewer.prototype.getTable = function(bindings, dtPlugin, pageInfo){
 	var tab = document.createElement("table");
-	tab.setAttribute("class", "terminus-query-results-table terminus-pointer");
+	tab.setAttribute("class", "terminus-hover-table");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var ordered_headings = this.orderColumns(bindings[0]);
