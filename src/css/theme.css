@@ -950,6 +950,7 @@ div.ql-editor{
 	border: 1px solid transparent;
 	border-radius: 4px;
 	margin: 20px 0px 10px 0px;
+	word-break: break-all;
 }
 
 .terminus-show-msg-vio{

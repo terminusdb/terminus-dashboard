@@ -49,11 +49,14 @@ context('check connection', () => {
 
 		  cy.get('#terminus-content-viewer').find('button').contains('Create').click().then(()=>{
 
-		  		
-		  })
 
+		  })
 
 	   })
 	})
+
+    it('delete database', () => {
+
+    })
 
 })
