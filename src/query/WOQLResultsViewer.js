@@ -64,7 +64,7 @@ WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 	else {
 		nor = document.createElement('div');
 		nor.setAttribute('class', 'terminus-no-res-alert');
-		nor.appendChild(document.createTextNode("No results available to view ..."));
+		nor.appendChild(document.createTextNode("No results available, create new ones to view them here..."));
 		rs.appendChild(nor);
 		return rs;
 	}

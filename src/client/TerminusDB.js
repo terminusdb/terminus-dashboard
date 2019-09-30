@@ -400,7 +400,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 			else{
 				nor = document.createElement('div');
 				nor.setAttribute('class', 'terminus-no-res-alert');
-				nor.appendChild(document.createTextNode("No documents available, create new ones to view them here..."));
+				nor.appendChild(document.createTextNode("No results available, create new ones to view them here..."));
 				d.appendChild(nor);
 			}
 		}

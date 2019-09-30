@@ -133,6 +133,12 @@ button.terminus-change-range {
 	margin-left: 10px;
 	background-color: #dcdcdc;
     border: 1px solid green;
+	background-color: #dcdcdc;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0px 5px 0px 5px;
+	white-space: nowrap;
+	padding: 4px 10px;
 }
 button.object-save, button.object-save-disabled, button.object-delete{
 	margin-top: 5px;
