@@ -390,6 +390,16 @@ input.terminus-form-value {
 	margin: 0px 0px 10px 0px;
 }
 
+span.ql-snow{
+	border: none !important;
+}
+
+div.ql-editor{
+	background-color: #fff !important;
+	border: 1px solid #ccc !important;
+}
+
+
 pre.terminus-schema-view {
 	background-color: #eaf5ff;
 	padding: 3px;
@@ -422,6 +432,9 @@ div.terminus-control-buttons {
 
 button.terminus-change-range{
 	margin-left: 10px;
+}
+button.object-save{
+	margin-top: 10px;
 }
 
 textarea.terminus-schema-edit {
@@ -517,18 +530,21 @@ div.terminus-object-frame button,
 	background-color: #eee;
 	border: 1px solid #48f;
 	list-style: none;
+
 }
 div.terminus-object-frame button:hover,
 .terminus-control-button:hover{
 	cursor: pointer;
 	background-color: #48f;
 	color: white;
+	font-weight: 600;
 }
 
 div.terminus-object-frame {}
 
 div.terminus-property-frame{
 	margin-bottom: 10px;
+	font-weight: 600;
 }
 
 .terminus-property-label-align{

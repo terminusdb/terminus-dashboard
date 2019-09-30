@@ -131,6 +131,11 @@ pre, code {
 
 button.terminus-change-range {
 	margin-left: 10px;
+	background-color: #dcdcdc;
+    border: 1px solid green;
+}
+button.object-save{
+	margin-top: 10px;
 }
 
 .dt-buttons.btn-group{
@@ -504,6 +509,7 @@ div.terminus-object-frame div.terminus-object-header {
 	margin-top: 50px;
 	padding: 4px;
 	margin-right: 20px;
+	font-weight: 600;
 }
 
 div.terminus-object-properties {
@@ -573,7 +579,7 @@ button{
 }
 
 div.terminus-object-frame button:hover,
-.terminus-control-button:hover{
+.terminus-control-button:hover {
 	background-color: #00C08B !important;
     color: #fff !important;
 }
@@ -582,12 +588,21 @@ div.terminus-object-frame {}
 
 div.terminus-property-frame{
 	margin-bottom: 10px;
-	font-weight: 700;
+	font-weight: 600;
 }
 
 .terminus-property-label-align{
 	margin-left: 20px;
 	text-align: right;
+}
+
+span.ql-snow{
+	border: none !important;
+}
+
+div.ql-editor{
+	background-color: #fff !important;
+	border: 1px solid #ccc !important;
 }
 
 .terminus-property-body-align{
