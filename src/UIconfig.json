@@ -3,13 +3,12 @@ let TerminusConfig = {
 		"server", "db", "api_explorer", "change-server", "import_schema", "create_database",
 		"create_document", "get_document", "get_schema", "update_schema", "woql_select"
 	],
- 	location: {server: "http://195.201.12.87:6363", key: "root"},
  	css: "theme",
 	plugins: {
 		"font-awesome": true,
 		gmaps: {
-			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI",
-			loaded: true
+			key: "GMAPS_DEV_KEY_HERE",
+			loaded: false
 		},
 		jquery: true,
 		jqueryui: false,
@@ -33,7 +32,14 @@ var FrameConfig = {
 		hide_disabled_buttons: true,
 		rules: [
 			{
-				pattern: { renderer: "object"},
+				pattern: { renderer: "object", depth: ">0"},
+				output: {
+					facet: "page",
+					features: ["body", "type"],
+				}
+			},
+			{
+				pattern: { renderer: "object", depth: 0},
 				output: {
 					facet: "page",
 					features: ["body", "type", "id"],

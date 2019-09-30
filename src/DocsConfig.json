@@ -14,7 +14,7 @@ let TerminusConfig = {
 			hide_disabled_buttons: true
 		}
 	},
- 	location: {server: "http://195.201.12.87:6363", db: "docs", document: "doc:introduction", key: "root"},
+ 	location: {server: "http://localhost/terminus-dashboard/src/server.php", db: "docs", document: "doc:introduction", key: "root"},
  	plugins: {
 		"font-awesome": true,
 		gmaps: {
