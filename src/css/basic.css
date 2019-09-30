@@ -550,12 +550,6 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 	/*border: 1px solid red;*/
 }
 
-div.terminus-object-frame input,
-input.terminus-form-value {
-	padding: 6px 4px;
-	width: 400px;
-}
-
 textarea.terminus-literal-value{
 	width: 406px;
 }

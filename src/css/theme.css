@@ -533,8 +533,9 @@ input.terminus-form-value {
 	/*width: 400px;*/
 }
 
-textarea.terminus-literal-value{
-	/*width: 406px;*/
+textarea.terminus-literal-big-value{
+	width: 406px;
+	height: 100px;
 }
 
 span.terminus-property-controls{
@@ -570,6 +571,7 @@ div.terminus-object-frame {}
 
 div.terminus-property-frame{
 	margin-bottom: 10px;
+	font-weight: 700;
 }
 
 .terminus-property-label-align{
@@ -963,7 +965,7 @@ div.terminus-violation{
 
 /* frameviewer styling */
 .terminus-zebra-frame:nth-child(odd) {
-	background-color: #f5f5f5;
+	background-color: #EBEDEF;
 	overflow:auto;
 }
 div.terminus-property-frame{
@@ -1024,7 +1026,7 @@ div.terminus-property-frame{
 
 .terminus-zebra-frame{
     position: relative;
-    min-height: 50px;
+    min-height: 70px;
 	border-radius: 5px;
     border-top: 1px solid lightgrey;
 }
