@@ -184,7 +184,7 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	aqbut.addEventListener("click", function(){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		var qvalue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern(),
+		var qvalue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern("v:Element"),
 														self.datatable.pageLength, self.datatable.start);
 		qip.value = JSON.stringify(qvalue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');

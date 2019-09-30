@@ -11,10 +11,10 @@ let TerminusConfig = {
 			key: "AIzaSyAqAFRzityYduKQ6BJNABpnAXnYbcoGadI",
 			loaded: true
 		},
-		jquery: false,
+		jquery: true,
 		jqueryui: false,
 		datatables: false,
-		quill: false,
+		quill: true,
 		select2: false,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor

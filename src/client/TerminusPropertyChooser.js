@@ -56,6 +56,18 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 		opt1.appendChild(document.createTextNode(this.empty_choice));
 		choices.push(opt1);
 	}
+	var labopt = document.createElement("option");
+	labopt.setAttribute("Class", "terminus-class-choice");
+	labopt.value = "rdfs:label";
+	labopt.appendChild(document.createTextNode("Label"));
+	choices.push(labopt);
+
+	var comopt = document.createElement("option");
+	comopt.setAttribute("Class", "terminus-class-choice");
+	comopt.value = "rdfs:comment";
+	comopt.appendChild(document.createTextNode("Comment"));
+	choices.push(comopt);
+
 	if(clist.bindings){
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
@@ -67,7 +79,7 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 				opt.value = cprop;
 				var lab = this.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
-					lab = TerminusClient.FrameHelper.labelFromURL(clist.bindings[i].Property);
+					lab = TerminusClient.FrameHelper.labelFromURL(cprop);
 				}
 				if(lab["@value"]) lab = lab["@value"];
 				opt.appendChild(document.createTextNode(lab));

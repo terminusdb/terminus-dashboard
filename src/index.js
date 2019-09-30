@@ -16,6 +16,10 @@ terminator.draw(pconfig, nlocation);
 function showPanel(mode){
 	toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
 }
+<<<<<<< HEAD
 
+=======
+*/
+>>>>>>> 0fb098d8480b5632503565411487e001643c2a40
 module.exports={TerminusUI:TerminusUI,
                 RenderingMap:RenderingMap}
