@@ -10,7 +10,7 @@ function TerminusSchemaViewer(ui){
 	this.ui = ui;
 	this.mode = "view";
 	this.format = "turtle";
-	this.confirm_before_update = true;
+	this.confirm_before_update = false;
 }
 
 /*
@@ -134,8 +134,7 @@ TerminusSchemaViewer.prototype.getSchemaSaveButtons = function(){
 TerminusSchemaViewer.prototype.getSchemaImportActionButtons = function(){
 	var ssb = document.createElement("span");
 	ssb.setAttribute("class", "terminus-schema-import-buttons");
-	ssb.appendChild(this.getCancelButton());
-	//ssb.appendChild(this.getImportPreviewButton());
+	ssb.appendChild(this.getCancelButton(true));
 	ssb.appendChild(this.getImportSaveButton());
 	return ssb;
 }
@@ -160,12 +159,17 @@ TerminusSchemaViewer.prototype.getImportPreviewButton = function(){
 	return this.getSchemaButton("Preview", "preview", func);
 }
 
-TerminusSchemaViewer.prototype.getCancelButton = function(){
+TerminusSchemaViewer.prototype.getCancelButton = function(is_import){
 	var self = this;
 	var func = function(){
 		self.ui.clearMessages();
 		self.mode = "view";
-		self.refreshPage();
+		if(is_import){
+			self.ui.redraw();
+		}
+		else {
+			self.refreshPage();
+		}
 	}
 	return this.getSchemaButton("Cancel", "cancel_update", func);
 }
@@ -262,15 +266,21 @@ TerminusSchemaViewer.prototype.load  = function(url, key, mode){
 	var self = this;
 	mode = (mode ? mode : "replace");
 	this.ui.showBusy("Loading schema from " + url);
+	var origurl = this.ui.client.connectionConfig.schemaURL();
 	return this.ui.client.getSchema(url, {"terminus:user_key": key, "terminus:encoding" : "terminus:" + this.format})
 	.then(function(response){
 		var newschema = (mode == "append") ? self.appendSchema(response) : response;
 		if(self.confirm_before_update){
+			//reconnect to original db
+			self.ui.showResult("Schema retrieved - click save to deploy");
+			self.ui.client.connectionConfig.setSchemaURL(origurl);
 			self.showConfirmPage(newschema);
 		}
 		else {
 			self.ui.showBusy("Updating schema");
-			self.updateSchema(false, newschema).then(function(response){
+			self.ui.client.connectionConfig.setSchemaURL(origurl);
+			self.updateSchema(newschema, {"terminus:encoding": "terminus:" + self.format}).then(function(response){
+				self.mode = "view";
 				self.ui.clearBusy();
 				self.ui.redraw();
 				self.ui.showResult("Successfully deployed new schema from " + url);
@@ -391,7 +401,7 @@ TerminusSchemaViewer.prototype.getSchemaImportDOM = function(){
 	var inpUrl  = document.createElement("input");
 	inpUrl.setAttribute("type", "text");
 	inpUrl.setAttribute("class", "terminus-form-value terminus-input-text terminus-form-url terminus-url-connect");
-	inpUrl.setAttribute("placeholder", "Enter url to import schema from");
+	inpUrl.setAttribute("placeholder", "Enter URL of DB to import from");
 	sci.appendChild(inpUrl);
 	scd.appendChild(sci);
 

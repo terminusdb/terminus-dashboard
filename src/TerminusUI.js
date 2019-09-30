@@ -70,6 +70,7 @@ TerminusUI.prototype.connect = function(opts){
 	.catch(function(err) {
 		self.clearBusy();
 		self.showError(err);
+		throw(err);
 	});
 }
 
@@ -384,8 +385,7 @@ TerminusUI.prototype.draw = function(comps, slocation){
 		if(typeof this.client.connection.connection[slocation.server] == "undefined") {
 			this.connect(slocation)
 			.catch(function(error){
-				this.showLoadURLPage();
-				this.showError(error);
+				self.showLoadURLPage();
 			});
 		}
 	}
