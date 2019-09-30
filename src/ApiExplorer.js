@@ -5,7 +5,6 @@
  *
  * @summary Displays a demo and description of api calls from WOQLCLient and what happens under the hood of api calls
  */
-const WOQLQuery = require('./query/WOQLQuery');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils')
 
@@ -113,7 +112,6 @@ function ApiExplorer(ui){
     this.ui = ui;
     this.viewer = ui.main;
     this.client = new TerminusClient.WOQLClient();
-    this.wQuery = new WOQLQuery(this.client, {}, this.ui);
     this.client.use_fetch = true;
     this.client.return_full_response = true;
     this.pman = new TerminusPluginManager();
@@ -884,12 +882,10 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'delete':
             button.addEventListener("click", function(){
-              opts = {};
-              opts.key = input.key.value;
-              self.client.deleteDatabase(input.url.value, opts)
+              self.client.deleteDatabase(input.url.value, input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
-                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
             }) // button click
         break
@@ -914,7 +910,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 var payload = input.doc.value;
                 var schurl = input.url.value;
                 self.client.connectionConfig.connected_mode = false;
-                self.client.updateSchema(schurl, JSON.parse(input.doc.value), opts)
+                self.client.updateSchema(schurl, input.doc.value, opts)
                 //self.client.updateSchema(schurl, input.doc.value, opts)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
@@ -938,7 +934,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
           button.addEventListener("click", function(){
               var dcurl = input.url.value;
               var opts = {};
-              opts.key = input.key.value
+              opts['terminus:encoding'] = "terminus:frame";
+              opts['terminus:user_key'] = input.key.value;
               self.client.getDocument(dcurl, opts)
               .then(function(response){
             	    TerminusClient.FrameHelper.removeChildren(resd);
@@ -948,9 +945,9 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'deleteDocument':
           button.addEventListener("click", function(){
-              var dcurl = input.value;
-              var buttonSelf = this;
+              var dcurl = input.url.value;
               var opts = {};
+              opts.key = input.key.value;
               self.client.deleteDocument(dcurl, opts)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
@@ -963,7 +960,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               var dcurl = input.url.value;
               var payload = input.doc.value;
               opts = {};
-              opts.key = input.key.value;
+              opts['terminus:encoding'] = "jsonld";
+              opts['terminus:user_key'] = input.key.value;
               self.client.createDocument(dcurl, JSON.parse(payload), opts)
               .then(function(response){
             	   TerminusClient.FrameHelper.removeChildren(resd);
@@ -977,9 +975,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             var payload = input.doc.value;
             var buttonSelf = this;
             opts = {};
-            opts.editmode = 'replace';
-            opts.format = 'json';
-            opts.key = input.key.value;
+            opts['terminus:encoding'] = "jsonld";
+            opts['terminus:user_key'] = input.key.value;
             self.client.updateDocument(dcurl, JSON.parse(payload), opts)
             .then(function(response){
             	TerminusClient.FrameHelper.removeChildren(resd);
@@ -991,8 +988,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 var opts = {};
                 opts.key = input.key.value;
-                var wrapped = self.wQuery.wrap(JSON.parse(input.doc.value));
-                self.client.select(input.url.value, wrapped)
+                self.client.select(input.url.value, JSON.parse(input.doc.value))
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
