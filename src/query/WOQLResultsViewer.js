@@ -125,34 +125,6 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 	return dtResult;
 }
 
-
-WOQLResultsViewer.prototype.wrapTableLinkCell = function(text){
-	var self = this;
-	var wrap = document.createElement("a");
-	wrap.setAttribute("href", "#");
-	wrap.setAttribute("class", "terminus-table-content");
-	if(text.length > this.max_cell_size){
-		wrap.setAttribute("title", text);
-		text = text.substring(0, this.max_cell_size) + "...";
-	}
-	const replacements = {}
-	const words = text.split(" ");
-	for(var i = 0; i < words.length; i++){
-		var word = words[i];
-		if(word.length > this.max_word_size){
-			wrap.setAttribute("title", text);
-			var newstr = word.substring(0, this.max_word_size) + "...";
-			replacements[word] = newstr;
-		}
-	}
-	for(var k in replacements){
-		text = text.replace(k, replacements[k]);
-	}
-	wrap.appendChild(document.createTextNode(text));
-	return wrap;
-}
-
-
 WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 	var tbody = document.createElement("tbody");
 	var self = this;
@@ -172,7 +144,6 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 				td.appendChild(a);
 			}
 			else {
-				//var wrappedTxt = this.wrapTableLinkCell(lab);
 				td.appendChild(document.createTextNode(lab));
 			}
 			tr.appendChild(td);

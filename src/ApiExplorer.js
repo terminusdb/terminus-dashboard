@@ -878,7 +878,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
               self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
-                var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
             }) // button click
         break;

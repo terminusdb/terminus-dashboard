@@ -136,10 +136,6 @@ pre, code {
 	margin-right: 2%;
 }
 
-table tbody tr {
-	cursor: pointer;
-}
-
 .table.dataTable{
 	margin: 0px !important;
 }
@@ -278,6 +274,24 @@ body [class^="icon-"], body [class*=" icon-"] {
 	margin-left: 15px
 }
 
+.terminus-hover-table{
+	/*width:100%;*/
+	border-collapse:collapse;
+}
+.terminus-hover-table td{
+	 border:lightgrey 0.5px solid;
+	 height: 20px;
+	 padding: 7px;
+}
+
+/* Define the default color for all the table rows */
+.terminus-hover-table tr{
+	background: #f5f5f5;
+}
+/* Define the hover highlight color for the table row */
+.terminus-hover-table tr:hover {
+      background-color: #b8d1f3;
+}
 .terminus-table-content{
 	font-size: 16px;
     text-decoration: none;
@@ -800,8 +814,7 @@ div.terminus-property-frame{
     font-size: 18px;
     padding-left: 30px;
     color: lightgrey;
-    min-width: 189px;
-    cursor: pointer;
+   /*// min-width: 189px;*/
     text-align: left;
 }
 
@@ -1722,8 +1735,8 @@ a.terminus-submenu-selected{
 }
 
 .terminus-db-list-del-icon {
-	margin-right: 10px;
-    margin-left: 70px;
+	margin-right: 50px;
+    margin-left: 50px;
     color: #00C08B;
 	font-size: large;
 	cursor: pointer;
@@ -1769,22 +1782,6 @@ a.terminus-submenu-selected{
 /* terminus table */
 .terminus-db-size {
 	table-layout: fixed;
-}
-
-.terminus-table-th{
-	color: #002856 !important;
-	background-color: #dcdcdc;
-	border-color: #eee;
-	padding: 10px 15px;
-	border-bottom: 1px solid transparent;
-	border-top-right-radius: 3px;
-	border-top-left-radius: 3px;
-	font-size: 18px;
-	padding: 10px;
-	color: black;
-	min-width: 189px;
-	cursor: pointer;
-	border-right: 0.5px solid #f5f5f5;
 }
 
 /* terminus document chooser */
