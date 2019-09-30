@@ -9,6 +9,7 @@ div.terminus-object-frame div.terminus-object-header,
 div.terminus-object-frame div.terminus-object-header {
 	margin-top: 1em;
 	padding: 4px;
+	height: 40px;
 }
 
 div.terminus-object-properties {
@@ -434,7 +435,7 @@ button.terminus-change-range{
 	margin-left: 10px;
 }
 button.object-save{
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 textarea.terminus-schema-edit {
@@ -550,6 +551,7 @@ div.terminus-property-frame{
 .terminus-property-label-align{
 	margin-left: 20px;
 	text-align: right;
+	font-weight: 600;
 }
 .terminus-property-body-align{
 	/*margin-left: 20px;*/

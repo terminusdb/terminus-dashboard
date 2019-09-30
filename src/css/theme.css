@@ -526,7 +526,7 @@ div.terminus-object-properties {
 }
 
 select.terminus-frame-selector{
-	width: 410px !important;
+	width: 150px !important;
 }
 
 
@@ -579,7 +579,7 @@ span.terminus-property-controls{
 button{
 	background-color: #00C08B;
     color: #002856;
-    font-weight: 900;
+    font-weight: 600;
     cursor: pointer;
 }
 

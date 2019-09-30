@@ -229,8 +229,8 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	thr.appendChild(th1);
 	thr.appendChild(th2);
 	thr.appendChild(th3);
-	thr.appendChild(th4);
-	thr.appendChild(th5);
+	//thr.appendChild(th4);
+	//thr.appendChild(th5);
 	thr.appendChild(th6);
 	thead.appendChild(thr);
 	scd.appendChild(thead);
@@ -288,8 +288,8 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);
-		tr.appendChild(td4);
-		tr.appendChild(td5);
+		//tr.appendChild(td4);
+		//tr.appendChild(td5);
 		tr.appendChild(td6);
 		tbody.appendChild(tr);
 	}

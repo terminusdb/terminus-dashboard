@@ -319,7 +319,7 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	//pd.appendChild(sth);
 	//pd.appendChild(UTILS.getHeaderDom('Summary'));
 	this.getDeleteOnHomePage(pd);
-	this.getDBSummary(pd);
+	//this.getDBSummary(pd);
 	pd.appendChild(pd.appendChild(UTILS.getHeaderDom('List of Documents')));
 	this.getClassesDOM(pd);
 	return pd;
@@ -370,7 +370,7 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
       	var deleteConfirm = confirm(`Do you want to delete ${dbdel} Database?`);
 		if (deleteConfirm == true) {
 			self.ui.deleteDatabase(dbdel);
-		}	
+		}
     });
     d.appendChild(del);
 }

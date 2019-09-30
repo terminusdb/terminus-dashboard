@@ -583,7 +583,7 @@ div.terminus-property-frame{
 /* frameviewer styling */
 
 select.terminus-frame-selector{
-	width: 410px !important;
+	width: 150px !important;
 }
 
 div.terminus-object-frame select,

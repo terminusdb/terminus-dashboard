@@ -62,7 +62,11 @@ WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 		return rs;
 	}
 	else {
-		console.log("no bindings for query");
+		nor = document.createElement('div');
+		nor.setAttribute('class', 'terminus-no-res-alert');
+		nor.appendChild(document.createTextNode("No results available to view ..."));
+		rs.appendChild(nor);
+		return rs;
 	}
 }
 

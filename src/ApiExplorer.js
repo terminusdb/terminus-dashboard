@@ -11,28 +11,28 @@ const UTILS = require('./Utils')
 let apiNavConfig = {
     mainNav: {
         connect: {
-    		navText: 'Connect Server Api',
+    		navText: 'Connect API',
             action : 'connect',
             icon   : 'link',
             defaultSelected: true
     	},
         database: {
-            navText: 'Database Api',
+            navText: 'Database API',
             action : 'create',
             icon   : 'database'
         },
         schema: {
-            navText: 'Schema Api',
+            navText: 'Schema API',
             action : 'schema',
             icon   : 'cog'
         },
         document: {
-            navText: 'Document Api',
+            navText: 'Document API',
             action : 'document',
             icon   : 'file'
         },
         query: {
-            navText: 'Query Api',
+            navText: 'Query API',
             action : 'query',
             icon   : 'search'
         }
@@ -1026,7 +1026,7 @@ ApiExplorer.prototype.getSignature = function(action){
     var api = document.createElement('div');
     // get header signature
     var sg = document.createElement('button');
-    sg.appendChild(document.createTextNode('Click to read Api Signature'));
+    sg.appendChild(document.createTextNode('Click to read API Signature'));
     sg.setAttribute('class', 'terminus-collapsible');
     ic = document.createElement('i');
     ic.setAttribute('class', 'terminus-cheveron-float fa fa-chevron-down');
