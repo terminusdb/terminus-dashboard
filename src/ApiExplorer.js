@@ -260,6 +260,8 @@ ApiExplorer.prototype.subNavOnSelect = function(curSubMenu, subMenuConfig, subNa
 
 // create sub nav bars
 ApiExplorer.prototype.createSubNavs = function(curSubMenu, subMenuConfig, cont, body, ul){
+    // comment getclassframes for api explorer time being
+    if(subMenuConfig.action == 'getClassFrames') return;
     var a = document.createElement('a');
     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     if(subMenuConfig.defaultSelected) a.classList.add('terminus-submenu-selected');
@@ -661,7 +663,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
         break;
         case 'schema':
             //encoding
-            var fd = document.createElement('div');
+           /* var fd = document.createElement('div');
             fd.setAttribute('class', 'terminus-control-group');
             formDoc.appendChild(fd);
             var encLabel = document.createElement('label');
@@ -683,7 +685,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
             optJld.setAttribute('value', 'terminus:jsonld');
             optJld.appendChild(document.createTextNode('jsonLD'));
             inpEnc.appendChild(optJld);
-            cd.appendChild(inpEnc);
+            cd.appendChild(inpEnc); */
         break;
     }
     var fd = document.createElement('div');
@@ -728,7 +730,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
     inp.url = inpUrl;
     inp.key = inpKey;
     if(curApi == 'getClassFrames') inp.docUrl = inpDocUrl;
-    if(curApi == 'schema') inp.enc = inpEnc;
+    //if(curApi == 'schema') inp.enc = inpEnc;
     if(!view) inp.doc = inpDoc;
     var form = this.getApiSendButton(action, inp);
     body.appendChild(form);
@@ -892,7 +894,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'getSchema':
             button.addEventListener("click", function(){
                 var opts = {};
-                opts['terminus:encoding'] = input.enc.value;
+                opts['terminus:encoding'] = 'turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var schurl = input.url.value;
                 self.client.getSchema(schurl, opts)
@@ -905,7 +907,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'updateSchema':
             button.addEventListener("click", function(){
                 opts = {};
-                opts['terminus:encoding'] = input.enc.value;
+                opts['terminus:encoding'] = 'turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var payload = input.doc.value;
                 var schurl = input.url.value;
@@ -992,7 +994,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 self.client.select(input.url.value, doc, opts)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
-                    var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                 });
             }) // button click
         break;
@@ -1000,10 +1002,11 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
               var opts = {};
               opts.key = input.key.value;
-              self.client.update(input.url.value, JSON.parse(input.doc.value), opts)
+              var doc = JSON.parse(input.doc.value);
+              self.client.update(input.url.value, doc, opts)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
-                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
             }) // button click
         break;

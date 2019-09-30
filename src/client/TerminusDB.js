@@ -365,8 +365,12 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
     var self = this;
     var dbdel = this.ui.db();
+
     del.addEventListener("click", function(){
-      self.ui.deleteDatabase(dbdel);
+      	var deleteConfirm = confirm(`Do you want to delete ${dbdel} Database?`);
+		if (deleteConfirm == true) {
+			self.ui.deleteDatabase(dbdel);
+		}	
     });
     d.appendChild(del);
 }
@@ -393,7 +397,12 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 			if(nd){
 				nd.setAttribute('class', 'terminus-margin-box');
 	        }
-			else d.appendChild(document.createTextNode("No results returned"));
+			else{
+				nor = document.createElement('div');
+				nor.setAttribute('class', 'terminus-no-res-alert');
+				nor.appendChild(document.createTextNode("No documents available, create new ones to view them here..."));
+				d.appendChild(nor);
+			}
 		}
 	})
 	.catch(function(err){

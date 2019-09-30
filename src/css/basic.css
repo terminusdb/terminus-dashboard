@@ -9,6 +9,7 @@ div.terminus-object-frame div.terminus-object-header,
 div.terminus-object-frame div.terminus-object-header {
 	margin-top: 1em;
 	padding: 4px;
+	height: 40px;
 }
 
 div.terminus-object-properties {
@@ -336,8 +337,37 @@ td, th {
 .cm-hide{
 	display: none;
 }
+.terminus-hover-table{
+	/*width:100%;*/
+	border-collapse:collapse;
+}
+.terminus-hover-table td{
+	 border:lightgrey 0.5px solid;
+	 height: 10px;
+	 padding: 7px;
+}
 
-div.terminus-object-frame select,
+.terminus-db-list-del-icon {
+	margin-right: 50px;
+    margin-left: 50px;
+    color: #dc3545;
+	font-size: large;
+	cursor: pointer;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+/* Define the default color for all the table rows */
+.terminus-hover-table tr{
+	background: #f5f5f5;
+}
+/* Define the hover highlight color for the table row */
+.terminus-hover-table tr:hover {
+      background-color: #b8d1f3;
+}
+
+
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
 	width: 223px;
@@ -346,6 +376,8 @@ select.terminus-class-select, select.terminus-form-select {
 div.terminus-object-frame select {
 	margin-left: 2px;
 	margin-right: 2px;
+	padding: 6px 4px;
+	width: 100px;
 }
 
 div.terminus-object-frame .terminus-frame-infobox-box {
@@ -356,7 +388,18 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
+	margin: 0px 0px 10px 0px;
 }
+
+span.ql-snow{
+	border: none !important;
+}
+
+div.ql-editor{
+	background-color: #fff !important;
+	border: 1px solid #ccc !important;
+}
+
 
 pre.terminus-schema-view {
 	background-color: #eaf5ff;
@@ -386,6 +429,13 @@ textarea.terminus-query-box {
 }
 div.terminus-control-buttons {
 	max-width: 700px;
+}
+
+button.terminus-change-range{
+	margin-left: 10px;
+}
+button.object-save{
+	margin-top: 5px;
 }
 
 textarea.terminus-schema-edit {
@@ -481,23 +531,27 @@ div.terminus-object-frame button,
 	background-color: #eee;
 	border: 1px solid #48f;
 	list-style: none;
+
 }
 div.terminus-object-frame button:hover,
 .terminus-control-button:hover{
 	cursor: pointer;
 	background-color: #48f;
 	color: white;
+	font-weight: 600;
 }
 
 div.terminus-object-frame {}
 
 div.terminus-property-frame{
 	margin-bottom: 10px;
+	font-weight: 600;
 }
 
 .terminus-property-label-align{
 	margin-left: 20px;
 	text-align: right;
+	font-weight: 600;
 }
 .terminus-property-body-align{
 	/*margin-left: 20px;*/
@@ -548,12 +602,6 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 	padding: 4px;
 	margin: 0 4px;
 	/*border: 1px solid red;*/
-}
-
-div.terminus-object-frame input,
-input.terminus-form-value {
-	padding: 6px 4px;
-	width: 400px;
 }
 
 textarea.terminus-literal-value{
@@ -614,7 +662,6 @@ div.terminus-property-frame{
     position: relative;
     min-height: 50px;
 	border-radius: 5px;
-    border-top: 1px solid lightgrey;
 }
 
 .terminus-zebra-frame:nth-child(odd) {

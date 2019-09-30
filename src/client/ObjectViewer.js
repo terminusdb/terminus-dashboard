@@ -258,6 +258,7 @@ HTMLObjectHeaderViewer.prototype.getObjectIDDOM = function(renderer){
 		if(renderer.idDOM) val = renderer.idDOM.value;
 		input = document.createElement("input");
 		input.setAttribute("class", "terminus-object-id-input");
+		input.required  = true;
 		if(val == "_:") val = "";
 		renderer.idDOM = input;
 	}
