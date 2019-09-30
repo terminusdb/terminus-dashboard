@@ -28,7 +28,7 @@ HTMLRangeViewer.prototype.getDOM = function(renderer, dataviewer){
 }
 
 HTMLRangeViewer.prototype.useCommas = function(renderer){
-	if(in_array(renderer.frame.getTypeShorthand(), array("xdd:gYearRange", "xdd:dateRange"))) return false;
+	if(["xdd:gYearRange", "xdd:dateRange"].indexOf(renderer.frame.getTypeShorthand()) != -1) return false;
 	return this.commas;
 }
 
