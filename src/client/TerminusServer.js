@@ -169,8 +169,8 @@ TerminusServerViewer.prototype.getServerDetailsDOM = function(){
 
 TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 	var self = this;
-	var wrap = document.createElement("a");
-	wrap.setAttribute("href", "#");
+	var wrap = document.createElement("p");
+//	wrap.setAttribute("href", "#");
 	wrap.setAttribute("class", "terminus-table-content");
 	if(text.length > this.max_cell_size){
 		wrap.setAttribute("title", text);
@@ -190,10 +190,10 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(dbid, text){
 		text = text.replace(k, replacements[k]);
 	}
 	wrap.appendChild(document.createTextNode(text));
-	wrap.addEventListener("click", function(){
+	/*wrap.addEventListener("click", function(){
 		self.ui.connectToDB(dbid);
 		self.ui.showDBMainPage();
-	});
+	});*/
 	return wrap;
 }
 
@@ -240,6 +240,12 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		var dbrec = dbrecs[fullid];
 		var dbid = fullid.split(":")[1];
 		var tr = document.createElement("tr");
+		tr.setAttribute("class", "terminus-db-pointer");
+		tr.addEventListener("click", function(){
+			self.ui.connectToDB(dbid);
+			self.ui.showDBMainPage();
+		})
+
 		var td1 = document.createElement("td");
 		td1.appendChild(this.wrapTableLinkCell(dbid, dbid));
 		td1.setAttribute("class", "terminus-db-id");
@@ -261,7 +267,7 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		td5.appendChild(this.wrapTableLinkCell(dbid, txt));
 		var td6 = document.createElement("td");
 		td6.setAttribute("class", "db-delete");
-		if(this.deleteDBPermitted(dbid)){
+        if(this.deleteDBPermitted(dbid)){
             if(this.ui.pluginAvailable("font-awesome")){
                 var delbut = document.createElement('i');
         		delbut.setAttribute("class", "terminus-db-list-del-icon fa fa-times-circle");
@@ -272,10 +278,19 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
     			delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
             }
 			// function to fix db in a closure
-			var delDB = function(db){ return function(){self.ui.deleteDatabase(db);}};
+			var delDB = function(db){
+				return function(){
+					var deleteConfirm = confirm(`Do you want to delete ${db} Database?`);
+					if (deleteConfirm == true) {
+			  			self.ui.deleteDatabase(db);
+					}
+					//self.ui.deleteDatabase(db);
+				}
+			};
 			delbut.addEventListener("click", delDB(dbid));
 			td6.appendChild(delbut);
 		}
+
 		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);

@@ -336,6 +336,24 @@ td, th {
 .cm-hide{
 	display: none;
 }
+.terminus-hover-table{
+	/*width:100%;*/
+	border-collapse:collapse;
+}
+.terminus-hover-table td{
+	 border:lightgrey 0.5px solid;
+	 height: 10px;
+	 padding: 7px;
+}
+
+/* Define the default color for all the table rows */
+.terminus-hover-table tr{
+	background: #f5f5f5;
+}
+/* Define the hover highlight color for the table row */
+.terminus-hover-table tr:hover {
+      background-color: #b8d1f3;
+}
 
 div.terminus-object-frame select,
 select.terminus-class-select, select.terminus-form-select {
@@ -386,6 +404,10 @@ textarea.terminus-query-box {
 }
 div.terminus-control-buttons {
 	max-width: 700px;
+}
+
+button.terminus-change-range{
+	margin-right: 10px;
 }
 
 textarea.terminus-schema-edit {
