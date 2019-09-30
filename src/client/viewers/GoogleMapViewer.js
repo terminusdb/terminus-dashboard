@@ -4,8 +4,9 @@ function GoogleMapViewer(options){}
 
 GoogleMapViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
-	var map = document.createElement("div");
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType())
+		var map = document.createElement("div");
 	map.setAttribute('class', "gmap-window gmap-viewer");
 	var self = this;
 	var ghelper = new GoogleMapHelper();

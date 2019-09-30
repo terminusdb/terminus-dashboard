@@ -879,7 +879,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
                 console.log(dbdoc);
             	return this.client.createDatabase(dbid, dbdoc)*/
 
-              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value))
+              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value),input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
                 var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
@@ -995,8 +995,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 var opts = {};
                 opts.key = input.key.value;
-                var wrapped = self.wQuery.wrap(JSON.parse(input.doc.value));
-                self.client.select(input.url.value, wrapped)
+                var doc = JSON.parse(input.doc.value);
+                self.client.select(input.url.value, doc, opts)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
