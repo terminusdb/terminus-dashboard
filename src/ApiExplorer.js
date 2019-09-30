@@ -663,7 +663,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
         break;
         case 'schema':
             //encoding
-            var fd = document.createElement('div');
+           /* var fd = document.createElement('div');
             fd.setAttribute('class', 'terminus-control-group');
             formDoc.appendChild(fd);
             var encLabel = document.createElement('label');
@@ -685,7 +685,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
             optJld.setAttribute('value', 'terminus:jsonld');
             optJld.appendChild(document.createTextNode('jsonLD'));
             inpEnc.appendChild(optJld);
-            cd.appendChild(inpEnc);
+            cd.appendChild(inpEnc); */
         break;
     }
     var fd = document.createElement('div');
@@ -730,7 +730,7 @@ ApiExplorer.prototype.getForm = function(curApi, body, view, action, urlPlacehol
     inp.url = inpUrl;
     inp.key = inpKey;
     if(curApi == 'getClassFrames') inp.docUrl = inpDocUrl;
-    if(curApi == 'schema') inp.enc = inpEnc;
+    //if(curApi == 'schema') inp.enc = inpEnc;
     if(!view) inp.doc = inpDoc;
     var form = this.getApiSendButton(action, inp);
     body.appendChild(form);
@@ -894,7 +894,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'getSchema':
             button.addEventListener("click", function(){
                 var opts = {};
-                opts['terminus:encoding'] = input.enc.value;
+                opts['terminus:encoding'] = 'turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var schurl = input.url.value;
                 self.client.getSchema(schurl, opts)
@@ -907,7 +907,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'updateSchema':
             button.addEventListener("click", function(){
                 opts = {};
-                opts['terminus:encoding'] = input.enc.value;
+                opts['terminus:encoding'] = 'turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var payload = input.doc.value;
                 var schurl = input.url.value;

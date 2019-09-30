@@ -135,7 +135,7 @@ button.terminus-change-range {
     border: 1px solid green;
 }
 button.object-save{
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 .dt-buttons.btn-group{
@@ -496,13 +496,18 @@ body [class^="icon-"], body [class*=" icon-"] {
   background-color: #f1f1f1;
 }
 
+span.terminus-object-id-label, span.terminus-object-type-label{
+	color:#0055B8;
+	font-weight: bolder;
+}
+
 /* terminus frames */
 div.terminus-object-frame div.terminus-object-header, .terminus-application-header {
 	margin-bottom: 1em;
     margin-right: 10px;
     color: #002856;
     background-color: #00C08B;
-	height: 50px;
+	height: 40px;
 }
 
 div.terminus-object-frame div.terminus-object-header {
@@ -588,12 +593,14 @@ div.terminus-object-frame {}
 
 div.terminus-property-frame{
 	margin-bottom: 10px;
-	font-weight: 600;
+	/*font-weight: 600;*/
 }
+
 
 .terminus-property-label-align{
 	margin-left: 20px;
 	text-align: right;
+	font-weight: 600;
 }
 
 span.ql-snow{

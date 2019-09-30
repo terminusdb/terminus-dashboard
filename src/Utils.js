@@ -60,9 +60,7 @@ function getFunctionSignature(which){
     spec   : "WOQLClient.getSchema(surl, options)",
     descr  : "\n\nGets the schema of a database."
              +"\n1)The first (surl) argument: {string}, it is a dbUrl/schema"
-             + "\n2)The second(options) argument: {object}, which includes "
-             + "\nopts.format is optional and defines which format is requested (*json / turtle)"
-             + "\nand opts.key is an optional API key",
+             + "\n2)The second(key) argument: {string}, contains an API key",
     result : "Ontology Document on success (HTTP 200), 409 for already existing database, otherwise error code",
     options: { format: "turtle" }
   };
@@ -90,8 +88,8 @@ function getFunctionSignature(which){
   sigs.createDocument = {
     spec   : "WOQLClient.createDocument(docurl, document, options)",
     descr  : "\n\nCreates a new document in the specified database"
-              + "\n1)The first (docurl) argument :{string}, is a dbUrl/document/document_id"
-              + "\n2)The second(document) argument:{object}, is a valid document in json-ld"
+              + "\n1)The first (docurl) argument: {string}, is a dbUrl/document/document_id"
+              + "\n2)The second(document) argument: {object}, is a valid document in json-ld"
               + "\n3)The third (key) argument:{string}, contains an API key",
     result : "Created Document on success (HTTP 200), Violation Report Otherwise (HTTP 400+)",
     args   : {document_url : 'url', document: "doc"},
@@ -100,8 +98,8 @@ function getFunctionSignature(which){
   sigs.viewDocument = {
     spec    : "WOQLClient.getDocument(docurl, options)",
     descr   : "\n\nRetrieves a document from the specified database"
-              + "\n1)The first (docurl) argument :{string}, is a dbUrl/document/document_id"
-              + "\n2)The second (key) argument:{string}, contains an API key",
+              + "\n1)The first (docurl) argument: {string}, is a dbUrl/document/document_id"
+              + "\n2)The second (key) argument: {string}, contains an API key",
     result : "Document (HTTP 200), Violation Report Otherwise (HTTP 400+)",
     args   : {document_url : 'url'},
     options: { format: "turtle"}
@@ -109,8 +107,8 @@ function getFunctionSignature(which){
   sigs.updateDocument = {
     spec   : "WOQLClient.updateDocument(docurl, document, options)",
     descr  : "\n\nUpdates a document in the specified database with a new version"
-                + "\n1)The first (docurl) argument :{string}, is a dbUrl/document/document_id"
-                + "\n2)The second(document) argument:{object}, is a valid document in json-ld"
+                + "\n1)The first (docurl) argument: {string}, is a dbUrl/document/document_id"
+                + "\n2)The second(document) argument: {object}, is a valid document in json-ld"
                 + "\n3)The third (key) argument:{string} argument contains an API key",
     result : "Ontology Document on success (HTTP 200), 409 for already existing database, otherwise error code",
     args   : {document_url : 'url', document: "doc"},
@@ -119,16 +117,16 @@ function getFunctionSignature(which){
   sigs.deleteDocument = {
     spec  : "WOQLClient.deleteDocument(docurl, key)",
     descr : "\n\nDeletes a document from the specified database"
-            + "\n1)The first (docurl) argument :{string},is a dbUrl/document/document_id"
-            + "\n2)The second (key) argument:{string}, contains an API key",
+            + "\n1)The first (docurl) argument: {string},is a dbUrl/document/document_id"
+            + "\n2)The second (key) argument: {string}, contains an API key",
     result: "Ontology Document on success (HTTP 200), 409 for already existing database, otherwise error code",
     args  : {document_url : 'url'},
   };
   sigs.select = {
     spec: "WOQLClient.select(dburl, query, options)",
     descr: "\n\nExecutes a read-only WOQL query on the specified database and returns the results"
-              + "\n1)The first (docurl) argument :{string}, is a terminusDB Url or a terminusDB Id"
-              + "\n2)The second (query) argument : {object}, a valid query in json-ld format "
+              + "\n1)The first (docurl) argument: {string}, is a terminusDB Url or a terminusDB Id"
+              + "\n2)The second (query) argument: {object}, a valid query in json-ld format "
               + "\n3)The third (key) argument:{string}, contains an API key",
     result: "WOQL Result (HTTP 200), otherwise error code",
     args: {woql: 'woql'},
@@ -136,8 +134,8 @@ function getFunctionSignature(which){
   sigs.update = {
     spec  : "WOQLClient.update(dburl, query, options)",
     descr : "\n\nExecutes a WOQL query on the specified database which updates the state and returns the results"
-              + "\n1)The first (dburl) argument :{string}, is a terminusDB Url or a terminusDB Id"
-              + "\n2)The second (query) argument : {object}, a valid query in json-ld format "
+              + "\n1)The first (dburl) argument: {string}, is a terminusDB Url or a terminusDB Id"
+              + "\n2)The second (query) argument: {object}, a valid query in json-ld format "
               + "\n3)The third (key) argument:{string}, contains an API key",
     result: "WOQL Result (HTTP 200), otherwise error code",
     args  : {woql: 'woql'},
