@@ -873,15 +873,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'create':
             button.addEventListener("click", function(form){
-<<<<<<< HEAD
-               /* var dbdoc = this.generateNewDatabaseDocument(input);
-                console.log(dbdoc);
-            	return this.client.createDatabase(dbid, dbdoc)*/
-
-              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value),input.key.value)
-=======
               self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
->>>>>>> f0beb99819e65b349c777bd8de9e1b4f20e3c5a7
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
                   var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
@@ -996,12 +988,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 var opts = {};
                 opts.key = input.key.value;
-<<<<<<< HEAD
                 var doc = JSON.parse(input.doc.value);
                 self.client.select(input.url.value, doc, opts)
-=======
-                self.client.select(input.url.value, JSON.parse(input.doc.value))
->>>>>>> f0beb99819e65b349c777bd8de9e1b4f20e3c5a7
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
                     var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);

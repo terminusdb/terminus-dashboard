@@ -1,7 +1,8 @@
 function HTMLMarkupEditor(options){}
 HTMLMarkupEditor.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType());
 	var input = document.createElement("div");
 	input.setAttribute('class', "html-wysiwyg");
 	var inner = document.createElement("span");

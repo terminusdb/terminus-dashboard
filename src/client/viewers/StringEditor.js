@@ -6,7 +6,8 @@ function HTMLStringEditor(options){
 }
 
 HTMLStringEditor.prototype.getDOM = function(renderer, dataviewer){
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType());
 	var value = renderer.value();
 	var big = ((this.options && typeof this.options.big != "undefined") ? this.options.big : this.isBigType(ty, value));
 	if(big){

@@ -270,7 +270,6 @@ RenderingMap.addPlugin = function(plugin){
 	}
 }
 
-
 RenderingMap.getAvailableObjectViewers = function(renderer){
 	var entries = ['html', 'json'];
 	return entries;
@@ -373,9 +372,9 @@ RenderingMap.registerViewerForFrameType("HTMLChoiceViewer", "Choice Viewer", "on
 RenderingMap.registerEditorForFrameType("HTMLChoiceEditor", "Choice Selector", "oneOf");
 RenderingMap.registerViewerForTypes("HTMLCoordinateViewer", "Coordinate Viewer", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
 RenderingMap.registerEditorForTypes("HTMLCoordinateEditor", "Coordinate Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
-RenderingMap.registerViewerForTypes("HTMLDateViewer", "Date Viewer", ["xsd:date", "xsd:dateTime", "xsd:gYear", 
+RenderingMap.registerViewerForTypes("HTMLDateViewer", "Date Viewer", ["xsd:time", "xsd:date", "xsd:dateTime", "xsd:gYear", 
 	"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
-RenderingMap.registerEditorForTypes("HTMLDateEditor", "Date Editor", ["xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear", 
+RenderingMap.registerEditorForTypes("HTMLDateEditor", "Date Editor", ["xsd:time", "xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear", 
 	"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
 RenderingMap.registerViewerForFrameType("HTMLEntityViewer", "Document Viewer", "document");
 RenderingMap.registerEditorForFrameType("HTMLEntityEditor", "Document Selector", "document");
@@ -387,10 +386,9 @@ RenderingMap.registerViewerForTypes("HTMLLinkViewer", "Link Viewer", ["xdd:url",
 RenderingMap.registerViewerForTypes("HTMLNumberViewer", "Number with commas", 
 		["xsd:decimal", "xsd:double", "xsd:float", "xsd:short", "xsd:integer", "xsd:long", 
 			"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger", "xsd:nonPositiveInteger"]);
-RenderingMap.registerViewerForTypes("HTMLRangeViewer", "Range Viewer", ["xdd:integerRange", "xdd:decimalRange"]);
-RenderingMap.registerEditorForTypes("HTMLRangeEditor", "Range Editor", ["xdd:integerRange", "xdd:decimalRange"]);
+RenderingMap.registerViewerForTypes("HTMLRangeViewer", "Range Viewer", ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
+RenderingMap.registerEditorForTypes("HTMLRangeEditor", "Range Editor", ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 RenderingMap.registerViewerForTypes("SantizedHTMLViewer", "Sanitized HTML", ["xsd:string", "xdd:html"]);
-
 
 FramePattern = function(pattern){
 	this.renderer = (pattern.renderer ? pattern.renderer : false);

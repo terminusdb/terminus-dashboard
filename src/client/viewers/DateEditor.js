@@ -38,7 +38,41 @@ HTMLDateEditor.prototype.set = function(part, val, renderer, ty){
 }
 
 HTMLDateEditor.prototype.getTimeComponentDOM = function(parsed, ty, renderer){
-	
+	if(["xsd:dateTime", "xsd:dateTimeStamp", "xsd:time"].indexOf(ty) == -1){
+		return false;
+	}
+	var self = this;
+	var hdom = document.createElement("input");
+	hdom.setAttribute("class", "terminus-hour-input terminus-hour-"+ty);
+	hdom.setAttribute("size", 2);
+	hdom.setAttribute("placeholder", "HH");
+	hdom.value = (parsed.hour ? parsed.hour : "");
+	hdom.addEventListener("input", function(){
+		self.set("hour", this.value, renderer, ty);
+	});
+	var mdom = document.createElement("input");
+	mdom.setAttribute("class", "terminus-minute-input terminus-minute-"+ty);
+	mdom.setAttribute("size", 2);
+	mdom.setAttribute("placeholder", "MM");
+	mdom.value = (parsed.minute ? parsed.minute: "");
+	mdom.addEventListener("input", function(){
+		self.set("minute", this.value, renderer, ty);
+	});
+	var sdom = document.createElement("input");
+	sdom.setAttribute("class", "terminus-second-input terminus-second-"+ty);
+	sdom.setAttribute("size", 8);
+	sdom.setAttribute("placeholder", "SS.sss...");
+	sdom.value = (parsed.second ? parsed.second: "");
+	sdom.addEventListener("input", function(){
+		self.set("second", this.value, renderer, ty);
+	})
+	var tdom = document.createElement("span");
+	tdom.appendChild(hdom);
+	tdom.appendChild(document.createTextNode(this.time_spacer));
+	tdom.appendChild(mdom);
+	tdom.appendChild(document.createTextNode(this.time_spacer));
+	tdom.appendChild(sdom);
+	return tdom;
 }
 
 HTMLDateEditor.prototype.getDateComponentDOM = function(parsed, ty, renderer){

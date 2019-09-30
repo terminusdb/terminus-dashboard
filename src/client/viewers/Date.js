@@ -11,7 +11,8 @@ function HTMLDateViewer(options){
 }
 
 HTMLDateViewer.prototype.getDOM = function(renderer, dataviewer){
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType());
 	var value = renderer.value();
 	var input = document.createElement("span");
 	input.setAttribute('class', "terminus-literal-value terminus-literal-date");
@@ -36,13 +37,13 @@ HTMLDateViewer.prototype.getTimeComponentDOM = function(parsed, ty){
 	var mdom = (typeof parsed.minute != "undefined" ? document.createElement("span") : false);
 	if(mdom){
 		mdom.setAttribute("class", "terminus-time-minute");
-		var mlab = (parsed.minute < 10 ? "0" + parsed.minute : parsed.minute);
+		var mlab = (parsed.minute < 10 ? parsed.minute : parsed.minute);
 		mdom.appendChild(document.createTextNode(mlab));
 	}
 	var sdom = (typeof parsed.second != "undefined" ? document.createElement("span") : false);
 	if(sdom){
 		sdom.setAttribute("class", "terminus-time-second");
-		var slab = (parsed.second < 10 ? "0" + parsed.second : parsed.second);
+		var slab = (parsed.second < 10 ? parsed.second : parsed.second);
 		sdom.appendChild(document.createTextNode(slab));
 	}
 	var tz = (parsed.timezone ? document.createElement("span") : false);

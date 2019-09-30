@@ -321,9 +321,6 @@ ValueRenderer.prototype.getDataValueViewer = function(){
 
 ValueRenderer.prototype.getAvailableViewers = function(){
 	var dt = this.frame.getTypeShorthand();
-	if(!dt){
-		//alert("here");
-	}
 	var ft = this.frame.ftype();
 	if(this.mode == "view"){
 		return TerminusDashboard.RenderingMap.getAvailableDataViewers(dt, ft);

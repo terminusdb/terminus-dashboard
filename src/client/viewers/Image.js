@@ -1,7 +1,8 @@
 function HTMLImageViewer(options){}
 HTMLImageViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType());
 	var input = document.createElement("span");
 	input.setAttribute('class', "terminus-literal-value terminus-literal-image-value");
 	input.setAttribute('data-value', value);

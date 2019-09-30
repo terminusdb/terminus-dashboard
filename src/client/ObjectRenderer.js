@@ -914,7 +914,7 @@ ObjectRenderer.prototype.getContentOrientation = function(){
 
 ObjectRenderer.prototype.getLabel = function(){
 	for(var prop in this.properties){
-		if(TerminusClient.FrameHelper.getShorthand(prop) == "rdfs:label"){
+		if(TerminusClient.FrameHelper.getShorthand(prop) == "rdfs:label" || prop == "rdfs:label"){
 			var prend = this.properties[prop];
 			var vrend = prend.values[0];
 			if(vrend){
@@ -927,11 +927,10 @@ ObjectRenderer.prototype.getLabel = function(){
 	if(s && s.substring(0, 2) == "_:"){
 		var ty = this.subjectClass();
 		var sh = TerminusClient.FrameHelper.getShorthand(ty);
-		if(sh){
-			var b = sh.split(":");
-			if(b.length > 1){
-				return "New " + b[1];
-			}
+		if(!sh) sh = ty;
+		var b = sh.split(":");
+		if(b.length > 1){
+			return "New " + b[1];
 		}
 		return "New Object";
 	}
