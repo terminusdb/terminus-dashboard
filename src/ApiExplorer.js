@@ -260,6 +260,8 @@ ApiExplorer.prototype.subNavOnSelect = function(curSubMenu, subMenuConfig, subNa
 
 // create sub nav bars
 ApiExplorer.prototype.createSubNavs = function(curSubMenu, subMenuConfig, cont, body, ul){
+    // comment getclassframes for api explorer time being
+    if(subMenuConfig.action == 'getClassFrames') return;
     var a = document.createElement('a');
     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     if(subMenuConfig.defaultSelected) a.classList.add('terminus-submenu-selected');

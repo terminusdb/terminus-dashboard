@@ -393,7 +393,12 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 			if(nd){
 				nd.setAttribute('class', 'terminus-margin-box');
 	        }
-			else d.appendChild(document.createTextNode("No results returned"));
+			else{
+				nor = document.createElement('div');
+				nor.setAttribute('class', 'terminus-no-res-alert');
+				nor.appendChild(document.createTextNode("No docuemnts available, please create new ones..."));
+				d.appendChild(nor);
+			}
 		}
 	})
 	.catch(function(err){
