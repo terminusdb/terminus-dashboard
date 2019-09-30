@@ -1,6 +1,6 @@
 {
   "name": "terminus-dashboard",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Terminus DB Management Dashboard",
   "main": "index.js",
   "scripts": {

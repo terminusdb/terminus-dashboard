@@ -1,7 +1,6 @@
 const WOQLQuery = require('../query/WOQLQuery');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
-const WOQLGraphBrowserGenerator = require('../query/WOQLGraphBrowserGenerator');
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 
 function TerminusQueryViewer(ui, options){
@@ -16,9 +15,6 @@ function TerminusQueryViewer(ui, options){
 	this.gentype = (options && options.generator ? options.generator : "textbox");
 	this.generators = {
 		"textbox" : { label: "Simple Text Box", value: "textbox"},
-	}
-	if(ui.pluginAvailable("jqueryui")){
-		this.generators.gbrowse = { label: "Graph Browser", value: "gbrowse"};
 	}
 	this.loadGenerator();
 }
@@ -52,9 +48,6 @@ TerminusQueryViewer.prototype.loadGenerator = function(){
 	}
 	if(this.gentype == "textbox"){
 		this.generator = new WOQLTextboxGenerator(nquery, this, this.ui);
-	}
-	else if(this.gentype == "gbrowse"){
-		this.generator = new WOQLGraphBrowserGenerator(nquery, this, this.ui);
 	}
 }
 

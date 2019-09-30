@@ -129,6 +129,11 @@ pre, code {
 	float: right;
 }
 
+.latlong {
+	display: block !important;
+	margin-bottom: 6px;
+}
+
 button.terminus-change-range {
 	margin-left: 10px;
 	background-color: #dcdcdc;
@@ -898,15 +903,6 @@ div.ql-editor{
    /*  max-width: 56.666667%;*/
     word-wrap: break-word;
     overflow: hidden;
-}
-
-.terminus-print {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  cursor: auto;
 }
 
 .cm-s-neo.CodeMirror{
@@ -1713,3 +1709,4 @@ div.dataTables_info, div.dataTables_paginate {
     width: 300px;
     padding: 10px;
 }
+

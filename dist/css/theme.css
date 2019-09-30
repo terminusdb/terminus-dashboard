@@ -129,10 +129,21 @@ pre, code {
 	float: right;
 }
 
+.latlong {
+	display: block !important;
+	margin-bottom: 6px;
+}
+
 button.terminus-change-range {
 	margin-left: 10px;
 	background-color: #dcdcdc;
     border: 1px solid green;
+	background-color: #dcdcdc;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0px 5px 0px 5px;
+	white-space: nowrap;
+	padding: 4px 10px;
 }
 button.object-save, button.object-save-disabled, button.object-delete{
 	margin-top: 5px;
@@ -526,7 +537,7 @@ div.terminus-object-properties {
 }
 
 select.terminus-frame-selector{
-	width: 410px !important;
+	width: 150px !important;
 }
 
 
@@ -579,7 +590,7 @@ span.terminus-property-controls{
 button{
 	background-color: #00C08B;
     color: #002856;
-    font-weight: 900;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -892,15 +903,6 @@ div.ql-editor{
    /*  max-width: 56.666667%;*/
     word-wrap: break-word;
     overflow: hidden;
-}
-
-.terminus-print {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  cursor: auto;
 }
 
 .cm-s-neo.CodeMirror{
@@ -1707,3 +1709,4 @@ div.dataTables_info, div.dataTables_paginate {
     width: 300px;
     padding: 10px;
 }
+

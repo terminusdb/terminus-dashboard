@@ -13,18 +13,23 @@ HTMLRangeViewer.prototype.getDOM = function(renderer, dataviewer){
 	rvals.setAttribute("class", "terminus-range-value-left");
 	var svals = document.createElement("span");
 	svals.setAttribute("class", "terminus-range-value-right");
-	var x = (this.commas ? TerminusClient.FrameHelper.numberWithCommas(vals[0]) : vals[0]);
+	var x = (this.useCommas(renderer) ? TerminusClient.FrameHelper.numberWithCommas(vals[0]) : vals[0]);
 	var tnode = document.createTextNode(x);
 	rvals.appendChild(tnode);
 	d.appendChild(rvals);	
 	if(vals.length == 2){
 		d.appendChild(getRangeSymbolDOM());
-		var x2 = (this.commas ? TerminusClient.FrameHelper.numberWithCommas(vals[1]) : vals[1]);
+		var x2 = (this.useCommas(renderer) ? TerminusClient.FrameHelper.numberWithCommas(vals[1]) : vals[1]);
 		var t2node = document.createTextNode(x2);
 		svals.appendChild(t2node);
 		d.appendChild(svals);	
 	}
 	return d;
+}
+
+function useCommas(renderer){
+	if(in_array(renderer.frame.getTypeShorthand(), array("xdd:gYearRange", "xdd:dateRange"))) return false;
+	return this.commas;
 }
 
 function getRangeSymbolDOM(){
