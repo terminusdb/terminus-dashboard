@@ -260,6 +260,8 @@ ApiExplorer.prototype.subNavOnSelect = function(curSubMenu, subMenuConfig, subNa
 
 // create sub nav bars
 ApiExplorer.prototype.createSubNavs = function(curSubMenu, subMenuConfig, cont, body, ul){
+    // comment getclassframes for api explorer time being
+    if(subMenuConfig.action == 'getClassFrames') return;
     var a = document.createElement('a');
     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
     if(subMenuConfig.defaultSelected) a.classList.add('terminus-submenu-selected');
@@ -988,10 +990,11 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
                 var opts = {};
                 opts.key = input.key.value;
-                self.client.select(input.url.value, JSON.parse(input.doc.value))
+                var doc = JSON.parse(input.doc.value);
+                self.client.select(input.url.value, doc, opts)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
-                    var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                    var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
                 });
             }) // button click
         break;
@@ -999,10 +1002,11 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
             button.addEventListener("click", function(){
               var opts = {};
               opts.key = input.key.value;
-              self.client.update(input.url.value, JSON.parse(input.doc.value), opts)
+              var doc = JSON.parse(input.doc.value);
+              self.client.update(input.url.value, doc, opts)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
-                  var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
+                  var resultDom = UTILS.showHttpResult(response, action, resd, self.ui);
               });
             }) // button click
         break;
