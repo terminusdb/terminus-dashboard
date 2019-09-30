@@ -396,7 +396,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 			else{
 				nor = document.createElement('div');
 				nor.setAttribute('class', 'terminus-no-res-alert');
-				nor.appendChild(document.createTextNode("No docuemnts available, please create new ones..."));
+				nor.appendChild(document.createTextNode("No documents available, create new ones to view them here..."));
 				d.appendChild(nor);
 			}
 		}
