@@ -875,11 +875,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'create':
             button.addEventListener("click", function(form){
-               /* var dbdoc = this.generateNewDatabaseDocument(input);
-                console.log(dbdoc);
-            	return this.client.createDatabase(dbid, dbdoc)*/
-
-              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value))
+              self.client.createDatabase(input.url.value, JSON.parse(input.doc.value), input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
                 var resultDom = UTILS.showHttpResult(response, action, currForm, self.ui);
