@@ -129,6 +129,7 @@ pre, code {
 	float: right;
 }
 
+.terminus-lat-long,
 .latlong {
 	display: block !important;
 	margin-bottom: 6px;
