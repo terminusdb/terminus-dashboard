@@ -129,6 +129,10 @@ pre, code {
 	float: right;
 }
 
+button.terminus-change-range{
+	margin-right: 10px;
+}
+
 .dt-buttons.btn-group{
 	float: left;
 	margin-right: 2%;
@@ -283,7 +287,7 @@ body [class^="icon-"], body [class*=" icon-"] {
 }
 .terminus-hover-table td{
 	 border:lightgrey 0.5px solid;
-	 height: 20px;
+	 height: 10px;
 	 padding: 7px;
 }
 
@@ -1610,12 +1614,9 @@ div.dataTables_info, div.dataTables_paginate {
 }
 
 .terminus-home-del{
-	/*position: absolute;
-    top: 20px;
-    right: 280px;*/
-    background-color: red;
-    color: white;
-    border: white;
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
 }
 .terminus-save-btn{
 	float: right;

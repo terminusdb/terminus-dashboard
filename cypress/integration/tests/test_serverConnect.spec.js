@@ -35,9 +35,15 @@ context('check connection', () => {
    	  cy.get('#terminus-control-panel').find('a').contains('Create New Database').click().then(() => {
 	   		cy.wait(1000)
 
-	   		const dbTitle="test db"
-
+	   	  const dbTitle="test db"
+ 			
 	   	  cy.get('#terminus-content-viewer').find('input[placeholder="No spaces or special characters allowed in IDs"]')
+		  .focus().type(dbName)
+
+		  cy.get('#terminus-content-viewer').find('input[placeholder="A brief title for the Database"]')
+		  .focus().type(dbName)
+
+		  cy.get('#terminus-content-viewer').find('textarea[placeholder="A short text describing the database and its purpose"]')
 		  .focus().type(dbName)
 
 
