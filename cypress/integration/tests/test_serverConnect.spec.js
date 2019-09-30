@@ -36,15 +36,21 @@ context('check connection', () => {
 	   		cy.wait(1000)
 
 	   	  const dbTitle="test db"
+	   	  const dbCommment="test db comment"
  			
 	   	  cy.get('#terminus-content-viewer').find('input[placeholder="No spaces or special characters allowed in IDs"]')
 		  .focus().type(dbName)
 
 		  cy.get('#terminus-content-viewer').find('input[placeholder="A brief title for the Database"]')
-		  .focus().type(dbName)
+		  .focus().type(dbTitle)
 
 		  cy.get('#terminus-content-viewer').find('textarea[placeholder="A short text describing the database and its purpose"]')
-		  .focus().type(dbName)
+		  .focus().type(dbCommment)
+
+		  cy.get('#terminus-content-viewer').find('button').contains('Create').click().then(()=>{
+
+		  		
+		  })
 
 
 	   })

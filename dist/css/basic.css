@@ -346,6 +346,17 @@ td, th {
 	 padding: 7px;
 }
 
+.terminus-db-list-del-icon {
+	margin-right: 50px;
+    margin-left: 50px;
+    color: #dc3545;
+	font-size: large;
+	cursor: pointer;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
 /* Define the default color for all the table rows */
 .terminus-hover-table tr{
 	background: #f5f5f5;
@@ -355,7 +366,7 @@ td, th {
       background-color: #b8d1f3;
 }
 
-div.terminus-object-frame select,
+
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
 	width: 223px;
@@ -364,6 +375,8 @@ select.terminus-class-select, select.terminus-form-select {
 div.terminus-object-frame select {
 	margin-left: 2px;
 	margin-right: 2px;
+	padding: 6px 4px;
+	width: 100px;
 }
 
 div.terminus-object-frame .terminus-frame-infobox-box {
@@ -374,6 +387,7 @@ div.terminus-object-frame .terminus-frame-infobox-box {
 div.terminus-object-frame input,
 input.terminus-form-value {
 	padding: 6px 4px;
+	margin: 0px 0px 10px 0px;
 }
 
 pre.terminus-schema-view {
@@ -407,7 +421,7 @@ div.terminus-control-buttons {
 }
 
 button.terminus-change-range{
-	margin-right: 10px;
+	margin-left: 10px;
 }
 
 textarea.terminus-schema-edit {
@@ -630,7 +644,6 @@ div.terminus-property-frame{
     position: relative;
     min-height: 50px;
 	border-radius: 5px;
-    border-top: 1px solid lightgrey;
 }
 
 .terminus-zebra-frame:nth-child(odd) {
