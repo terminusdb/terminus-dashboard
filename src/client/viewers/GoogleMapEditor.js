@@ -4,7 +4,8 @@ function GoogleMapEditor(options){}
 
 GoogleMapEditor.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
-	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.range);
+	var ty = TerminusClient.FrameHelper.getShorthand(renderer.frame.getType());
+	ty = (ty ? ty : renderer.frame.getType())
 	var mapcontainer = document.createElement("div");
 	mapcontainer.setAttribute('class', "gmap-window gmap-editor");
 	var self = this;
