@@ -32,15 +32,7 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 		else {
 			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action " + type + "-" + control);
 			button.addEventListener("click", function(){
-				if(this.innerHTML == 'Save'){
-					var objId = document.getElementsByClassName('terminus-object-id-input');
-					if(!objId[0].value){
-						objId[0].setAttribute('placeholder', 'Required field');
-						objId[0].style.background = '#f8d7da';
-					}
-					else callback(control);
-				}
-				else callback(control);
+				callback(control);
 			});
 		}
 		dpropDOM.appendChild(button);

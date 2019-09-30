@@ -134,7 +134,7 @@ button.terminus-change-range {
 	background-color: #dcdcdc;
     border: 1px solid green;
 }
-button.object-save{
+button.object-save, button.object-save-disabled, button.object-delete{
 	margin-top: 5px;
 }
 
