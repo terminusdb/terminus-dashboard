@@ -191,9 +191,6 @@ TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
 			this.document.loadDataFrames(dataframes);
 		}
 	}
-	else {
-		alert("Missing Class" + " " + "Failed to add dataframes due to missing class");
-	}
 }
 
 
@@ -214,9 +211,6 @@ TerminusDocumentViewer.prototype.loadSchemaFrames = function(classframes, cls){
 				this.document.fillFromSchema("_:");
 			}
 		}
-	}
-	else {
-		this.error("Missing Class", "Failed to add class frames due to missing class");
 	}
 }
 
