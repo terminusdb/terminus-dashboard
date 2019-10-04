@@ -756,7 +756,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       button.addEventListener("click", function(){
         var opts = {};
         opts['terminus:encoding'] = input.enc.value;
-        opts['terminus:user_key'] = input.key.value;
+        opts['terminus:user_key'] = 'terminus:turtle';
         var schurl = input.url.value;
         var buttonSelf = this;
         self.client.getSchema(schurl, opts)
@@ -771,7 +771,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var buttonSelf = this;
         opts = {};
         opts['terminus:encoding'] = input.enc.value;
-        opts['terminus:user_key'] = input.key.value;
+        opts['terminus:user_key'] = 'terminus:turtle';
         var schurl = input.url.value;
         self.client.connectionConfig.connected_mode = false;
         self.client.updateSchema(schurl, input.doc.value, opts)
@@ -865,7 +865,6 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
     switch(action){
         case 'connect':
             button.addEventListener("click", function(){
-                console.log('input', input.url.value);
                 self.client.connect(input.url.value, input.key.value)
                 .then(function(response){
                 	TerminusClient.FrameHelper.removeChildren(resd);
@@ -884,6 +883,8 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         break;
         case 'delete':
             button.addEventListener("click", function(){
+              var opts ={}
+              //opts.key = input.key.value;
               self.client.deleteDatabase(input.url.value, input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
@@ -894,7 +895,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'getSchema':
             button.addEventListener("click", function(){
                 var opts = {};
-                opts['terminus:encoding'] = 'turtle';
+                opts['terminus:encoding'] = 'terminus:turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var schurl = input.url.value;
                 self.client.getSchema(schurl, opts)
@@ -907,7 +908,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'updateSchema':
             button.addEventListener("click", function(){
                 opts = {};
-                opts['terminus:encoding'] = 'turtle';
+                opts['terminus:encoding'] = 'terminus:turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var payload = input.doc.value;
                 var schurl = input.url.value;
