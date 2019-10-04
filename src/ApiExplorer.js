@@ -884,7 +884,6 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'delete':
             button.addEventListener("click", function(){
               var opts ={}
-              //opts.key = input.key.value;
               self.client.deleteDatabase(input.url.value, input.key.value)
               .then(function(response){
             	  TerminusClient.FrameHelper.removeChildren(resd);
