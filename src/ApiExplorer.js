@@ -756,7 +756,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
       button.addEventListener("click", function(){
         var opts = {};
         opts['terminus:encoding'] = input.enc.value;
-        opts['terminus:user_key'] = input.key.value;
+        opts['terminus:user_key'] = 'terminus:turtle';
         var schurl = input.url.value;
         var buttonSelf = this;
         self.client.getSchema(schurl, opts)
@@ -771,7 +771,7 @@ ApiExplorer.prototype.getApiForm = function(action, input){
         var buttonSelf = this;
         opts = {};
         opts['terminus:encoding'] = input.enc.value;
-        opts['terminus:user_key'] = input.key.value;
+        opts['terminus:user_key'] = 'terminus:turtle';
         var schurl = input.url.value;
         self.client.connectionConfig.connected_mode = false;
         self.client.updateSchema(schurl, input.doc.value, opts)
@@ -894,7 +894,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'getSchema':
             button.addEventListener("click", function(){
                 var opts = {};
-                opts['terminus:encoding'] = 'turtle';
+                opts['terminus:encoding'] = 'terminus:turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var schurl = input.url.value;
                 self.client.getSchema(schurl, opts)
@@ -907,7 +907,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
         case 'updateSchema':
             button.addEventListener("click", function(){
                 opts = {};
-                opts['terminus:encoding'] = 'turtle';
+                opts['terminus:encoding'] = 'terminus:turtle';
                 opts['terminus:user_key'] = input.key.value;
                 var payload = input.doc.value;
                 var schurl = input.url.value;
