@@ -15,7 +15,7 @@ terminator.draw(pconfig, nlocation);
 
 function showPanel(mode){
 	toggleHeaders(mode, document.getElementById("terminus-content-viewer"));
-}
-*/
+}*/
+
 module.exports={TerminusUI:TerminusUI,
                 RenderingMap:RenderingMap}
