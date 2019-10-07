@@ -1,3 +1,4 @@
+const TerminusClient = require('@terminusdb/terminus-client');
 function HTMLImageViewer(options){}
 HTMLImageViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();

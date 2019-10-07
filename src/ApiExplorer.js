@@ -6,7 +6,8 @@
  * @summary Displays a demo and description of api calls from WOQLCLient and what happens under the hood of api calls
  */
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
-const UTILS = require('./Utils')
+const UTILS = require('./Utils');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 let apiNavConfig = {
     mainNav: {

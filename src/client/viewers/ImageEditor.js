@@ -1,4 +1,4 @@
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLImageEditor(options){}
 HTMLImageEditor.prototype.getDOM = function(renderer, dataviewer){

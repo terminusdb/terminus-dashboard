@@ -1,3 +1,6 @@
+const HTMLFrameHelper = require('../HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
+
 function HTMLEntityViewer(options){}
 HTMLEntityViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();
@@ -34,11 +37,13 @@ HTMLEntityViewer.prototype.getEntityViewHTML = function(value, renderer, datavie
 
 HTMLEntityViewer.prototype.getEntityLabel = function(url, response, dv){
 	var nspan = document.createElement("span");
-	if(response && typeof response.InstanceLabel == "object" && response.InstanceLabel["@value"]){
-		nspan.appendChild(dv.internalLink(url, response.InstanceLabel["@value"]));
-		var tit = url + " Type: " + response.InstanceType;
-		if(typeof response.InstanceComment == "object" && response.InstanceComment["@value"]){
-			tit += " " + response.InstanceComment["@value"];
+	if(response && (il = HTMLFrameHelper.getVariableValueFromBinding("InstanceLabel", response))){
+		nspan.appendChild(dv.internalLink(url, il));
+		var rt = HTMLFrameHelper.getVariableValueFromBinding("InstanceType", response);
+		var tit = url + " Type: " + rt;
+		var ic = HTMLFrameHelper.getVariableValueFromBinding("InstanceComment", response);
+		if(typeof ic == "object" && ic["@value"]){
+			tit += " " + ic["@value"];
 		}
 		nspan.setAttribute("title", tit);
 		return nspan;

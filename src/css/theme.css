@@ -1,44 +1,45 @@
 
-body {
+.terminus-client-ui {
 	font-family: 'Lexend Deca', sans-serif;
     margin: 0px;
 }
-h1, h2, h3, h4, h5, h6 {
+.terminus-client-ui h1, .terminus-client-ui h2, .terminus-client-ui h3, .terminus-client-ui h4, .terminus-client-ui h5, .terminus-client-ui h6 {
 	color: #333;
 	margin-top: 0
 }
-h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+.terminus-client-ui h1 small, .terminus-client-ui h2 small, .terminus-client-ui h3 small, .terminus-client-ui h4 small, .terminus-client-ui h5 small, .terminus-client-ui h6 small {
 	font-size: 11px;
 	margin: 0 0 0 5px
 }
-h1 {
+.terminus-client-ui h1 {
 	font-size: 28px
 }
-h2 {
+.terminus-client-ui h2 {
 	font-size: 24px
 }
-h3 {
+.terminus-client-ui h3 {
 	font-size: 20px
 }
-h4 {
+.terminus-client-ui h4 {
 	font-size: 16px
 }
-h5 {
+.terminus-client-ui h5 {
 	font-size: 13px
 }
-h6 {
+.terminus-client-ui h6 {
 	font-size: 11px
 }
-strong, b {
+.terminus-client-ui strong, .terminus-client-ui b {
 	color: #555
 }
-a:hover, a:focus {
+
+.terminus-client-ui a:hover, .terminus-client-ui a:focus {
 	outline: 0
 }
-small, .small {
+.terminus-client-ui small, .terminus-client-ui .small {
 	font-size: 11px
 }
-pre, code {
+.terminus-client-ui pre, .terminus-client-ui code {
 	padding: 1px 2px;
 	font-weight: bold;
 	font-size: 16px
@@ -51,6 +52,7 @@ pre, code {
     content: "";
     background-size: 100%;
 }
+
 /*busy loader*/
 @keyframes animate-stripes {
     0% {
@@ -188,11 +190,11 @@ button.object-save, button.object-save-disabled, button.object-delete{
  height: auto !important;
 }
 
-form {
+.terminus-client-ui form {
 	margin: 0
 }
 
-body [class^="icon-"], body [class*=" icon-"] {
+.terminus-client-ui [class^="icon-"], body [class*=" icon-"] {
 	font-size: 14px;
 	line-height: 20px;
 	height: 20px
@@ -508,73 +510,6 @@ body [class^="icon-"], body [class*=" icon-"] {
   background-color: #f1f1f1;
 }
 
-span.terminus-object-id-label, span.terminus-object-type-label{
-	color:#0055B8;
-	font-weight: bolder;
-}
-
-/* terminus frames */
-div.terminus-object-frame div.terminus-object-header, .terminus-application-header {
-	margin-bottom: 1em;
-    margin-right: 10px;
-    color: #002856;
-    background-color: #00C08B;
-	height: 40px;
-}
-
-div.terminus-object-frame div.terminus-object-header {
-	margin-top: 50px;
-	padding: 4px;
-	margin-right: 20px;
-	font-weight: 600;
-}
-
-div.terminus-object-properties {
-	background-color: #f5f5f5;
-	border: 1px solid lightgrey;
-	margin-right: 20px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-}
-
-select.terminus-frame-selector{
-	width: 150px !important;
-}
-
-
-select.terminus-class-select, select.terminus-form-select {
-	padding: 6px 4px;
-	width: 223px;
-	margin-right: 10px;
-}
-
-div.terminus-object-frame select {
-	margin-left: 2px;
-	margin-right: 2px;
-	padding: 6px 4px;
-	width: 100px;
-}
-
-div.terminus-object-frame .terminus-frame-infobox-box {
-	padding: 4px;
-	margin: 0 4px;
-	/*border: 1px solid red;*/
-}
-
-div.terminus-object-frame input,
-input.terminus-form-value {
-	padding: 6px 4px;
-	margin: 0px 0px 10px 0px;
-}
-
-textarea.terminus-literal-big-value{
-	width: 406px;
-	height: 100px;
-}
-
-span.terminus-property-controls{
-	float: left
-}
 
 .terminus-headings{
 	font-size: 30px;
@@ -601,19 +536,7 @@ div.terminus-object-frame button:hover,
     color: #fff !important;
 }
 
-div.terminus-object-frame {}
 
-div.terminus-property-frame{
-	margin-bottom: 10px;
-	/*font-weight: 600;*/
-}
-
-
-.terminus-property-label-align{
-	margin-left: 20px;
-	text-align: right;
-	font-weight: 600;
-}
 
 span.ql-snow{
 	border: none !important;
@@ -624,18 +547,6 @@ div.ql-editor{
 	border: 1px solid #ccc !important;
 }
 
-.terminus-property-body-align{
-	/*margin-left: 20px;*/
-	text-align: left;
-}
-
-.terminus-property-values-align{
-	margin-top: 20px;
-}
-
-.terminus-property-value{
-	display: flex;
-}
 
 /* terminus table */
 .truncate {
@@ -1005,9 +916,6 @@ div.terminus-violation{
 	background-color: #EBEDEF;
 	overflow:auto;
 }
-div.terminus-property-frame{
-	margin: 10px;
-}
 .terminus-zebra-frame:nth-child(even) {
 	background-color: #faf8f9;
 	overflow:auto;
@@ -1059,12 +967,6 @@ div.terminus-property-frame{
 	font-style: bold;
     padding: 10px;
     background-color: #ccc;
-}
-
-.terminus-zebra-frame{
-    position: relative;
-    min-height: 70px;
-	border-radius: 5px;
 }
 
 .ico-value-facet{
@@ -1195,14 +1097,6 @@ span.terminus-document-chooser .select2-selection-rendered {
 
 .select2-selection-arrow {
     height: 31px !important;
-}
-
-span.terminus-entity-reference-value {
-	padding: 0.2em;
-	margin-left: 7px;
-	height: 2em;
-	margin-top: 5px !important;
-    display: block !important;
 }
 
 span.terminus-mapping-label {
@@ -1498,7 +1392,7 @@ a.terminus-submenu-selected{
 	margin-top: 3px;
 }
 
-.terminus-query-btn:hover, .terminus-query-go-btn:hover, .terminus-object-frame-btn:hover{
+.terminus-query-btn:hover, .terminus-query-go-btn:hover {
 	color: #000 !important;
 	background: #00C08B;
 	border-color: #00C08B !important;
@@ -1511,12 +1405,6 @@ a.terminus-submenu-selected{
     width: 345px;
 }
 
-
-.terminus-text{
-    width: 300px;
-    display: block;
-	margin-top: 20px;
-}
 
 .terminus-control-panel-layout {
 	position: -webkit-sticky;
@@ -1598,7 +1486,6 @@ div.dataTables_info, div.dataTables_paginate {
   opacity: 1;
 }
 
-
 .terminus-doc-btn-gp-align{
 	margin-right: 10px;
 }
@@ -1640,6 +1527,7 @@ div.dataTables_info, div.dataTables_paginate {
     max-width: 100%;
 }
 
+
 .terminus-home-del{
 	color: #721c24;
 	background-color: #f8d7da;
@@ -1675,7 +1563,7 @@ div.dataTables_info, div.dataTables_paginate {
     overflow-x: auto;
 }
 .terminus-status-layout{
-	background: #27293d;{
+	background: #27293d;
 	border: 0;
     position: relative;
     width: 100%;
@@ -1711,3 +1599,148 @@ div.dataTables_info, div.dataTables_paginate {
     padding: 10px;
 }
 
+/* terminus frames */
+div.terminus-object-frame div.terminus-object-header, 
+.terminus-application-header {
+    color: #fff;
+	padding-top: 12px;
+	padding-left: 12px;
+    background-color: #00C08B;
+	height: 34px;
+	border-radius: 4px 4px 0 0;
+}
+
+div.terminus-root-frame div.terminus-object-header {
+}	
+
+div.terminus-object-frame div.terminus-object-header {
+	margin-top: 10px;
+}
+
+div.terminus-object-properties {
+	background-color: #f5f5f5;
+	border: 1px solid lightgrey;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+div.terminus-object-header .terminus-action-control {
+	margin-top: -4px;
+}
+
+
+div.terminus-property-frame {
+	padding: 20px 0 12px 0;
+	
+}
+
+
+span.property-value-view {
+	padding-top: 4px;
+}
+
+span.terminus-property-value {
+	display: block !important;
+	vertical-align: top;
+}
+
+span.terminus-property-header {
+	display: inline-block;
+	width: 240px;
+	float: left;
+}
+
+div.terminus-property-header {
+	width: 240px;
+	margin-bottom: 16px;
+	height: 30px;
+	display: block !important;
+}
+
+div.terminus-property-values div.terminus-object-frame {
+	padding-left: 20px;
+	padding-right: 4px;
+}
+
+.terminus-property-header .terminus-property-label {
+	float: right;
+	padding-top: 4px;
+	font-weight: 600;
+	color: #231;
+	vertical-align: middle;
+}
+
+span.terminus-property-values {
+	float: left;
+	display: inline-block;
+	margin-left: 6px;
+	
+}
+
+select.terminus-frame-selector{
+	margin-left: 4px;
+	width: 120px !important;
+}
+
+
+select.terminus-class-select, select.terminus-form-select {
+	padding: 6px 4px;
+	width: 223px;
+	margin-right: 10px;
+}
+
+div.terminus-object-frame select {
+	margin-left: 2px;
+	margin-right: 2px;
+	padding: 6px 4px;
+	width: 100px;
+}
+
+div.terminus-object-frame .terminus-frame-infobox-box {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+div.terminus-object-frame input,
+input.terminus-form-value {
+	padding: 6px 4px;
+	margin: 0px 0px 10px 0px;
+}
+
+textarea.terminus-literal-big-value{
+	width: 406px;
+	height: 100px;
+}
+
+span.terminus-property-controls{
+	float: left
+}
+
+.terminus-zebra-frame{
+    min-height: 50px;
+	border-radius: 5px;
+}
+
+
+span.terminus-entity-reference-value {
+}
+
+.terminus-client-ui a {
+	text-decoration: none;
+}
+
+
+span.terminus-object-id-label, span.terminus-object-type-label{
+	font-weight: bold;
+	color: #dfd;
+}
+
+.terminus-frame-infobox-spacer {
+	display: inline-block;
+	width: 8px;
+}
+
+.terminus-property-change-label {
+	display: inline-block;
+	margin-right: 8px;
+}

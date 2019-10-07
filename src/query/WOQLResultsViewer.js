@@ -1,5 +1,7 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const Datatables = require('../plugins/datatables.terminus');
+const HTMLFrameHelper = require('../client/HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function WOQLResult(res, query, options, ui){
 	this.ui = ui;
@@ -26,6 +28,8 @@ function WOQLResultsViewer(ui, wresult, wQuery, options, settings, queryPage){
 	this.ui = ui;
 	this.result = wresult;
 	this.wQuery = wQuery;
+	this.max_cell_size = 400;
+	this.max_word_size = 60;
 	this.options = options;
 	this.qPage = queryPage;
 	//this.wqlRes = new WOQLResult();
@@ -148,7 +152,7 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 				td.appendChild(a);
 			}
 			else {
-				td.appendChild(document.createTextNode(lab));
+				HTMLFrameHelper.wrapShortenedText(td, lab, this.max_cell_size, this.max_word_size);
 			}
 			tr.appendChild(td);
 		}

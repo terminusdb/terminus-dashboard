@@ -1,5 +1,7 @@
 const WOQLQuery = require('../query/WOQLQuery');
 const Renderers = require('./ObjectRenderer');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusDocumentViewer(ui, action, options){
 	this.ui = ui;
@@ -24,7 +26,7 @@ TerminusDocumentViewer.prototype.init = function(){
 	wq.execute(woql).then(function(wresult){
 		if(wresult && wresult.hasBindings()){
 			for(var i = 0; i<wresult.bindings.length; i++){
-				var cls = wresult.bindings[i].Class;
+				var cls = HTMLFrameHelper.getVariableValueFromBinding("Element", wresult.bindings[i]);
 				if(cls && typeof self.classmeta[cls] == "undefined"){
 					self.classmeta[cls] = wresult.bindings[i];
 				}
@@ -99,7 +101,7 @@ TerminusDocumentViewer.prototype.loadDocument = function(url, cls){
 		self.setLabel();
 		self.refreshPage();
 		if(self.load_schema){
-			return self.loadDocumentSchema(self.document.cls).then(function(){ self.refreshPage()}).catch(function(e){console.error(e)});
+			self.loadDocumentSchema(self.document.cls).then(function(){ self.refreshPage()}).catch(function(e){console.error(e)});
 		}
 		return response;
 	})
@@ -191,6 +193,9 @@ TerminusDocumentViewer.prototype.loadDataFrames = function(dataframes, cls){
 			this.document.loadDataFrames(dataframes);
 		}
 	}
+	else {
+		console.log("Missing Class" + " " + "Failed to add dataframes due to missing class");
+	}
 }
 
 
@@ -211,6 +216,9 @@ TerminusDocumentViewer.prototype.loadSchemaFrames = function(classframes, cls){
 				this.document.fillFromSchema("_:");
 			}
 		}
+	}
+	else {
+		console.log("Missing Class", "Failed to add class frames due to missing class");
 	}
 }
 

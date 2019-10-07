@@ -1,5 +1,5 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 let HTMLFrameHelper = {};
 
 HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled){
@@ -158,6 +158,40 @@ HTMLFrameHelper.goToName = function(s, p, i){
 	}
 }
 
+HTMLFrameHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word_size){
+	if(max_cell_size && (text.length > max_cell_size)){
+		wrap.setAttribute("title", text);
+		text = text.substring(0, max_cell_size) + "...";
+	}
+	if(max_word_size){
+		const replacements = {}
+		const words = text.split(" ");
+		for(var i = 0; i < words.length; i++){
+			var word = words[i];
+			if(word.length > max_word_size){
+				wrap.setAttribute("title", text);
+				var newstr = word.substring(0, max_word_size) + "...";
+				replacements[word] = newstr;
+			}
+		}
+		for(var k in replacements){
+			text = text.replace(k, replacements[k]);
+		}
+	}
+	wrap.appendChild(document.createTextNode(text));
+}
+
+HTMLFrameHelper.getVariableValueFromBinding = function(varname, bind){
+	for(var key in bind){
+		var skey = key.substring(key.lastIndexOf("/")+1);
+		if(skey == varname){
+			const obj = bind[key];
+			if(typeof obj == "object" && obj['@value']) return obj['@value'];
+			return obj;
+		}
+	}
+	return false;
+}
 
 
 /*HTMLFrameHelper.getFrameRow = function(){

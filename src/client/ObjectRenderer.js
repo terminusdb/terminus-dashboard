@@ -8,12 +8,13 @@
  * @param options options json
  * @returns
  */
-
+const TerminusClient = require('@terminusdb/terminus-client');
 const RenderingMap = require('./RenderingMap');
 const ValueRenderer = require('./ValueRenderer');
 const ObjectViewer = require('./ObjectViewer');
 const PropertyViewer = require('./PropertyViewer');
 const HTMLDataViewer = require('./DataViewer');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
 
 function PropertyRenderer(prop, parent, options){
 	this.predicate = prop;
@@ -173,7 +174,8 @@ PropertyRenderer.prototype.getAvailableClassChoices = function(){
 			var choices = [];
 			for(var i = 0; i < cf.length; i++){
 				var clsmeta = this.parent.getClassMeta(cf[i]);
-				var lab = ((clsmeta && clsmeta.Label && clsmeta.Label["@value"]) ? clsmeta.Label["@value"] : TerminusClient.FrameHelper.labelFromURL(cf[i]));
+				var lab = (clsmeta ? HTMLFrameHelper.getVariableValueFromBinding("Label", clsmeta) : false);
+				var lab = (lab ? lab : TerminusClient.FrameHelper.labelFromURL(cf[i]));
 				choices.push({value: cf[i], label: lab});
 			}
 			return choices;

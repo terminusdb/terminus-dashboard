@@ -31,11 +31,7 @@ const config = {
   },
   devtool :'source-map',
   // Plugins
-
-
-  
 };
-
 
 module.exports = function(env, argv){
 

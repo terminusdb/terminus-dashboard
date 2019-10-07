@@ -73,7 +73,7 @@ var FrameConfig = {
 				pattern: { renderer: "object", depth: 0},
 				output: {
 					facet: "page",
-					features: ["body", "type", "label", "control"],
+					features: ["body", "type", "id", "control"],
 					controls: ["add", "update", "delete"]
 				}
 			},
@@ -92,13 +92,6 @@ var FrameConfig = {
 					features: ["body", "control"],
  					controls: ["delete"]
  				}
-			},
-			{
-				pattern: { renderer: "value", property: "rdfs:comment"},
-				output: {
-					viewerType: "HTMLStringEditor",
-					viewerOptions: { big: true}
-				}
 			}
 
 		],
@@ -145,6 +138,7 @@ var FrameConfig = {
 			{
 				pattern: { renderer: "value", property: "rdfs:comment"},
 				output: {
+					facet: "line",
 					viewerType: "HTMLStringEditor",
 					viewerOptions: { big: true},
 					features: ["body"],

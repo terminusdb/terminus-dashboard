@@ -2,6 +2,7 @@ const TerminusClassChooser = require('../client/TerminusClassChooser');
 const TerminusPropertyChooser = require('../client/TerminusPropertyChooser');
 const TerminusDocumentChooser = require('../client/TerminusDocumentChooser');
 const UTILS= require('../Utils')
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function WOQLTextboxGenerator(tq, qman, ui){
 	this.query = tq;

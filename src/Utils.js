@@ -6,6 +6,7 @@
  * @summary Set of functions used across scripts
  */
 const Codemirror= require('./plugins/codemirror.terminus');
+const TerminusClient = require('@terminusdb/terminus-client');
 // function to read Files
 function readFile(file){
     if (window.XMLHttpRequest){

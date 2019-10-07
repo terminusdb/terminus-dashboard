@@ -2,6 +2,8 @@ const WOQLQuery = require('../query/WOQLQuery');
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;
@@ -60,7 +62,7 @@ TerminusQueryViewer.prototype.init = function(){
 		var wqlR = new WOQLResultsViewer.WOQLResult(wresult, null ,null, self.ui);
 		if(wqlR.hasBindings(wresult)){
 			for(var i = 0; i<wresult.bindings.length; i++){
-				var el = wresult.bindings[i].Element;
+				var el = HTMLFrameHelper.getVariableValueFromBinding("Element", wresult.bindings[i]);
 				if(el && typeof self.meta[el] == "undefined"){
 					self.meta[el] = wresult.bindings[i];
 				}
