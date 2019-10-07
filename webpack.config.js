@@ -54,7 +54,8 @@ module.exports = function(env, argv){
   config.plugins= [
       new HtmlWebPackPlugin({
         template: path.resolve(__dirname, 'src/index.html'),
-        filename: "index.html"
+        filename: "index.html",
+        bundleFileName:"terminus-dashboard.min.js"
       }),
       new CopyWebPackPlugin([
         { from: path.resolve(__dirname, 'src/css'), to: 'css' },
