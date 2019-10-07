@@ -5,7 +5,9 @@
  *
  */
  const Datatables = require('../plugins/datatables.terminus');
- const UTILS =require('../Utils')
+ const UTILS =require('../Utils');
+ const HTMLFrameHelper = require('./HTMLFrameHelper');
+ 
  function TerminusServerController(ui){
 	 this.ui = ui;
  }
@@ -172,24 +174,7 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(tdElement,dbid, text
 	var wrap = document.createElement("p");
 //	wrap.setAttribute("href", "#");
 	wrap.setAttribute("class", "terminus-table-content");
-	if(text.length > this.max_cell_size){
-		wrap.setAttribute("title", text);
-		text = text.substring(0, this.max_cell_size) + "...";
-	}
-	const replacements = {}
-	const words = text.split(" ");
-	for(var i = 0; i < words.length; i++){
-		var word = words[i];
-		if(word.length > this.max_word_size){
-			wrap.setAttribute("title", text);
-			var newstr = word.substring(0, this.max_word_size) + "...";
-			replacements[word] = newstr;
-		}
-	}
-	for(var k in replacements){
-		text = text.replace(k, replacements[k]);
-	}
-	wrap.appendChild(document.createTextNode(text));
+	HTMLFrameHelper.wrapShortenedText(wrap, text, this.max_cell_size, this.max_word_size);
 	tdElement.addEventListener("click", function(){
 		self.ui.connectToDB(dbid);
 		self.ui.showDBMainPage();

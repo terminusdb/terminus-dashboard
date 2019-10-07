@@ -292,8 +292,9 @@ HTMLObjectHeaderViewer.prototype.getObjectTypeDOM = function(renderer){
 	var lab = renderer.subjectClass();
 	var cmt = "All objects have types, identified by a unique URL";
 	if(cm){
-		lab = (cm.Label && cm.Label["@value"] ? cm.Label["@value"]: lab);
-		cmt = (cm.Comment && cm.Comment["@value"] ? renderer.subjectClass() + " " + cm.Comment["@value"] : cmt);
+		lab = HTMLFrameHelper.getVariableValueFromBinding("Label", cm);
+		cmt = HTMLFrameHelper.getVariableValueFromBinding("Comment", cm);
+		cmt = (cmt ? renderer.subjectClass() + " " + cmt : renderer.subjectClass());
 	}
 	return HTMLFrameHelper.getInfoboxDOM("object-type", "Type", lab, cmt);
 }

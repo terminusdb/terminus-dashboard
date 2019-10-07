@@ -1,4 +1,3 @@
-//const FrameHelper = require('../FrameHelper');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
 
 /**
@@ -15,13 +14,13 @@ function HTMLPropertyViewer(renderer){
  * Draws the property as header and body components
  */
 HTMLPropertyViewer.prototype.render = function(){
-	var block = document.createElement('div');
-	block.setAttribute('style', 'display: flex; margin: 10px');
-	var br = document.createElement('br');
-	block.appendChild(br);
+	//var block = document.createElement('div');
+	//block.setAttribute('style', 'display: flex; margin: 10px');
+	//var br = document.createElement('br');
+	//block.appendChild(br);
 	if(this.propDOM){
 		var npropDOM = this.getPropertyDOM();
-		npropDOM.setAttribute('style', 'display: flex; margin: 10px;');
+		//npropDOM.setAttribute('style', 'display: flex; margin: 10px;');
 			//block.appendChild(npropDOM);
 		this.propDOM.replaceWith(npropDOM);
 		this.propDOM = npropDOM;
@@ -31,7 +30,7 @@ HTMLPropertyViewer.prototype.render = function(){
 		//block.appendChild(this.getPropertyDOM());
 		//this.propDOM = block;
 		this.propDOM = this.getPropertyDOM();
-		this.propDOM.setAttribute('style', 'display: flex; margin: 10px;');
+		//this.propDOM.setAttribute('style', 'display: flex; margin: 10px;');
 	}
 	this.propDOM.appendChild(this.getPropertyIDMarker(this.renderer));
 	if(this.headerViewer){
@@ -54,7 +53,7 @@ HTMLPropertyViewer.prototype.getPropertyDOM = function(){
 	}
 	//terminus-property-frame-spacer
 
-	sp.setAttribute("class", "terminus-property-frame terminus-zebra-frame "+ sp + " terminus-property-frame-" + this.renderer.mode + " " + pcls);
+	sp.setAttribute("class", "terminus-property-frame terminus-zebra-frame terminus-property-frame-" + this.renderer.mode + " " + pcls);
 	sp.setAttribute('data-property', this.renderer.property());
 	return sp;
 }

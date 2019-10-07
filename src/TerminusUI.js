@@ -47,10 +47,10 @@ TerminusUI.prototype.connect = function(opts){
 		if(opts && opts.db && self.getDBRecord(opts.db)){
 			self.connectToDB(opts.db);
 			if(opts.document && self.showView("get_document")){
-				self.showDocument(opts.document);
+				response = self.showDocument(opts.document);
 			}
 			else if(opts.schema && self.showView("get_schema")){
-				self.showSchemaPage(opts.schema);
+				response = self.showSchemaPage(opts.schema);
 			}
 			else if(opts.query && self.showView("woql_select")){
 				self.showQueryPage(opts.query);
@@ -66,6 +66,7 @@ TerminusUI.prototype.connect = function(opts){
 			self.showServerMainPage();
 		}
 		self.redraw();
+		return response;
 	})
 	.catch(function(err) {
 		self.clearBusy();
@@ -312,14 +313,16 @@ TerminusUI.prototype.showMappingPage = function(mapping){
 
 TerminusUI.prototype.showDocument = function(durl){
 	this.viewer = new TerminusDocumentViewer(this, "view", this.getDocViewerOptions());
-	this.viewer.loadDocument(durl);
+	const promise = this.viewer.loadDocument(durl);
 	this.redrawMainPage();
+	return promise;
 }
 
 TerminusUI.prototype.showCreateDocument = function(durl){
 	this.viewer = new TerminusDocumentViewer(this, "create", this.getDocCreatorOptions());
-	this.viewer.loadCreateDocument(durl);
+	const promise = this.viewer.loadCreateDocument(durl);
 	this.redrawMainPage();
+	return promise;
 }
 
 TerminusUI.prototype.redrawMainPage = function(){
@@ -383,7 +386,7 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	var cdrawn = false;
 	if(slocation && slocation.server){
 		if(typeof this.client.connection.connection[slocation.server] == "undefined") {
-			this.connect(slocation)
+			return this.connect(slocation)
 			.catch(function(error){
 				self.showLoadURLPage();
 			});

@@ -2,6 +2,7 @@
  * Utility Property which runs a query against the schema and presents the returned Propertyes as a drop-down / Property filter list
  */
 const WOQLQuery = require('../query/WOQLQuery');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
 
 TerminusPropertyChooser = function(ui, filter){
 	this.ui = ui;
@@ -71,13 +72,13 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	if(clist.bindings){
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
-			var cprop = this.getVariableValueFromBinding("Property", clist.bindings[i]);
+			var cprop = HTMLFrameHelper.getVariableValueFromBinding("Property", clist.bindings[i]);
 			if(cprop && added.indexOf(cprop) == -1){
 				added.push(cprop);
 				var opt = document.createElement("option");
 				opt.setAttribute("Class", "terminus-class-choice");
 				opt.value = cprop;
-				var lab = this.getVariableValueFromBinding("Label", clist.bindings[i]);
+				var lab = HTMLFrameHelper.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
 					lab = TerminusClient.FrameHelper.labelFromURL(cprop);
 				}
@@ -90,15 +91,6 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	return choices;
 }
 
-TerminusPropertyChooser.prototype.getVariableValueFromBinding = function(varname, bind){
-	for(var key in bind){
-		var skey = key.substring(key.lastIndexOf("/")+1);
-		if(skey == varname){
-			return bind[key];
-		}
-	}
-	return false;
-}
 
 
 module.exports=TerminusPropertyChooser
