@@ -382,6 +382,9 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	if(this.plugins){
 		this.drawPlugins();
 	}
+	if(this.buttons){
+		this.toggleControl();
+	}
 	var self = this;
 	var cdrawn = false;
 	if(slocation && slocation.server){
@@ -395,9 +398,6 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	else {
 		this.showLoadURLPage();
 	};
-	if(this.buttons){
-		this.toggleControl();
-	}
 }
 
 
