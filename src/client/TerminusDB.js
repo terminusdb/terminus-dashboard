@@ -8,6 +8,7 @@ const TerminusDocumentChooser = require('./TerminusDocumentChooser');
 const WOQLQuery=require('../query/WOQLQuery');
 const UTILS=require('../Utils');
 
+
 /*
  * User Interface elements dealing with database level functions - view, delete, create, db
  * view document etc

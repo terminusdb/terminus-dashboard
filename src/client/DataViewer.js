@@ -56,7 +56,7 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
 		var vholder = document.createElement("span");
 	}
     vholder.setAttribute('class', ' terminus-property-body property-value-body property-value-body-'+this.renderer.currentFacet() + ' terminus-property-body-align');
-	vholder.setAttribute('style', 'display: flex;');
+	//vholder.setAttribute('style', 'display: flex;');
 	if(this.renderer.showFeature("body")){
         var valueViewer = this.renderer.getDataValueViewer();
     	var vdom = valueViewer.getDOM(this.renderer, this);
@@ -135,16 +135,20 @@ HTMLDataViewer.prototype.getSummaryDOM = function(){
 	return HTMLTerminusClient.FrameHelper.getInfoboxDOM("value-summary", false, sum.long, sum.long);
 }
 
-HTMLDataViewer.prototype.internalLink = function(link, label){
+HTMLDataViewer.prototype.fireInternalLink = function(link){
 	var self = this;
-
-	var onclick = function(e){
+	var fire = function(e){
 		e.preventDefault();
-		self.renderer.load(link);
+		self.renderer.load(link);		
 	}
+	return fire;
+}
+
+HTMLDataViewer.prototype.internalLink = function(link, label){
+	var onclick = this.fireInternalLink(link);
 	var a = document.createElement("a");
 	a.onClick = onclick;
-	a.href="";
+	a.href=link;
 	a.addEventListener("click", onclick);
 	if(label){
 		a.appendChild(document.createTextNode(label));

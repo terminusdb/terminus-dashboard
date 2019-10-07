@@ -1,8 +1,10 @@
 /*
  * Utility class which runs a query against the schema and presents the returned classes as a drop-down / class filter list
  */
-//const FrameHelper = require('../FrameHelper');
+
 const WOQLQuery = require('../query/WOQLQuery');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
+
 
 TerminusClassChooser = function(ui, filter, chosen){
 	this.ui = ui;
@@ -68,8 +70,8 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 		}
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
-			var bclass = this.getVariableValueFromBinding("Element", clist.bindings[i]);
-			if(!bclass) bclass = this.getVariableValueFromBinding("Class", clist.bindings[i]);
+			var bclass = HTMLFrameHelper.getVariableValueFromBinding("Element", clist.bindings[i]);
+			if(!bclass) bclass = HTMLFrameHelper.getVariableValueFromBinding("Class", clist.bindings[i]);
 			if(bclass && added.indexOf(bclass) == -1){
 				added.push(bclass);
 				var opt = document.createElement("option");
@@ -78,7 +80,7 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 				if(opt.value == this.choice){
 					opt.selected = true;
 				}
-				var lab = this.getVariableValueFromBinding("Label", clist.bindings[i]);
+				var lab = HTMLFrameHelper.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
 
 					lab = TerminusClient.FrameHelper.labelFromURL(bclass);
@@ -93,14 +95,6 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 	return choices;
 }
 
-TerminusClassChooser.prototype.getVariableValueFromBinding = function(varname, bind){
-	for(var key in bind){
-		var skey = key.substring(key.lastIndexOf("/")+1);
-		if(skey == varname){
-			return bind[key];
-		}
-	}
-	return false;
-}
+
 
 module.exports=TerminusClassChooser
