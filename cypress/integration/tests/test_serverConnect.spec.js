@@ -1,3 +1,5 @@
+const schemaUpdate =require('./schemaUpdate') 
+
 context('check connection', () => {
    beforeEach(() => {
        cy.visit('http://localhost/terminus-dashboard/dist/index.html')
@@ -57,7 +59,7 @@ context('check connection', () => {
 	   })
 	})
 
-    it('get and update database Schema', () => {
+    it('get database Schema', () => {
     	cy.get("table.terminus-db-list").contains('td',dbName).click().then(()=>{
     		cy.wait(1000);
 
@@ -72,21 +74,32 @@ context('check connection', () => {
 	    			const cmAtomSchema=$pre.find(`span.cm-atom:contains(<http://localhost:6363/${dbName}/schema#>)`);
 	    			expect(cmAtomSchema).to.have.length(1);
 	    		})
-
-	    		cy.get('#terminus-content-viewer').find('button.terminus-schema-import_schema').click().then(()=>{
-
-	    			//cy.get('#terminus-content-viewer').find('input.terminus-url-connect').type()
-	    			
-
-	    		})
-
-
-
-
-
     		})
     	})
     })
+
+    it('update database Schema', () => {
+    	cy.get("table.terminus-db-list").contains('td',dbName).click().then(()=>{
+    		cy.wait(1000);
+
+    		cy.get('#terminus-control-panel').contains('a', 'Schema').click().then(()=>{
+    		//cy.wait(1000);
+
+	    		cy.get('#terminus-content-viewer').find('pre').should(($pre)=>{
+	    			
+	    			const cmAtomDoc=$pre.find(`span.cm-atom:contains(<http://localhost:6363/${dbName}/document/>)`);
+	    			expect(cmAtomDoc).to.have.length(1);
+
+	    			const cmAtomSchema=$pre.find(`span.cm-atom:contains(<http://localhost:6363/${dbName}/schema#>)`);
+	    			expect(cmAtomSchema).to.have.length(1);
+	    		})
+    		})
+    	})
+    })
+
+
+
+
 
     it('delete database', () => {
     	//tr:has(td nobr:contains('Question'))
