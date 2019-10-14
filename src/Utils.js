@@ -361,6 +361,24 @@ function extractValueFromCell(cellValue){
     return ihtml.firstChild.innerHTML;
 }
 
+function displayDocumentSubMenus(ui) {
+	//display submenus on click of documents
+	if(ui.showControl("get_document")) {
+		var gd = document.getElementsByClassName('terminus-get-doc');
+		showSubMenus(gd[0]);
+	}
+	if(ui.showControl("create_document")) {
+		var cd = document.getElementsByClassName('terminus-create-doc');
+		showSubMenus(cd[0]);
+	}
+}
+
+function showSubMenus (el){
+	el.classList.remove('terminus-hide');
+	el.classList.add('terminus-display');
+}
+
+
 module.exports={tolggleContent,
                removeSelectedNavClass,
                stylizeCodeDisplay,
@@ -372,4 +390,5 @@ module.exports={tolggleContent,
                getFunctionSignature,
                toggleVisibility,
                extractValueFromCell,
+               displayDocumentSubMenus,
                activateSelectedNav}

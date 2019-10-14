@@ -1,5 +1,6 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const Datatables = require('../plugins/datatables.terminus');
+const UTILS=require('../Utils');
 const HTMLFrameHelper = require('../client/HTMLFrameHelper');
 
 
@@ -161,6 +162,13 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 	return tbody;
 }
 
+WOQLResultsViewer.prototype.selectDocumentNavBar = function(ui) {
+	UTILS.removeSelectedNavClass("terminus-selected");
+	var dnav = document.getElementsByClassName('terminus-document-nav');
+	dnav[0].classList.add("terminus-selected");
+	UTILS.displayDocumentSubMenus(ui);
+}
+
 WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
 	var a = document.createElement("a");
 	a.setAttribute("title", lab);
@@ -170,6 +178,7 @@ WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
 		if(self.result.ui) {
 			self.result.ui.showDocument(this.title);
 			self.result.ui.redraw();
+			self.selectDocumentNavBar(self.ui);
 		}
 	});
 	a.appendChild(document.createTextNode(lab));
