@@ -1,4 +1,5 @@
 const DateHelper = require('./DateHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLDateEditor(options){
 	this.max = (options && options.max ? options.max : false);

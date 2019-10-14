@@ -4,7 +4,7 @@
 
 const WOQLQuery = require('../query/WOQLQuery');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 TerminusClassChooser = function(ui, filter, chosen){
 	this.ui = ui;

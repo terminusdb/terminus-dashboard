@@ -1,3 +1,4 @@
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLCoordinateViewer(options){
 	this.inputs = [];

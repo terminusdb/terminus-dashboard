@@ -1,5 +1,5 @@
 const HTMLFrameHelper = require('./HTMLFrameHelper');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 /**
  * Property Viewer
  */

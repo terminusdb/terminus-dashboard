@@ -2,7 +2,7 @@ const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const Datatables = require('../plugins/datatables.terminus');
 const UTILS=require('../Utils');
 const HTMLFrameHelper = require('../client/HTMLFrameHelper');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function WOQLResult(res, query, options, ui){
 	this.ui = ui;

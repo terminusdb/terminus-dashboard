@@ -1,3 +1,5 @@
+const TerminusClient = require('@terminusdb/terminus-client');
+
 function HTMLRangeViewer(options){
 	this.commas = (options && options.commas ? options.commas : true);
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
@@ -27,8 +29,8 @@ HTMLRangeViewer.prototype.getDOM = function(renderer, dataviewer){
 	return d;
 }
 
-function useCommas(renderer){
-	if(in_array(renderer.frame.getTypeShorthand(), array("xdd:gYearRange", "xdd:dateRange"))) return false;
+HTMLRangeViewer.prototype.useCommas = function(renderer){
+	if(["xdd:gYearRange", "xdd:dateRange"].indexOf(renderer.frame.getTypeShorthand()) != -1) return false;
 	return this.commas;
 }
 

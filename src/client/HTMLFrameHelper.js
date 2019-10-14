@@ -1,5 +1,5 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 let HTMLFrameHelper = {};
 
 HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled){

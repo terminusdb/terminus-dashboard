@@ -1,4 +1,4 @@
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLStringEditor(options){
 	this.css = ((options && options.css) ? "terminus-literal-value " + options.css : "terminus-literal-value");
