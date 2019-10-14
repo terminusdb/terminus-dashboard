@@ -93,10 +93,11 @@ TerminusDBController.prototype.getAsDOM = function(){
 		}
 		if((this.ui.showControl("get_document") || this.ui.showControl("create_document"))){
 			var item = this.getControlHTML("Document", "fa-book");
+			item.classList.add('terminus-document-nav');
 	        item.addEventListener("click", function(){
 				UTILS.removeSelectedNavClass("terminus-selected");
                 this.classList.add("terminus-selected");
-				self.displayDocumentSubMenus();
+				UTILS.displayDocumentSubMenus(self.ui);
 			})
 	        ul.appendChild(item);
 		}
@@ -131,24 +132,6 @@ TerminusDBController.prototype.getControlHTML = function(text, ic, css){
     a.appendChild(txt);
     return a;
 }
-
-TerminusDBController.prototype.showSubMenus = function(el){
-	el.classList.remove('terminus-hide');
-	el.classList.add('terminus-display');
-}
-
-TerminusDBController.prototype.displayDocumentSubMenus = function(){
-	//display submenus on click of documents
-	if(this.ui.showControl("get_document")) {
-		var gd = document.getElementsByClassName('terminus-get-doc');
-		this.showSubMenus(gd[0]);
-	}
-	if(this.ui.showControl("create_document")) {
-		var cd = document.getElementsByClassName('terminus-create-doc');
-		this.showSubMenus(cd[0]);
-	}
-}
-
 
 TerminusDBController.prototype.getDocumentChooserDOM = function(){
 	var self = this;
@@ -477,9 +460,22 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	schem.setAttribute("placeholder", "Terminus DB URL");
 	schem.setAttribute("type", "text");
 	schem.setAttribute("class", "terminus-form-value terminus-form-url terminus-input-text");
-
 	sci.appendChild(schem);
 	mfd.appendChild(sci);
+
+	var sci = document.createElement("div");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	var slab = document.createElement("span");
+	slab.setAttribute("class", "terminus-schema-label terminus-form-label terminus-control-label");
+	slab.appendChild(document.createTextNode("Key"));
+	sci.appendChild(slab);
+	var kip = document.createElement("input");
+	kip.setAttribute("placeholder", "Server API Key");
+	kip.setAttribute("type", "text");
+	kip.setAttribute("class", "terminus-form-value terminus-form-url terminus-input-text");
+	sci.appendChild(kip);
+	mfd.appendChild(sci);
+
 	var sci = document.createElement("div");
 	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
@@ -507,6 +503,7 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 		input.title = titip.value;
 		input.description = descip.value;
 		input.schema = schem.value;
+		input.key = kip.value;
 		input.data = datip.value;
 		return input;
 	}
