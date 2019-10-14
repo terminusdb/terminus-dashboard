@@ -1,4 +1,5 @@
 function HTMLChoiceViewer(options){};
+const TerminusClient = require('@terminusdb/terminus-client');
 
 HTMLChoiceViewer.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();

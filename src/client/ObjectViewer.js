@@ -2,6 +2,7 @@
  * Object for producing a HTML view of a given object in a frame
  */
 const HTMLFrameHelper = require('./HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLObjectViewer(renderer){
 	this.renderer = renderer;

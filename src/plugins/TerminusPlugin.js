@@ -1,3 +1,4 @@
+const TerminusClient = require('@terminusdb/terminus-client');
 function TerminusPluginManager(){
 	this.preloaded = [];
 	this.loaded = [];

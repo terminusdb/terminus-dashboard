@@ -3,6 +3,7 @@ const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;

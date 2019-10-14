@@ -1,3 +1,5 @@
+const TerminusClient = require('@terminusdb/terminus-client');
+
 function HTMLRangeEditor(options){
 	this.commas = (options && options.commas ? options.commas : true);
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");

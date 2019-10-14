@@ -1,3 +1,4 @@
+const TerminusClient = require('@terminusdb/terminus-client');
 const UTILS= require('../Utils')
 
 /*** client side processing ***/

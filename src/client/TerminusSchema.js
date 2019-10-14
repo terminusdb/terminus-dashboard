@@ -5,6 +5,7 @@
 const TerminusClassChooser = require('./TerminusClassChooser');
 const TerminusDocumentViewer = require('./TerminusDocument');
 const UTILS=require('../Utils')
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusSchemaViewer(ui){
 	this.ui = ui;

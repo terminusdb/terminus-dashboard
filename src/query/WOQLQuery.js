@@ -1,5 +1,5 @@
 const WOQLResult = require('./WOQLResultsViewer');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 function WOQLQuery(client, options, ui){
 	this.client = client;
 	this.options = options;

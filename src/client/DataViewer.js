@@ -3,7 +3,7 @@
  */
 const HTMLFrameHelper = require('./HTMLFrameHelper');
 const HTMLStringViewer = require('./viewers/String');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 function HTMLDataViewer(renderer){
 	this.renderer = renderer;
 	this.headerViewer = renderer.getValueHeaderViewer();

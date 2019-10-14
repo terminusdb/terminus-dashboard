@@ -3,7 +3,7 @@ let TerminusConfig = {
 		"server", "db", "api_explorer", "change-server", "import_schema", "create_database",
 		"create_document", "get_document", "get_schema", "update_schema", "woql_select"
 	],
- 	css: "theme",
+	css: "theme",
 	plugins: {
 		"font-awesome": true,
 		gmaps: {

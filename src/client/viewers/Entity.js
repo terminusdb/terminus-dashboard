@@ -1,5 +1,5 @@
 const HTMLFrameHelper = require('../HTMLFrameHelper');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLEntityViewer(options){}
 HTMLEntityViewer.prototype.getDOM = function(renderer, dataviewer){

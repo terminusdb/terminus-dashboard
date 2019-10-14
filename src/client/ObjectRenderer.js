@@ -8,7 +8,7 @@
  * @param options options json
  * @returns
  */
-
+const TerminusClient = require('@terminusdb/terminus-client');
 const RenderingMap = require('./RenderingMap');
 const ValueRenderer = require('./ValueRenderer');
 const ObjectViewer = require('./ObjectViewer');

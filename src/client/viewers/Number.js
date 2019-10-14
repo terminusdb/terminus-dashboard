@@ -1,3 +1,4 @@
+const TerminusClient = require('@terminusdb/terminus-client');
 function HTMLNumberViewer(options){
 	this.commas = (options && options.commas ? options.commas : true);
 }

@@ -3,6 +3,7 @@
  */
 const WOQLQuery = require('../query/WOQLQuery');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
+const TerminusClient = require('@terminusdb/terminus-client');
 
 TerminusPropertyChooser = function(ui, filter){
 	this.ui = ui;

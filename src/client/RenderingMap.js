@@ -22,7 +22,7 @@ const GoogleMapEditor = require('./viewers/GoogleMapEditor');
 const GoogleMapViewer = require('./viewers/GoogleMapViewer');
 const HTMLMarkupEditor = require('./viewers/HTMLMarkupEditor');
 const S2EntityEditor = require('./viewers/S2EntityEditor');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 let RenderingMap = {
 	registeredDataViewers: {},

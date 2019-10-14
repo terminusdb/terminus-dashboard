@@ -1,3 +1,5 @@
+const TerminusClient = require('@terminusdb/terminus-client');
+
 function HTMLMarkupEditor(options){}
 HTMLMarkupEditor.prototype.getDOM = function(renderer, dataviewer){
 	var value = renderer.value();

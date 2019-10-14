@@ -1,7 +1,7 @@
 const WOQLQuery = require('../query/WOQLQuery');
 const Renderers = require('./ObjectRenderer');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
-
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusDocumentViewer(ui, action, options){
 	this.ui = ui;
