@@ -14,6 +14,7 @@ cache:
     - ~/.cache
 
 install:
+  - npm install
   - npm ci
 
 before_script:
