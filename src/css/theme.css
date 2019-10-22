@@ -550,7 +550,8 @@ div.ql-editor{
 
 /* terminus table */
 .truncate {
-  max-width:50px;
+  /*max-width:200px;*/
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1432,8 +1433,8 @@ div.dataTables_info, div.dataTables_paginate {
   /*line-height: 50px;*/
   transition: all .5s ease-in-out;
   transform-origin: left top;
-  flex: 0 0 76.666667%;
-    max-width: 76.666667%;
+  /*flex: 0 0 76.666667%;
+    max-width: 76.666667%;*/
   /*transform: scaleY(0);*/
  }
 
@@ -1600,7 +1601,7 @@ div.dataTables_info, div.dataTables_paginate {
 }
 
 /* terminus frames */
-div.terminus-object-frame div.terminus-object-header, 
+div.terminus-object-frame div.terminus-object-header,
 .terminus-application-header {
     color: #fff;
 	padding-top: 12px;
@@ -1611,7 +1612,7 @@ div.terminus-object-frame div.terminus-object-header,
 }
 
 div.terminus-root-frame div.terminus-object-header {
-}	
+}
 
 div.terminus-object-frame div.terminus-object-header {
 	margin-top: 10px;
@@ -1631,7 +1632,7 @@ div.terminus-object-header .terminus-action-control {
 
 div.terminus-property-frame {
 	padding: 20px 0 12px 0;
-	
+
 }
 
 
@@ -1674,7 +1675,7 @@ span.terminus-property-values {
 	float: left;
 	display: inline-block;
 	margin-left: 6px;
-	
+
 }
 
 select.terminus-frame-selector{
