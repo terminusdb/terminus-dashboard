@@ -112,12 +112,20 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 		for(var j = 0; j<ordered_headings.length; j++){
 			if(typeof bindings[i][ordered_headings[j]] == "object"){
 				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "Object?");
+				var wrap = document.createElement("p");
+				wrap.setAttribute("class", "terminus-table-content");
+				HTMLFrameHelper.wrapShortenedText(wrap, lab, this.max_cell_size, this.max_word_size);
+				lab = wrap.innerText;
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
 				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
 				if(lab == "unknown") lab = "";
-				if(lab.substring(0, 4) == "doc:"){
-					lab = this.getDocumentLocalLink(lab).outerHTML;
+				else if(lab.substring(0, 4) == "doc:"){
+					var a = document.createElement("a");
+					a.setAttribute("title", lab);
+					a.setAttribute("href", '#');
+					a.appendChild(document.createTextNode(lab));
+					lab = a.outerHTML;
 				}
 			}
 			var clab = TerminusClient.FrameHelper.validURL(ordered_headings[j]) ? TerminusClient.FrameHelper.labelFromURL(ordered_headings[j]) : ordered_headings[j];
@@ -125,12 +133,12 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 		}
 		data.push(colDataData);
 	}
-	dtResult.columns = columns;
-	formattedResult.data = data;
-	formattedResult.recordsTotal = 65;
+	dtResult.columns                = columns;
+	formattedResult.data            = data;
+	formattedResult.recordsTotal    = 65;
 	formattedResult.recordsFiltered = 65;
-	formattedResult.draw = 1;
-	dtResult.data = formattedResult;
+	formattedResult.draw 			= pageInfo.draw;
+	dtResult.data 					= formattedResult;
 	return dtResult;
 }
 

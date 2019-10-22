@@ -1,4 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLFrameHelper = require('../client/HTMLFrameHelper');
 const UTILS= require('../Utils')
 
 /*** client side processing ***/
@@ -62,13 +63,11 @@ function Datatables(wResViewer, qPage){
 */
 Datatables.prototype.executeQuery = function(query, pageInfo, resultDOM){
     var self = this;
-    //dcb.wquery.execute(query)
-    this.wQuery.execute(query)
+    return this.wQuery.execute(query)
       .then(function(result){
           var dtResult = {};
-          dtResult =self.wrViewer.getDtTableDOMOnChange(result.bindings, resultDOM, pageInfo);
-          return dtResult;
-          //self.getDataFromServer(dtResult, wrViewer, ui, wQuery, resultDOM);
+          dtResult = self.wrViewer.formatResultsForDatatableDisplay(result.bindings, pageInfo)
+          return dtResult.data;
       })
       .catch(function(err){
           console.error(err);
@@ -131,12 +130,13 @@ Datatables.prototype.generateNewQueryOnPageChange = function(pageInfo){
     dt: Datatable reference
     len : current number of records to display
 */
-Datatables.prototype.getCallbackSettings = function(dt, len, start){
+Datatables.prototype.getCallbackSettings = function(dt, dtAPIChangeSettings){
     var pageInfo = {};
-    pageInfo.pageLength = len;
-    pageInfo.start      = start;
-    pageInfo.qTextDom   = dt.qTextDom;
-    pageInfo.query      = dt.query;
+    pageInfo.pageLength  = dtAPIChangeSettings._iDisplayLength;
+    pageInfo.start       = dtAPIChangeSettings._iDisplayStart;
+    pageInfo.draw        = dtAPIChangeSettings.iDraw;
+    pageInfo.qTextDom    = dt.qTextDom;
+    pageInfo.query       = dt.query;
     pageInfo.chosenValue = dt.chosenValue;
     return pageInfo;
 }
@@ -159,13 +159,13 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
 }
 
 Datatables.prototype.getNewDataOnChange = function(drawnTab, aSettings, resultDOM){
-    var pageInfo = this.getCallbackSettings(this, aSettings._iDisplayLength, aSettings._iDisplayStart);
+    var pageInfo = this.getCallbackSettings(this, aSettings);
     var query = this.generateNewQueryOnPageChange(pageInfo);
     return this.executeQuery(query, pageInfo, resultDOM);
     //return  dtResult.result.data;
 }
 
-Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
+Datatables.prototype.getDataFromServer = function(dtResult, resultDOM){
     var dt = this;
     var tab = dtResult.tab;
     this.setUp(tab, this.wrViewer.settings, resultDOM);
@@ -180,35 +180,47 @@ Datatables.prototype.getDataFromServer = function(dtResult,resultDOM){
          columns     : dtResult.result.columns,
          paging      : true,
          select      : true,
-         initComplete: function(settings) {
-                        var ict =settings.oInstance.api();
-                        ict.$('td').each(function(){
-                            this.setAttribute('title', $(this).html())
-                        })},
+         autoWidth   : true,
          ajax        : function (data, callback, settings) {
-                        if(Object.entries(dtResult.result.data).length > 0){
-                            // first draw is loaded
-                            var res = dtResult.result.data;
-                            dtResult.result.data = {};
-                        }
-                        else{
-                            var res = dt.getNewDataOnChange(this, settings, resultDOM);
-                            console.log('res', res);
-                        }
-                        callback(res);},
+                            if(Object.entries(dtResult.result.data).length > 0){
+                                // first draw is loaded
+                                var res = dtResult.result.data;
+                                dtResult.result.data = {};
+                                callback(res);
+                            }
+                            else{
+                                dt.getNewDataOnChange(this, settings, resultDOM)
+                                    .then(function(result){
+                                     callback(result);
+                                })
+                            }
+                       },
          buttons     : [{ extend: 'copy', text: 'Copy to clipboard' },
                         { extend: 'excel', text: 'Export to Excel' }],
-         columnDefs  : [{targets:'_all',className:"truncate"}],
+         columnDefs  : [{ targets:'_all',
+                          className:"truncate"}],
          createdRow  : function(row){
                             var td = $(row).find(".truncate");
                             td.attr("title", td.html());},
-         //colReorder  : {addFixed : true, liveDrag:true},
          scrollX     : true
     }); //jQuery(tab)
 
+    // on click of doc
+    jQuery(tab, 'tbody').on('click', 'td', function(){
+        if(table.cell(this).data){
+            if(this.innerText.substring(0, 4) == "doc:"){
+                if(dt.wrViewer.result.ui) {
+        			dt.wrViewer.result.ui.showDocument(this.innerText);
+        			dt.wrViewer.result.ui.redraw();
+        			dt.wrViewer.selectDocumentNavBar(dt.ui);
+        		}
+            }
+        }
+     }); // on click
+
     //styling
     tab.setAttribute('class'      , 'stripe dataTable');
-    tab.setAttribute('style'       , 'margin: 0!important');
+    tab.setAttribute('style'      , 'margin: 0!important');
     tab.setAttribute('cellpadding', '1');
     tab.setAttribute('cellspacing', '1');
     tab.setAttribute('border'     , '0');
