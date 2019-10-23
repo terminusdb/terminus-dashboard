@@ -1553,16 +1553,22 @@ div.dataTables_info, div.dataTables_paginate {
 .terminus-content-layout{
 	background-color: #f8f8ff;
 	box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);
-	min-height: 800px;
+	min-height: 900px;
 }
 
 .terminus-main-content{
 	padding: 30px;
     overflow: hidden;
-    max-width: 1240px;
+    /*max-width: 1240px;*/
+	width 100%;
     overflow-x: overlay;
 }
-
+.terminus-client-table-layout{
+	height: 100%;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    height: fill-available;
+}
 /*terminus status layout */
 .terminus-connected-status-window-layout {
 	position: relative;
@@ -1571,10 +1577,11 @@ div.dataTables_info, div.dataTables_paginate {
     padding-left: 15px;
 }
 .terminus-query-results{
-	min-width: 100px;
+	/*min-width: 100px; */
     max-width: 1250px;
-    overflow: hidden;
-    overflow-x: auto;
+    /* overflow: hidden; */
+    /* overflow-x: auto; */
+    width: 100%;
 }
 .terminus-status-layout{
 	background: #27293d;

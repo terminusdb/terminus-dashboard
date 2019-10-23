@@ -179,7 +179,7 @@ Datatables.prototype.getDataFromServer = function(dtResult, resultDOM){
          pageLength  : dt.wrViewer.settings.pageLength,
          serverSide  : true,
          processing  : true,
-         lengthMenu  : [5, 15, 25, 50, 75, 100],
+         lengthMenu  : [25, 50, 75, 100],
          dom         : 'RBlftip',
          columns     : dtResult.result.columns,
          paging      : true,
