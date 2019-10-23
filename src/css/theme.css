@@ -234,6 +234,12 @@ button.object-save, button.object-save-disabled, button.object-delete{
 	padding-top: 13px;
 	border-top: 1px solid #f5f5f5
 }
+.terminus-document-config{
+	float: right;
+}
+.terminus-list-of-doc{
+	margin: 30px 0px 30px 0px;
+}
 .terminus-form-horizontal .terminus-control-label{
 	float: left;
     width: 160px !important;
@@ -912,6 +918,14 @@ div.terminus-violation{
 	border-bottom: 0.5px solid #856404;
 }
 
+.terminus-doc-control-label{
+	float: right;
+    width: 160px !important;
+    padding-top: 12px;
+	font-size: 18px;
+    text-align: left;
+}
+
 /* frameviewer styling */
 .terminus-zebra-frame:nth-child(odd) {
 	background-color: #EBEDEF;
@@ -1291,9 +1305,8 @@ a.terminus-submenu-selected{
 
 /* terminus document chooser */
 .terminus-choose-by-id{
-	margin: 20px 0px 20px 30px;
+	margin: 20px 0px 20px 0px;
 }
-
 
 /* terminus query button grouping */
 .terminus-query-group-row {

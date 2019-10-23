@@ -136,11 +136,6 @@ ApiExplorer.prototype.setSelectedNavMenu = function(a){
     a.classList.add("terminus-selected");
 }
 
-ApiExplorer.prototype.setSelectedSubMenu = function(a){
-    UTILS.removeSelectedNavClass("terminus-submenu-selected");
-    a.classList.add("terminus-submenu-selected");
-}
-
 ApiExplorer.prototype.navOnSelect = function(action, nav, viewer){
     UTILS.removeSelectedNavClass("terminus-selected");
     nav.classList.add("terminus-selected");
@@ -255,7 +250,7 @@ ApiExplorer.prototype.changeSubApiDom = function(curSubMenu, action, cont, body)
 }
 
 ApiExplorer.prototype.subNavOnSelect = function(curSubMenu, subMenuConfig, subNav, cont, body){
-    this.setSelectedSubMenu(subNav);
+    UTILS.setSelectedSubMenu(subNav);
     this.changeSubApiDom(curSubMenu, subMenuConfig.action, cont, body);
 }
 

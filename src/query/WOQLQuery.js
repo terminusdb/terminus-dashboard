@@ -250,7 +250,7 @@ WOQLQuery.prototype.getDocumentQuery = function(id, limit, start){
 	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
-WOQLQuery.prototype.getClassesQuery = function(){
+WOQLQuery.prototype.getClassesQuery = function(limit, start){
 	var wjson = {
 		and: [
 			{triple: ["v:ID", "rdf:type", "v:Class"]},
@@ -268,7 +268,7 @@ WOQLQuery.prototype.getClassesQuery = function(){
 			}
 		]
 	}
-	return wjson;
+	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
 module.exports=WOQLQuery

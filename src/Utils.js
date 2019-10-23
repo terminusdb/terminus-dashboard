@@ -302,9 +302,15 @@ function stylizeCodeDisplay(ui, txt, dom, mode){
 */
 function removeSelectedNavClass(name){
     var el = document.getElementsByClassName(name);
-    for(var i=0; i<el.length; i++){
+    if (el.length < 1) return;
+    for(var i=0; i<(el.length + 1); i++){
         el[i].classList.remove(name);
     }
+}
+
+function setSelectedSubMenu(a){
+    removeSelectedNavClass("terminus-submenu-selected");
+    a.classList.add("terminus-submenu-selected");
 }
 
 // toggles between contents
@@ -324,7 +330,7 @@ function tolggleContent(icon, content){
 // controls current selected nav bar
 function activateSelectedNav(nav, terminator){
     removeSelectedNavClass("terminus-selected");
-	checkDocumentSubMenus(terminator);
+	//checkDocumentSubMenus(terminator);
 	nav.classList.add("terminus-selected");
 }
 
@@ -392,4 +398,5 @@ module.exports={tolggleContent,
                toggleVisibility,
                extractValueFromCell,
                displayDocumentSubMenus,
+               setSelectedSubMenu,
                activateSelectedNav}
