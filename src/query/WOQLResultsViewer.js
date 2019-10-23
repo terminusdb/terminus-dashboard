@@ -85,7 +85,7 @@ WOQLResultsViewer.prototype.getTableDOM = function(bindings, resultDOM){
 		resultDOM.classList.add('terminus-dt-result-cont');
 		return tab;
     }
-	else{
+	else {
 		var tab = this.getTable(bindings, false, {});
 		resultDOM.appendChild(tab);
 	}
@@ -185,7 +185,7 @@ WOQLResultsViewer.prototype.getDocumentLocalLink = function(lab){
 	a.addEventListener("click", function(){
 		if(self.result.ui) {
 			self.result.ui.showDocument(this.title);
-			self.result.ui.redraw();
+			//self.result.ui.redraw();
 			self.selectDocumentNavBar(self.ui);
 		}
 	});

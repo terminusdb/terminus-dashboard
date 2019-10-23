@@ -106,6 +106,9 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
         case 'Show_Document_Info_by_Id':
             return wq.getDocumentQuery(settings.chosenValue, settings.pageLength, settings.start);
         break;
+        case 'Show_All_Document_classes':
+            return wq.getClassesQuery(settings.pageLength, settings.start);
+        break;
         default:
             console.log('Invalid woql option passed');
         break;
@@ -136,7 +139,8 @@ Datatables.prototype.getCallbackSettings = function(dt, dtAPIChangeSettings){
     pageInfo.start       = dtAPIChangeSettings._iDisplayStart;
     pageInfo.draw        = dtAPIChangeSettings.iDraw;
     pageInfo.qTextDom    = dt.qTextDom;
-    pageInfo.query       = dt.query;
+    if(this.qPage) pageInfo.query = dt.query;
+    else pageInfo.query = 'Show_All_Document_classes';
     pageInfo.chosenValue = dt.chosenValue;
     return pageInfo;
 }
@@ -175,7 +179,7 @@ Datatables.prototype.getDataFromServer = function(dtResult, resultDOM){
          pageLength  : dt.wrViewer.settings.pageLength,
          serverSide  : true,
          processing  : true,
-         lengthMenu  : [5, 10, 25, 50, 75, 100],
+         lengthMenu  : [5, 15, 25, 50, 75, 100],
          dom         : 'RBlftip',
          columns     : dtResult.result.columns,
          paging      : true,

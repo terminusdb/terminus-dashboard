@@ -312,6 +312,13 @@ TerminusUI.prototype.showMappingPage = function(mapping){
 	this.redrawMainPage();
 }
 
+TerminusUI.prototype.showDocumentPage = function(durl){
+    var opts = {};
+    opts.mode = 'home';
+    this.viewer = new TerminusDocumentViewer(this, "view", opts);
+	this.redrawMainPage();
+}
+
 TerminusUI.prototype.showDocument = function(durl){
 	this.viewer = new TerminusDocumentViewer(this, "view", this.getDocViewerOptions());
 	const promise = this.viewer.loadDocument(durl);

@@ -95,14 +95,16 @@ TerminusDBController.prototype.getAsDOM = function(){
 			var item = this.getControlHTML("Document", "fa-book");
 			item.classList.add('terminus-document-nav');
 	        item.addEventListener("click", function(){
-				UTILS.removeSelectedNavClass("terminus-selected");
-                this.classList.add("terminus-selected");
-				UTILS.displayDocumentSubMenus(self.ui);
+				UTILS.activateSelectedNav(this, self);
+				self.ui.showDocumentPage();
+				//UTILS.removeSelectedNavClass("terminus-selected");
+                //this.classList.add("terminus-selected");
+				//UTILS.displayDocumentSubMenus(self.ui);
 			})
 	        ul.appendChild(item);
 		}
 		// hidden submenus
-		if(this.ui.showControl("get_document")) {
+		/*if(this.ui.showControl("get_document")) {
 			var a = document.createElement('a');
 			a.setAttribute('class', 'terminus-hide terminus-get-doc');
 			a.appendChild(self.getDocumentChooserDOM());
@@ -115,7 +117,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 			a.setAttribute('class', 'terminus-hide terminus-create-doc');
 			a.appendChild(self.getDocumentCreatorDOM());
 			ul.appendChild(a);
-		}
+		} */
 	}
 	return dbc;
 }
@@ -304,7 +306,10 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	//pd.appendChild(UTILS.getHeaderDom('Summary'));
 	this.getDeleteOnHomePage(pd);
 	//this.getDBSummary(pd);
-	pd.appendChild(pd.appendChild(UTILS.getHeaderDom('List of Documents')));
+	var lod = document.createElement('div');
+	lod.setAttribute('class', 'terminus-list-of-doc');
+	lod.appendChild(UTILS.getHeaderDom('List of Documents'))
+	pd.appendChild(lod);
 	this.getClassesDOM(pd);
 	return pd;
 }
@@ -371,7 +376,7 @@ TerminusDBViewer.prototype.getDBSummary = function(d){
 }
 
 TerminusDBViewer.prototype.getClassesDOM = function(d){
-	var q = this.wquery.getClassesQuery();
+	var q = this.wquery.getClassesQuery(25, 0);
 	var self = this;
 	this.wquery.execute(q)
 	.then(function(result){
