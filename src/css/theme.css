@@ -341,6 +341,16 @@ button.object-save, button.object-save-disabled, button.object-delete{
     font-size: 16px;
 	background: #f5f5f5;
 }
+span.terminus-display-flex{
+	display: flex !important;
+}
+span.terminus-document-page-controls{
+	display: flex;
+    margin-left: 856px;
+}
+select.terminus-doc-config{
+	height: 30px;
+}
 /* terminus alerts*/
 .terminus-alert {
 	background: #fffaef;
@@ -1651,11 +1661,15 @@ div.terminus-object-header .terminus-action-control {
 
 
 div.terminus-property-frame {
-	padding: 20px 0 12px 0;
-
+	padding: 20px 0 12px 10px;
 }
-
-
+span.terminus-property-header-wrapper{
+	/*display: flex;*/
+}
+span.terminus-property-header-info{
+	/*text-align: right;*/
+	/*float: left;*/
+}
 span.property-value-view {
 	padding-top: 4px;
 }
@@ -1672,10 +1686,10 @@ span.terminus-property-header {
 }
 
 div.terminus-property-header {
-	width: 240px;
-	margin-bottom: 16px;
-	height: 30px;
-	display: block !important;
+	width: 100%;
+    margin-bottom: 16px;
+    height: 30px;
+    display: block !important;
 }
 
 div.terminus-property-values div.terminus-object-frame {
@@ -1684,7 +1698,7 @@ div.terminus-property-values div.terminus-object-frame {
 }
 
 .terminus-property-header .terminus-property-label {
-	float: right;
+	text-align: left;
 	padding-top: 4px;
 	font-weight: 600;
 	color: #231;
