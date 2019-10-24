@@ -932,7 +932,7 @@ ApiExplorer.prototype.getApiSendButton = function(action, input){
           button.addEventListener("click", function(){
               var dcurl = input.url.value;
               var opts = {};
-              opts['terminus:encoding'] = "terminus:frame";
+              opts['terminus:encoding'] = "jsonld";
               opts['terminus:user_key'] = input.key.value;
               self.client.getDocument(dcurl, opts)
               .then(function(response){

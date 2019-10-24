@@ -49,13 +49,16 @@ Codemirror.prototype.setCodemirrorSize = function(editor, mode){
       editor.setSize('800', '400');
     break;
     case 'schema':
-      editor.setSize('1200', '1550');
+      editor.setSize('auto', '1550');
     break;
     case 'document':
      editor.setSize('765', '500');
     break;
     case 'api-doc':
         editor.setSize('800', '500');
+    break;
+    case 'auto':
+        editor.setSize('auto', 'auto');
     break;
   } // switch(mode)
 } // setCodemirrorSize()
