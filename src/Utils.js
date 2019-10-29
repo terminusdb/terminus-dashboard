@@ -380,6 +380,18 @@ function displayDocumentSubMenus(ui) {
 	}
 }
 
+function checkForMandatoryId(){
+    var objId = document.getElementsByClassName('terminus-object-id-input');
+    if(objId.length>0){
+        if(!objId[0].value){
+            objId[0].setAttribute('placeholder', 'Required field');
+            objId[0].style.background = '#f8d7da';
+            return false;
+        }
+        else return true;
+    }
+}
+
 function showSubMenus (el){
 	el.classList.remove('terminus-hide');
 	el.classList.add('terminus-display');
@@ -399,4 +411,5 @@ module.exports={tolggleContent,
                extractValueFromCell,
                displayDocumentSubMenus,
                setSelectedSubMenu,
+               checkForMandatoryId,
                activateSelectedNav}

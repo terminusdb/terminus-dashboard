@@ -314,7 +314,7 @@ TerminusUI.prototype.showMappingPage = function(mapping){
 
 TerminusUI.prototype.showDocumentPage = function(durl){
     var opts = {};
-    opts.mode = 'home';
+    opts.page_config = 'home';
     this.viewer = new TerminusDocumentViewer(this, "view", opts);
 	this.redrawMainPage();
 }
