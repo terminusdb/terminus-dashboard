@@ -57,10 +57,10 @@ PropertyRenderer.prototype.render = function(viewer){
  		}
  		return this.viewer.render();
  	}
-} 
+}
 
 /*
- * Creates the array of object renderer or value renderer objects corresponding to the property values. 
+ * Creates the array of object renderer or value renderer objects corresponding to the property values.
  */
 PropertyRenderer.prototype.buildValueRenderers = function(){
  	var adorig = (this.originalValues === false ? true : false);
@@ -167,7 +167,7 @@ PropertyRenderer.prototype.cancel = function(){
 	this.setMode("view");
 }
 
-PropertyRenderer.prototype.getAvailableClassChoices = function(){ 
+PropertyRenderer.prototype.getAvailableClassChoices = function(){
 	if(this.cframe){
 		var cf = this.cframe.getClassChoices();
 		if(this.parent){
@@ -181,7 +181,7 @@ PropertyRenderer.prototype.getAvailableClassChoices = function(){
 			return choices;
 		}
 		return cf;
-		
+
 	}
 	return false;
 };
@@ -191,7 +191,7 @@ PropertyRenderer.prototype.delete = function(){
 	var prop = this.predicate;
 	if(prop){
 		this.reset();
-		this.parent.deleteProperty(prop);	
+		this.parent.deleteProperty(prop);
 		this.parent.redraw();
 	}
 }
@@ -242,7 +242,7 @@ PropertyRenderer.prototype.reset = function(){
 		}
 		this.values = nvals;
 	}
-	this.redraw();	
+	this.redraw();
 	this.parent.childUpdated();
 }
 
@@ -381,7 +381,7 @@ PropertyRenderer.prototype.parentFacetChange = function(facet){
 	if(facet == 'line'){
 		this.setFacet("label");
 	}
-		
+
 }
 
 
@@ -389,24 +389,24 @@ PropertyRenderer.prototype.parentFacetChange = function(facet){
 PropertyRenderer.prototype.getDefaultFacets = function(){
 	var defs = {
 		page: {
-			label: "Full Page", value: "page", 
-			features: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "view", "viewer"], 
+			label: "Full Page", value: "page",
+			features: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "view", "viewer"],
 			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		multiline: {
 			label: "Multiple Lines", value: "multiline",
-			features: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "view", "viewer"], 
+			features: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "view", "viewer"],
 			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		line: {
 			label: "Single Line", value: "line",
-			features: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "viewer"], 
+			features: ["facet", "label", "comment", "id", "control", "type", "cardinality", "body", "status", "facet", "viewer"],
 			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		summary: {
 			label: "Summary", value: "summary",
-			features: ["facet", "satus", "label", "type", "cardinality", "body", "status", "facet", "viewer"], 
-			controls: [] 
+			features: ["facet", "satus", "label", "type", "cardinality", "body", "status", "facet", "viewer"],
+			controls: []
 		},
 		label: {
 			label: "Label", value: "label",
@@ -419,7 +419,7 @@ PropertyRenderer.prototype.getDefaultFacets = function(){
 			controls: []
 		}
 	}
-	return defs;	
+	return defs;
 }
 
 PropertyRenderer.prototype.getAvailableFacets = function(){
@@ -471,9 +471,9 @@ PropertyRenderer.prototype.setView = function(view){
 
 PropertyRenderer.prototype.getAvailableViewers = function(){
 	if(this.mode == "view"){
-		return TerminusDashboard.RenderingMap.getAvailablePropertyViewers(this);		
+		return TerminusDashboard.RenderingMap.getAvailablePropertyViewers(this);
 	}
-	return TerminusDashboard.RenderingMap.getAvailablePropertyEditors(this);				
+	return TerminusDashboard.RenderingMap.getAvailablePropertyEditors(this);
 }
 
 PropertyRenderer.prototype.nukeViewer = function(){
@@ -516,13 +516,13 @@ PropertyRenderer.prototype.getSummary = function(){
 		ret.long += vsum.long;
 		if(i < this.values.length-1) ret.long += ", ";
 	}
-	return ret;	
+	return ret;
 }
 
 PropertyRenderer.prototype.getFeaturesForFacet = function(facet){
 	return this.facets[facet].features.concat(this.facets[facet].controls);
 }
- 
+
 PropertyRenderer.prototype.showFeature = function(which){
 	if(this.features.indexOf(which) == -1 && this.controls.indexOf(which) == -1) {
 		return false;
@@ -585,8 +585,8 @@ ObjectRenderer.prototype.buildPropertyRenderers = function(){
 			renders[props[j]] = this.properties[props[j]];
 		}
 		if(this.newProperties.indexOf(props[j]) != -1) {
-			renders[props[j]].setNew(); 
-			renders[props[j]].mode = "edit"; 
+			renders[props[j]].setNew();
+			renders[props[j]].mode = "edit";
 		}
 	}
 	this.properties = renders;
@@ -604,9 +604,9 @@ ObjectRenderer.prototype.subjectClass = function(){
 
 ObjectRenderer.prototype.getAvailableViewers = function(){
 	//if(this.mode == "view"){
-	//	return RenderingMap.getAvailableObjectViewers(this);		
+	//	return RenderingMap.getAvailableObjectViewers(this);
 	//}
-	//return RenderingMap.getAvailableObjectEditors(this);				
+	//return RenderingMap.getAvailableObjectEditors(this);
 	return ["html", "json"];
 }
 
@@ -681,10 +681,12 @@ ObjectRenderer.prototype.save = function(){
 		if(this.isNewDocument()){
 			var demandid = this.inputID();
 			if(demandid == "_:") demandid = "";
+            var extr = this.extract();
 			this.controller.createDocument(demandid);
 		}
 		else {
-			this.controller.updateDocument();
+            var extr = this.extract();
+			this.controller.updateDocument(extr);
 		}
 	}
 	else if(this.parent) {
@@ -702,7 +704,7 @@ ObjectRenderer.prototype.delete = function(){
 	}
 	else {
 		if(this.parent){
-			this.parent.deletePropertyValue(dval);		
+			this.parent.deletePropertyValue(dval);
 			this.parent.redraw();
 		}
 	}
@@ -749,8 +751,8 @@ ObjectRenderer.prototype.addPropertyClass = function(prop, cls){
 
 ObjectRenderer.prototype.changeClass = function(cls){
 	if(this.parent){
-		this.parent.addClass(cls);		
-		this.parent.deletePropertyValue(this.subject());		
+		this.parent.addClass(cls);
+		this.parent.deletePropertyValue(this.subject());
 	}
 }
 
@@ -811,7 +813,7 @@ ObjectRenderer.prototype.isUpdated = function(){
 	for(var prop in this.properties){
 		if(this.originalProperties[i] != prop) return true;
 		if(this.properties[prop].isUpdated()) return true;
-		i++;		
+		i++;
 	}
 	if(i != this.originalProperties.length) return true;
 	return false;
@@ -855,19 +857,19 @@ ObjectRenderer.prototype.setFacet = function(facet, nocascade){
 ObjectRenderer.prototype.getDefaultFacets = function(){
 	var defs = {
 		page: {
-			label: "Full Page", value: "page", 
+			label: "Full Page", value: "page",
 			features: ["facet", "label", "comment", "id", "control", "type", "body", "status", "facet", "view", "viewer"],
-			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"] 
+			controls: ["delete", "clone", "add", "reset", "cancel", "update", "mode", "show", "hide"]
 		},
 		line: {
 			label: "Single Line", value: "line",
-			features: ["facet", "label", "comment", "id", "type", "body", "status", "facet"], 
-			controls: [] 
+			features: ["facet", "label", "comment", "id", "type", "body", "status", "facet"],
+			controls: []
 		},
 		summary: {
 			label: "Summary", value: "summary",
-			features: ["facet", "satus", "label", "type", "summary", "status", "facet"], 
-			controls: [] 
+			features: ["facet", "satus", "label", "type", "summary", "status", "facet"],
+			controls: []
 		},
 		label: {
 			label: "Label", value: "label",
@@ -948,7 +950,7 @@ ObjectRenderer.prototype.getSummary = function(){
 		ret.propcount++;
 	}
 	ret.long = ret.propcount + " properties";
-	return ret;	
+	return ret;
 }
 
 ObjectRenderer.prototype.getObjectHeaderViewer = function(){
@@ -965,7 +967,7 @@ ObjectRenderer.prototype.getViewerForObject = function(format){
 ObjectRenderer.prototype.getFeaturesForFacet = function(facet){
 	return this.facets[facet].features.concat(this.facets[facet].controls);
 }
- 
+
 ObjectRenderer.prototype.hideDisabledControls = function(){
 	return this.hide_disabled_controls;
 }
@@ -1039,10 +1041,10 @@ ObjectRenderer.prototype.setViewer = function(viewer){
 ObjectRenderer.prototype.setView = function(view){
 	var views = {
 		"full": {
-			
+
 		},
 		"hidden": {
-			
+
 		}
 	};
 	this.view = view;
@@ -1063,11 +1065,11 @@ ObjectRenderer.prototype.nukeViewer = function(){
 }
 
 ObjectRenderer.prototype.getViewableProperties = function(){
-	return this.objframe.getFilledPropertyList();	
+	return this.objframe.getFilledPropertyList();
 }
 
 ObjectRenderer.prototype.getAddableProperties = function(){
-	var props = this.objframe.getMissingPropertyList();	
+	var props = this.objframe.getMissingPropertyList();
 	return props;
 }
 
@@ -1101,7 +1103,7 @@ ObjectRenderer.prototype.standardSort = function(objframe, filter){
 		if(sorted.indexOf(prop) == -1) sorted.push(prop);
 	}
 	for(var prop in objframe.children){
-		if(sorted.indexOf(prop) == -1) sorted.push(prop);		
+		if(sorted.indexOf(prop) == -1) sorted.push(prop);
 	}
 	return sorted;
 }
@@ -1116,7 +1118,7 @@ ObjectRenderer.prototype.extractLDO = function(extracts){
 	extracts["rdf:type"] = this.objframe.cls;
 	var full = {};
 	full[this.subject()] = extracts;
-	return full;	
+	return full;
 }
 
 ObjectRenderer.prototype.extractJSONLD = function(extracts){
@@ -1145,4 +1147,3 @@ ObjectRenderer.prototype.extract = function(){
 }
 
 module.exports={ObjectRenderer,PropertyRenderer}
-
