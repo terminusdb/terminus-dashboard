@@ -682,7 +682,7 @@ ObjectRenderer.prototype.save = function(){
 			var demandid = this.inputID();
 			if(demandid == "_:") demandid = "";
             var extr = this.extract();
-			this.controller.createDocument(demandid);
+			this.controller.createDocument(demandid, extr);
 		}
 		else {
             var extr = this.extract();

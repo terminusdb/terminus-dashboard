@@ -108,26 +108,20 @@ TerminusDocumentViewer.prototype.getEncodingChooserDOM = function() {
 		self.viewMode = this.value;
 		switch(self.page_config){
 			case 'view':
+				self.page_config = 'view';
 				if(this.value == 'frame'){
-					//self.page_config = 'view';
 					self.renderer = false;
-					//self.viewMode = this.value;
 					self.refreshPage();
 				}
-				else{
-					self.getJsonLdViewer();
-				}
+				else self.getJsonLdViewer();
 			break;
 			case 'create':
+				self.page_config = 'create';
 				if(this.value == 'frame'){
-					self.page_config = 'create';
 					self.renderer = false;
-					//self.viewMode = this.value;
 					self.refreshPage();
 				}
-				else{
-					self.getJsonLdViewer();
-				}
+				else self.getJsonLdViewer();
 			break;
 		}
 	})
@@ -250,101 +244,6 @@ TerminusDocumentViewer.prototype.getDocumentCreatorDOM = function(){
 	return scd;
 };
 
-TerminusDocumentViewer.prototype.getListOfDocuments = function(holder){
-	var lod = document.createElement('div');
-	lod.setAttribute('class', 'terminus-list-of-doc');
-	lod.appendChild(UTILS.getHeaderDom('List of Documents'))
-	holder.appendChild(lod);
-	this.dbViewer.getClassesDOM(holder);
-}
-
-TerminusDocumentViewer.prototype.getDocumentSubMenus = function(feature, ul, holder, active){
-	var a = document.createElement('a');
-    a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
-	var self = this;
-	switch(feature){
-		case 'get_document':
-			a.appendChild(document.createTextNode('View Document'));
-			// set selected nav after redrawMainPage and home page
-			if(active) a.classList.add('terminus-submenu-selected');
-			if((this.page_config == 'view') || (this.page_config == 'home')){ // hide in create mode
-				var sp = document.createElement('span');
-				sp.setAttribute('class', 'terminus-display-flex');
-				holder.appendChild(sp);
-				this.getDocumentChooserDOM(sp);
-				this.viewMode = 'frame';
-			}
-			if(this.page_config == 'view') this.getDocumentEditControls(sp);
-			a.addEventListener('click', function(){
-				/*TerminusClient.FrameHelper.removeChildren(holder);
-				UTILS.setSelectedSubMenu(this);
-				self.getDocumentChooserDOM(holder);
-				self.getDocumentEditControls(holder);
-				self.getListOfDocuments(holder);
-				self.page_config = 'home'; */
-				TerminusClient.FrameHelper.removeChildren(self.pagedom);
-				TerminusClient.FrameHelper.removeChildren(self.controldom);
-				self.page_config = 'home';
-				self.loadDocumentHome();
-			});
-		break;
-		case 'create_document':
-			a.appendChild(document.createTextNode('Create Document'));
-			// set selected nav after redrawMainPage
-		    if(active) a.classList.add('terminus-submenu-selected');
-		    holder.appendChild(self.getDocumentCreatorDOM());
-			a.addEventListener('click', function(){
-				TerminusClient.FrameHelper.removeChildren(holder);
-				UTILS.setSelectedSubMenu(this);
-				holder.appendChild(self.getDocumentCreatorDOM());
-			});
-		break;
-		default:
-			console.log('Invalid features in TerminusDocument');
-		break;
-	} // switch(feature)
-	ul.appendChild(a);
-}
-
-TerminusDocumentViewer.prototype.loadDocumentHome = function(){
-	var self = this;
-	var ul = document.createElement('ul');
-	ul.setAttribute('class','terminus-ul-horizontal');
-	this.controldom.appendChild(ul);
-	var holder = document.createElement('div');
-	holder.setAttribute('class', 'terminus-doc-holder');
-	this.controldom.appendChild(holder);
-	var controls = document.createElement('span');
-	controls.setAttribute('class', 'terminus-display-flex');
-	holder.appendChild(controls);
-
-	switch(this.page_config){
-		case 'view':
-			if(this.ui.showControl("get_document"))
-				this.getDocumentSubMenus('get_document', ul, controls, true);
-			controls.appendChild(this.getDocumentCreatorSelect());
-		break;
-		case 'create':
-			if(this.ui.showControl("create_document")){
-				this.getDocumentSubMenus('get_document', ul, controls, false);
-				this.getDocumentSubMenus('create_document', ul, holder, true);
-			}
-		break;
-		case 'home':
-			if(this.ui.showControl("get_document"))
-				this.getDocumentSubMenus('get_document', ul, controls, true);
-		    var sd = document.createElement('div');
-			sd.setAttribute('class', 'terminus-class-chooser-align');
-			controls.appendChild(sd);
-			sd.appendChild(this.getDocumentCreatorSelect());
-			this.getListOfDocuments(holder);
-		break;
-		case 'default':
-			console.log('Invalid page config passed in TerminusDocument.js');
-		break;
-	}
-}
-
 TerminusDocumentViewer.prototype.getDocumentJsonldCreateButton = function(){
 	var cr = document.createElement('button');
 	cr.innerHTML = 'Save';
@@ -352,13 +251,19 @@ TerminusDocumentViewer.prototype.getDocumentJsonldCreateButton = function(){
 	var self = this;
 	cr.addEventListener('click', function(){
 		if (!UTILS.checkForMandatoryId()) return;
-		console.log('this.renderer.idDOM', self.renderer.idDOM.value);
 		self.ui.showBusy();
 		self.createDocument(self.renderer.idDOM.value, JSON.parse(self.json_editor.value))
-		.then(function(){
-			self.page_config = "view";
-			self.renderer = false;
-			self.refreshPage();
+		.then(function(page_config){
+			if(page_config == 'home'){
+				TerminusClient.FrameHelper.removeChildren(self.pagedom);
+				self.getListOfDocuments(self.pagedom);
+			}
+			else{
+				self.page_config = "view";
+				self.mode = self.page_config;
+				self.renderer = false;
+				self.refreshPage();
+			}
 		})
 		.catch(function(error) {
 			self.ui.clearBusy();
@@ -392,7 +297,7 @@ TerminusDocumentViewer.prototype.getDocumentJsonldSaveButton = function(){
 TerminusDocumentViewer.prototype.toggleControlActions = function(button){
 	var enc = document.getElementsByClassName('terminus-enc');
 	if(button.innerHTML === 'Edit'){
-		enc[0].style.display = 'none';
+		if(enc.length > 0) enc[0].style.display = 'none';
 		button.innerHTML = 'Cancel';
 		if(this.viewMode == 'frame'){
 			this.page_config = "edit";
@@ -417,7 +322,7 @@ TerminusDocumentViewer.prototype.toggleControlActions = function(button){
 	}
 	else {
 		button.innerHTML = 'Edit';
-		enc[0].style.display = 'block';
+		if(enc.length > 0) enc[0].style.display = 'block';
 		if(this.viewMode == 'frame'){
 			this.page_config = "view";
 			this.renderer = false;
@@ -427,7 +332,14 @@ TerminusDocumentViewer.prototype.toggleControlActions = function(button){
 			this.getJsonLdViewer();
 		}
 	}
+}
 
+TerminusDocumentViewer.prototype.getListOfDocuments = function(holder){
+	var lod = document.createElement('div');
+	lod.setAttribute('class', 'terminus-list-of-doc');
+	lod.appendChild(UTILS.getHeaderDom('List of Documents'))
+	holder.appendChild(lod);
+	this.dbViewer.getClassesDOM(holder);
 }
 
 TerminusDocumentViewer.prototype.getDocumentEditControls = function(holder, doc){
@@ -443,6 +355,85 @@ TerminusDocumentViewer.prototype.getDocumentEditControls = function(holder, doc)
 	dpc.addEventListener("click", function(){
 		self.toggleControlActions(dpc);
 	})
+ }
+
+TerminusDocumentViewer.prototype.getDocumentSubMenus = function(feature, ul, holder, active){
+ 	var a = document.createElement('a');
+     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+ 	var self = this;
+ 	switch(feature){
+ 		case 'get_document':
+ 			a.appendChild(document.createTextNode('View Document'));
+ 			// set selected nav after redrawMainPage and home page
+ 			if(active) a.classList.add('terminus-submenu-selected');
+ 			if((this.page_config == 'view') || (this.page_config == 'home')){ // hide in create mode
+ 				var sp = document.createElement('span');
+ 				sp.setAttribute('class', 'terminus-display-flex');
+ 				holder.appendChild(sp);
+ 				this.getDocumentChooserDOM(sp);
+ 				this.viewMode = 'frame';
+ 			}
+ 			if(this.page_config == 'view') this.getDocumentEditControls(sp);
+ 			a.addEventListener('click', function(){
+ 				TerminusClient.FrameHelper.removeChildren(self.pagedom);
+ 				TerminusClient.FrameHelper.removeChildren(self.controldom);
+ 				self.page_config = 'home';
+ 				self.loadDocumentHome();
+ 			});
+ 		break;
+ 		case 'create_document':
+ 			a.appendChild(document.createTextNode('Create Document'));
+ 		    if(active) a.classList.add('terminus-submenu-selected');
+ 		    holder.appendChild(self.getDocumentCreatorDOM());
+ 			a.addEventListener('click', function(){
+ 				TerminusClient.FrameHelper.removeChildren(holder);
+ 				UTILS.setSelectedSubMenu(this);
+ 				holder.appendChild(self.getDocumentCreatorDOM());
+ 			});
+ 		break;
+ 		default:
+ 			console.log('Invalid features in TerminusDocument');
+ 		break;
+ 	} // switch(feature)
+ 	ul.appendChild(a);
+ }
+
+TerminusDocumentViewer.prototype.loadDocumentHome = function(){
+ 	var self = this;
+ 	var ul = document.createElement('ul');
+ 	ul.setAttribute('class','terminus-ul-horizontal');
+ 	this.controldom.appendChild(ul);
+ 	var holder = document.createElement('div');
+ 	holder.setAttribute('class', 'terminus-doc-holder');
+ 	this.controldom.appendChild(holder);
+ 	var controls = document.createElement('span');
+ 	controls.setAttribute('class', 'terminus-display-flex');
+ 	holder.appendChild(controls);
+ 	switch(this.page_config){
+ 		case 'view':
+ 			if(this.ui.showControl("get_document"))
+ 				this.getDocumentSubMenus('get_document', ul, controls, true);
+ 			controls.appendChild(this.getDocumentCreatorSelect());
+ 		break;
+ 		case 'create':
+ 			if(this.ui.showControl("create_document")){
+ 				this.getDocumentSubMenus('get_document', ul, controls, false);
+ 				this.getDocumentSubMenus('create_document', ul, holder, true);
+ 			}
+ 		break;
+ 		case 'home':
+ 			if(this.ui.showControl("get_document"))
+ 				this.getDocumentSubMenus('get_document', ul, controls, true);
+ 		    var sd = document.createElement('div');
+ 			sd.setAttribute('class', 'terminus-class-chooser-align');
+ 			controls.appendChild(sd);
+ 			sd.appendChild(this.getDocumentCreatorSelect());
+ 			this.getListOfDocuments(holder);
+ 		break;
+ 		case 'default':
+ 			console.log('Invalid page config passed in TerminusDocument.js');
+ 		break;
+ 	}
  }
 
 TerminusDocumentViewer.prototype.getAsDOM = function(){
@@ -569,6 +560,8 @@ TerminusDocumentViewer.prototype.createDocument = function(id, extr){
 		else {
 			self.ui.showError(error);
 		}
+		self.page_config = 'home';
+		return self.page_config;
 	});
 }
 
@@ -704,25 +697,6 @@ TerminusDocumentViewer.prototype.refreshPage = function(){
 		}
 	}
 }
-
-/*TerminusDocumentViewer.prototype.getAsDOMOriginal = function(){
-	var holder = document.createElement("div");
-	holder.setAttribute("class", "terminus-document-holder");
-	if(this.mode !== 'edit'){ // dont provide drop down on create mode
-		this.controldom = document.createElement("div");
-		this.controldom.setAttribute("class", "terminus-document-controller");
-		if(Object.keys(this.config_options).length > 1)	this.controldom.appendChild(this.getDocumentPageControls());
-		holder.appendChild(this.controldom);
-	}
-	this.pagedom = document.createElement("div");
-	this.pagedom.setAttribute("class", "terminus-document-page");
-	var rends = this.render();
-	if(rends){
-		this.pagedom.appendChild(rends);
-	}
-	holder.appendChild(this.pagedom);
-	return holder;
-}  */
 
 TerminusDocumentViewer.prototype.getDocumentPageControls = function(){
 	var dpc = document.createElement("select");
