@@ -397,6 +397,39 @@ function showSubMenus (el){
 	el.classList.add('terminus-display');
 }
 
+// function which generates query based on current settings from different screens of dashboard
+function getCurrentWoqlQueryObject(query, settings){
+	var qval;
+    if(!query) query = settings.query;
+	switch(query){
+		case 'Show_All_Schema_Elements':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .elementMetadata();
+		break;
+		case 'Show_All_Classes':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .classMetadata();
+		break;
+		case 'Show_All_Data':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .getEverything();
+		break;
+		case 'Show_All_Documents':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .getAllDocuments();
+		break;
+		default:
+			console.log('Invalid query ' + query + ' passed in WOQLTextboxGenerator');
+		break;
+	}
+	return qval;
+}
+
+
 
 module.exports={tolggleContent,
                removeSelectedNavClass,
@@ -412,4 +445,5 @@ module.exports={tolggleContent,
                displayDocumentSubMenus,
                setSelectedSubMenu,
                checkForMandatoryId,
-               activateSelectedNav}
+               activateSelectedNav,
+               getCurrentWoqlQueryObject}

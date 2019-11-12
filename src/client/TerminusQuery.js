@@ -1,4 +1,4 @@
-const WOQLQuery = require('../query/WOQLQuery');
+/*const WOQLQuery = require('../query/WOQLQuery'); */
 const WOQLResultsViewer = require('../query/WOQLResultsViewer');
 const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
@@ -12,7 +12,8 @@ function TerminusQueryViewer(ui, options){
 	this.init();
 	this.generator = false;
 	this.result = false;
-	this.wquery = new WOQLQuery(ui.client, this.options, this.ui);
+	//var y = new TerminusClient.WOQLResult();
+	//this.wquery = TerminusClient.WOQL;
 	this.pman = new TerminusPluginManager();
 	this.gentype = (options && options.generator ? options.generator : "textbox");
 	this.generators = {
@@ -54,11 +55,15 @@ TerminusQueryViewer.prototype.loadGenerator = function(){
 }
 
 TerminusQueryViewer.prototype.init = function(){
-	var wq = new WOQLQuery(this.ui.client, this.options, this.ui);
-	var woql = wq.getElementMetaDataQuery();
+	//var wq = new WOQLQuery(this.ui.client, this.options, this.ui);
+	var wq = TerminusClient.WOQL
+				.limit(20)
+				.start(0)
+				.elementMetadata();
 	var self = this;
 	self.meta = {};
-	wq.execute(woql).then(function(wresult){
+	//wq.execute(woql).then(function(wresult){
+	wq.execute(this.ui.client).then(function(wresult){
 		var wqlR = new WOQLResultsViewer.WOQLResult(wresult, null ,null, self.ui);
 		if(wqlR.hasBindings(wresult)){
 			for(var i = 0; i<wresult.bindings.length; i++){
@@ -74,13 +79,13 @@ TerminusQueryViewer.prototype.init = function(){
 	});
 }
 
-
 TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	var self = this;
 	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
-	this.wquery.execute(val)
+	val.execute(this.ui.client)
 	.then(function(result){
-		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.wquery, self.options, settings, true);
+		var wqRes = new TerminusClient.WOQLResult(result, val);
+		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, wqRes, self.options, settings, true);
 		var nd = self.result.getAsDOM(self.resultDOM, true);
 		if(nd){
 			 self.resultDOM.appendChild(nd);
