@@ -1,4 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
+const WOQLTextboxGenerator = require('../query/WOQLTextboxGenerator');
 const HTMLFrameHelper = require('../client/HTMLFrameHelper');
 const UTILS= require('../Utils')
 
@@ -54,6 +55,7 @@ function Datatables(wResViewer, qPage){
    this.wQuery = wResViewer.wQuery;
    this.ui = wResViewer.ui;
    this.qPage = qPage;
+   this.currDTSettings = wResViewer.settings;
 }
 
 /*
@@ -61,22 +63,24 @@ function Datatables(wResViewer, qPage){
     pageInfo: current drawCallBack page change info
     resultDOM: result dom on veiwer page
 */
-Datatables.prototype.executeQuery = function(query, pageInfo, resultDOM){
+Datatables.prototype.executeQuery = function(qObj, pageInfo, resultDOM){
     var self = this;
-    return this.wQuery.execute(query)
-      .then(function(result){
-          var dtResult = {};
-          dtResult = self.wrViewer.formatResultsForDatatableDisplay(result.bindings, pageInfo)
-          return dtResult.data;
-      })
-      .catch(function(err){
-          console.error(err);
-          self.ui.showError(err);
-      });
+    // return this.wQuery.execute(query)
+    return qObj.execute(this.ui.client)
+    .then(function(result){
+      var dtResult = {};
+      var wqRes = new TerminusClient.WOQLResult(result, qObj);
+      dtResult = self.wrViewer.formatResultsForDatatableDisplay(result.bindings, pageInfo)
+      return dtResult.data;
+    })
+    .catch(function(err){
+      console.error(err);
+      self.ui.showError(err);
+    });
 }
 
 /* get query string based on datatable pagination and current query */
-Datatables.prototype.getQueryOnPagination = function(wq, settings){
+/*Datatables.prototype.getQueryOnPagination = function(wq, settings){
     switch(settings.query){
         case 'Show_All_Documents':
             return wq.getAllDocumentQuery(null, settings.pageLength, settings.start);
@@ -114,19 +118,22 @@ Datatables.prototype.getQueryOnPagination = function(wq, settings){
         break;
 
     }
-}
-
+}   */
 /*
     pageInfo: current drawCallBack page change info
 */
 Datatables.prototype.generateNewQueryOnPageChange = function(pageInfo){
     if(this.qPage) UTILS.deleteStylizedEditor(this.ui, pageInfo.qTextDom);
-    var query = this.getQueryOnPagination(this.wQuery, pageInfo)
+    var qObj = UTILS.getCurrentWoqlQueryObject(null, pageInfo);
+    //var query = this.getQueryOnPagination(this.wQuery, pageInfo)
     if(this.qPage) {
-        pageInfo.qTextDom.value = JSON.stringify(query,undefined, 2);
+        if(pageInfo.queryMode.value == 'woql')
+            pageInfo.qTextDom.value = JSON.stringify(qObj.prettyPrint(), undefined, 2);
+        else pageInfo.qTextDom.value = JSON.stringify(qObj, undefined, 2);
         UTILS.stylizeEditor(this.ui, pageInfo.qTextDom, 'query', 'javascript');
     }
-    return query;
+    //return query;
+    return qObj;
 }
 
 /*
@@ -139,6 +146,7 @@ Datatables.prototype.getCallbackSettings = function(dt, dtAPIChangeSettings){
     pageInfo.start       = dtAPIChangeSettings._iDisplayStart;
     pageInfo.draw        = dtAPIChangeSettings.iDraw;
     pageInfo.qTextDom    = dt.qTextDom;
+    pageInfo.queryMode   = dt.queryMode;
     if(this.qPage) pageInfo.query = dt.query;
     else pageInfo.query = 'Show_All_Document_classes';
     pageInfo.chosenValue = dt.chosenValue;
@@ -160,12 +168,22 @@ Datatables.prototype.setUp = function(tab, settings, resultDOM){
     this.qTextDom = settings.qTextDom;
     this.query = settings.query;
     this.chosenValue = settings.chosenValue;
+    this.queryMode = settings.queryMode;
+}
+
+// update datatables settings so it can be reused in WOQLTextboxGenerator to re write query in woql/ jsonld
+Datatables.prototype.updateCurrDTSettings = function(pageInfo){
+    this.currDTSettings.pageLength = pageInfo.pageLength;
+    this.currDTSettings.start      = pageInfo.start;
 }
 
 Datatables.prototype.getNewDataOnChange = function(drawnTab, aSettings, resultDOM){
     var pageInfo = this.getCallbackSettings(this, aSettings);
-    var query = this.generateNewQueryOnPageChange(pageInfo);
-    return this.executeQuery(query, pageInfo, resultDOM);
+    this.updateCurrDTSettings(pageInfo);
+   // var query = this.generateNewQueryOnPageChange(pageInfo);
+    var qObj = this.generateNewQueryOnPageChange(pageInfo);
+    return this.executeQuery(qObj, pageInfo, resultDOM);
+    //return this.executeQuery(query, pageInfo, resultDOM);
     //return  dtResult.result.data;
 }
 

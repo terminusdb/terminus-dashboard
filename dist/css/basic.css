@@ -5,13 +5,33 @@ div.terminus-object-frame div.terminus-object-header,
 	background-color: #48f;
 	color: white;
 }
-
+div.terminus-property-frame {
+	padding: 20px 0 12px 10px;
+}
+span.terminus-property-header-wrapper{
+	display: flex;
+}
+span.terminus-property-header-info{
+	text-align: right;
+}
 div.terminus-object-frame div.terminus-object-header {
 	margin-top: 1em;
 	padding: 4px;
 	height: 40px;
 }
-
+span.terminus-display-flex{
+	display: flex !important;
+}
+div.terminus-class-chooser-align{
+	margin-left: 770px;
+}
+span.terminus-document-page-controls{
+	display: flex;
+    margin-left: 835px;
+}
+select.terminus-doc-config{
+	height: 30px;
+}
 div.terminus-object-properties {
 	background-color: rgba(200, 230, 255, 0.1);
 	border: 1px solid lightgrey;
@@ -100,7 +120,9 @@ div.terminus-object-properties {
 	padding: 4px 10px;
 	width: 220px;
 }
-
+span.terminus-span-float-right {
+	float: right;
+}
 .terminus-query-select{
 	display: inline-block;
     width: 220px;

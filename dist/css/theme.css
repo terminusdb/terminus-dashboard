@@ -33,6 +33,11 @@
 	color: #555
 }
 
+h3.terminus-query-head{
+	padding: 0px 15px 0px 5px;
+    font-weight: 500 !important;
+}
+
 .terminus-client-ui a:hover, .terminus-client-ui a:focus {
 	outline: 0
 }
@@ -234,6 +239,12 @@ button.object-save, button.object-save-disabled, button.object-delete{
 	padding-top: 13px;
 	border-top: 1px solid #f5f5f5
 }
+.terminus-document-config{
+	float: right;
+}
+.terminus-list-of-doc{
+	margin: 30px 0px 30px 0px;
+}
 .terminus-form-horizontal .terminus-control-label{
 	float: left;
     width: 160px !important;
@@ -334,6 +345,19 @@ button.object-save, button.object-save-disabled, button.object-delete{
     font-weight: bold;
     font-size: 16px;
 	background: #f5f5f5;
+}
+div.terminus-class-chooser-align{
+	margin-left: 770px;
+}
+span.terminus-display-flex{
+	display: flex !important;
+}
+span.terminus-document-page-controls{
+	display: flex;
+    margin-left: 600px;
+}
+select.terminus-doc-config{
+	height: 30px;
 }
 /* terminus alerts*/
 .terminus-alert {
@@ -550,7 +574,8 @@ div.ql-editor{
 
 /* terminus table */
 .truncate {
-  max-width:50px;
+  /*max-width:200px;*/
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -909,6 +934,14 @@ span.terminus-violation-property-label{
 }
 div.terminus-violation{
 	border-bottom: 0.5px solid #856404;
+}
+
+.terminus-doc-control-label{
+	float: right;
+    width: 160px !important;
+    padding-top: 12px;
+	font-size: 18px;
+    text-align: left;
 }
 
 /* frameviewer styling */
@@ -1290,9 +1323,8 @@ a.terminus-submenu-selected{
 
 /* terminus document chooser */
 .terminus-choose-by-id{
-	margin: 20px 0px 20px 30px;
+	margin: 20px 0px 20px 0px;
 }
-
 
 /* terminus query button grouping */
 .terminus-query-group-row {
@@ -1432,8 +1464,8 @@ div.dataTables_info, div.dataTables_paginate {
   /*line-height: 50px;*/
   transition: all .5s ease-in-out;
   transform-origin: left top;
-  flex: 0 0 76.666667%;
-    max-width: 76.666667%;
+  /*flex: 0 0 76.666667%;
+    max-width: 76.666667%;*/
   /*transform: scaleY(0);*/
  }
 
@@ -1539,16 +1571,22 @@ div.dataTables_info, div.dataTables_paginate {
 .terminus-content-layout{
 	background-color: #f8f8ff;
 	box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);
-	min-height: 800px;
+	min-height: 900px;
 }
 
 .terminus-main-content{
 	padding: 30px;
     overflow: hidden;
-    max-width: 1240px;
+    /*max-width: 1240px;*/
+	width 100%;
     overflow-x: overlay;
 }
-
+.terminus-client-table-layout{
+	height: 100%;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    height: fill-available;
+}
 /*terminus status layout */
 .terminus-connected-status-window-layout {
 	position: relative;
@@ -1557,10 +1595,11 @@ div.dataTables_info, div.dataTables_paginate {
     padding-left: 15px;
 }
 .terminus-query-results{
-	min-width: 100px;
+	/*min-width: 100px; */
     max-width: 1250px;
-    overflow: hidden;
-    overflow-x: auto;
+    /* overflow: hidden; */
+    /* overflow-x: auto; */
+    width: 100%;
 }
 .terminus-status-layout{
 	background: #27293d;
@@ -1600,7 +1639,7 @@ div.dataTables_info, div.dataTables_paginate {
 }
 
 /* terminus frames */
-div.terminus-object-frame div.terminus-object-header, 
+div.terminus-object-frame div.terminus-object-header,
 .terminus-application-header {
     color: #fff;
 	padding-top: 12px;
@@ -1611,7 +1650,7 @@ div.terminus-object-frame div.terminus-object-header,
 }
 
 div.terminus-root-frame div.terminus-object-header {
-}	
+}
 
 div.terminus-object-frame div.terminus-object-header {
 	margin-top: 10px;
@@ -1630,11 +1669,18 @@ div.terminus-object-header .terminus-action-control {
 
 
 div.terminus-property-frame {
-	padding: 20px 0 12px 0;
-	
+	padding: 20px 0 12px 10px;
 }
-
-
+span.terminus-property-header-wrapper{
+	/*display: flex;*/
+}
+span.terminus-property-header-info{
+	/*text-align: right;*/
+	/*float: left;*/
+}
+span.terminus-span-float-right button.terminus-btn-float-right{
+	float: right;
+}
 span.property-value-view {
 	padding-top: 4px;
 }
@@ -1651,10 +1697,10 @@ span.terminus-property-header {
 }
 
 div.terminus-property-header {
-	width: 240px;
-	margin-bottom: 16px;
-	height: 30px;
-	display: block !important;
+	width: 100%;
+    margin-bottom: 16px;
+    height: 30px;
+    display: block !important;
 }
 
 div.terminus-property-values div.terminus-object-frame {
@@ -1663,7 +1709,7 @@ div.terminus-property-values div.terminus-object-frame {
 }
 
 .terminus-property-header .terminus-property-label {
-	float: right;
+	text-align: left;
 	padding-top: 4px;
 	font-weight: 600;
 	color: #231;
@@ -1674,7 +1720,7 @@ span.terminus-property-values {
 	float: left;
 	display: inline-block;
 	margin-left: 6px;
-	
+
 }
 
 select.terminus-frame-selector{
