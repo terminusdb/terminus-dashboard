@@ -12,14 +12,15 @@ let TerminusConfig = {
 		},
 		jquery: true,
 		jqueryui: false,
-		datatables: true,
+		datatables: false,
 		quill: true,
 		select2: false,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor
 			loaded: true
 		}
-	}
+	},
+	location: { server: "http://localhost:6363/", db: "terminus", key: "root"}
 };
 
 var FrameConfig = {
