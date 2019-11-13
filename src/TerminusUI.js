@@ -6,14 +6,13 @@
  * @param opts - options array
  */
 const ApiExplorer = require('./ApiExplorer');
-const TerminusDocumentViewer = require('./client/TerminusDocument');
-const TerminusDBsdk = require('./client/TerminusDB');
-const TerminusViolations = require('./client/TerminusViolation');
-const TerminusQueryViewer = require('./client/TerminusQuery');
-const TerminusMappingViewer = require('./client/TerminusMapping');
-const TerminusSchemaViewer = require('./client/TerminusSchema');
-const TerminusServersdk = require('./client/TerminusServer');
-const TerminusURLLoader = require('./client/TerminusURL');
+const TerminusDocumentViewer = require('./TerminusDocument');
+const TerminusDBsdk = require('./TerminusDB');
+const TerminusViolations = require('./html/TerminusViolation');
+const TerminusQueryViewer = require('./TerminusQuery');
+const TerminusSchemaViewer = require('./TerminusSchema');
+const TerminusServersdk = require('./TerminusServer');
+const TerminusURLLoader = require('./TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils');
 const RenderingMap = require('./client/RenderingMap');
@@ -307,11 +306,6 @@ TerminusUI.prototype.showQueryPage = function(query){
 	this.redrawMainPage();
 }
 
-TerminusUI.prototype.showMappingPage = function(mapping){
-	this.viewer = new TerminusMappingViewer(this, mapping, this.options);
-	this.redrawMainPage();
-}
-
 TerminusUI.prototype.showDocumentPage = function(durl){
     var opts = {};
     opts.page_config = 'home';
@@ -334,10 +328,10 @@ TerminusUI.prototype.showCreateDocument = function(durl){
 }
 
 TerminusUI.prototype.redrawMainPage = function(){
-    this.clearMessages();
-	TerminusClient.FrameHelper.removeChildren(this.main);
-	if(this.viewer){
-		this.main.appendChild(this.viewer.getAsDOM());
+	TerminusClient.FrameHelper.removeChildren(this.mainDOM);
+	if(this.viewer && this.mainDOM){
+		var x = this.viewer.getAsDOM();
+		this.mainDOM.appendChild(x);
 	}
 }
 
@@ -378,15 +372,15 @@ TerminusUI.prototype.setPluginsDOM = function(dom){
 }
 
 TerminusUI.prototype.setViewerDOM = function(dom){
-	this.main = dom;
+	this.mainDOM = dom;
 }
 
 TerminusUI.prototype.draw = function(comps, slocation){
+	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.buttons) this.setbuttonControls(comps.buttons);
 	if(comps && comps.messages) this.setMessageDOM(comps.messages);
 	if(comps && comps.controller) this.setControllerDOM(comps.controller);
 	if(comps && comps.explorer) this.setExplorerDOM(comps.explorer);
-	if(comps && comps.viewer) this.setViewerDOM(comps.viewer);
 	if(comps && comps.plugins) this.setPluginsDOM(comps.plugins);
 	if(this.plugins){
 		this.drawPlugins();
