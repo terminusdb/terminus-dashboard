@@ -1,5 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const HTMLFrameHelper = require('../client/HTMLFrameHelper');
+const HTMLFrameHelper = require('../html/HTMLFrameHelper');
 const UTILS= require('../Utils')
 
 /*** client side processing ***/

@@ -1,8 +1,8 @@
 /*
  * Utility Property which runs a query against the schema and presents the returned Propertyes as a drop-down / Property filter list
  */
-const WOQLQuery = require('../query/WOQLQuery');
-const HTMLFrameHelper = require('./HTMLFrameHelper');
+const WOQLQuery = require('./WOQLQuery');
+const HTMLFrameHelper = require('../html/HTMLFrameHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 TerminusPropertyChooser = function(ui, filter){
