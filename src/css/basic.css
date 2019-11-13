@@ -22,9 +22,12 @@ div.terminus-object-frame div.terminus-object-header {
 span.terminus-display-flex{
 	display: flex !important;
 }
+div.terminus-class-chooser-align{
+	margin-left: 770px;
+}
 span.terminus-document-page-controls{
 	display: flex;
-    margin-left: 856px;
+    margin-left: 835px;
 }
 select.terminus-doc-config{
 	height: 30px;
@@ -117,7 +120,9 @@ div.terminus-object-properties {
 	padding: 4px 10px;
 	width: 220px;
 }
-
+span.terminus-span-float-right {
+	float: right;
+}
 .terminus-query-select{
 	display: inline-block;
     width: 220px;

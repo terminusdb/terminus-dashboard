@@ -380,10 +380,55 @@ function displayDocumentSubMenus(ui) {
 	}
 }
 
+function checkForMandatoryId(){
+    var objId = document.getElementsByClassName('terminus-object-id-input');
+    if(objId.length>0){
+        if(!objId[0].value){
+            objId[0].setAttribute('placeholder', 'Required field');
+            objId[0].style.background = '#f8d7da';
+            return false;
+        }
+        else return true;
+    }
+}
+
 function showSubMenus (el){
 	el.classList.remove('terminus-hide');
 	el.classList.add('terminus-display');
 }
+
+// function which generates query based on current settings from different screens of dashboard
+function getCurrentWoqlQueryObject(query, settings){
+	var qval;
+    if(!query) query = settings.query;
+	switch(query){
+		case 'Show_All_Schema_Elements':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .elementMetadata();
+		break;
+		case 'Show_All_Classes':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .classMetadata();
+		break;
+		case 'Show_All_Data':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .getEverything();
+		break;
+		case 'Show_All_Documents':
+			qval = TerminusClient.WOQL.limit(settings.pageLength)
+									  .start(settings.start)
+									  .getAllDocuments();
+		break;
+		default:
+			console.log('Invalid query ' + query + ' passed in WOQLTextboxGenerator');
+		break;
+	}
+	return qval;
+}
+
 
 
 module.exports={tolggleContent,
@@ -399,4 +444,6 @@ module.exports={tolggleContent,
                extractValueFromCell,
                displayDocumentSubMenus,
                setSelectedSubMenu,
-               activateSelectedNav}
+               checkForMandatoryId,
+               activateSelectedNav,
+               getCurrentWoqlQueryObject}

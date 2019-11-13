@@ -33,6 +33,11 @@
 	color: #555
 }
 
+h3.terminus-query-head{
+	padding: 0px 15px 0px 5px;
+    font-weight: 500 !important;
+}
+
 .terminus-client-ui a:hover, .terminus-client-ui a:focus {
 	outline: 0
 }
@@ -341,12 +346,15 @@ button.object-save, button.object-save-disabled, button.object-delete{
     font-size: 16px;
 	background: #f5f5f5;
 }
+div.terminus-class-chooser-align{
+	margin-left: 770px;
+}
 span.terminus-display-flex{
 	display: flex !important;
 }
 span.terminus-document-page-controls{
 	display: flex;
-    margin-left: 856px;
+    margin-left: 600px;
 }
 select.terminus-doc-config{
 	height: 30px;
@@ -1669,6 +1677,9 @@ span.terminus-property-header-wrapper{
 span.terminus-property-header-info{
 	/*text-align: right;*/
 	/*float: left;*/
+}
+span.terminus-span-float-right button.terminus-btn-float-right{
+	float: right;
 }
 span.property-value-view {
 	padding-top: 4px;

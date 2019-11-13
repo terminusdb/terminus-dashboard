@@ -23,10 +23,11 @@ WOQLResult.prototype.hasBindings = function(result){
 	else return (this.bindings && this.bindings.length);
 }
 
-function WOQLResultsViewer(ui, wresult, wQuery, options, settings, queryPage){
+
+function WOQLResultsViewer(ui, wresult, woqlResult, options, settings, queryPage){
 	this.ui = ui;
 	this.result = wresult;
-	this.wQuery = wQuery;
+	this.woqlResult = woqlResult;
 	this.max_cell_size = 400;
 	this.max_word_size = 60;
 	this.options = options;
@@ -54,13 +55,14 @@ WOQLResultsViewer.prototype.orderColumns = function(sample){
 WOQLResultsViewer.prototype.getAsDOM = function(resultDOM, displayResultHeader){
 	var rs = document.createElement('div');
 	resultDOM.appendChild(rs);
+
 	if(displayResultHeader){
 		var rh = document.createElement('div');
 		rh.setAttribute("class", "terminus-margin-top-bottom terminus-module-head");
 		rh.appendChild(document.createTextNode("Results"));
 		rs.appendChild(rh);
 	}
-	if(this.result && this.result.hasBindings() && this.showTable()){
+	if(this.result && this.woqlResult.hasBindings(this.result) && this.showTable()){
 		this.getTableDOM(this.result.bindings, rs);
 		return rs;
 	}
@@ -116,7 +118,8 @@ WOQLResultsViewer.prototype.formatResultsForDatatableDisplay = function(bindings
 				lab = wrap.innerText;
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
-				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
+				//var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
+				var lab = bindings[i][ordered_headings[j]];
 				if(lab == "unknown") lab = "";
 				else if(lab.substring(0, 4) == "doc:"){
 					var a = document.createElement("a");
@@ -151,7 +154,8 @@ WOQLResultsViewer.prototype.getTableBody = function(bindings, ordered_headings){
 				var lab = (bindings[i][ordered_headings[j]]['@value'] ? bindings[i][ordered_headings[j]]['@value'] : "?");
 			}
 			else if(typeof bindings[i][ordered_headings[j]] == "string") {
-				var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
+				//var lab = this.result.shorten(bindings[i][ordered_headings[j]]);
+				var lab = bindings[i][ordered_headings[j]];
 			}
 			if(lab == "unknown") lab = "";
 			if(lab.substring(0, 4) == "doc:"){

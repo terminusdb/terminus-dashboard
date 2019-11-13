@@ -57,8 +57,11 @@ Codemirror.prototype.setCodemirrorSize = function(editor, mode){
     case 'api-doc':
         editor.setSize('800', '500');
     break;
-    case 'auto':
-        editor.setSize('auto', 'auto');
+    case 'doc-json':
+        editor.setSize('1410', 'auto');
+    break;
+    case 'doc-json-create':
+        editor.setSize('1410', '500');
     break;
   } // switch(mode)
 } // setCodemirrorSize()
