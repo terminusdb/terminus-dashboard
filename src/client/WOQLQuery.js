@@ -100,7 +100,7 @@ WOQLQuery.prototype.queryWrappedWithLimit = function(query, limit, start){
 	return wjson;
 }
 
-
+//getAllDocuments
 WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 	var query = {
 		and: [
@@ -116,6 +116,7 @@ WOQLQuery.prototype.getAllDocumentQuery = function(constraint, limit, start){
 	return this.queryWrappedWithLimit(query, limit, start);
 }
 
+//getEverything
 WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 	var wjson = {triple: ["v:Subject", "v:Predicate", "v:Object"]};
 	if(constraint){
@@ -124,6 +125,7 @@ WOQLQuery.prototype.getEverythingQuery = function(constraint, limit, start){
 	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
+// propertyMetadata
 WOQLQuery.prototype.getPropertyListQuery = function(constraint, limit, start){
 	var wjson = {
 		and: [{quad: ["v:Property", "rdfs:range", "v:Range", "db:schema"]},
@@ -147,7 +149,7 @@ WOQLQuery.prototype.getPropertyListQuery = function(constraint, limit, start){
 	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
-
+// elementMetadata() in new woql query
 WOQLQuery.prototype.getElementMetaDataQuery = function(constraint, limit, start){
 	var wjson = {
 		and: [{quad: ["v:Element", "rdf:type", "v:Type", "db:schema"]},
@@ -174,6 +176,7 @@ WOQLQuery.prototype.getElementMetaDataQuery = function(constraint, limit, start)
 	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
+// classMetadata in new woql client
 WOQLQuery.prototype.getClassListMetaDataQuery = function(constraint, limit, start){
 	var wjson = {
 		and: [{quad: ["v:Element", "rdf:type", "owl:Class", "db:schema"]},
@@ -194,6 +197,7 @@ WOQLQuery.prototype.getClassListMetaDataQuery = function(constraint, limit, star
 	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
+// classMetadata
 WOQLQuery.prototype.getClassMetaDataQuery = WOQLQuery.prototype.getClassListMetaDataQuery;
 
 WOQLQuery.prototype.getDataOfChosenClassQuery = function(chosen, limit, start){

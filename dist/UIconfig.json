@@ -148,5 +148,33 @@ var FrameConfig = {
 		editor: true,
 		mode: "edit",
 		viewer: "html"
-	}
+	},
+	model: {
+		label: "Class Frames",
+		rules: [
+			{
+				pattern: { renderer: "object"},
+				output: {
+					facet: "page",
+					features: ["type", "comment", "body"]
+				}
+			},
+			{
+				pattern: { renderer: "property"},
+				output: {
+					features: ["label", "id", "type", "comment", "body"]
+				}
+			},
+			{
+				pattern: { renderer: "value"},
+				output: {
+					features: []
+				}
+			}
+		],
+		editor: true,
+		facet: "page",
+		mode: "view",
+		viewer: "html"
+	} 
 };
