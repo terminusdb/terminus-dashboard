@@ -23,8 +23,6 @@ WOQLResult.prototype.hasBindings = function(result){
 	else return (this.bindings && this.bindings.length);
 }
 
-
-
 function WOQLResultsViewer(ui, wresult, woqlResult, options, settings, queryPage){
 	this.ui = ui;
 	this.result = wresult;

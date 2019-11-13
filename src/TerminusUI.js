@@ -15,7 +15,7 @@ const TerminusSchemaViewer = require('./client/TerminusSchema');
 const TerminusServersdk = require('./client/TerminusServer');
 const TerminusURLLoader = require('./client/TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
-const UTILS=require('./Utils');
+const UTILS = require('./Utils');
 const RenderingMap = require('./client/RenderingMap');
 const TerminusClient = require('@terminusdb/terminus-client');
 
@@ -334,6 +334,7 @@ TerminusUI.prototype.showCreateDocument = function(durl){
 }
 
 TerminusUI.prototype.redrawMainPage = function(){
+    this.clearMessages();
 	TerminusClient.FrameHelper.removeChildren(this.main);
 	if(this.viewer){
 		this.main.appendChild(this.viewer.getAsDOM());
