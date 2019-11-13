@@ -404,32 +404,56 @@ function getCurrentWoqlQueryObject(query, settings){
 	switch(query){
 		case 'Show_All_Schema_Elements':
 			qval = TerminusClient.WOQL.limit(settings.pageLength)
-									  .start(settings.start)
-									  .elementMetadata();
+                        .start(settings.start)
+                        .elementMetadata();
 		break;
 		case 'Show_All_Classes':
 			qval = TerminusClient.WOQL.limit(settings.pageLength)
-									  .start(settings.start)
-									  .classMetadata();
+                        .start(settings.start)
+                        .classMetadata();
 		break;
 		case 'Show_All_Data':
 			qval = TerminusClient.WOQL.limit(settings.pageLength)
-									  .start(settings.start)
-									  .getEverything();
+                        .start(settings.start)
+                        .getEverything();
 		break;
 		case 'Show_All_Documents':
 			qval = TerminusClient.WOQL.limit(settings.pageLength)
-									  .start(settings.start)
-									  .getAllDocuments();
+                        .start(settings.start)
+                        .getAllDocuments();
 		break;
+        case 'Show_All_Document_classes':
+            qval = TerminusClient.WOQL.limit(settings.pageLength)
+                        .start(settings.start)
+                        .documentMetadata();
+        break;
+        case 'Show_Document_Classes':
+            qval = TerminusClient.WOQL.limit(settings.pageLength)
+                        .start(settings.start).and(
+                        TerminusClient.WOQL.quad("v:Element", "rdf:type", "owl:Class", "db:schema"),
+                        TerminusClient.WOQL.abstract("v:Element"),
+                        TerminusClient.WOQL.sub("v:Element", "tcs:Document"),
+                        TerminusClient.WOQL.opt().quad("v:Element", "rdfs:label", "v:Label", "db:schema"),
+                        TerminusClient.WOQL.opt().quad("v:Element", "rdfs:comment", "v:Comment", "db:schema"));
+        break;
+        case 'Show_All_Properties':
+            qval = TerminusClient.WOQL.limit(settings.pageLength)
+                        .start(settings.start)
+                        .propertyMetadata();
+        break;
 		default:
 			console.log('Invalid query ' + query + ' passed in WOQLTextboxGenerator');
 		break;
 	}
+    console.log('qval', qval);
 	return qval;
 }
 
-
+// removes spaces
+function trimValue(text){
+    (text).replace(/[\s\t\r\n\f]/g,'');
+    return text;
+}
 
 module.exports={tolggleContent,
                removeSelectedNavClass,
@@ -446,4 +470,5 @@ module.exports={tolggleContent,
                setSelectedSubMenu,
                checkForMandatoryId,
                activateSelectedNav,
-               getCurrentWoqlQueryObject}
+               getCurrentWoqlQueryObject,
+               trimValue}

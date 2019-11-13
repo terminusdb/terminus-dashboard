@@ -176,5 +176,5 @@ var FrameConfig = {
 		facet: "page",
 		mode: "view",
 		viewer: "html"
-	} 
+	}
 };

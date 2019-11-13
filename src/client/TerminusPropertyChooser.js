@@ -1,7 +1,7 @@
 /*
  * Utility Property which runs a query against the schema and presents the returned Propertyes as a drop-down / Property filter list
  */
-const WOQLQuery = require('../query/WOQLQuery');
+//const WOQLQuery = require('../query/WOQLQuery');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
@@ -36,10 +36,9 @@ TerminusPropertyChooser.prototype.getAsDOM = function(){
 		}
 	});
 	ccdom.appendChild(ccsel);
-	var wq = new WOQLQuery(this.ui.client, false, this.ui);
-	var woql = wq.getPropertyListQuery(this.filter);
+	var wq = TerminusClient.WOQL.query().propertyMetadata();
 	var self = this;
-	wq.execute(woql)
+	wq.execute(this.ui.client)
 	.then(function(response){
 		var opts = self.getResultsAsOptions(response);
 		for(var i = 0; i<opts.length; i++){
@@ -91,7 +90,5 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	}
 	return choices;
 }
-
-
 
 module.exports=TerminusPropertyChooser

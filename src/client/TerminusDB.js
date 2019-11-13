@@ -376,11 +376,17 @@ TerminusDBViewer.prototype.getDBSummary = function(d){
 }
 
 TerminusDBViewer.prototype.getClassesDOM = function(d){
-	var q = this.wquery.getClassesQuery(25, 0);
+	var q = TerminusClient.WOQL
+				.limit(25)
+				.start(0)
+				.documentMetadata();
+	//var q = this.wquery.getClassesQuery(25, 0);
 	var self = this;
-	this.wquery.execute(q)
+	//this.wquery.execute(q)
+	q.execute(this.ui.client)
 	.then(function(result){
-		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.wquery, {}, {}, false);
+		var wqRes = new TerminusClient.WOQLResult(result, q);
+		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, wqRes, {}, {}, false);
 		if(self.result){
 			var nd = self.result.getAsDOM(d, false);
 			if(nd){
