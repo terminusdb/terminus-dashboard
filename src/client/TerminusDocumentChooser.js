@@ -1,4 +1,4 @@
-const WOQLQuery = require('../query/WOQLQuery');
+const WOQLQuery = require('./WOQLQuery');
 const TerminusClassChooser = require('./TerminusClassChooser');
 /*
  * Utility class which allows the user to choose a document by id or by label (if select2 and full text indexing is turned on)

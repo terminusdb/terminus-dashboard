@@ -1,6 +1,6 @@
-const HTMLPropertyViewer = require('./PropertyViewer');
+const HTMLPropertyViewer = require('../html/document/PropertyViewer');
 const RenderingMap = require('./RenderingMap');
-const HTMLDataViewer = require('./DataViewer');
+const HTMLDataViewer = require('../html/document/DataViewer');
 
 function ValueRenderer(dataframe, index, parent, options){
 	this.frame = dataframe;

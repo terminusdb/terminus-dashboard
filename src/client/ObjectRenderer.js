@@ -11,10 +11,10 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 const RenderingMap = require('./RenderingMap');
 const ValueRenderer = require('./ValueRenderer');
-const ObjectViewer = require('./ObjectViewer');
-const PropertyViewer = require('./PropertyViewer');
-const HTMLDataViewer = require('./DataViewer');
-const HTMLFrameHelper = require('./HTMLFrameHelper');
+const ObjectViewer = require('../html/document/ObjectViewer');
+const PropertyViewer = require('../html/document/PropertyViewer');
+const HTMLDataViewer = require('../html/document/DataViewer');
+const HTMLFrameHelper = require('../html/HTMLFrameHelper');
 
 function PropertyRenderer(prop, parent, options){
 	this.predicate = prop;

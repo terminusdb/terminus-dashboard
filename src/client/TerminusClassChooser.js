@@ -2,8 +2,8 @@
  * Utility class which runs a query against the schema and presents the returned classes as a drop-down / class filter list
  */
 
-//const WOQLQuery = require('../query/WOQLQuery');
-const HTMLFrameHelper = require('./HTMLFrameHelper');
+const WOQLQuery = require('./WOQLQuery');
+const HTMLFrameHelper = require('../html/HTMLFrameHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 TerminusClassChooser = function(ui, filter, chosen){
