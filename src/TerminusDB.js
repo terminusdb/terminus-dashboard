@@ -428,28 +428,72 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	var showLabel = function(value, key, row){
 		return document.createTextNode(value['@value'] + " aa");
 	}
-
+	let nq = new TerminusHTMLViewer(this.ui.client);//should specify default renderers here....
 	let WOQL = TerminusClient.WOQL;
 	let query = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(25).start(0).documentMetadata();
-	let t = WOQL.table().pager(true).pagesize(true, true).page(true);
-	t.column("Class", "Type_Comment", "ID").hidden(true);
-	t.column("Label").header("Document");
-	t.column("Comment").header("Description");
-	//t.column("Label").header("Document").render(showLabel).click(cellClick);
-	t.column("Comment").renderer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
-	//t.column("ID").header("l").renderer("MyRenderer");
-	t.column_order("Label", "Type", "Comment");
-	t.column("Label").render(showLabel);
-	t.row().click(rowClick);
-	let nq = new TerminusHTMLViewer(this.ui.client);
-	//should specify default renderers here....
-	var nt = nq.displayResults(query, t);
 	
+	query.execute(this.ui.client).then((results) => {
+		let qres = new TerminusClient.WOQLResult(results, query);
+		var nt = nq.showResult(qres, WOQL.table());
+		d.appendChild(nt);
+		qres.first()
+		var n = nq.showResult(qres, WOQL.chooser());
+		d.appendChild(n);
+		qres.first()
+		var ng = nq.showResult(qres, WOQL.graph());
+		d.appendChild(ng);
+		//d.appendChild(nc);
+		//var ng = nq.displayResults(false, WOQL.graph());
+		//d.appendChild(ng);
+		let t = WOQL.table().pager(false);
+		t.column("Class", "Type_Comment", "ID").hidden(true);
+		t.column("Label").header("Document");
+		t.column("Comment").header("Description");
+		t.column("Comment").renderer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
+		t.column_order("Label", "Type", "Comment");
+		t.column("Label").render(showLabel);
+		t.row().click(rowClick);
+		qres.first();
+		var dt2 = nq.showResult(qres, t);
+		d.appendChild(dt2);
+		
+		qres.first();
+		var w = WOQL.chooser().values("ID").labels("Comment").titles("Class").sort("Comment").direction("asc");
+		w.change(function(x){
+			alert(x);
+		}).show_empty("Choose something");
+		var n2 = nq.showResult(qres, w);
+		d.appendChild(n2);
+		var licon2 = { color: [10,0,0], weight: 100, unicode: "\uf2bb", size:2 };
+		var licon = { color: [255,255,255], weight: 100, unicode: "\uf1c2"};
+		var licon3 = { color: [23,3,34], weight: 100, unicode: "\uf1c2"};
+		var lborder = { color: [10,255,0], weight: 100, unicode: "\uf2bb", size:20};
+		var g = WOQL.graph();
+		//g.source("ID").width("1000").height(1000);//.literals(false);
+		g.node("Class").size(20).color([220, 202, 230]).collisionRadius(100).icon(licon3);
+		g.node("ID").size(24).color([20, 20, 20]).icon(licon2);
+		g.node().literal(true).color([200, 200, 220]).size(10).icon(licon).border(lborder);
+		g.node("Comment", "Label").hidden(true);
+		//var e = g.rule().edge("ID", "Class").label(x).icon(y).color();
+		//var n = g.rule().node("ID").label(x).icon(y).color();
+		g.edges(["ID", "Class"]);
+		g.edge().color([150, 200, 250]);
+		qres.first()
+		var ng3 = nq.showResult(qres, g);
+		d.appendChild(ng3);
+
+	});
+	//let c = WOQL.chooser();
+	
+	//t.display(query);
+	//t.column("Label").header("Document").render(showLabel).click(cellClick);
+	//t.column("ID").header("l").renderer("MyRenderer");
+	//should specify default renderers here....
 	//var qp = nq.querypane(woql, this.getDocumentTableConfig());
-	d.appendChild(nt);
 	
 	//let nquery = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(1000).simpleGraphQuery();
 	//let g = WOQL.graph();
+	//g.edge("v:Source", "v:Edge", "v:Target").label("bla").color([23,23,45]).weight("v:Account")
 	//t.column("Class", "Type_Comment", "ID").hidden(true);
 	//t.column("Label").header("Document").render(showLabel).click(cellClick);
 	//t.column("Comment").header("Description").renderer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
