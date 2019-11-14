@@ -45,11 +45,11 @@ GraphResultsViewer.prototype.setData = function(dqr, show){
 }
 
 GraphResultsViewer.prototype.loadNewData = function(){
-	this.nodes = jQuery.extend(true, [], this.result.getNodesAndFringes());
+	this.nodes = jQuery.extend(true, [], this.result.getNodes());
 	for(var i = 0 ; i<this.nodes.length; i++){
 		this.loadedNodes[this.nodes[i].id] = this.nodes[i];
 	}
-	this.links = this.result.getLinks();
+	this.links = this.result.getEdges();
 	//this.browser.rebuildController();
 }
 
@@ -421,7 +421,7 @@ GraphResultsViewer.prototype.styleLinkElements = function() {
 GraphResultsViewer.prototype.getEdgeArrow = function(edge) {
 	if(edge){
 		var dir = this.getEdgeDirection(edge);
-		if(dir){
+		//if(dir){
 			var col = this.getEdgeColour(edge);
 			var reference;
 			this.svg.append("svg:defs").selectAll("marker")
@@ -439,7 +439,7 @@ GraphResultsViewer.prototype.getEdgeArrow = function(edge) {
 					.attr("d", dir)
 					.style("fill", col);
 				return "url(#" + reference + ")";
-		}
+		//}
 	}
 	return "";
 }
@@ -535,20 +535,20 @@ GraphResultsViewer.prototype.recentre = function(graph_node) {
 GraphResultsViewer.prototype.setConfigOptions = function(config) {
 	//configuration options for different types of behaviour
 	// Need to explicitly know font family name for unicode glyphs
-	this.fontfam = (config && config.fontfam ? config.fontfam : 'Font Awesome\ 5 Free'); 
-	this.selected_grows = (config && typeof config.selected_grows != "undefined" ? config.selected_grows : true);
-	this.show_force = (config && typeof config.show_force != "undefined" ? config.show_force : true);
-	this.fix_nodes = (config && typeof config.fix_nodes != "undefined" ? config.fix_nodes : false);
-	this.explode_out = (config && typeof config.explode_out != "undefined" ? config.explode_out: false);
-	this.width = (config && config.width ? config.width: false);
-	this.height = (config && config.height ? config.height: false);
+	this.fontfam = (config && config.fontfamily ? config.fontfamily() : 'Font Awesome\ 5 Free'); 
+	this.selected_grows = (config && typeof config.selected_grows() != "undefined" ? config.selected_grows() : true);
+	this.show_force = (config && typeof config.show_force() != "undefined" ? config.show_force() : true);
+	this.fix_nodes = (config && typeof config.fix_nodes() != "undefined" ? config.fix_nodes() : false);
+	this.explode_out = (config && typeof config.explode_out() != "undefined" ? config.explode_out(): false);
+	this.width = (config && config.width() ? config.width(): false);
+	this.height = (config && config.height() ? config.height(): false);
 	this.defaults = {
 		edge: {
 			type: "edge",
 			distance: (config && config.edge && config.edge.distance ? config.edge.distance : 70),
 			arrow: (config && config.edge && config.edge.arrow ? config.edge.arrow : { width: 36, height: 16}),
 			symmetric: (config && config.edge && config.edge.symmetric ? config.edge.symmetric : true),
-			color: (config && config.edge && config.edge.color ? config.edge.color : [255,0,255]),
+			color: (config && config.edge && config.edge.color ? config.edge.color : [150,150,255]),
 			weight: (config && config.edge && config.edge.weight ? config.edge.weight : 0.3),
 			size: (config && config.edge && config.edge.size ? config.edge.size : 4)
 		},
@@ -557,6 +557,7 @@ GraphResultsViewer.prototype.setConfigOptions = function(config) {
 			radius: (config && config.node && config.node.radius ? config.node.radius : 14),
 			charge: (config && config.node && config.node.charge ? config.node.charge : -60),
 			collisionRadius: (config && config.node && config.node.collisionRadius ? config.node.collisionRadius : 20),
+			color: (config && config.node && config.node.color ? config.node.color : [0,255,255]),
 			icon: {
 				weight: (config && config.node && config.node.icon && config.node.icon.weight ? config.node.icon.weight : 900),
 				color: (config && config.node && config.node.icon && config.node.icon.color ? config.node.icon.color : [0,0,255]),
@@ -564,7 +565,6 @@ GraphResultsViewer.prototype.setConfigOptions = function(config) {
 				size: (config && config.node && config.node.icon && config.node.icon.size ? config.node.icon.size : 10),
 				faclass: (config && config.node && config.node.icon && config.node.icon.faclass ? config.node.icon.faclass : "fas fa-user-astronaut")
 			},
-			color: (config && config.node && config.node.color ? config.node.color : [0,255,255]),
 			text: {
 				color: (config && config.node && config.node.text && config.node.text.color ? config.node.text.color : [0,0,0]),
 				size: (config && config.node && config.node.icon && config.node.text.size ? config.node.text.size : 10)

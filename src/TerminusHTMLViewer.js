@@ -1,6 +1,7 @@
 const TerminusClient = require('@terminusdb/terminus-client');
+const WOQLRule = require("./viewer/WOQLRule");
 const WOQLTable = require("./viewer/WOQLTable");
-const WOQLChoice = require("./viewer/WOQLChooser");
+const WOQLChooser = require("./viewer/WOQLChooser");
 const WOQLQueryViewer = require("./viewer/WOQLQueryView");
 const WOQLGraph = require("./viewer/WOQLGraph");
 const WOQLStream = require("./viewer/WOQLStream");
@@ -26,6 +27,21 @@ function TerminusHTMLViewer(client, config){
 TerminusHTMLViewer.prototype.setRenderers = function(config){
 }
 
+TerminusHTMLViewer.prototype.showResult = function(result, config){
+	let span = document.createElement("span");
+	span.setAttribute("class", "terminus-results");
+	let renderers = {
+			table: new SimpleTable(),
+			graph: new SimpleGraph(),
+		//	stream: [new SimpleStream()],
+			chooser: new SimpleChooser()
+	}	
+	let viewer = config.create(this.client, renderers, Datatypes.initialiseDataRenderers);
+	viewer.setResult(result);
+	span.appendChild(viewer.render());
+	return span;
+}
+
 TerminusHTMLViewer.prototype.displayResults = function(query, config){
 	let span = document.createElement("span");
 	span.setAttribute("class", "terminus-results");
@@ -36,19 +52,24 @@ TerminusHTMLViewer.prototype.displayResults = function(query, config){
 			choice: new SimpleChooser()
 	}	
 	let viewer = config.create(this.client, renderers, Datatypes.initialiseDataRenderers);
-	this.loadResults(query, viewer, function(){ span.appendChild(viewer.render()); })
+	if(query){
+		this.loadResults(query, viewer, function(){ span.appendChild(viewer.render()); })
+	}
+	else {
+		alert("x");
+		if(this.last_result){
+			viewer.setResult(this.last_result);
+			span.appendChild(viewer.render());
+		}
+	}
 	return span;
 }
 
 TerminusHTMLViewer.prototype.loadResults = function(query, viewer, then){
-	
-	//var wqt = new WOQLTable(this.client).options(config);
-	//wqt.setDatatypes(Datatypes.initialiseDataRenderers);
-	//wqt.setRenderer(new SimpleTable());
-	query.execute(this.client).then((results) => {
-		let result = new TerminusClient.WOQLResult(results, query);
-		viewer.setResult(result);
-		if(then) then(viewer);
+	var self = this;
+	return query.execute(this.client).then((results) => {
+		self.last_result = new TerminusClient.WOQLResult(results, query);
+		viewer.setResult(self.last_result);
 	});	
 }
 
