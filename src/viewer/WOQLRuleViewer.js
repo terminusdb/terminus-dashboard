@@ -1,5 +1,3 @@
-const WOQLPatternMatcher = require("./WOQLRule");
-
 function WOQLRuleViewer(client){
 	this.client = client;
 	this.rules = [];

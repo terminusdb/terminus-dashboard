@@ -113,7 +113,8 @@ SimpleTable.prototype.getCell = function(key, row){
 			rc(row);
 		});
 	}
-	td.appendChild(this.getCellData(key, row));
+	var c = this.getCellData(key, row);
+	if(c) td.appendChild(c);
 	return td;
 }
 
@@ -126,7 +127,7 @@ SimpleTable.prototype.getCellData = function(key, row){
 		return this.woqltable.renderValue(renderer, row[key], key, row);
 	}
 	var val = row[key]
-	if(val['@value']) val = val['@value'];
+	if(val && val['@value']) val = val['@value'];
 	return document.createTextNode(val);
 }
 
