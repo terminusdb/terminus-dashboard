@@ -1,13 +1,15 @@
 const TerminusClient = require('@terminusdb/terminus-client');
+const UTILS= require('../../Utils');
+const TerminusCodeSnippet = require('../../viewer/TerminusCodeSnippet');
 
-function SimpleTextbox(woql){
+function SimpleTextbox(woql, width, height){
 	this.woql = woql;
-	this.placeholder = "Enter Query";
+	this.placeholder = "Enter Query ...";
 	this.button = "Submit";
-	this.width = 1000;
-	this.height = 600;
+	this.width = width;
+	this.height = height;
 	this.format = "js";
-	this.input = document.createElement("textarea");	
+	this.input = document.createElement("textarea");
 }
 
 SimpleTextbox.prototype.options = function(options){
@@ -32,15 +34,27 @@ SimpleTextbox.prototype.render = function(){
 	return this.getAsDOM();
 }
 
+// myTest
+var settings = {};
+settings.pageLength = 5;
+settings.start = 0;
+var qObj = UTILS.getCurrentWoqlQueryObject('Show_All_Schema_Elements', settings);
+
 SimpleTextbox.prototype.getAsDOM = function(){
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-textbox-input terminus-query-section");
+
+
+	// myTest
+	var tcs = new TerminusCodeSnippet(qObj, 500, 'auto', 'edit');
+	//qbox.appendChild(tcs.getAsDOM().dom);
+
 	this.input.setAttribute("class", "terminus-query-box");
 	if(this.placeholder){
 		this.input.setAttribute("placeholder", this.placeholder);
 	}
 	if(this.width && this.height){
-		this.input.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");	
+		this.input.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");
 	}
 	qbox.appendChild(this.input);
 	var self = this;

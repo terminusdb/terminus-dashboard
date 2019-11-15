@@ -445,7 +445,6 @@ function getCurrentWoqlQueryObject(query, settings){
 			console.log('Invalid query ' + query + ' passed in WOQLTextboxGenerator');
 		break;
 	}
-    console.log('qval', qval);
 	return qval;
 }
 

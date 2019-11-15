@@ -1,3 +1,5 @@
+const TerminusClient = require('@terminusdb/terminus-client');
+
 function WOQLQueryView(client){
 	this.client = client;
 }
@@ -44,7 +46,18 @@ WOQLQueryView.prototype.parseText = function(text, format){
 	}
 }
 
-WOQLQueryView.prototype.submitQuery = function (query) {}
+// function gets woql object from entered query
+WOQLQueryView.prototype.getqObjFromInput = function(query){
+    var query = 'const WOQL = TerminusClient.WOQL ; return ' + 'WOQL.' + query;
+    var qObj = new Function(query)();
+    var qJson = qObj.json();
+    var newQObj= TerminusClient.WOQL.json(JSON.parse(JSON.stringify(qJson)))
+    return newQObj;
+}
+
+WOQLQueryView.prototype.submitQuery = function(qObj){
+	
+}
 
 WOQLQueryView.prototype.error = function(msg){
 	console.log(msg);

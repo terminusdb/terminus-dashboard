@@ -11,8 +11,6 @@ function TerminusQueryViewer(ui, options){
 	this.thv = new TerminusHTMLViewer(ui.client);
 }
 
-
-
 TerminusQueryViewer.prototype.query = function(val, settings, tab){
 	var self = this;
 	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
@@ -41,17 +39,18 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 			inputs: {"js": {}, "json": {}},
 			results: {"table": {}, "graph": {}, "stream" : {}}
 		};
-	
+
 	var wqv = this.thv.querypane(q, this.qvc);
-	
-	
-	
+
+
+
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-page");
+	qbox.setAttribute("style", "2px solid black");
 	if(wqv){
 		qbox.appendChild(wqv);
 	}
-	
+
 	/*var woql = TerminusClient.WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(30).start(0).simpleGraphQuery();
 	var wqv = this.thv.woql(woql, this.qvc);
 	if(wqv){
