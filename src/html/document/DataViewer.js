@@ -5,12 +5,11 @@ const HTMLFrameHelper = require('../HTMLFrameHelper');
 const HTMLStringViewer = require('../datatypes/String');
 const TerminusClient = require('@terminusdb/terminus-client');
 
-function HTMLDataViewer(renderer){
-	this.renderer = renderer;
-	this.headerViewer = renderer.getValueHeaderViewer();
+function HTMLDataViewer(){
 }
 
-HTMLDataViewer.prototype.render = function(){
+HTMLDataViewer.prototype.render = function(renderer){
+	this.headerViewer = new HTMLDataHeaderViewer();
 	if(this.valDOM){
 		var nvalDOM = this.getValueDOM();
 		this.valDOM.replaceWith(nvalDOM);
@@ -323,19 +322,4 @@ HTMLDataHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
 	return false;
 }
 
-function JSONObjectViewer(renderer){
-	this.renderer = renderer;
-	this.properties = [];
-}
-
-/**
- * Functions for rendering / re-rendering the object as header and body components
- */
-JSONObjectViewer.prototype.render = function(){
-	alert("render json tbd");
-}
-JSONObjectViewer.prototype.redraw = function(){
-	alert('redraw json tbd');
-}
-
-module.exports={HTMLDataViewer,HTMLDataHeaderViewer,JSONObjectViewer}
+module.exports=HTMLDataViewer;

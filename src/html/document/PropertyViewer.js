@@ -4,16 +4,16 @@ const TerminusClient = require('@terminusdb/terminus-client');
  * Property Viewer
  */
 function HTMLPropertyViewer(renderer){
-	this.renderer = renderer;
 	this.values = [];
-	this.headerViewer = renderer.getPropertyHeaderViewer();
 }
 
 
 /**
  * Draws the property as header and body components
  */
-HTMLPropertyViewer.prototype.render = function(){
+HTMLPropertyViewer.prototype.render = function(renderer){
+	this.renderer = renderer;
+	this.headerViewer = new HTMLPropertyHeaderViewer();
 	//var block = document.createElement('div');
 	//block.setAttribute('style', 'display: flex; margin: 10px');
 	//var br = document.createElement('br');
@@ -465,9 +465,7 @@ HTMLPropertyHeaderViewer.prototype.showValue = function(renderer, index){
 	window.location = (""+window.location).replace(/#[A-Za-z0-9_]*$/,'') + "#" + htmlid;
 }
 
-function HTMLDataViewer(renderer){
-	this.renderer = renderer;
-	this.headerViewer = renderer.getValueHeaderViewer();
+function HTMLDataViewer(){
 }
 
-module.exports={HTMLPropertyViewer,HTMLPropertyHeaderViewer}
+module.exports=HTMLPropertyViewer;

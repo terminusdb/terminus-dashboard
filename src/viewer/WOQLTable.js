@@ -1,6 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 const DatatypeRenderers = require("./DatatypeRenderers");
-//const WOQLPatternMatcher = require("./WOQLRule");
 
 function WOQLTable(client, config){
 	this.client = client;
@@ -40,7 +39,7 @@ WOQLTable.prototype.next = function(){
 
 
 WOQLTable.prototype.options = function(config){
-	this.config = config || false;	
+	this.config = config || TerminusClient.WOQL.table();	
 	return this;
 }
 
@@ -174,7 +173,7 @@ WOQLTable.prototype.getCellHover = function(row, key){
 }
 
 WOQLTable.prototype.getColumnOrder = function(){
-	return this.config.column_order;
+	return this.config.column_order();
 }
 
 WOQLTable.prototype.hasColumnOrder = WOQLTable.prototype.getColumnOrder;
@@ -211,7 +210,7 @@ WOQLTable.prototype.renderValue = function(renderer, val, key, row){
 		renderer.type = "id";
 		var dv = new DataValue(val['@value'], "id", key, row);
 	}
-	return renderer.renderValue(dv);
+	if(dv) return renderer.renderValue(dv);
 }
 
 function DataValue(val, type){
