@@ -2,38 +2,37 @@ function SimpleChooser(){}
 
 SimpleChooser.prototype.options = function(options){
 	this.options = options;
-	this.show_single == (options && options.show_single ? options.show_single : false);
-	this.empty_choice == (options && options.empty_choice ? options.empty_choice : false);
-	this.change = (options && options.change ? options.change : function(val){console.log("chooser set to " + val)});
 	return this;
 }
 
-SimpleChooser.prototype.render = function(){
-	if(this.show_single == false && this.chooser.count() < 2) return false;
-	if(this.show_empty == false && this.chooser.count() < 1) return false;
+SimpleChooser.prototype.render = function(chooser){
+	if(chooser) this.chooser = chooser;
+	if(this.chooser.config.show_empty() == false && this.chooser.count() < 1) return false;
 	var ccdom = document.createElement("span");
 	ccdom.setAttribute("class", "woql-chooser");
 	var ccsel = document.createElement("select");
 	ccsel.setAttribute("class", " woql-chooser");
 	var self = this;
 	ccsel.addEventListener("change", function(){
-		if(self.change)	self.change(this.value, this);
+		self.chooser.set(this.value);
 	});
 	var opts = [];
-	if(this.empty_choice){
+	if(this.chooser.config.show_empty()){
 		opts.push(this.getEmptyOption())
 	}
 	while(choice = this.chooser.next()){
 		var opt = this.createOptionFromChoice(choice);
-		opts.push(choice);
+		opts.push(opt);
 	}
-	ccdom.appendChild(opts);
+	for(var i = 0; i<opts.length; i++){
+		ccsel.appendChild(opts[i]);
+	}
 	ccdom.appendChild(ccsel);
 	return ccdom;
 }
 
 SimpleChooser.prototype.getEmptyOption = function(){
-	var choice = { id: "", label: this.empty_choice};
+	var choice = { id: "", label: this.chooser.config.show_empty()};
 	return this.createOptionFromChoice(choice);
 }
 
