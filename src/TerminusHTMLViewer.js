@@ -5,12 +5,19 @@ const WOQLChooser = require("./viewer/WOQLChooser");
 const WOQLQueryViewer = require("./viewer/WOQLQueryView");
 const WOQLGraph = require("./viewer/WOQLGraph");
 const WOQLStream = require("./viewer/WOQLStream");
+const TerminusFrame = require("./viewer/TerminusFrame");
 const Datatypes = require("./html/Datatypes");
 const QueryPane = require("./html/QueryPane");
 const SimpleTable = require("./html/table/SimpleTable");
 const SimpleGraph = require("./html/graph/SimpleGraph");
+const SimpleStream = require("./html/stream/SimpleStream");
 const SimpleTextbox = require("./html/query/SimpleTextbox");
 const SimpleChooser = require("./html/chooser/SimpleChooser");
+const SimpleDocument = require("./html/document/SimpleDocument");
+const DocumentTable = require("./html/document/DocumentTable");
+const HTMLObjectViewer = require("./html/document/ObjectViewer");
+const HTMLPropertyViewer = require("./html/document/PropertyViewer");
+const HTMLDataViewer = require("./html/document/DataViewer");
 
 /*
  * Simple wrapper functions for initialising 
@@ -19,9 +26,8 @@ const SimpleChooser = require("./html/chooser/SimpleChooser");
 
 function TerminusHTMLViewer(client, config){
 	this.client = client;
-	if(config && config.render){
-		this.render = config.render;
-	}
+	
+	this.config = config;
 }
 
 TerminusHTMLViewer.prototype.setRenderers = function(config){
@@ -31,10 +37,10 @@ TerminusHTMLViewer.prototype.showResult = function(result, config){
 	let span = document.createElement("span");
 	span.setAttribute("class", "terminus-results");
 	let renderers = {
-			table: new SimpleTable(),
-			graph: new SimpleGraph(),
-		//	stream: [new SimpleStream()],
-			chooser: new SimpleChooser()
+		table: new SimpleTable(),
+		graph: new SimpleGraph(),
+		stream: new SimpleStream(),
+		chooser: new SimpleChooser()
 	}	
 	let viewer = config.create(this.client, renderers, Datatypes.initialiseDataRenderers);
 	viewer.setResult(result);
@@ -149,6 +155,7 @@ TerminusHTMLViewer.prototype.chooser = function(query, config){
 
 TerminusHTMLViewer.prototype.graph = function(query, config){
 	var span = document.createElement("span");
+	span.setAttribute("class", "terminus-graph terminus-graph-holder");
 	var wqt = new WOQLGraph(this.client).options(config);
 	return query.execute(this.client).then((results) => {
 		var result = new WOQLResult(results, query);
@@ -156,22 +163,40 @@ TerminusHTMLViewer.prototype.graph = function(query, config){
 	});	
 	return span;
 }
-	
+
+TerminusHTMLViewer.prototype.lmg = function(config){
+	config.show_all("HTMLObjectViewer", "HTMLPropertyViewer", "HTMLDataViewer");
+}
+
 TerminusHTMLViewer.prototype.document = function(id, config){
-	var tdv = new TerminusDocumentViewer(this.client, config);
-	Datatypes.initialiseDataRenderers(tdv.datatypes);
-	if(!config['object_renderer']) config['object_renderer'] = "HTMLObjectFrameViewer";
-	if(!config['property_renderer']) config['property_renderer'] = "HTMLPropertyFrameViewer";
-	if(!config['data_renderer']) config['data_renderer'] = "HTMLDataFrameViewer";
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-document terminus-document-holder");
-	tdv.show(id, function(rend){
-		if(rend){
-			holder.appendChild(rend);
-		}
-	});	
+	//config.renderer(new DocumentTable());
+	this.lmg(config);
+	var tdv = new TerminusFrame(this.client).options(config);
+	tdv.owner = this;
+	tdv.setDatatypes(Datatypes.initialiseDataRenderers);
+	tdv.loadDocument(id).then(() => { 
+		let dom = tdv.render(); 
+		if(dom) holder.appendChild(dom);
+	});
 	return holder;
 }    
+
+TerminusHTMLViewer.prototype.loadRenderer = function(rendname, frame, args){
+	var evalstr = "new " + rendname + "(";
+	if(args) evalstr += JSON.stringify(args);
+	evalstr += ");";
+	try {
+		var nr = eval(evalstr);
+		return nr;
+	}
+	catch(e){
+		console.log("Failed to load " + rendname + e.toString());
+		return false;
+	}
+}
+
 
 module.exports = TerminusHTMLViewer;
 

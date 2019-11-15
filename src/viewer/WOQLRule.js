@@ -4,16 +4,106 @@ const WOQLTable = require("./WOQLTable");
 const WOQLQueryViewer = require("./WOQLQueryView");
 const WOQLGraph = require("./WOQLGraph");
 const WOQLStream = require("./WOQLStream");
+const TerminusFrame = require("./TerminusFrame");
 
-TerminusClient.WOQL.table = function(t){ return new WOQLTableConfig(t); }
-TerminusClient.WOQL.graph = function(t){ return new WOQLGraphConfig(t); }
-TerminusClient.WOQL.chooser = function(t){ return new WOQLChooserConfig(t); }
-TerminusClient.WOQL.stream = function(s){ return new WOQLStreamConfig(s); }
-
+TerminusClient.WOQL.table = function(){ return new WOQLTableConfig(); }
+TerminusClient.WOQL.graph = function(){ return new WOQLGraphConfig(); }
+TerminusClient.WOQL.chooser = function(){ return new WOQLChooserConfig(); }
+TerminusClient.WOQL.stream = function(){ return new WOQLStreamConfig(); }
+TerminusClient.WOQL.document = function(){ return new FrameConfig(); }
+//the below are aspirational...
+//TerminusClient.WOQL.map = function(){ return new WOQLMapConfig(); }
+//TerminusClient.WOQL.chart = function(){ return new WOQLChartConfig(); }
 
 //Class for expressing and matching rules about WOQL results
 //especially for efficiently expressing rules about how they should be rendered
 //const TerminusClient = require('@terminusdb/terminus-client');
+
+function FrameConfig(){
+	this.rules = [];
+}
+
+FrameConfig.prototype.create = function(client, renderers){
+	var tf = new TerminusFrame(client, this);
+	if(this.trenderer) tf.setRenderer(this.trenderer);
+	else if(renderers && renderers['frame']){
+		tf.setRenderer(renderers['frame']);
+	}
+	return tf;
+}
+
+FrameConfig.prototype.renderer = function(rend){
+	if(typeof rend == "undefined") return this.trenderer;
+	this.trenderer = rend;
+	return this;
+}
+
+
+FrameConfig.prototype.json_rules = function(){
+	let jr = [];
+	for(var i = 0; i<this.rules.length; i++){
+		jr.push(this.rules[i].json());
+	}
+	return jr;
+}
+
+FrameConfig.prototype.load_schema = function(tf){
+	if(typeof tf == "undefined") return this.get_schema;
+	this.get_schema = tf;
+	return this;
+}
+
+FrameConfig.prototype.show_all = function(o, p, d){
+	this.object().renderer(o);
+	this.property().renderer(p);
+	this.data().renderer(d);
+	return this;
+}
+
+FrameConfig.prototype.object = function(){
+	let fp = TerminusClient.WOQL.rule();
+	fp.scope("object")
+	this.rules.push(fp);
+	return fp;
+}
+
+FrameConfig.prototype.property = function(){
+	let fp = TerminusClient.WOQL.rule();
+	fp.scope("property");
+	this.rules.push(fp);
+	return fp;	
+}
+
+FrameConfig.prototype.data = function(){
+	let fp = TerminusClient.WOQL.rule();
+	fp.scope("data")
+	this.rules.push(fp);
+	return fp;	
+}
+
+//WOQL.rule().renderer("object").json(),
+//WOQL.rule().renderer("property").json(),
+//WOQL.rule().renderer("data").json(),
+//WOQL.rule().renderer("data").property("rdfs:comment").render(false).json()
+
+
+function WOQLStreamConfig(){
+	this.rules = [];
+}
+
+WOQLStreamConfig.prototype.getMatchingRules = function(row, key, context, action){
+	return getMatchingRules(this.rules, row, key, context, action);
+}
+
+WOQLStreamConfig.prototype.create = function(client, renderers){
+	var wqt = new WOQLStream(client, this);
+	if(this.trenderer) wqt.setRenderer(this.trenderer);
+	else if(renderers && renderers['stream']){
+		wqt.setRenderer(renderers['stream']);
+	}
+	return wqt;
+}
+
 
 function WOQLChooserConfig(){
 	this.rules = [];
@@ -109,7 +199,6 @@ function WOQLTableConfig(){
 	this.show_pagesize = true;	
 	this.change_pagesize = true;
 	this.show_pagenumber = true;
-
 }
 
 WOQLTableConfig.prototype.getMatchingRules = function(row, key, context, action){
@@ -300,43 +389,6 @@ WOQLGraphConfig.prototype.edges = function(...edges){
 	}
 	return this.show_edges;
 }
-
-
-/*this.defaults = {
-	edge: {
-		type: "edge",
-		distance: (config && config.edge && config.edge.distance ? config.edge.distance : 70),
-		arrow: (config && config.edge && config.edge.arrow ? config.edge.arrow : { width: 36, height: 16}),
-		symmetric: (config && config.edge && config.edge.symmetric ? config.edge.symmetric : true),
-		color: (config && config.edge && config.edge.color ? config.edge.color : [255,0,255]),
-		weight: (config && config.edge && config.edge.weight ? config.edge.weight : 0.3),
-		size: (config && config.edge && config.edge.size ? config.edge.size : 4)
-	},
-	node: {
-		type: "node",
-		radius: (config && config.node && config.node.radius ? config.node.radius : 14),
-		charge: (config && config.node && config.node.charge ? config.node.charge : -60),
-		collisionRadius: (config && config.node && config.node.collisionRadius ? config.node.collisionRadius : 20),
-		icon: {
-			weight: (config && config.node && config.node.icon && config.node.icon.weight ? config.node.icon.weight : 900),
-			color: (config && config.node && config.node.icon && config.node.icon.color ? config.node.icon.color : [0,0,255]),
-			unicode: (config && config.node && config.node.icon && config.node.icon.unicode ? config.node.icon.unicode : "\uf4fb"),
-			size: (config && config.node && config.node.icon && config.node.icon.size ? config.node.icon.size : 10),
-			faclass: (config && config.node && config.node.icon && config.node.icon.faclass ? config.node.icon.faclass : "fas fa-user-astronaut")
-		},
-		color: (config && config.node && config.node.color ? config.node.color : [0,255,255]),
-		text: {
-			color: (config && config.node && config.node.text && config.node.text.color ? config.node.text.color : [0,0,0]),
-			size: (config && config.node && config.node.icon && config.node.text.size ? config.node.text.size : 10)
-		},
-		border: {
-			color: (config && config.node && config.node.border && config.node.border.color ? config.node.border.color : [0,0,0]),
-			size: (config && config.node && config.node.border && config.node.border.size ? config.node.border.size : 10)
-		}
-	}
-}
-*/
-
 
 function WOQLRule(s){
 	this.rule = { scope: s };
@@ -652,42 +704,6 @@ WOQLRule.prototype.test = function(value, constraint){
 
 
 /*
- * [
-	WOQL.column("ID", "Class", "Type_Comment").hidden(true);
-	WOQL.column("Label").header("Document").renderer(func);
-	WOQL.column("Type").renderer(func);
-	WOQL.column("Comment").header("Description").renderer("HTMLStringViewer").args({max_cell_size: 40, max_word_size: 10});
-	WOQL.row().v("ID").in("a", "b", "c").hover(func);
-	WOQL.cell("ID").in("a", "b", "c").hover(func);
-	WOQL.cell().type("xsd:date").hover(func);
-	]
-*/
-
-/*
- * 
- */
-
-
-function WOQLStreamConfig(){
-	this.rules = [];
-}
-
-
-
-
-
-
-
-
-function WOQLPatternMatcher(){}
-
-WOQLPatternMatcher.prototype.loadRules = function(rules){
-	this.rules = rules;
-}
-
-
-
-/*
  * Utility function adds v: to variables...
  */
 function addNamespacesToVariables(vars){
@@ -710,8 +726,6 @@ function getMatchingRules(rules, row, key, context, action){
 }
 
 
-
-
 /*
  * 
 var x = WOQL.schema();
@@ -721,45 +735,3 @@ x.execute(client).then ...
  */
 
 
-
-/*
- * 
- * WOQLRule().row().click(rowClick).cell().click(cellClick);
-[
-WOQL.column("ID", "Class", "Type_Comment").hidden(true);
-WOQL.column("ID", "Class", "Type_Comment").hidden(true);
-WOQL.column("Label").header("Document").renderer(func);
-WOQL.column("Type").renderer(func);
-WOQL.column("Comment").header("Description").renderer("HTMLStringViewer").args({max_cell_size: 40, max_word_size: 10});
-WOQL.value("ID").in("a", "b", "c").row().hover(func);
-]
-*/
-
-//WOQL.
-
-
-/*var opts = {
-		"v:ID": {
-			hidden: true
-		},
-		"v:Class": {hidden: true },
-		"v:Type_Comment": {hidden: true },
-		"v:Label": { 
-			header: "Document", 
-			renderer: function(dataviewer){
-				return dataviewer.annotateValue(dataviewer.value(), 
-					{ ID: dataviewer.binding('v:ID')});
-			},
-		},
-		"v:Type": { 
-			renderer: function(dataviewer){
-				return dataviewer.annotateValue(dataviewer.value(), 
-						{ Class: dataviewer.binding('v:Class'), Description: dataviewer.binding('v:Type_Comment')}
-				);
-			}
-		},
-		"v:Comment": {	header: "Description", renderer: "HTMLStringViewer", args: {max_cell_size: 40, max_word_size: 10} },
-	}
-	return opts;
-*/
-module.exports = WOQLPatternMatcher;

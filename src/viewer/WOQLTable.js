@@ -210,7 +210,7 @@ WOQLTable.prototype.renderValue = function(renderer, val, key, row){
 		renderer.type = "id";
 		var dv = new DataValue(val['@value'], "id", key, row);
 	}
-	return renderer.renderValue(dv);
+	if(dv) return renderer.renderValue(dv);
 }
 
 function DataValue(val, type){

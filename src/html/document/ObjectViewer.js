@@ -5,25 +5,25 @@ const HTMLFrameHelper = require('../HTMLFrameHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLObjectViewer(renderer){
-	this.renderer = renderer;
 	this.properties = [];
-	this.headerViewer = renderer.getObjectHeaderViewer();
 	//this.featureViewers = {};
 }
 
 /**
  * Functions for rendering / re-rendering the object as header and body components
  */
-HTMLObjectViewer.prototype.render = function(){
+HTMLObjectViewer.prototype.render = function(renderer){
+	this.renderer = renderer;
+	this.headerViewer = new HTMLObjectHeaderViewer();
 	if(this.renderedDOM){
-		var renderedDOM = this.getObjectDOM();
-		this.renderedDOM.replaceWith(renderedDOM);
-		this.renderedDOM = renderedDOM;
+		//var renderedDOM = this.getObjectDOM();
+		//this.renderedDOM.replaceWith(renderedDOM);
+		//this.renderedDOM = renderedDOM;
 	}
 	else {
-		this.renderedDOM = this.getObjectDOM();
+		//this.renderedDOM = this.getObjectDOM();
 	}
-	this.renderedDOM.appendChild(this.getObjectIDMarker(this.renderer));
+	//this.renderedDOM.appendChild(this.getObjectIDMarker(this.renderer));
 	if(this.headerViewer){
 		this.header = this.headerViewer.getAsDOM(this.renderer);
 		if(this.header) this.renderedDOM.appendChild(this.header);
@@ -50,7 +50,7 @@ HTMLObjectViewer.prototype.getObjectDOM = function(){
 }
 
 HTMLObjectViewer.prototype.getObjectBodyDOM = function(){
-	var orientation = this.renderer.getContentOrientation();
+	var orientation = "page";//this.renderer.getContentOrientation();
 	var pcls = "terminus-object-properties-" + orientation;
 	if(orientation == "page"){
 		var vholder = document.createElement("div");
@@ -403,4 +403,4 @@ HTMLObjectHeaderViewer.prototype.getObjectUpdateDOM = function(renderer){
 	return dpropDOM;
 }
 
-module.exports={HTMLObjectViewer,HTMLObjectHeaderViewer}
+module.exports=HTMLObjectViewer;
