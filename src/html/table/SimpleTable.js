@@ -1,7 +1,7 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 
 
-function SimpleTable(){	
+function SimpleTable(){
 	this.holder = document.createElement("div");
 }
 
@@ -50,7 +50,7 @@ SimpleTable.prototype.getTableHeader = function(cols){
 		var th = this.getColumnHeader(cols[i]);
 		thr.appendChild(th);
 	}
-	thead.appendChild(thr);	
+	thead.appendChild(thr);
 	return thead;
 }
 

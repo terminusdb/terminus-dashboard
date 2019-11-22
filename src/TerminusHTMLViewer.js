@@ -10,7 +10,7 @@ const Datatypes = require("./html/Datatypes");
 const QueryPane = require("./html/QueryPane");
 const SimpleTable = require("./html/table/SimpleTable");
 const SimpleGraph = require("./html/graph/SimpleGraph");
-const SimpleStream = require("./html/stream/SimpleStream");
+//const SimpleStream = require("./html/stream/SimpleStream");
 const SimpleTextbox = require("./html/query/SimpleTextbox");
 const SimpleChooser = require("./html/chooser/SimpleChooser");
 const SimpleDocument = require("./html/document/SimpleDocument");
@@ -27,7 +27,6 @@ const TerminusCodeSnippet = require('./viewer/TerminusCodeSnippet');
 
 function TerminusHTMLViewer(client, config){
 	this.client = client;
-
 	this.config = config;
 }
 
@@ -40,7 +39,7 @@ TerminusHTMLViewer.prototype.showResult = function(result, config){
 	let renderers = {
 		table: new SimpleTable(),
 		graph: new SimpleGraph(),
-		stream: new SimpleStream(),
+		//stream: new SimpleStream(),
 		chooser: new SimpleChooser()
 	}
 	let viewer = config.create(this.client, renderers, Datatypes.initialiseDataRenderers);
@@ -63,7 +62,6 @@ TerminusHTMLViewer.prototype.displayResults = function(query, config){
 		this.loadResults(query, viewer, function(){ span.appendChild(viewer.render()); })
 	}
 	else {
-		alert("x");
 		if(this.last_result){
 			viewer.setResult(this.last_result);
 			span.appendChild(viewer.render());
@@ -77,6 +75,7 @@ TerminusHTMLViewer.prototype.loadResults = function(query, viewer, then){
 	return query.execute(this.client).then((results) => {
 		self.last_result = new TerminusClient.WOQLResult(results, query);
 		viewer.setResult(self.last_result);
+		console.log('self.last_result', self.last_result);
 	});
 }
 
@@ -118,12 +117,7 @@ TerminusHTMLViewer.prototype.woql = function(query, config){
 }
 
 TerminusHTMLViewer.prototype.ruleEditor = function(){
-	var woql = TerminusClient.WOQL;
-	var cont = document.createElement('div');
-	var tcs = new TerminusCodeSnippet({}, 500, 250, 'Enter rules ...', 'edit');
-	var snippet = tcs.getAsDOM();
-	cont.appendChild(snippet.dom);
-	return cont;
+
 }
 
 TerminusHTMLViewer.prototype.getAddRuleButton = function(cont){
@@ -156,16 +150,17 @@ TerminusHTMLViewer.prototype.querypane = function(query, config){
 	qp.options(config);
 	this.queryPane = qp;
 	var wqv = new WOQLQueryViewer(this.client).options(config);
+	this.queryViewer = wqv;
 
 	// Query Viewer
-	var tcs = new TerminusCodeSnippet({}, 800, 250, 'Enter Query', 'edit');
+/*	var tcs = new TerminusCodeSnippet({}, 800, 250, 'Enter Query', 'edit');
 	var snippet = tcs.getAsDOM();
 	span.appendChild(snippet.dom);
 	//span.appendChild(this.ruleEditor());
 	var abtn = snippet.actionButton;
-	var self = this;
+	var self = this; */
 	// On submit query
-	abtn.addEventListener('click', function(){
+	/*abtn.addEventListener('click', function(){
 		var qObj = wqv.getqObjFromInput(snippet.snippetText.value);
 		let t = TerminusClient.WOQL.table();
 		console.log('t', t);
@@ -188,8 +183,8 @@ TerminusHTMLViewer.prototype.querypane = function(query, config){
 			self.getConfigButton(span);
 		}) */
 		//wqv.submitQuery(qObj);
-	})
-
+	/*})
+	*/
 
 	//console.log('wqv', wqv);
 	//var wqc = new WOQLChoice(this.client).options(config);

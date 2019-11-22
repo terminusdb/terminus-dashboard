@@ -18,10 +18,10 @@ ResultViewer.prototype.setRuleViewer = function(rv){
 
 function QueryPane(client, query, results){
 	this.client = client;
-	this.query = query;
+	if (query) this.query = query;
 	this.result = results;
 	this.query_viewers = [];
-	this.result_viewers = {};
+	this.result_viewers = [];
 	//this.libraries = [];
 	this.rules = [];
 }
@@ -37,10 +37,15 @@ QueryPane.prototype.addQueryViewer = function(qv){
 	return this;
 }
 
-QueryPane.prototype.addResultViewer = function(label, rule, ruleviewer){
+/*QueryPane.prototype.addResultViewerOLD = function(label, rule, ruleviewer){
 	let rv = new ResultViewer(rule);
 	if(ruleviewer) rv.setRuleViewer(ruleviewer);
 	this.result_viewers[label] = rv;
+	return this;
+} */
+
+QueryPane.prototype.addResultViewer = function(rule){
+	this.result_viewers.push(rule);
 	return this;
 }
 

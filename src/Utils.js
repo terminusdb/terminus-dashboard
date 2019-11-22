@@ -454,6 +454,20 @@ function trimValue(text){
     return text;
 }
 
+// query string
+function getqObjFromInput(q){
+    const WOQL = TerminusClient.WOQL ;
+    var query = 'WOQL.' + q;
+    try {
+        var qObj = eval(query);
+        this.qObj = qObj;
+        return qObj;
+    }
+    catch(e){
+        console.log('Error in getting woql object ',e.toString());
+    }
+}
+
 module.exports={tolggleContent,
                removeSelectedNavClass,
                stylizeCodeDisplay,
@@ -470,4 +484,5 @@ module.exports={tolggleContent,
                checkForMandatoryId,
                activateSelectedNav,
                getCurrentWoqlQueryObject,
-               trimValue}
+               trimValue,
+               getqObjFromInput}
