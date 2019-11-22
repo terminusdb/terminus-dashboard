@@ -78,7 +78,9 @@ h3.terminus-query-head{
     width: 100%;
   }
 }
-
+.terminus-woql-pane{
+	border: 2px solid black;
+}
 .term-progress-bar {
 	background-color: #1a1a1a;
 	height: 15px;

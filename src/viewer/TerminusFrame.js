@@ -106,12 +106,12 @@ TerminusFrame.prototype.render = function(){
 		return x;
 	}
 	else {
-		alert("didna make it ");
+		console.log("didna make it ");
 	}
 }
 
 /*
- * adds render and compare functions to object frames 
+ * adds render and compare functions to object frames
  */
 TerminusFrame.prototype.applyRenderersToDocument = function(doc, config){
 	var self = this;

@@ -311,7 +311,10 @@ TerminusDBViewer.prototype.getAsDOM = function(selected){
 	lod.setAttribute('class', 'terminus-list-of-doc');
 	lod.appendChild(UTILS.getHeaderDom('List of Documents'))
 	pd.appendChild(lod);
-	this.getClassesDOM(pd);
+	let query = TerminusClient.WOQL.limit(25).start(0).getEverything();
+	let test = query.prettyPrint();
+	pd.appendChild(document.createTextNode(JSON.stringify(test)));
+	//this.getClassesDOM(pd); // un comment this later on ...
 	return pd;
 }
 

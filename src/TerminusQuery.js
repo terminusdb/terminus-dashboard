@@ -2,6 +2,7 @@ const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const HTMLFrameHelper = require('./html/HTMLFrameHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 const TerminusHTMLViewer = require("./TerminusHTMLViewer");
+const QueryPaneManager = require("./html/QueryPaneManager");
 
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;
@@ -9,6 +10,7 @@ function TerminusQueryViewer(ui, options){
 	this.meta = {};
 	this.pman = new TerminusPluginManager();
 	this.thv = new TerminusHTMLViewer(ui.client);
+	this.qpMan = new QueryPaneManager(ui);
 }
 
 TerminusQueryViewer.prototype.query = function(val, settings, tab){
@@ -40,15 +42,19 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 			results: {"table": {}, "graph": {}, "stream" : {}}
 		};
 
-	var wqv = this.thv.querypane(q, this.qvc);
-
-
-
+	// set html viewer qviewer and panes
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-page");
-	qbox.setAttribute("style", "2px solid black");
-	if(wqv){
+	qbox.setAttribute("style", "border: 2px solid green; padding: 10px;");
+	var wqv = this.thv.querypane(q, this.qvc);
+	var qpm = this.qpMan.getAsDOM(this.thv, qbox);
+
+	/*if(wqv){
 		qbox.appendChild(wqv);
+	} */
+
+	if(qpm){
+		qbox.appendChild(qpm);
 	}
 
 	/*var woql = TerminusClient.WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(30).start(0).simpleGraphQuery();
