@@ -418,7 +418,7 @@ TerminusDBViewer.prototype.getDocumentTableConfig = function(nq){
 
 TerminusDBViewer.prototype.getClassesDOM = function(d){
 	var self = this;
-	var rowClick = function(row){
+	var rowClick = function(row){	
 		self.ui.showDocument(row['v:ID']);
 	};
 	var cellClick = function(key, value){
@@ -431,8 +431,8 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	}
 	let nq = new TerminusHTMLViewer(this.ui.client);//should specify default renderers here....
 	let WOQL = TerminusClient.WOQL;
-	let query = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(25).start(0).getEverything();
-	
+	let query = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(25).start(0).documentMetadata();
+	TerminusClient.FrameHelper.loadDynamicCSS("myfa", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css");
 	query.execute(this.ui.client).then((results) => {
 		let qres = new TerminusClient.WOQLResult(results, query);
 		var nt = nq.showResult(qres, WOQL.table());
@@ -441,7 +441,11 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		var n = nq.showResult(qres, WOQL.chooser());
 		d.appendChild(n);
 		qres.first();
-		var ng = nq.showResult(qres, WOQL.graph());
+		var lg = WOQL.graph();
+		lg.source("v:Subject");
+		var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
+		lg.edge("v:Subject", "v:Object").icon(licon2);
+		var ng = nq.showResult(qres, lg);
 		d.appendChild(ng);
 		qres.first();
 		//var sg = nq.showResult(qres, WOQL.stream());
@@ -449,32 +453,32 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		//d.appendChild(nc);
 		//var ng = nq.displayResults(false, WOQL.graph());
 		//d.appendChild(ng);
-		/*let t = WOQL.table().pager(false);
-		//t.column("Class", "Type_Comment", "ID").hidden(true);
-		//t.column("Label").header("Document");
-		//t.column("Comment").header("Description");
-		//t.column("Comment").renderer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
-		t.column_order("Subject", "Predicate", "Object");
-		//t.column("Label").render(showLabel);
+		let t = WOQL.table().pager(false);
+		t.column("Class", "Type_Comment", "ID").hidden(true);
+		t.column("Label").header("Document");
+		t.column("Comment").header("Description");
+		t.column("Comment").renderer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
+		//t.column_order("Subject", "Predicate", "Object");
+		t.column("Label").render(showLabel);
 		t.row().click(rowClick);
 		qres.first();
 		var dt2 = nq.showResult(qres, t);
 		d.appendChild(dt2);
 		
 		qres.first();
-		//var w = WOQL.chooser().values("ID").labels("Comment").titles("Class").sort("Comment").direction("asc");
-		//w.change(function(x){
-		//	alert(x);
-		//}).show_empty("Choose something");
-		//var n2 = nq.showResult(qres, w);
-		//d.appendChild(n2);
+		var w = WOQL.chooser().values("ID").labels("Comment").titles("Class").sort("Comment").direction("asc");
+		w.change(function(x){
+			alert(x);
+		}).show_empty("Choose something");
+		var n2 = nq.showResult(qres, w);
+		d.appendChild(n2);
 		var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
 		var licon = { color: [255,255,255], weight: 100, unicode: "\uf1c2"};
 		var licon3 = { color: [23,3,34], weight: 100, unicode: "\uf1c2"};
 		var lborder = { color: [10,255,0], weight: 100, unicode: "\uf2bb", size:2 };
 		var g = WOQL.graph();
-		//g.source("ID").width("1000").height(1000);//.literals(false);
-		g.node("Subject").size(20).color([220, 202, 230]).collisionRadius(100).icon(licon3);
+		g.source("ID").width("1000").height(1000);//.literals(false);
+		//g.node("Id").size(20).color([220, 202, 230]).collisionRadius(100).icon(licon3);
 		g.node("Object").size(24).color([20, 20, 20]).icon(licon2);
 		g.node().literal(true).color([200, 200, 220]).size(10).icon(licon);
 		g.node("Predicate").hidden(true);
@@ -485,11 +489,9 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		qres.first()
 		var ng3 = nq.showResult(qres, g);
 		d.appendChild(ng3);
-		*/
 		var x = "doc:access_all_areas";
 		var d1 = nq.document(x, WOQL.document());
-		d.appendChild(d1);
-		
+		d.appendChild(d1);		
 	});
 	//let c = WOQL.chooser();
 	

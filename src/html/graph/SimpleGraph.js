@@ -24,7 +24,9 @@ SimpleGraph.prototype.render = function(wgraph){
 SimpleGraph.prototype.getGraphDOM = function(){
 	this.gviz = new GraphResultsViewer(this.graph.config); 
 	var gdom = this.gviz.getAsDOM();
-	gdom.setAttribute("style", "border: 2px solid blue; width: 400px; height: 400px");
+	var h = this.graph.config.height() ? this.graph.config.height() : 800;
+	var w = this.graph.config.width() ? this.graph.config.width() : 800;
+	gdom.setAttribute("style", "border: 1px solid #aaa; width: " + w + "px; height: " + h + "px; " + this.graph.config.width() + "px");
 	this.gviz.setData(this.graph);
 	this.gviz.initDOM(gdom);
 	return gdom;

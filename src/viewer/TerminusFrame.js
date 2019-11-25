@@ -94,11 +94,12 @@ TerminusFrame.prototype.render = function(){
 			this.renderer = this.config.renderer();
 		}
 		else {
-			this.applyRenderersToDocument(this.document, this.config);
-			this.renderer = this.document.render;
+			this.applyRulesToDocument(this.document, this.config);
+			this.renderer = this.document;
 		}
 	}
 	if(this.renderer && this.renderer.render){
+		//this.renderer.world();
 		return this.renderer.render(this.document);
 	}
 	else if(typeof this.renderer == "function"){
@@ -113,31 +114,33 @@ TerminusFrame.prototype.render = function(){
 /*
  * adds render and compare functions to object frames 
  */
-TerminusFrame.prototype.applyRenderersToDocument = function(doc, config){
+TerminusFrame.prototype.applyRulesToDocument = function(doc, config){
 	var self = this;
 	function onmatch(frame, rule){
-		if(typeof rule.render != "undefined"){
-			frame.render = rule.render;
+		if(typeof rule.render() != "undefined"){
+			frame.render = rule.render();
 		}
 		else {
-			if(rule.renderer){
-				var renderer = self.loadRenderer(rule.renderer, frame, rule.args);
+			if(rule.renderer()){
+				var renderer = self.loadRenderer(rule.renderer(), frame, rule.args);		
 			}
 			if(renderer && renderer.render){
-				frame.render = renderer.render;
+				frame.render = function(frame){
+					return renderer.render(frame);
+				}
 			}
 		}
-		if(rule.compare){
-			frame.compare = rule.compare;
+		if(rule.compare()){
+			frame.compare = rule.compare();
 		}
+		config.setFrameDisplayOptions(frame, rule);
 	}
-	var xhz = config.json_rules();
-	this.document.filter(xhz, onmatch);
+	this.document.filter(config.rules, onmatch);
 }
 
 TerminusFrame.prototype.loadRenderer = function(rendname, frame, args){
 	if(this.owner){
-		return this.owner.loadRenderer(rendname, frame, args);
+		return this.owner.loadRenderer(rendname, frame, args, this);
 	}
 	return false;
 }

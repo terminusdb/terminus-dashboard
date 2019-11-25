@@ -47,6 +47,8 @@ function initialiseDataRenderers(RenderingMap, plugins){
 	RenderingMap.registerViewerForTypes("HTMLRangeViewer", {label: "Range Viewer"}, ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 	RenderingMap.registerEditorForTypes("HTMLRangeEditor", {label: "Range Editor"}, ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 	RenderingMap.registerViewerForTypes("SantizedHTMLViewer", {label: "Sanitized HTML"}, ["xsd:string", "xdd:html"]);
+	RenderingMap.universalEditor = "HTMLStringEditor";
+	RenderingMap.universalViewer = "HTMLStringViewer";
 	addPlugins(RenderingMap, plugins);
 	RenderingMap.createRenderer = function(type, args){
 		let r = createDataRenderer(type, args);
