@@ -38,7 +38,6 @@ FrameConfig.prototype.renderer = function(rend){
 	return this;
 }
 
-
 FrameConfig.prototype.json_rules = function(){
 	let jr = [];
 	for(var i = 0; i<this.rules.length; i++){
@@ -53,7 +52,12 @@ FrameConfig.prototype.load_schema = function(tf){
 	return this;
 }
 
-FrameConfig.prototype.show_all = function(o, p, d){
+FrameConfig.prototype.show_all = function(r){
+	this.all().renderer(r);
+	return this;
+}
+
+FrameConfig.prototype.show_parts = function(o, p, d){
 	this.object().renderer(o);
 	this.property().renderer(p);
 	this.data().renderer(d);
@@ -80,6 +84,37 @@ FrameConfig.prototype.data = function(){
 	this.rules.push(fp);
 	return fp;	
 }
+
+FrameConfig.prototype.all = function(){
+	let fp = TerminusClient.WOQL.rule();
+	fp.scope("*")
+	this.rules.push(fp);
+	return fp;	
+}
+
+
+FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
+	if(typeof frame.display_options == "undefined") frame.display_options = {};
+	if(typeof rule.mode() != "undefined") frame.display_options.mode = rule.mode();
+	if(typeof rule.view() != "undefined") frame.display_options.view = rule.view();
+	//if(typeof rule.facets() != "undefined") frame.display_options.facets = rule.facets();
+	//if(typeof rule.facet() != "undefined") frame.display_options.facet = rule.facet();
+	if(typeof rule.show_disabled_buttons() != "undefined") frame.display_options.show_disabled_buttons = rule.hide_disabled_buttons();
+	if(typeof rule.features() != "undefined") frame.display_options.features = rule.features();
+	if(typeof rule.header() != "undefined") frame.display_options.header = rule.header();
+	if(typeof rule.hidden() != "undefined") frame.display_options.hidden = rule.hidden();
+	if(typeof rule.collapse() != "undefined") frame.display_options.collapse = rule.collapse();
+	if(typeof rule.header_features() != "undefined") frame.display_options.header_features = rule.header_features();
+	if(typeof rule.show_empty() != "undefined") frame.display_options.show_empty = rule.show_empty();
+	if(typeof rule.feature_renderers() != "undefined") frame.display_options.feature_renderers = rule.feature_renderers();
+	if(typeof rule.dataviewer() != "undefined") {
+		frame.display_options.dataviewer = rule.dataviewer();
+		if(typeof rule.dataviewer_options() != "undefined")
+			frame.display_options.dataviewer_options = rule.dataviewer_options();
+	}
+}	
+
+
 
 //WOQL.rule().renderer("object").json(),
 //WOQL.rule().renderer("property").json(),
@@ -259,10 +294,6 @@ WOQLTableConfig.prototype.column = function(...cols){
 	this.rules.push(nr);
 	return nr;
 }
-
-/* shorthand alternative */
-WOQLTableConfig.prototype.col = WOQLTableConfig.prototype.column; 
-
 
 WOQLTableConfig.prototype.row = function(){
 	let nr = new WOQLRule("row");
@@ -542,7 +573,6 @@ WOQLRule.prototype.literal = function(tf){
 	this.rule.literal = tf;
 	return this;
 }
-
 
 WOQLRule.prototype.type = function(...list){
 	this.rule.type = list;

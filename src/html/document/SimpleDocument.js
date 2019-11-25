@@ -3,7 +3,6 @@ function SimpleDocument(){}
 SimpleDocument.prototype.render = function(frame){
 	var s = document.createElement("div");
 	for(var p in frame.properties){
-		//s.appendChild(document.createTextNode(p));
 		var pr = this.renderProperty(frame.properties[p])
 		if(pr) s.appendChild(pr);
 	}

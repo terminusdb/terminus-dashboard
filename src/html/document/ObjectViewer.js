@@ -6,7 +6,6 @@ const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLObjectViewer(renderer){
 	this.properties = [];
-	//this.featureViewers = {};
 }
 
 /**
