@@ -19,23 +19,76 @@ const HTMLObjectViewer = require("./html/document/ObjectViewer");
 const HTMLPropertyViewer = require("./html/document/PropertyViewer");
 const HTMLDataViewer = require("./html/document/DataViewer");
 const TerminusCodeSnippet = require('./viewer/TerminusCodeSnippet');
+const UTILS = require('./Utils');
 
 /*
  * Simple wrapper functions for initialising
  * table, stream, graph, chooser, woql and documents
  */
 
-function TerminusHTMLViewer(client, config){
-	this.client = client;
+function TerminusHTMLViewer(ui, client, config){
+	this.ui = ui;
+	this.client = ui.client;
 	this.config = config;
 }
 
 TerminusHTMLViewer.prototype.setRenderers = function(config){
 }
 
+TerminusHTMLViewer.prototype.getEditor = function(width, height, placeholder){
+    var woql = TerminusClient.WOQL;
+	var tcs = new TerminusCodeSnippet({}, width, height, placeholder, this.mode);
+	var snippet = tcs.getAsDOM();
+	var dimensions = {};
+	dimensions.width = width;
+	dimensions.height = height;
+	UTILS.stylizeEditor(this.ui, snippet.snippetText, dimensions, 'javascript');
+	return snippet;
+}
+
+TerminusHTMLViewer.prototype.showConfigEditor = function(result, config, span){
+    var cSnippet = this.getEditor(300, 250,
+                        JSON.stringify(config, undefined, 2));
+    var self = this;
+    cSnippet.actionButton.addEventListener('click', function(){
+        try{
+            //self.submitConfigRules(woql, cSnippet, qSnippet, rSnippet);
+			var cObj = UTILS.getqObjFromInput(cSnippet.snippetText.value);
+			TerminusClient.FrameHelper.removeChildren(span);
+			span.appendChild(self.showResult(result, cObj));
+        }
+        catch(e){
+            //self.ui.showError('Error in config editor: ' + e);
+			console.log('Error in config editor: ' + e);
+        }
+    })
+    return cSnippet;
+}
+
+TerminusHTMLViewer.prototype.submitConfig = function(result, config, span, cdom){
+	var cSnippet = this.showConfigEditor(result, config, span);
+	cdom.appendChild(cSnippet.dom);
+}
+
+TerminusHTMLViewer.prototype.showConfig = function(result, config, span, cdom){
+	var cbtn = document.createElement('button');
+    //cbtn.setAttribute('style', 'margin-top: 10px;');
+    cbtn.setAttribute('class', 'terminus-btn terminus-query-config-btn');
+    cbtn.appendChild(document.createTextNode('Config'));
+    //rSnippet.dom.appendChild(cbtn);
+    //qSnippet.dom.appendChild(cbtn);
+    var self = this;
+    cbtn.addEventListener('click', function(){
+		TerminusClient.FrameHelper.removeChildren(cdom);
+        self.submitConfig(result, config, span, cdom);
+    })
+    return cbtn;
+}
+
 TerminusHTMLViewer.prototype.showResult = function(result, config){
 	let span = document.createElement("span");
-	span.setAttribute("class", "terminus-results");
+	span.setAttribute("class", "terminus-query-results");
+	result.first();
 	let renderers = {
 		table: new SimpleTable(),
 		graph: new SimpleGraph(),
@@ -45,6 +98,9 @@ TerminusHTMLViewer.prototype.showResult = function(result, config){
 	let viewer = config.create(this.client, renderers, Datatypes.initialiseDataRenderers);
 	viewer.setResult(result);
 	span.appendChild(viewer.render());
+	var cdom = document.createElement('div');
+	span.appendChild(cdom);
+	span.appendChild(this.showConfig(result, config, span, cdom));
 	return span;
 }
 
