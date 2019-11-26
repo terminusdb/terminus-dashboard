@@ -8,6 +8,8 @@ function DatatypeRenderers(options){
 	this.registeredDataEditors = {},
 	this.defaultViewers = {};
 	this.defaultEditors = {};
+	this.universalViewer = false;
+	this.universalEditor = false;
 	if(options) this.options(options);
 	//links to other documents, choices, id field, id fields of contained objects, ids of structural elements: properties, etc
 	this.specials = ['document', 'oneOf', 'id', 'contained', 'structural'];
@@ -56,7 +58,10 @@ DatatypeRenderers.prototype.getEditorForDataFrame = function(datatype){
 	}
 	//last added is default if no explicit default is set
 	if(vals){
-		return vals[Object.keys(vals)[0]];
+		return vals[Object.keys(vals)[vals.length-1]];
+	}
+	else {
+		if(this.universalEditor) return this.universalEditor;
 	}
 }
 
@@ -68,6 +73,10 @@ DatatypeRenderers.prototype.getViewerForDataFrame = function(datatype){
 	if(vals){
 		return vals[Object.keys(vals)[0]];
 	}
+	else {
+		if(this.universalViewer) return this.universalViewer;
+	}
+
 }
 
 DatatypeRenderers.prototype.registerViewerForTypes = function(viewer, record, types){
