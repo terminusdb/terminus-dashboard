@@ -432,7 +432,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	let nq = new TerminusHTMLViewer(this.ui.client);//should specify default renderers here....
 	let WOQL = TerminusClient.WOQL;
 	let query = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(25).start(0).documentMetadata();
-	TerminusClient.FrameHelper.loadDynamicCSS("myfa", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css");
+	//TerminusClient.FrameHelper.loadDynamicCSS("myfa", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css");
 	query.execute(this.ui.client).then((results) => {
 		let qres = new TerminusClient.WOQLResult(results, query);
 		var nt = nq.showResult(qres, WOQL.table());
@@ -490,7 +490,12 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		var ng3 = nq.showResult(qres, g);
 		d.appendChild(ng3);
 		var x = "doc:access_all_areas";
-		var d1 = nq.document(x, WOQL.document());
+		var nd = WOQL.document();
+		nd.show_all("SimpleFrameViewer");
+		nd.object().features("value", "id");
+		nd.property().features("value", "label");
+		nd.data().features("value");//.dataviewer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
+		var d1 = nq.document(x, nd);
 		d.appendChild(d1);		
 	});
 	//let c = WOQL.chooser();
