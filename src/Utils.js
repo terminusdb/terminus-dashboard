@@ -457,7 +457,8 @@ function trimValue(text){
 // query string
 function getqObjFromInput(q){
     const WOQL = TerminusClient.WOQL ;
-    var query = 'WOQL.' + q;
+    //var query = 'WOQL.' + q;
+    var query = q;
     try {
         var qObj = eval(query);
         this.qObj = qObj;

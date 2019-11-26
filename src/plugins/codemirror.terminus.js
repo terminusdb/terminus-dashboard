@@ -4,6 +4,13 @@ function Codemirror(text, format, config){
   this.darkMode = config.darkMode;
   if(this.jsonldCheck(format)) this.mode = 'javascript';
 }
+// checks if a json object is empty
+function isEmpty(arg) {
+  for (var item in arg) {
+    return false;
+  }
+  return true;
+}
 
 /*
 txtar    : editor is attached to textar
@@ -30,12 +37,12 @@ Codemirror.prototype.colorizeTextArea = function(mode){
         extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },
         refresh             : true
     });
-
-    this.setCodemirrorSize(editor, mode);
+    if(!(isEmpty(mode)))
+        editor.setSize(mode.width, mode.height);
+    else this.setCodemirrorSize(editor, mode);
     editor.defaultCharWidth('20px');
     if(this.darkMode) editor.setOption("theme", 'erlang-dark');
     else editor.setOption("theme", 'neo');
-
     return editor;
 } // colorizeTextArea()
 

@@ -9,8 +9,8 @@ function TerminusQueryViewer(ui, options){
 	this.options = options;
 	this.meta = {};
 	this.pman = new TerminusPluginManager();
-	this.thv = new TerminusHTMLViewer(ui.client);
-	this.qpMan = new QueryPaneManager(ui);
+	this.thv = new TerminusHTMLViewer(ui);
+	this.qpMan = new QueryPaneManager(ui, this.thv);
 }
 
 TerminusQueryViewer.prototype.query = function(val, settings, tab){
@@ -45,9 +45,9 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	// set html viewer qviewer and panes
 	var qbox = document.createElement("div");
 	qbox.setAttribute("class", "terminus-query-page");
-	qbox.setAttribute("style", "border: 2px solid green; padding: 10px;");
+	//qbox.setAttribute("style", "border: 2px solid green; padding: 10px;");
 	var wqv = this.thv.querypane(q, this.qvc);
-	var qpm = this.qpMan.getAsDOM(this.thv, qbox);
+	var qpm = this.qpMan.getAsDOM(qbox);
 
 	/*if(wqv){
 		qbox.appendChild(wqv);

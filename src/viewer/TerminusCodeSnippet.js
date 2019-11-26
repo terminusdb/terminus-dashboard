@@ -23,6 +23,7 @@ function TerminusCodeSnippet(qObj, width, height, placeholder, mode){
 //View and submit button
 TerminusCodeSnippet.prototype.getActionButtons = function(){
     var actbtn = document.createElement('button');
+    actbtn.setAttribute('class', 'terminus-btn');
     actbtn.setAttribute('type', 'submit');
     if(this.mode == 'view')
         actbtn.appendChild(document.createTextNode(this.mode.charAt(0)
@@ -64,9 +65,12 @@ TerminusCodeSnippet.prototype.displayFormat = function(button){
 
 TerminusCodeSnippet.prototype.getFormatButtons = function(){
     var bsp = document.createElement('span');
+    bsp.setAttribute('class', 'terminus-snippet-panel');
+    bsp.setAttribute("style", "width: "+ this.width +"px;");
     for(var i=0; i<this.format.length; i++){
         var btn = document.createElement('button');
         btn.setAttribute('value', this.format[i]);
+        btn.setAttribute('class', 'terminus-snippet-button');
         btn.appendChild(document.createTextNode(this.format[i].charAt(0)
                                                     .toUpperCase()
                                                     + this.format[i].slice(1)));

@@ -1,123 +1,254 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const TerminusHTMLViewer = require("../TerminusHTMLViewer");
 const TerminusCodeSnippet = require('../viewer/TerminusCodeSnippet');
 const QueryPane = require('../html/QueryPane');
-const UTILS= require('../Utils');
+const UTILS = require('../Utils');
 
-function QueryPaneManager(ui){
+function QueryPaneManager(ui, thv){
     this.ui = ui;
+    this.thv = thv;
     this.client = ui.client;
+    this.mode = 'edit';
 }
 
-QueryPaneManager.prototype.addNewQuery = function(){
-    var abtn = document.createElement('button');
-    abtn.appendChild(document.createTextNode('New Query'));
-    abtn.setAttribute('style', 'float:right');
+/*********** Default Config per query pane ************/
+/*QueryPaneManager.prototype.submitDefaultConfigOnChange = function(woql, dcbtn, qSnippet){
+
+}
+
+QueryPaneManager.prototype.addDefaultConfig = function(woql, qSnippet){
+    var dcbtn = document.createElement('button');
+    dcbtn.setAttribute('style', 'margin-top: 10px;');
+    dcbtn.setAttribute('class', 'terminus-btn');
+    dcbtn.appendChild(document.createTextNode('Default Config'));
+    qSnippet.results.appendChild(qSnippet);
     var self = this;
-    abtn.addEventListener('click', function(){
-        self.queryPane();
-        //self.thv.queryPane.addQueryViewer(self.thv.queryViewer);
-        self.qpane.addQueryViewer(self.thv.queryViewer);
+    qSnippet.addEventListener('click', function(){
+        try{
+            self.submitDefaultConfigOnChange(woql, dcbtn, qSnippet);
+        }
+        catch(e){
+            self.ui.showError('Error in default config ' + e);
+        }
     })
-    return abtn;
-}
+} */
 
-QueryPaneManager.prototype.queryEditor = function(){
-    var woql = TerminusClient.WOQL;
-	var tcs = new TerminusCodeSnippet(woql, 500, 250, 'Enter Query ...', 'edit');
-	var snippet = tcs.getAsDOM();
-	return snippet;
-}
+/*********** Config ************/
 
-QueryPaneManager.prototype.ruleEditor = function(){
-    var woql = TerminusClient.WOQL;
-	var tcs = new TerminusCodeSnippet({}, 300, 250, 'Enter Rules ...', 'edit');
-	var snippet = tcs.getAsDOM();
-	return snippet;
+/*
+    descr: con click of submit config
+    params: query object, query snippet, results snippet
+*/
+QueryPaneManager.prototype.submitConfigRules = function(woql, cSnippet, qSnippet, rSnippet){
+    this.ui.clearMessages();
+    var cObj = UTILS.getqObjFromInput(cSnippet.snippetText.value);
+    TerminusClient.FrameHelper.removeChildren(rSnippet.result);
+    //rSnippet.result.appendChild(this.addConfig(woql, qSnippet, rSnippet));
+    rSnippet.rules = cSnippet.snippetText.value;
+    qSnippet.qres.first();
+    var n = this.thv.showResult(qSnippet.qres, cObj);
+    rSnippet.result.appendChild(n);
 }
 
 /*
-    qObj: woql object
-    woql:
+    descr: show config editor
+    params: query object, query snippet, results snippet
+*/
+/*QueryPaneManager.prototype.showConfigEditor = function(woql, qSnippet, rSnippet){
+    var cSnippet = this.thv.getEditor(300, 250,
+                        JSON.stringify(rSnippet.rules, undefined, 2));
+    var self = this;
+    cSnippet.actionButton.addEventListener('click', function(){
+        try{
+            self.submitConfigRules(woql, cSnippet, qSnippet, rSnippet);
+        }
+        catch(e){
+            self.ui.showError('Error in config editor: ' + e);
+        }
+    })
+    return cSnippet;
+}*/
+
+/*********** Rules ************/
+/*
+    descr: on click of config button
+    params: query object, config button dom, query snippet, results snippet
+*/
+/*QueryPaneManager.prototype.submitConfig = function(woql, cbtn, qSnippet, rSnippet){
+    var cSnippet = this.showConfigEditor(woql, qSnippet, rSnippet);
+    //rSnippet.result.appendChild(cbtn);
+    //rSnippet.result.appendChild(cSnippet.dom);
+    //rSnippet.result.setAttribute('style', 'border: 1px solid red; display:-webkit-inline-box;');
+    //qSnippet.result.appendChild(cbtn);
+    //qSnippet.result.appendChild(cSnippet.dom);
+    //qSnippet.result.setAttribute('style', 'border: 1px solid red; display:-webkit-inline-box;');
+
+}
+*/
+/*
+    descr: get Config button
+    params: query object, query snippet, results snippet
+*/
+/*QueryPaneManager.prototype.addConfig = function(woql, qSnippet, rSnippet){
+    var cbtn = document.createElement('button');
+    cbtn.setAttribute('style', 'margin-top: 10px;');
+    cbtn.setAttribute('class', 'terminus-btn');
+    cbtn.appendChild(document.createTextNode('Config'));
+    //rSnippet.dom.appendChild(cbtn);
+    qSnippet.dom.appendChild(cbtn);
+    var self = this;
+    cbtn.addEventListener('click', function(){
+        self.submitConfig(woql, cbtn, qSnippet, rSnippet);
+    })
+    return cbtn;
+}
+*/
+/*
+    descr: on click of Add View button
+    params: query object, query snippet, results snippet
+*/
+QueryPaneManager.prototype.submitView = function(woql, qSnippet, rSnippet){
+    this.ui.clearMessages();
+    var rObj = UTILS.getqObjFromInput(rSnippet.snippetText.value);
+    qSnippet.qres.first();
+    var n = this.thv.showResult(qSnippet.qres, rObj);
+    this.qpane.addResultViewer(rSnippet.snippetText.value);
+    qSnippet.result.appendChild(UTILS.getHeaderDom('View:'));
+    qSnippet.result.appendChild(n);
+    //qSnippet.dom.appendChild(UTILS.getHeaderDom('View:'));
+    //qSnippet.dom.appendChild(n);
+    rSnippet.rules = rObj;
+    //qSnippet.dom.appendChild(this.addConfig(woql, qSnippet, rSnippet));
+    //qSnippet.result.appendChild(this.addConfig(woql, qSnippet, rSnippet));
+    qSnippet.dom.appendChild(this.addView(woql, qSnippet));
+}
+
+QueryPaneManager.prototype.hideAddViewEditor = function(vd){
+    vd.classList.remove('terminus-rule-editor');
+    vd.classList.remove('erminus-rule-editor-border');
+    //vd.classList.add('terminus-rule-editor-border');
+    TerminusClient.FrameHelper.removeChildren(vd);
+}
+
+/*
+    descr: Show results editor on click of Add View
+    params: query object, query snippet
+*/
+QueryPaneManager.prototype.showRuleEditor = function(woql, vd, qSnippet){
+    var cancel = document.createElement('icon');
+    //cancel.appendChild(document.createTextNode('cancel'));
+    cancel.setAttribute('class', 'fa fa-times terminus-pointer terminus-cancel-rule-editor');
+    vd.appendChild(cancel);
+    var rSnippet = this.thv.getEditor(1350, 250, 'Enter Rules ...');
+    //var rEditor = document.createElement('div');
+    vd.setAttribute('class', 'terminus-rule-editor');
+    //vd.setAttribute('style', 'border: 1px solid orange');
+    this.qpane.addRuleDom = rSnippet.actionButton;
+    vd.appendChild(UTILS.getHeaderDom('Rule Editor:'));
+    vd.appendChild(rSnippet.dom);
+    qSnippet.dom.appendChild(vd);
+    var self = this;
+    cancel.addEventListener('click', function(){
+        TerminusClient.FrameHelper.removeChildren(vd);
+        self.addView(woql, qSnippet);
+    })
+    this.qpane.addRuleDom.addEventListener('click', function(){
+        try{
+            self.submitView(woql, qSnippet, rSnippet);
+            self.hideAddViewEditor(vd);
+        }
+        catch(e){
+            self.ui.showError('Error in rule editor: ' + e);
+        }
+    })
+    return rSnippet;
+}
+
+/*********** Query ************/
+/*
+    descr: process results by default
 */
 QueryPaneManager.prototype.processResults = function(qObj, woql, thv, results, snippet){
     let qres = new TerminusClient.WOQLResult(results, qObj);
     this.qres = qres;
     this.qpane.qres = qres;
     snippet.qres = qres;
+    snippet.result.appendChild(UTILS.getHeaderDom('View:'));
+    snippet.result.appendChild(document.createElement('BR'));
     var nt = thv.showResult(qres, woql.table());
     snippet.result.appendChild(nt);
+    //snippet.result.appendChild(this.addDefaultConfig(woql, snippet));
     qres.first()
-    /*var n = thv.showResult(qres, woql.chooser());
-    snippet.result.appendChild(n);
-    qres.first();
-    var ng = thv.showResult(qres, woql.graph());
-    snippet.result.appendChild(ng);
-    qres.first();*/
 }
 
-// rules
-QueryPaneManager.prototype.showRuleEditor = function(woql, qSnippet){
-    var snippet = this.ruleEditor();
-    this.qpane.addRuleDom = snippet.actionButton;
-    qSnippet.result.appendChild(document.createTextNode('Rule Editor'));
-    qSnippet.result.appendChild(snippet.dom);
+/*
+    descr: Add new query pane
+*/
+QueryPaneManager.prototype.addNewQuery = function(){
+    var abtn = document.createElement('button');
+    abtn.setAttribute('class', 'terminus-btn terminus-new-query-btn');
+    abtn.appendChild(document.createTextNode('New Query'));
+    //abtn.setAttribute('style', 'float:right');
     var self = this;
-    this.qpane.addRuleDom.addEventListener('click', function(){
-        try{
-            self.ui.clearMessages();
-            var rObj = UTILS.getqObjFromInput(snippet.snippetText.value);
-            //self.qpane.qres.first();
-            qSnippet.qres.first();
-            //var n = self.thv.showResult(self.qpane.qres, rObj);
-            var n = self.thv.showResult(qSnippet.qres, rObj);
-            // store rules per query
-            self.qpane.addResultViewer(snippet.snippetText.value);
-            qSnippet.result.appendChild(document.createTextNode('Results'))
-            qSnippet.result.appendChild(n);
-            qSnippet.result.appendChild(self.showConfig(woql, qSnippet));
-        }
-        catch(e){
-            self.ui.showError('Error in rule editor: ' + e);
-        }
+    abtn.addEventListener('click', function(){
+        self.queryPane();
+        self.qpane.addQueryViewer(self.thv.queryViewer);
     })
+    return abtn;
 }
 
-QueryPaneManager.prototype.showConfig = function(woql, qSnippet){
+/*
+    descr: Returns Add View button
+    params: query object, query snippet
+*/
+QueryPaneManager.prototype.addView = function(woql, qSnippet){
+    var vd = document.createElement('div');
+    vd.setAttribute('class', 'terminus-add-view-editor');
     var cbtn = document.createElement('button');
-    cbtn.setAttribute('style', 'margin-top: 10px;')
-    cbtn.appendChild(document.createTextNode('Add Rule'));
-    qSnippet.result.appendChild(cbtn);
+    vd.appendChild(cbtn);
+    cbtn.setAttribute('style', 'margin-top: 10px;');
+    cbtn.setAttribute('class', 'terminus-btn');
+    cbtn.appendChild(document.createTextNode('Add View'));
+    qSnippet.result.appendChild(vd);
     var self = this;
     cbtn.addEventListener('click', function(){
-        self.showRuleEditor(woql, qSnippet);
+        let editor = self.showRuleEditor(woql, vd, qSnippet);
     })
-    return cbtn;
+    return vd;
 }
 
-QueryPaneManager.prototype.submitQuery = function(snippet){
-    //let thv = new TerminusHTMLViewer(this.client);
+/*
+    descr: On submit of query, generate results view according to previous rules
+    params: query object, query snippet (with new query)
+*/
+QueryPaneManager.prototype.generateResultsFromRules = function(woql, qSnippet){
+    for(var i=0; i < this.qpane.result_viewers.length; i ++){
+        this.qres.first();
+        var rObj = UTILS.getqObjFromInput(this.qpane.result_viewers[i]);
+        var rt = this.thv.showResult(this.qres, rObj);
+        qSnippet.result.appendChild(rt);
+        this.addView(woql, qSnippet);
+    }
+}
+/*
+    descr: submit query
+    params: query snippet
+*/
+QueryPaneManager.prototype.submitQuery = function(qSnippet){
     let WOQL = TerminusClient.WOQL;
-    this.qpane.submitDom = snippet.actionButton;
+    TerminusClient.FrameHelper.removeChildren(qSnippet.actionButton);
+    qSnippet.actionButton.appendChild(document.createTextNode('Run'));
+    this.qpane.submitDom = qSnippet.actionButton;
     var self = this;
     this.qpane.submitDom.addEventListener('click', function(){
         try{
-            //self.thv.queryPane.query = snippet.snippetText.value;
-            self.qpane.query = snippet.snippetText.value;
+            self.qpane.query = qSnippet.snippetText.value;
             self.ui.clearMessages();
-            let qObj = UTILS.getqObjFromInput(snippet.snippetText.value);
+            let qObj = UTILS.getqObjFromInput(qSnippet.snippetText.value);
             qObj.execute(self.client).then((results) => {
-                TerminusClient.FrameHelper.removeChildren(snippet.result);
-                self.processResults(qObj, WOQL, self.thv, results, snippet);
-                self.showConfig(WOQL, snippet);
-                for(var i=0; i < self.qpane.result_viewers.length; i ++){
-                    self.qres.first();
-                    var rObj = UTILS.getqObjFromInput(self.qpane.result_viewers[i]);
-                    var rt = self.thv.showResult(self.qres, rObj);
-                    snippet.result.appendChild(rt);
-                    //self.showConfig(WOQL, snippet.result);
-                    self.showConfig(WOQL, snippet);
-                }
+                TerminusClient.FrameHelper.removeChildren(qSnippet.result);
+                self.processResults(qObj, WOQL, self.thv, results, qSnippet);
+                self.addView(WOQL, qSnippet);
+                self.generateResultsFromRules(WOQL, qSnippet);
             })
         }
         catch(e){
@@ -126,22 +257,22 @@ QueryPaneManager.prototype.submitQuery = function(snippet){
     })
 }
 
+// new query pane
 QueryPaneManager.prototype.queryPane = function(){
     this.qpane = new QueryPane(this.client);
     var cont = document.createElement('div');
+    cont.setAttribute('class', 'terminus-query-pane-cont');
     this.container.appendChild(cont);
-    cont.appendChild(document.createTextNode('Enter New Query:'))
-    cont.setAttribute('style', 'border: 1px solid grey; padding: 10px; margin:10px;background-color:antiquewhite');
-    //query editor
-    var snippet = this.queryEditor();
+    cont.appendChild(UTILS.getHeaderDom('Enter New Query:'))
+    //cont.setAttribute('style', 'border: 1px solid grey; padding: 10px; margin:10px;background-color:white');
+    var snippet = this.thv.getEditor(1350, 250, 'Enter Query ...'); //query editor
     cont.appendChild(snippet.dom);
     this.submitQuery(snippet);
     cont.appendChild(this.addNewQuery());
     return cont;
 }
 
-QueryPaneManager.prototype.getAsDOM = function(thv, qbox){
-    this.thv = thv;
+QueryPaneManager.prototype.getAsDOM = function(qbox){
     this.container = qbox;
     return this.queryPane();
 }

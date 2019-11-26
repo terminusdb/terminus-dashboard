@@ -391,6 +391,47 @@ select.terminus-doc-config{
 	font-size:large;
 	text-align: left;
 }
+/*terminus snippet*/
+span.terminus-snippet-panel{
+	width: 100%;
+    display: inline-flex;
+}
+button.terminus-snippet-button{
+	width: 100%;
+	padding: 10px;
+}
+button.terminus-new-query-btn{
+	float: right;
+    margin-top: 50px;
+}
+span.terminus-query-results{
+	max-width: 1250px;
+    width: 100%;
+	display: -webkit-inline-box;
+}
+div.terminus-query-pane-cont{
+	border: 1px solid grey;
+    padding: 10px;
+    margin: 100px 10px 10px 10px;
+    background-color: white;
+}
+button.terminus-query-config-btn{
+	margin-top: 10px;
+	margin-left: 30px;
+}
+div.terminus-rule-editor{
+	border: 2px solid grey;
+	background-color: whitesmoke;
+	margin-top: 30px;
+}
+div.terminus-rule-editor-border{
+	border: 1px solid grey;
+	margin-top: 20px;
+}
+icon.terminus-cancel-rule-editor{
+	float: right;
+    margin: 20px 10px 10px 10px;
+}
 /* terminus buttons */
 .terminus-send-api-btn{
 	margin-left:935px;
@@ -1596,13 +1637,13 @@ div.dataTables_info, div.dataTables_paginate {
     padding-right: 15px;
     padding-left: 15px;
 }
-.terminus-query-results{
+/*.terminus-query-results{
 	/*min-width: 100px; */
     max-width: 1250px;
     /* overflow: hidden; */
     /* overflow-x: auto; */
     width: 100%;
-}
+}*/
 .terminus-status-layout{
 	background: #27293d;
 	border: 0;
