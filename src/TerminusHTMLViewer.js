@@ -165,15 +165,11 @@ TerminusHTMLViewer.prototype.graph = function(query, config){
 	return span;
 }
 
-TerminusHTMLViewer.prototype.lmg = function(config){
-	config.show_all("SimpleFrameViewer");
-}
-
 TerminusHTMLViewer.prototype.document = function(id, config){
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-document terminus-document-holder");
-	config.renderer(new DocumentTable());
-	this.lmg(config);
+	//config.renderer(new DocumentTable());
+	//config.show_all("SimpleFrameViewer");
 	var tdv = new TerminusFrame(this.client).options(config);
 	tdv.owner = this;
 	tdv.setDatatypes(Datatypes.initialiseDataRenderers);

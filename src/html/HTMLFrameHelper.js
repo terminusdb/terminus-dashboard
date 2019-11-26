@@ -249,14 +249,14 @@ HTMLFrameHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, fea
 		}
 	}
 	else {
-		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, "page");
+		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, "page", hfeatures);
 		if(hfeatures) hd.appendChild(hfeatures);
 		framedom.appendChild(hd);
 	}
 	return framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, "page", features));
 }
 
-HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation, features){
+HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	var pcls = "terminus-" + scope + "-frame";
 	if(orientation == "page"){
 		var sp = document.createElement("div");
@@ -288,7 +288,7 @@ HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation, features
 	return sp;
 }
 
-HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation){
+HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-header";
 	if(orientation == "page"){
 		var objDOM = document.createElement("div");
@@ -297,10 +297,11 @@ HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation){
 		var objDOM = document.createElement("span");
 	}
 	objDOM.setAttribute("class", css + " " + css + "-" + orientation);
+    if(features) objDOM.appendChild(features);
 	return objDOM;
 }
 
-HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation){
+HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-properties";
 	if(orientation == "page"){
 		var vholder = document.createElement("div");
@@ -309,6 +310,7 @@ HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation){
 		var vholder = document.createElement("span");
 	}
     vholder.setAttribute('class', css + " " + css + "-" + orientation);
+    if(features) vholder.appendChild(features);
     return vholder;
 }
 
@@ -327,7 +329,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 	if(feature == "id"){	
 		if(scope == "object") var val = frame.subject();
 		else if(scope == "property") var val = frame.property();
-		if(frame.isNewDocument() && val == "_:") val = "New Document";
+		//if(frame.isNewDocument() && val == "_:") val = "New Document";
 		return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "The URL that identifies this data object");
 	}
 	else if(feature == "summary"){
@@ -335,7 +337,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 		return HTMLFrameHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status);
 	}
 	else if(feature == "label"){
-		var lab = renderer.getLabel();
+		var lab = frame.getLabel();
 		if(lab){
 			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", false, lab);
 		}
