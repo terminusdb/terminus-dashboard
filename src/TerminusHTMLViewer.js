@@ -15,6 +15,7 @@ const SimpleTextbox = require("./html/query/SimpleTextbox");
 const SimpleChooser = require("./html/chooser/SimpleChooser");
 const SimpleDocument = require("./html/document/SimpleDocument");
 const DocumentTable = require("./html/document/DocumentTable");
+const SimpleFrameViewer = require("./html/document/SimpleFrameViewer");
 const HTMLObjectViewer = require("./html/document/ObjectViewer");
 const HTMLPropertyViewer = require("./html/document/PropertyViewer");
 const HTMLDataViewer = require("./html/document/DataViewer");
@@ -287,15 +288,11 @@ TerminusHTMLViewer.prototype.graph = function(query, config){
 	return span;
 }
 
-TerminusHTMLViewer.prototype.lmg = function(config){
-	config.show_all("HTMLObjectViewer", "HTMLPropertyViewer", "HTMLDataViewer");
-}
-
 TerminusHTMLViewer.prototype.document = function(id, config){
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-document terminus-document-holder");
 	//config.renderer(new DocumentTable());
-	this.lmg(config);
+	//config.show_all("SimpleFrameViewer");
 	var tdv = new TerminusFrame(this.client).options(config);
 	tdv.owner = this;
 	tdv.setDatatypes(Datatypes.initialiseDataRenderers);
@@ -306,12 +303,13 @@ TerminusHTMLViewer.prototype.document = function(id, config){
 	return holder;
 }
 
-TerminusHTMLViewer.prototype.loadRenderer = function(rendname, frame, args){
+TerminusHTMLViewer.prototype.loadRenderer = function(rendname, frame, args, termframe){
 	var evalstr = "new " + rendname + "(";
 	if(args) evalstr += JSON.stringify(args);
 	evalstr += ");";
 	try {
 		var nr = eval(evalstr);
+		nr.terminus = termframe;
 		return nr;
 	}
 	catch(e){
