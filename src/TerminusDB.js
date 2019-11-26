@@ -434,7 +434,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	let query = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(25).start(0).documentMetadata();
 	//TerminusClient.FrameHelper.loadDynamicCSS("myfa", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css");
 	query.execute(this.ui.client).then((results) => {
-		let qres = new TerminusClient.WOQLResult(results, query);
+		/*let qres = new TerminusClient.WOQLResult(results, query);
 		var nt = nq.showResult(qres, WOQL.table());
 		d.appendChild(nt);
 		qres.first()
@@ -488,12 +488,12 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		g.edge().color([150, 200, 250]);
 		qres.first()
 		var ng3 = nq.showResult(qres, g);
-		d.appendChild(ng3);
+		d.appendChild(ng3);*/
 		var x = "doc:access_all_areas";
 		var nd = WOQL.document();
 		nd.show_all("SimpleFrameViewer");
-		nd.object().features("value", "id");
-		nd.property().features("value", "label");
+		nd.object().features("id", "type", "comment", "delete", "reset", "hide", "show", "clone", "update", "view", "add", "value");//"summary", "viewer", "status", 
+		nd.property().features("value");//features("id", "cardinality", "type", "comment", "delete", "reset", "hide", "show", "clone", "update", "view", "add", "value");//"summary", "status", 
 		nd.data().features("value");//.dataviewer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
 		var d1 = nq.document(x, nd);
 		d.appendChild(d1);		

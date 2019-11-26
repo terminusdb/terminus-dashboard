@@ -40,7 +40,8 @@ SimpleFrameViewer.prototype.render = function(frame){
 		var features = this.getFeaturesDOM(frame.display_options.features, frame.display_options.feature_renderers, scope, frame);
 	}
 	else var features = false;
-	var ndom = HTMLFrameHelper.getFrameDOM(scope, frame, "page", hfeatures, features);
+	var orient = (scope == "object" || scope == "property") ? "page" : "line";
+	var ndom = HTMLFrameHelper.getFrameDOM(scope, frame, orient, hfeatures, features);
 	if(!ndom) return false;
 	if(this.framedom){
 		this.framedom.replaceWith(ndom);
@@ -50,7 +51,6 @@ SimpleFrameViewer.prototype.render = function(frame){
 }	
 
 SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, frame){
-	//alert(flist);
 	var features = document.createElement("span");
 	features.setAttribute("class", featuresToCSS(flist));
 	for(var i = 0; i<flist.length; i++){
@@ -80,12 +80,11 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, f
 					else {
 						var vals = frame.renderValues();		    
 					}
-				    for(var i = 0; i<vals.length; i++){
-						features.appendChild(vals[i]);
+				    for(var j = 0; j<vals.length; j++){
+						features.appendChild(vals[j]);
 					}
 				}
 				else {
-					//alert(flist[i]);
 					var dom = HTMLFrameHelper.getFeatureDOM(flist[i], scope, frame);
 					if(dom)	features.appendChild(dom);
 					else alert("No dom");
