@@ -2,7 +2,7 @@ const TerminusClient = require('@terminusdb/terminus-client');
 const WOQLRule = require("./viewer/WOQLRule");
 const WOQLTable = require("./viewer/WOQLTable");
 const WOQLChooser = require("./viewer/WOQLChooser");
-const WOQLQueryViewer = require("./viewer/WOQLQueryView");
+//const WOQLQueryViewer = require("./viewer/WOQLQueryView");
 const WOQLGraph = require("./viewer/WOQLGraph");
 const WOQLStream = require("./viewer/WOQLStream");
 const TerminusFrame = require("./viewer/TerminusFrame");
@@ -11,7 +11,7 @@ const QueryPane = require("./html/QueryPane");
 const SimpleTable = require("./html/table/SimpleTable");
 const SimpleGraph = require("./html/graph/SimpleGraph");
 //const SimpleStream = require("./html/stream/SimpleStream");
-const SimpleTextbox = require("./html/query/SimpleTextbox");
+//const SimpleTextbox = require("./html/query/SimpleTextbox");
 const SimpleChooser = require("./html/chooser/SimpleChooser");
 const SimpleDocument = require("./html/document/SimpleDocument");
 const DocumentTable = require("./html/document/DocumentTable");
@@ -19,7 +19,7 @@ const SimpleFrameViewer = require("./html/document/SimpleFrameViewer");
 const HTMLObjectViewer = require("./html/document/ObjectViewer");
 const HTMLPropertyViewer = require("./html/document/PropertyViewer");
 const HTMLDataViewer = require("./html/document/DataViewer");
-const TerminusCodeSnippet = require('./viewer/TerminusCodeSnippet');
+const TerminusCodeSnippet = require('./html/query/TerminusCodeSnippet');
 const UTILS = require('./Utils');
 
 /*
