@@ -3,34 +3,14 @@ const TerminusCodeSnippet = require('../viewer/TerminusCodeSnippet');
 const QueryPane = require('../html/QueryPane');
 const UTILS = require('../Utils');
 
+
+
 function QueryPaneManager(ui, thv){
     this.ui = ui;
     this.thv = thv;
     this.client = ui.client;
     this.mode = 'edit';
 }
-
-/*********** Default Config per query pane ************/
-/*QueryPaneManager.prototype.submitDefaultConfigOnChange = function(woql, dcbtn, qSnippet){
-
-}
-
-QueryPaneManager.prototype.addDefaultConfig = function(woql, qSnippet){
-    var dcbtn = document.createElement('button');
-    dcbtn.setAttribute('style', 'margin-top: 10px;');
-    dcbtn.setAttribute('class', 'terminus-btn');
-    dcbtn.appendChild(document.createTextNode('Default Config'));
-    qSnippet.results.appendChild(qSnippet);
-    var self = this;
-    qSnippet.addEventListener('click', function(){
-        try{
-            self.submitDefaultConfigOnChange(woql, dcbtn, qSnippet);
-        }
-        catch(e){
-            self.ui.showError('Error in default config ' + e);
-        }
-    })
-} */
 
 /*********** Config ************/
 
@@ -49,59 +29,6 @@ QueryPaneManager.prototype.submitConfigRules = function(woql, cSnippet, qSnippet
     rSnippet.result.appendChild(n);
 }
 
-/*
-    descr: show config editor
-    params: query object, query snippet, results snippet
-*/
-/*QueryPaneManager.prototype.showConfigEditor = function(woql, qSnippet, rSnippet){
-    var cSnippet = this.thv.getEditor(300, 250,
-                        JSON.stringify(rSnippet.rules, undefined, 2));
-    var self = this;
-    cSnippet.actionButton.addEventListener('click', function(){
-        try{
-            self.submitConfigRules(woql, cSnippet, qSnippet, rSnippet);
-        }
-        catch(e){
-            self.ui.showError('Error in config editor: ' + e);
-        }
-    })
-    return cSnippet;
-}*/
-
-/*********** Rules ************/
-/*
-    descr: on click of config button
-    params: query object, config button dom, query snippet, results snippet
-*/
-/*QueryPaneManager.prototype.submitConfig = function(woql, cbtn, qSnippet, rSnippet){
-    var cSnippet = this.showConfigEditor(woql, qSnippet, rSnippet);
-    //rSnippet.result.appendChild(cbtn);
-    //rSnippet.result.appendChild(cSnippet.dom);
-    //rSnippet.result.setAttribute('style', 'border: 1px solid red; display:-webkit-inline-box;');
-    //qSnippet.result.appendChild(cbtn);
-    //qSnippet.result.appendChild(cSnippet.dom);
-    //qSnippet.result.setAttribute('style', 'border: 1px solid red; display:-webkit-inline-box;');
-
-}
-*/
-/*
-    descr: get Config button
-    params: query object, query snippet, results snippet
-*/
-/*QueryPaneManager.prototype.addConfig = function(woql, qSnippet, rSnippet){
-    var cbtn = document.createElement('button');
-    cbtn.setAttribute('style', 'margin-top: 10px;');
-    cbtn.setAttribute('class', 'terminus-btn');
-    cbtn.appendChild(document.createTextNode('Config'));
-    //rSnippet.dom.appendChild(cbtn);
-    qSnippet.dom.appendChild(cbtn);
-    var self = this;
-    cbtn.addEventListener('click', function(){
-        self.submitConfig(woql, cbtn, qSnippet, rSnippet);
-    })
-    return cbtn;
-}
-*/
 /*
     descr: on click of Add View button
     params: query object, query snippet, results snippet
@@ -266,6 +193,9 @@ QueryPaneManager.prototype.queryPane = function(){
     cont.appendChild(UTILS.getHeaderDom('Enter New Query:'))
     //cont.setAttribute('style', 'border: 1px solid grey; padding: 10px; margin:10px;background-color:white');
     var snippet = this.thv.getEditor(1350, 250, 'Enter Query ...'); //query editor
+    //tcs.submit = function(){
+    	
+    //}
     cont.appendChild(snippet.dom);
     this.submitQuery(snippet);
     cont.appendChild(this.addNewQuery());

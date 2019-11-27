@@ -1,105 +1,26 @@
-const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const HTMLFrameHelper = require('./html/HTMLFrameHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
-const TerminusHTMLViewer = require("./TerminusHTMLViewer");
-const QueryPaneManager = require("./html/QueryPaneManager");
+const QueryPane = require("./html/QueryPane");
 
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;
 	this.options = options;
+	this.panes = [];
 	this.meta = {};
-	this.pman = new TerminusPluginManager();
-	this.thv = new TerminusHTMLViewer(ui);
-	this.qpMan = new QueryPaneManager(ui, this.thv);
+	this.container = document.createElement("div");
+	this.container.setAttribute("class", "terminus-query-page");    
+	this.newPaneButton = document.createElement('button');
+	this.newPaneButton.setAttribute('class', 'terminus-btn terminus-new-query-btn');
+	this.newPaneButton.appendChild(document.createTextNode('New Query'));
+	this.newPaneButton.addEventListener('click', () => this.getAsDOM());	    
 }
-
-TerminusQueryViewer.prototype.query = function(val, settings, tab){
-	var self = this;
-	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
-	this.wquery.execute(val)
-	.then(function(result){
-		self.result = new WOQLResultsViewer.WOQLResultsViewer(self.ui, result, self.wquery, self.options, settings, true);
-		var nd = self.result.getAsDOM(self.resultDOM, true);
-		if(nd){
-			 self.resultDOM.appendChild(nd);
-		}
-	})
-	.catch(function(err){
-		self.ui.showError(err);
-	});
-}
-
-TerminusQueryViewer.prototype.getResultViewDom = function(){
-	this.resultDOM = document.createElement("div");
-	this.resultDOM.setAttribute("class", "terminus-query-results");
-}
-
-
 
 TerminusQueryViewer.prototype.getAsDOM = function(q){
-	var qvc = {
-			inputs: {"js": {}, "json": {}},
-			results: {"table": {}, "graph": {}, "stream" : {}}
-		};
-
-	// set html viewer qviewer and panes
-	var qbox = document.createElement("div");
-	qbox.setAttribute("class", "terminus-query-page");
-	//qbox.setAttribute("style", "border: 2px solid green; padding: 10px;");
-	var wqv = this.thv.querypane(q, this.qvc);
-	var qpm = this.qpMan.getAsDOM(qbox);
-
-	/*if(wqv){
-		qbox.appendChild(wqv);
-	} */
-
-	if(qpm){
-		qbox.appendChild(qpm);
-	}
-
-	/*var woql = TerminusClient.WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(30).start(0).simpleGraphQuery();
-	var wqv = this.thv.woql(woql, this.qvc);
-	if(wqv){
-		qbox.appendChild(wqv);
-	}
-	if(this.hasGeneratorOptions()){
-		qbox.appendChild(this.getQueryCreatorChoiceDOM(q));
-	}
-	this.resultDOM = document.createElement("div");
-	this.resultDOM.setAttribute("class", "terminus-query-results terminus-query-section");
-
-	var qtHolder = document.createElement('span');
-	qtHolder.setAttribute('style', 'display: flex;');
-
-	this.qTextBox = this.getQueryTextAreaDOM(q, qtHolder);
-	this.buttonsDOM = document.createElement("span");
-	this.buttonsDOM.setAttribute("class", "terminus-query-input");
-	this.buttonsDOM.appendChild(this.getQueryButtonsDOM(q, this.qTextBox));
-
-	qtHolder.appendChild(this.buttonsDOM);
-
-	qbox.appendChild(qtHolder);
-	qbox.appendChild(this.resultDOM);*/
-	return qbox;
+	let qpane = new QueryPane(this.ui.client, q);
+	this.panes.push(qpane);
+	this.container.appendChild(qpane.getAsDOM(this.ui));
+	this.container.appendChild(this.newPaneButton);
+	return this.container;
 }
-
-TerminusQueryViewer.prototype.getQueryCreatorChoiceDOM = function(){
-	var qcc = document.createElement("select");
-	qcc.setAttribute("class", "terminus-query-generator-selector");
-	for(var c in this.generators){
-		var gen = this.generators[c];
-		var opt = document.createElement("option");
-		opt.value = (gen.value ? gen.value : c);
-		var lab = (gen.label ? gen.label : c);
-		opt.appendChild(document.createTextNode(lab));
-		qcc.appendChild(opt);
-	}
-	var self = this;
-	qcc.addEventListener("change", function(){
-		self.changeGenerator(this.value);
-	});
-	return qcc;
-}
-
 
 module.exports=TerminusQueryViewer
