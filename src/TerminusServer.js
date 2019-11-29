@@ -188,19 +188,16 @@ TerminusServerViewer.prototype.wrapTableLinkCell = function(tdElement,dbid, text
 TerminusServerViewer.prototype.getNDBListDOM = function(){
 	var whtml = new TerminusHTMLViewer(this.ui.client);
 	var dbrecs = this.ui.client.connection.getServerDBRecords();
-	
-	//var tab = whtml.table(); 
+
+	//var tab = whtml.table();
 }
 
 TerminusServerViewer.prototype.getDBListDOM = function(){
 	var self = this;
 	var sec = document.createElement("div");
-	var lihed = document.createElement("h3");
-	lihed.setAttribute("class", "terminus-db-list-title terminus-module-head");
-	lihed.appendChild(document.createTextNode("Available Databases"));
-	sec.appendChild(lihed);
+	sec.appendChild(UTILS.getHeaderDom('Available Databases'));
 	var scd = document.createElement("table");
-	scd.setAttribute("class", "terminus-db-list terminus-db-size terminus-hover-table");
+	scd.setAttribute("class", "terminus-db-list terminus-db-size terminus-hover-table terminus-margin-top");
 	var thead = document.createElement("thead");
 	var thr = document.createElement("tr");
 	var th1 = document.createElement("th");
