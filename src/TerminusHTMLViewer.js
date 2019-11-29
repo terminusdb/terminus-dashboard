@@ -86,7 +86,7 @@ TerminusHTMLViewer.prototype.showConfig = function(result, config, span, cdom){
     return cbtn;
 }
 
-TerminusHTMLViewer.prototype.showResult = function(result, config){
+TerminusHTMLViewer.prototype.showResult = function(result, config, cDisplay){
 	let span = document.createElement("span");
 	span.setAttribute("class", "terminus-query-results");
 	result.first();
@@ -101,7 +101,7 @@ TerminusHTMLViewer.prototype.showResult = function(result, config){
 	span.appendChild(viewer.render());
 	var cdom = document.createElement('div');
 	span.appendChild(cdom);
-	span.appendChild(this.showConfig(result, config, span, cdom));
+	if(cDisplay) span.appendChild(this.showConfig(result, config, span, cdom));
 	return span;
 }
 
