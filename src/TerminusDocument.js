@@ -2,6 +2,7 @@ const WOQLQuery = require('./client/WOQLQuery');
 const Renderers = require('./client/ObjectRenderer');
 const HTMLFrameHelper = require('./html/HTMLFrameHelper');
 const TerminusDBViewer = require('./TerminusDB');
+const TerminusHTMLViewer = require('./TerminusHTMLViewer');
 const TerminusClient = require('@terminusdb/terminus-client');
 const UTILS=require('./Utils');
 
@@ -130,7 +131,7 @@ TerminusDocumentViewer.prototype.getEncodingChooserDOM = function() {
 	scd.appendChild(ccDOM);
 	return scd;
 }
-
+/*
 TerminusDocumentViewer.prototype.getDocumentChooserDOM = function(holder){
 	var self = this;
 	var scd = document.createElement("span");
@@ -139,13 +140,10 @@ TerminusDocumentViewer.prototype.getDocumentChooserDOM = function(holder){
 	lab.setAttribute("class", "terminus-document-chooser-label terminus-doc-control-label terminus-control-label-padding");
 	var dcip = document.createElement("input");
 	dcip.setAttribute("class", "terminus-form-doc-value terminus-document-chooser terminus-doc-input-text");
-	dcip.setAttribute("placeholder", "Enter Document ID to view.");
+	dcip.setAttribute("placeholder", "doc:myDocId");
 	var nbut = document.createElement("button");
-	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-doc-btn")
-	nbut.setAttribute('title', 'Enter Document ID to view');
-	var i = document.createElement('i');
-	i.setAttribute('class', 'fa fa-check');
-	nbut.appendChild(i);
+	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-btn");
+	nbut.appendChild(document.createTextNode('View'));
 	nbut.addEventListener("click", function(){
 		if(dcip.value) {
 			self.ui.showDocument(dcip.value);
@@ -193,252 +191,124 @@ TerminusDocumentViewer.prototype.getDocumentChooserDOM = function(holder){
 	scd.appendChild(nbuts);
 	holder.appendChild(scd);
 };
+*/
 
-TerminusDocumentViewer.prototype.getDocumentCreatorSelect = function(){
-	var wq = new WOQLQuery(this.ui.client, {}, this.ui);
-	var filter = wq.getConcreteDocumentClassPattern("v:Element");
-	var termcc = new TerminusClassChooser(this.ui, filter);
-	termcc.empty_choice = "Create Document of Type";
-	var self = this;
-	termcc.change = function(new_class){
-		if(new_class){
-			self.ui.showCreateDocument(new_class);
-			termcc.choice = false;
-		}
-	}
-	var tcdom = termcc.getAsDOM('terminus-class-select');
-	return tcdom;
+TerminusDocumentViewer.prototype.getDocumentInput = function(d){
+	var span = document.createElement('div');
+	span.setAttribute('class', 'terminus-display-flex')
+	var inp = document.createElement('input');
+	inp.setAttribute('class', 'terminus-form-doc-value terminus-document-chooser terminus-doc-input-text');
+	inp.setAttribute('placeholder', 'doc:myDocId');
+	var vbtn = document.createElement('button');
+	vbtn.appendChild(document.createTextNode('Create'));
+	vbtn.setAttribute('class', 'terminus-control-button terminus-document-button terminus-btn');
+	vbtn.addEventListener('click', function(){
+		if(this.value) self.ui.showDocument(this.value);
+	})
+	span.appendChild(inp);
+	span.appendChild(vbtn);
+	d.appendChild(span);
 }
 
-TerminusDocumentViewer.prototype.getDocumentCreatorDOM = function(){
-	var self = this;
-	var scd = document.createElement("div");
-	scd.setAttribute("class", "terminus-create-doc terminus-document-creator terminus-form-horizontal terminus-control-group");
-	// get dropdown with list of types
-	var nbuts = document.createElement("div");
-	nbuts.setAttribute("class", "terminus-control-buttons terminus-document-creator-buttons");
-	// get input type
-	var dcip = document.createElement("input");
-	dcip.setAttribute("class", "terminus-form-doc-value terminus-document-creator");
-	dcip.setAttribute("placeholder", "Enter Document Type");
-	var nbut = document.createElement("button");
-	var lab = document.createElement("span");
-	lab.setAttribute("class", "document-creator-label terminus-control-label terminus-control-label-padding");
-	nbut.setAttribute('class', "terminus-control-button create-document-button terminus-doc-btn")
-	var i = document.createElement('i');
-	i.setAttribute('title', 'Input which document type to create');
-	i.setAttribute('class', 'fa fa-check');
-	nbut.appendChild(i);
-	nbut.addEventListener("click", function(){
-		if(dcip.value) self.ui.showCreateDocument(dcip.value);
-	})
-	var ccDOM = document.createElement("span");
-	ccDOM.setAttribute("class", "create-document-list terminus-display-flex");
-	ccDOM.appendChild(this.getDocumentCreatorSelect());
-	//ccDOM.appendChild(tcdom);
-	ccDOM.appendChild(dcip);
-	ccDOM.appendChild(nbut);
-	ccDOM.appendChild(this.getEncodingChooserDOM());
-	scd.appendChild(ccDOM);
-	return scd;
-};
-
-TerminusDocumentViewer.prototype.getDocumentJsonldCreateButton = function(){
-	var cr = document.createElement('button');
-	cr.innerHTML = 'Save';
-	cr.setAttribute('class', 'terminus-btn terminus-btn-float-right');
-	var self = this;
-	cr.addEventListener('click', function(){
-		if (!UTILS.checkForMandatoryId()) return;
-		self.ui.showBusy();
-		self.createDocument(self.renderer.idDOM.value, JSON.parse(self.json_editor.value))
-		.then(function(page_config){
-			if(page_config == 'home'){
-				TerminusClient.FrameHelper.removeChildren(self.pagedom);
-				self.getListOfDocuments(self.pagedom);
-			}
-			else{
-				self.page_config = "view";
-				self.mode = self.page_config;
-				self.renderer = false;
-				self.refreshPage();
-			}
-		})
-		.catch(function(error) {
-			self.ui.clearBusy();
-			self.ui.showError(error);
-		});
-	})
-	return cr;
+TerminusDocumentViewer.prototype.showCreateDocument = function(dType){
+	this.ui.showCreateDocument(dType);
 }
 
-TerminusDocumentViewer.prototype.getDocumentJsonldSaveButton = function(){
-	var sv = document.createElement('button');
-	sv.innerHTML = 'Save';
-	sv.setAttribute('class', 'terminus-btn terminus-btn-float-right');
-	var self = this;
-	sv.addEventListener('click', function(){
-		self.ui.showBusy();
-		self.updateDocument(JSON.parse(self.json_editor.value))
-		.then(function(){
-			self.page_config = "view";
-			self.renderer = false;
-			self.refreshPage();
-		})
-		.catch(function(error) {
-			self.ui.clearBusy();
-			self.ui.showError(error);
-		});
-	})
-	return sv;
-}
-
-TerminusDocumentViewer.prototype.toggleControlActions = function(button){
-	var enc = document.getElementsByClassName('terminus-enc');
-	if(button.innerHTML === 'Edit'){
-		if(enc.length > 0) enc[0].style.display = 'none';
-		button.innerHTML = 'Cancel';
-		if(this.viewMode == 'frame'){
-			this.page_config = "edit";
-			this.renderer = false;
-			this.refreshPage();
-		}
-		else {
-			TerminusClient.FrameHelper.removeChildren(this.pagedom);
-			var label = this.document_json_response['@id']; // get doc id
-			var header = document.createElement('div');
-			header.setAttribute('class', 'terminus-application-header');
-			header.appendChild(document.createTextNode('Edit ' + label + ' in jsonld format'));
-			header.appendChild(this.getDocumentJsonldSaveButton());
-			this.pagedom.appendChild(header);
-			var res = document.createElement('textarea');
-			this.json_editor = res;
-			this.pagedom.appendChild(res);
-			res.appendChild(document.createTextNode(JSON.stringify(this.document_json_response, undefined, 2)));
-			res.setAttribute('class', 'terminus-api-explorer-text-area');
-			UTILS.stylizeEditor(this.ui, res, 'doc-json', 'javascript');
-		}
-	}
-	else {
-		button.innerHTML = 'Edit';
-		if(enc.length > 0) enc[0].style.display = 'block';
-		if(this.viewMode == 'frame'){
-			this.page_config = "view";
-			this.renderer = false;
-			this.refreshPage();
-		}
-		else{ //jsonld
-			this.getJsonLdViewer();
+TerminusDocumentViewer.prototype.styleCreateDocumentChooser = function(){
+	var select = document.getElementsByClassName('woql-chooser');
+	for(i=0; i<select.length; i++){
+		if(select[i].type == 'select-one'){
+			select[i].classList.add('terminus-form-doc-value');
+			var self = this;
+			select[i].addEventListener('change', function(){
+				self.showCreateDocument(this.value);
+			})
 		}
 	}
 }
 
-TerminusDocumentViewer.prototype.getListOfDocuments = function(holder){
-	var lod = document.createElement('div');
-	lod.setAttribute('class', 'terminus-list-of-doc');
-	lod.appendChild(UTILS.getHeaderDom('List of Documents'))
-	holder.appendChild(lod);
-	this.dbViewer.getClassesDOM(holder);
+TerminusDocumentViewer.prototype.getCreateDocumentButton = function(d){
+	var cbtn = document.createElement('button');
+	cbtn.setAttribute('class', 'terminus-btn');
+	cbtn.appendChild(document.createTextNode('Create'));
+	var self = this;
+	cbtn.addEventListener("click", function(){
+		if(this.value) self.ui.showCreateDocument(this.value);
+	})
+	d.appendChild(cbtn);
 }
 
-TerminusDocumentViewer.prototype.getDocumentEditControls = function(holder, doc){
-	var sp = document.createElement('span');
-	sp.setAttribute('class', 'terminus-document-page-controls');
-	holder.appendChild(sp);
-    sp.appendChild(this.getEncodingChooserDOM());
-	var dpc = document.createElement('button');
-	dpc.setAttribute('class', 'terminus-btn terminus-document-config');
-	dpc.innerHTML = 'Edit';
-	sp.appendChild(dpc);
-	var self = this;
-	dpc.addEventListener("click", function(){
-		self.toggleControlActions(dpc);
-	})
- }
+TerminusDocumentViewer.prototype.getDocumentCreatorSelect = function(d){
+	let nq = new TerminusHTMLViewer(this.ui.client);
+	let WOQL = TerminusClient.WOQL;
+	let query = WOQL.from(this.ui.client.connectionConfig.dbURL())
+					.start(0)
+					.concreteClass();
+    var self = this;
+	query.execute(this.ui.client).then((results) => {
+		let qres = new TerminusClient.WOQLResult(results, query);
+		var phr = 'Create Document of Type';
+		var n = nq.showResult(qres, WOQL.chooser().show_empty(phr), false);
+		d.appendChild(n);
+		self.styleCreateDocumentChooser();
+		self.getCreateDocumentButton(d);
+	});
+}
 
-TerminusDocumentViewer.prototype.getDocumentSubMenus = function(feature, ul, holder, active){
- 	var a = document.createElement('a');
-     a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
- 	var self = this;
- 	switch(feature){
- 		case 'get_document':
- 			a.appendChild(document.createTextNode('View Document'));
- 			// set selected nav after redrawMainPage and home page
- 			if(active) a.classList.add('terminus-submenu-selected');
- 			if((this.page_config == 'view') || (this.page_config == 'home')){ // hide in create mode
- 				var sp = document.createElement('span');
- 				sp.setAttribute('class', 'terminus-display-flex');
- 				holder.appendChild(sp);
- 				this.getDocumentChooserDOM(sp);
- 				this.viewMode = 'frame';
- 			}
- 			if(this.page_config == 'view') this.getDocumentEditControls(sp);
- 			a.addEventListener('click', function(){
- 				TerminusClient.FrameHelper.removeChildren(self.pagedom);
- 				TerminusClient.FrameHelper.removeChildren(self.controldom);
- 				self.page_config = 'home';
- 				self.loadDocumentHome();
- 			});
- 		break;
- 		case 'create_document':
- 			a.appendChild(document.createTextNode('Create Document'));
- 		    if(active) a.classList.add('terminus-submenu-selected');
- 		    holder.appendChild(self.getDocumentCreatorDOM());
- 			a.addEventListener('click', function(){
- 				TerminusClient.FrameHelper.removeChildren(holder);
- 				UTILS.setSelectedSubMenu(this);
- 				holder.appendChild(self.getDocumentCreatorDOM());
- 			});
- 		break;
- 		default:
- 			console.log('Invalid features in TerminusDocument');
- 		break;
- 	} // switch(feature)
- 	ul.appendChild(a);
- }
+TerminusDocumentViewer.prototype.getDocumentCreatorDOM = function(dom){
+	var span = document.createElement('span');
+	span.setAttribute('class', 'terminus-display-flex terminus-create-document-align');
+	this.getDocumentCreatorSelect(span);
+	dom.appendChild(span);
+}
+
+TerminusDocumentViewer.prototype.getListOfDocuments = function(){
+	this.dbViewer.getClassesDOM(this.controldom);
+}
 
 TerminusDocumentViewer.prototype.loadDocumentHome = function(){
- 	var self = this;
- 	var ul = document.createElement('ul');
- 	ul.setAttribute('class','terminus-ul-horizontal');
- 	this.controldom.appendChild(ul);
- 	var holder = document.createElement('div');
- 	holder.setAttribute('class', 'terminus-doc-holder');
- 	this.controldom.appendChild(holder);
- 	var controls = document.createElement('span');
- 	controls.setAttribute('class', 'terminus-display-flex');
- 	holder.appendChild(controls);
- 	switch(this.page_config){
- 		case 'view':
- 			if(this.ui.showControl("get_document"))
- 				this.getDocumentSubMenus('get_document', ul, controls, true);
- 			controls.appendChild(this.getDocumentCreatorSelect());
- 		break;
- 		case 'create':
- 			if(this.ui.showControl("create_document")){
- 				this.getDocumentSubMenus('get_document', ul, controls, false);
- 				this.getDocumentSubMenus('create_document', ul, holder, true);
- 			}
- 		break;
- 		case 'home':
- 			if(this.ui.showControl("get_document"))
- 				this.getDocumentSubMenus('get_document', ul, controls, true);
- 		    var sd = document.createElement('div');
- 			sd.setAttribute('class', 'terminus-class-chooser-align');
- 			controls.appendChild(sd);
- 			sd.appendChild(this.getDocumentCreatorSelect());
- 			this.getListOfDocuments(holder);
- 		break;
- 		case 'default':
- 			console.log('Invalid page config passed in TerminusDocument.js');
- 		break;
- 	}
+	var controls = document.createElement('span');
+	controls.setAttribute('class', 'terminus-display-flex');
+	this.controldom.appendChild(controls);
+	if(this.ui.showControl("get_document")){
+		this.getDocumentInput(controls);
+		this.getListOfDocuments();
+	}
+    if(this.ui.showControl("create_document"))
+		this.getDocumentCreatorDOM(controls);
+}
+
+TerminusDocumentViewer.prototype.styleToggleSwitch = function(btn){
+	btn.classList.remove('terminus-btn');
+	btn.classList.add('terminus-doc-btn-group');
+}
+
+TerminusDocumentViewer.prototype.getFormatButtons = function(){
+	 var span = document.createElement('span');
+	 span.setAttribute('class', 'terminus-display-flex terminus-format-button-align');
+	 var hbtn = span.appendChild(UTILS.getButton('HTML'));
+	 var jbtn = UTILS.getButton('JSON-LD');
+	 this.styleToggleSwitch(hbtn);
+	 this.styleToggleSwitch(jbtn);
+	 hbtn.classList.add('terminus-doc-btn-selected'); // default view is HTML
+	 this.format = 'HTML';
+	 span.appendChild(hbtn);
+	 span.appendChild(jbtn);
+	 var self = this;
+	 hbtn.addEventListener('click', function(){
+		 self.format = this.value;
+	 })
+	 jbtn.addEventListener('click', function(){
+		 self.format = this.value;
+	 })
+	 return span;
  }
 
 TerminusDocumentViewer.prototype.getAsDOM = function(){
 	this.holder = document.createElement("div");
 	this.controldom = document.createElement("div");
 	this.controldom.setAttribute("class", "terminus-document-controls");
+	this.holder.appendChild(this.getFormatButtons());
 	this.pagedom = document.createElement("div");
 	this.pagedom.setAttribute("class", "terminus-document-viewer");
 	this.loadDocumentHome();

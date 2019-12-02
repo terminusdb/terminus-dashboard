@@ -560,7 +560,7 @@ TerminusUI.prototype.showBusy = function(msg){
 };
 
 TerminusUI.prototype.pseudoCapability = function(el){
-	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "schema_format"];
+	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "add_new_library"];
 	if(pseuds.indexOf(el) == -1) return false;
 	return true;
 }
