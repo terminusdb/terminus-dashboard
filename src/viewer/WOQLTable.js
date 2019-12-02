@@ -17,8 +17,8 @@ WOQLTable.prototype.setRenderer = function(rend){
 	return this;
 }
 
-WOQLTable.prototype.render = function(){
-	if(this.renderer) return this.renderer.render(this);
+WOQLTable.prototype.render = function(onChangeQuery){
+	if(this.renderer) return this.renderer.render(this, onChangeQuery);
 }
 
 WOQLTable.prototype.count = function(){
@@ -83,6 +83,10 @@ WOQLTable.prototype.nextPage = function(){
 	return this.update(this.result.query.nextPage());
 }
 
+WOQLTable.prototype.firstPage = function(){
+	return this.update(this.result.query.firstPage());
+}
+
 WOQLTable.prototype.previousPage = function(){
 	return this.update(this.result.query.previousPage());
 }
@@ -135,6 +139,7 @@ WOQLTable.prototype.update = function(nquery){
 	return nquery.execute(this.client).then((results) => {
 		var nresult = new TerminusClient.WOQLResult(results, nquery);
 		this.setResult(nresult);
+		if(this.notify) this.notify(nresult);
 		return nresult;
 	});	
 }

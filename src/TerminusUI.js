@@ -407,10 +407,7 @@ TerminusUI.prototype.draw = function(comps, slocation){
 
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();
-	if(this.controller){
-		TerminusClient.FrameHelper.removeChildren(this.controller);
-		this.drawControls();
-	}
+	this.redrawControls();
 	if(this.explorer){
 		TerminusClient.FrameHelper.removeChildren(this.explorer);
 		//this.drawExplorer();
@@ -440,6 +437,13 @@ TerminusUI.prototype.toggleControl = function(){
     self.toggleDashboardWidget(this);
     self.drawExplorer();
   })
+}
+
+TerminusUI.prototype.redrawControls = function(){
+	if(this.controller){
+		TerminusClient.FrameHelper.removeChildren(this.controller);
+		this.drawControls();
+	}
 }
 
 TerminusUI.prototype.drawControls = function(){

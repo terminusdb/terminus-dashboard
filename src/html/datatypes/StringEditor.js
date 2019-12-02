@@ -6,6 +6,7 @@ function HTMLStringEditor(options){
 }
 
 HTMLStringEditor.prototype.renderFrame = function(frame, dataviewer){
+	var value = frame.get();
 	var big = ((this.options && typeof this.options.big != "undefined") ? this.options.big : this.isBigType(this.type, value));
 	if(big){
 		var input = document.createElement("textarea");
