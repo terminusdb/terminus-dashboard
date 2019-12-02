@@ -1001,9 +1001,7 @@ div.terminus-violation{
 	font-size: 18px;
     text-align: left;
 }
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+
 /* frameviewer styling */
 .terminus-zebra-frame:nth-child(odd) {
 	background-color: #EBEDEF;
