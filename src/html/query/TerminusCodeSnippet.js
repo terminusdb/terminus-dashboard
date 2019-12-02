@@ -169,7 +169,7 @@ TerminusCodeSnippet.prototype.getFormatButtons = function(){
     for(f in this.formats){
         var btn = document.createElement('button');
         btn.setAttribute('value', f);
-        btn.setAttribute('class', 'terminus-snippet-button');
+        btn.setAttribute('class', 'terminus-snippet-button terminus-btn');
         btn.appendChild(document.createTextNode(this.formats[f]));
         var self = this;
         btn.addEventListener('click', function(){
