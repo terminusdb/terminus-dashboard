@@ -158,7 +158,9 @@ button.terminus-change-range {
 button.object-save, button.object-save-disabled, button.object-delete{
 	margin-top: 5px;
 }
-
+span.terminus-format-button-align{
+	margin-bottom: 10px;
+}
 .dt-buttons.btn-group{
 	float: left;
 	margin-right: 2%;
@@ -225,12 +227,13 @@ button.object-save, button.object-save-disabled, button.object-delete{
     display: flex;
     flex-direction: column;
     min-width: 0;
-	width: 1100px;
+	/*width: 1100px;*/
+	width: 100%;
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
     border: .0625rem solid rgba(34,42,66,.05);
-    border-radius: .2857rem;
+    border-radius: .7rem;
 }
 
 .terminus-form-horizontal .terminus-control-group {
@@ -249,10 +252,12 @@ button.object-save, button.object-save-disabled, button.object-delete{
 }
 .terminus-form-horizontal .terminus-control-label{
 	float: left;
-    width: 160px !important;
+    /*width: 160px !important;*/
     padding-top: 12px;
 	font-size: 18px;
-    text-align: left;
+    text-align: right;
+	min-width: 150px;
+	margin: 0px 30px 10px 10px;
 }
 .terminus-control-label-padding{
     padding-left: 10px;
@@ -286,7 +291,7 @@ button.object-save, button.object-save-disabled, button.object-delete{
     border-radius: 4px;
 	font-size: 18px;
     box-sizing: border-box;
-	width: 800px;
+	width: 600px;
 }
 .terminus-textarea {
     width: 100%;
@@ -351,7 +356,7 @@ button.object-save, button.object-save-disabled, button.object-delete{
 div.terminus-class-chooser-align{
 	margin-left: 770px;
 }
-span.terminus-display-flex{
+span.terminus-display-flex, div.terminus-display-flex{
 	display: flex !important;
 }
 span.terminus-document-page-controls{
@@ -455,10 +460,15 @@ icon.terminus-cancel-rule-editor{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+	border-radius: 0.2rem !important;
 }
 
-.terminus-btn-float-right{
+button.terminus-btn-float-right{
 	float: right;
+	margin: 50px 20px 20px 0px;
+}
+div.terminus-form-margin-top{
+	min-height: 30px;
 }
 .terminus-frame-btn{
 	background-color: #dcdcdc;
@@ -858,7 +868,12 @@ div.ql-editor{
 	margin: 10px;
 	width: fit-content;
 }
-
+span.terminus-create-document-align{
+	margin-inline-start: auto;
+}
+div.terminus-margin-top, table.terminus-margin-top{
+	margin-top : 20px;
+}
 .terminus-dt-result-cont{
 	width: fit-content;
 }
@@ -986,7 +1001,9 @@ div.terminus-violation{
 	font-size: 18px;
     text-align: left;
 }
-
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 /* frameviewer styling */
 .terminus-zebra-frame:nth-child(odd) {
 	background-color: #EBEDEF;
@@ -1523,7 +1540,7 @@ div.dataTables_info, div.dataTables_paginate {
 	border-bottom: 1px solid rgba(0,0,0,.125);
 }
 
-.terminus-doc-btn-group button {
+button.terminus-doc-btn-group{
 	background-color: #00C08B;
   	border: 1px solid green;
   	color: #002856;
@@ -1534,6 +1551,9 @@ div.dataTables_info, div.dataTables_paginate {
 	margin-top: 5px;
 }
 
+div.terminus-margin-left-auto {
+	margin-left: auto;
+}
 
 .terminus-doc-btn-group button:hover,  .terminus-doc-btn-selected{
   background-color: #0055B8 !important;
@@ -1615,6 +1635,7 @@ div.dataTables_info, div.dataTables_paginate {
 	background-color: #f8f8ff;
 	box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);
 	min-height: 900px;
+	max-width: calc(100vw - 420px)!important;
 }
 
 .terminus-main-content{
@@ -1765,7 +1786,16 @@ span.terminus-property-values {
 	margin-left: 6px;
 
 }
-
+/*button.terminus-schema-cancel_update, button.terminus-schema-update_schema{
+	float: right;
+}*/
+input.terminus-schema-id-display{
+	margin: 30px 0px 30px 20px;
+	width: 810px;
+}
+button.terminus-schema-import_schema, button.terminus-schema-add_new_library{
+	float: right;
+}
 select.terminus-frame-selector{
 	margin-left: 4px;
 	width: 120px !important;
@@ -1775,7 +1805,7 @@ select.terminus-frame-selector{
 select.terminus-class-select, select.terminus-form-select {
 	padding: 6px 4px;
 	width: 223px;
-	margin-right: 10px;
+	/*margin-right: 10px;*/
 }
 
 div.terminus-object-frame select {

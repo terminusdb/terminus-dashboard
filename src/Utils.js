@@ -184,6 +184,14 @@ function getHeaderDom(text){
   return hd;
 } // getHeaderTextDom
 
+function getButton(text){
+  var button = document.createElement('button');
+  button.setAttribute('class', 'terminus-btn');
+  button.setAttribute('value', text);
+  button.appendChild(document.createTextNode(text));
+  return button;
+}
+
 // returns dom for alert banner
 function getInfoAlertDom(type, label, msg){
   var ald = document.createElement('div');
@@ -485,5 +493,6 @@ module.exports={tolggleContent,
                checkForMandatoryId,
                activateSelectedNav,
                getCurrentWoqlQueryObject,
+               getButton,
                trimValue,
                getqObjFromInput}

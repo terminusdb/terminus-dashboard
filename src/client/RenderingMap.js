@@ -26,7 +26,7 @@ const TerminusClient = require('@terminusdb/terminus-client');
 
 let RenderingMap = {
 	registeredDataViewers: {},
-	registeredDataEditors: {},	
+	registeredDataEditors: {},
 	getValidDataViewerList: function(type, frametype){
 		var valids = ['HTMLStringViewer'];
 		if(frametype && typeof this.registeredDataViewers[frametype] != "undefined"){
@@ -125,7 +125,7 @@ let RenderingMap = {
 			if(this.registeredDataEditors[types[i]].indexOf(viewer) == -1){
 				this.registeredDataEditors[types[i]].push(viewer);
 				this.renderers[viewer] = {label: label};
-			}			
+			}
 		}
 	},
 	registerEditorForFrameType: function(viewer, label, frametype){
@@ -188,7 +188,7 @@ RenderingMap.decorateRenderer = function(options, renderer){
 	}
 	if(compiled_options && compiled_options.facet && typeof renderer.facets[compiled_options.facet] == "object"){
 		renderer.facet = compiled_options.facet;
-	}	
+	}
 	else {
 		var deffacet = renderer.getDefaultFacet();
 		if(typeof renderer.facets[deffacet] == "object"){
@@ -231,7 +231,8 @@ RenderingMap.decorateRenderer = function(options, renderer){
 	if(compiled_options && typeof compiled_options.sort != "undefined"){}
 	else {}
 	return options;
-}	
+}
+
 
 RenderingMap.compileOptions = function(options, renderer){
 	var compiled_options = {};
@@ -241,7 +242,7 @@ RenderingMap.compileOptions = function(options, renderer){
 			compiled_options[key] = options[key];
 		}
 	}
-	if(options.rules){
+	/*if(options.rules){
 		for(var i = 0; i<options.rules.length; i++){
 			var match = (!options.rules[i].pattern || this.patternMatchesRenderer(options.rules[i].pattern, renderer));
 			if(match && options.rules[i].output){
@@ -250,7 +251,7 @@ RenderingMap.compileOptions = function(options, renderer){
 				}
 			}
 		}
-	}
+	} */
 	return compiled_options;
 }
 
@@ -260,9 +261,9 @@ RenderingMap.registerViewerForFrameType("HTMLChoiceViewer", "Choice Viewer", "on
 RenderingMap.registerEditorForFrameType("HTMLChoiceEditor", "Choice Selector", "oneOf");
 RenderingMap.registerViewerForTypes("HTMLCoordinateViewer", "Coordinate Viewer", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
 RenderingMap.registerEditorForTypes("HTMLCoordinateEditor", "Coordinate Editor", ["xdd:coordinate", "xdd:coordinatePolyline", "xdd:coordinatePolygon"]);
-RenderingMap.registerViewerForTypes("HTMLDateViewer", "Date Viewer", ["xsd:time", "xsd:date", "xsd:dateTime", "xsd:gYear", 
+RenderingMap.registerViewerForTypes("HTMLDateViewer", "Date Viewer", ["xsd:time", "xsd:date", "xsd:dateTime", "xsd:gYear",
 	"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
-RenderingMap.registerEditorForTypes("HTMLDateEditor", "Date Editor", ["xsd:time", "xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear", 
+RenderingMap.registerEditorForTypes("HTMLDateEditor", "Date Editor", ["xsd:time", "xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear",
 	"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
 RenderingMap.registerViewerForFrameType("HTMLEntityViewer", "Document Viewer", "document");
 RenderingMap.registerEditorForFrameType("HTMLEntityEditor", "Document Selector", "document");
@@ -271,13 +272,11 @@ RenderingMap.registerEditorForTypes("HTMLImageEditor", "Image Editor", ["xsd:bas
 RenderingMap.registerViewerForTypes("HTMLImageViewer", "Image Viewer", ["xdd:url", "xsd:anyURI", "xsd:base64Binary"]);
 RenderingMap.registerEditorForTypes("HTMLImageEditor", "Image Editor", ["xsd:base64Binary"]);
 RenderingMap.registerViewerForTypes("HTMLLinkViewer", "Link Viewer", ["xdd:url", "xsd:anyURI"]);
-RenderingMap.registerViewerForTypes("HTMLNumberViewer", "Number with commas", 
-		["xsd:decimal", "xsd:double", "xsd:float", "xsd:short", "xsd:integer", "xsd:long", 
+RenderingMap.registerViewerForTypes("HTMLNumberViewer", "Number with commas",
+		["xsd:decimal", "xsd:double", "xsd:float", "xsd:short", "xsd:integer", "xsd:long",
 			"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger", "xsd:nonPositiveInteger"]);
 RenderingMap.registerViewerForTypes("HTMLRangeViewer", "Range Viewer", ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 RenderingMap.registerEditorForTypes("HTMLRangeEditor", "Range Editor", ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 RenderingMap.registerViewerForTypes("SantizedHTMLViewer", "Sanitized HTML", ["xsd:string", "xdd:html"]);
 
 module.exports=RenderingMap
-
-

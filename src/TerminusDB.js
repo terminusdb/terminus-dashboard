@@ -493,7 +493,16 @@ TerminusDBViewer.prototype.getDocumentTableConfig = function(nq){
 	return opts;
 }
 
-
+TerminusDBViewer.prototype.getExplanation = function(view){
+	var d = document.createElement('div');
+	var title = view.charAt(0).toUpperCase() + view.slice(1)
+	d.appendChild(UTILS.getHeaderDom(title + ' View'));
+	if(view == 'table')
+		var explaination = 'Below view shows a table view of available documents within the database';
+	else var explaination = 'Below view shows a graph view of how available documents are related to other documents';
+	d.appendChild(document.createTextNode(explaination));
+	return d;
+}
 
 TerminusDBViewer.prototype.getClassesDOM = function(d){
 	var q = TerminusClient.WOQL
@@ -517,18 +526,20 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 	let query = WOQL.from(this.ui.client.connectionConfig.dbURL()).limit(25).start(0).documentMetadata();
 	//TerminusClient.FrameHelper.loadDynamicCSS("myfa", "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css");
 	query.execute(this.ui.client).then((results) => {
-		/*let qres = new TerminusClient.WOQLResult(results, query);
-		var nt = nq.showResult(qres, WOQL.table());
+		let qres = new TerminusClient.WOQLResult(results, query);
+		var nt = nq.showResult(qres, WOQL.table(), false);
+		d.appendChild(this.getExplanation('table'));
 		d.appendChild(nt);
-		qres.first()
+		/*qres.first()
 		var n = nq.showResult(qres, WOQL.chooser());
-		d.appendChild(n);
+		d.appendChild(n); */
 		qres.first();
 		var lg = WOQL.graph();
 		lg.source("v:Subject");
 		var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
 		lg.edge("v:Subject", "v:Object").icon(licon2);
-		var ng = nq.showResult(qres, lg);
+		var ng = nq.showResult(qres, lg, false);
+		d.appendChild(this.getExplanation('graph'));
 		d.appendChild(ng);
 		qres.first();
 		//var sg = nq.showResult(qres, WOQL.stream());
@@ -536,7 +547,7 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		//d.appendChild(nc);
 		//var ng = nq.displayResults(false, WOQL.graph());
 		//d.appendChild(ng);
-		let t = WOQL.table().pager(false);
+		/*let t = WOQL.table().pager(false);
 		t.column("Class", "Type_Comment", "ID").hidden(true);
 		t.column("Label").header("Document");
 		t.column("Comment").header("Description");
@@ -572,14 +583,14 @@ TerminusDBViewer.prototype.getClassesDOM = function(d){
 		qres.first()
 		var ng3 = nq.showResult(qres, g);
 		d.appendChild(ng3);*/
-		var x = "doc:access_all_areas";
+		/*var x = "doc:access_all_areas";
 		var nd = WOQL.document();
 		nd.show_all("SimpleFrameViewer");
 		nd.object().features("id", "type", "comment", "delete", "reset", "hide", "show", "clone", "update", "view", "add", "value");//"summary", "viewer", "status",
 		nd.property().features("value");//features("id", "cardinality", "type", "comment", "delete", "reset", "hide", "show", "clone", "update", "view", "add", "value");//"summary", "status",
 		nd.data().features("value");//.dataviewer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
 		var d1 = nq.document(x, nd);
-		d.appendChild(d1);
+		d.appendChild(d1); */
 	});
 	//let c = WOQL.chooser();
 
@@ -642,11 +653,14 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	scd.setAttribute("class", "terminus-db-creator");
 	var sct = document.createElement("h3");
 	sct.setAttribute("class", "terminus-db-creator-title terminus-module-head");
-	sct.appendChild(document.createTextNode("Create New Database"));
+	sct.appendChild(UTILS.getHeaderDom("Create New Database"));
 	scd.appendChild(sct);
 	var mfd = document.createElement('div');
-	mfd.setAttribute('class', 'terminus-form-border');
+	mfd.setAttribute('class', 'terminus-form-border ');
 	scd.appendChild(mfd);
+	var dht = document.createElement('div');
+	dht.setAttribute('class', 'terminus-form-margin-top');
+	mfd.appendChild(dht);
 	var sci = document.createElement("div");
 	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
 	var slab = document.createElement("span");
@@ -723,10 +737,10 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	var butfield = document.createElement("div");
 	butfield.setAttribute("class", "terminus-control-buttons");
 	var cancbut = document.createElement("button");
-	cancbut.setAttribute("class", "terminus-control-button terminus-cancel-db-button terminus-btn");
+	cancbut.setAttribute("class", "terminus-control-button terminus-cancel-db-button terminus-btn terminus-btn-float-right");
 	cancbut.appendChild(document.createTextNode("Cancel"));
 	var loadbut = document.createElement("button");
-	loadbut.setAttribute("class", "terminus-control-button terminus-create-db-button terminus-btn");
+	loadbut.setAttribute("class", "terminus-control-button terminus-create-db-button terminus-btn terminus-btn-float-right");
 	loadbut.appendChild(document.createTextNode("Create"));
 	var self = this;
 	var gatherips = function(){
