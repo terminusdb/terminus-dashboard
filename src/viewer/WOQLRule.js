@@ -21,15 +21,16 @@ TerminusClient.WOQL.document = function(){ return new FrameConfig(); }
 
 function FrameConfig(){
 	this.rules = [];
+	this.type = "document";
 }
 
 FrameConfig.prototype.prettyPrint = function(){
-	var str = "view = WOQL.graph();\n";
+	var str = "view = WOQL.document();\n";
 	if(this.renderer()){
 		str += "view.renderer('" + this.renderer() + "')\n";
 	}
 	if(typeof this.load_schema() != "undefined"){
-		str += "view.load_schema('" + this.load_schema() + "')\n";		
+		str += "view.load_schema(" + this.load_schema() + ")\n";		
 	}
 	for(var i = 0; i<this.rules.length ; i++){
 		str += "view." + this.rules[i].prettyPrint("frame") + "\n";
@@ -109,7 +110,7 @@ FrameConfig.prototype.all = function(){
 
 FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
 	if(typeof frame.display_options == "undefined") frame.display_options = {};
-	if(typeof rule.mode() != "undefined") frame.display_options.mode = rule.mode();
+	if(typeof rule.mode() != "undefined") {	frame.display_options.mode = rule.mode();}
 	if(typeof rule.view() != "undefined") frame.display_options.view = rule.view();
 	//if(typeof rule.facets() != "undefined") frame.display_options.facets = rule.facets();
 	//if(typeof rule.facet() != "undefined") frame.display_options.facet = rule.facet();
@@ -140,6 +141,7 @@ FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
 
 function WOQLStreamConfig(){
 	this.rules = [];
+	this.type = "stream";
 }
 
 WOQLStreamConfig.prototype.prettyPrint = function(){
@@ -167,6 +169,7 @@ WOQLStreamConfig.prototype.create = function(client, renderers){
 
 function WOQLChooserConfig(){
 	this.rules = [];
+	this.type = "chooser";
 }
 
 WOQLChooserConfig.prototype.getMatchingRules = function(row, key, context, action){
@@ -284,10 +287,7 @@ WOQLChooserConfig.prototype.direction = function(v){
 
 function WOQLTableConfig(){
 	this.rules = [];
-	this.show_pager = true;
-	this.show_pagesize = true;	
-	this.change_pagesize = true;
-	this.show_pagenumber = true;
+	this.type = "table";
 }
 
 WOQLTableConfig.prototype.getMatchingRules = function(row, key, context, action){
@@ -310,16 +310,16 @@ WOQLTableConfig.prototype.prettyPrint = function(){
 		str += "view.column_order('" + this.column_order() + "')\n";		
 	}
 	if(typeof this.pagesize() != "undefined"){
-		str += "view.pagesize('" + this.pagesize() + "')\n";		
+		str += "view.pagesize(" + this.pagesize() + ")\n";		
 	}
 	if(typeof this.renderer() != "undefined"){
 		str += "view.renderer('" + this.renderer() + "')\n";		
 	}
 	if(typeof this.pager() != "undefined"){
-		str += "view.pager('" + this.pager() + "')\n";		
+		str += "view.pager(" + this.pager() + ")\n";		
 	}
 	if(typeof this.page() != "undefined"){
-		str += "view.page('" + this.page() + "')\n";		
+		str += "view.page(" + this.page() + ")\n";		
 	}
 	for(var i = 0; i<this.rules.length ; i++){
 		str += "view." + this.rules[i].prettyPrint("table") + "\n";
@@ -380,7 +380,8 @@ WOQLTableConfig.prototype.row = function(){
 }
 
 WOQLGraphConfig = function(){
-	this.rules = [];	
+	this.rules = [];
+	this.type = "graph";	
 }
 
 WOQLGraphConfig.prototype.create = function(client, renderers){
@@ -913,23 +914,26 @@ WOQLRule.prototype.match = function(data, key, context, action){
 		}
 		if(typeof key == "object"){
 			if(this.rule.constraints && this.rule.constraints[key[0]]){
+				if(!data) return false;
 				for(var i = 0; i<this.rule.constraints[key[0]].length; i++){
-					if(!this.test(row[key[0]], this.rule.constraints[key][0])){
+					if(!this.test(data[key[0]], this.rule.constraints[key][0])){
 						return false;
 					}
 				}			
 			}
 			if(this.rule.constraints && this.rule.constraints[key[1]]){
+				if(!data) return false;
 				for(var i = 0; i<this.rule.constraints[key[1]].length; i++){
-					if(!this.test(row[key[1]], this.rule.constraints[key][1])){
+					if(!this.test(data[key[1]], this.rule.constraints[key][1])){
 						return false;
 					}
 				}			
 			}
 		}
 		else if(this.rule.constraints && this.rule.constraints[key]){
+			if(!data) return false;
 			for(var i = 0; i<this.rule.constraints[key].length; i++){
-				if(!this.test(row[key], this.rule.constraints[key])){
+				if(!this.test(data[key], this.rule.constraints[key])){
 					return false;
 				}
 			}			
@@ -941,6 +945,7 @@ WOQLRule.prototype.match = function(data, key, context, action){
 	}
 	else {
 		for(var k in this.rule.constraints){
+			if(!data) return false;
 			for(var i = 0; i<this.rule.constraints[k].length; i++){
 				if(!this.test(data[k], this.rule.constraints[k])){
 					return false;
