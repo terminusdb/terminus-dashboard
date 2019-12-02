@@ -2,7 +2,7 @@ const WOQLQuery = require('./client/WOQLQuery');
 const Renderers = require('./client/ObjectRenderer');
 const HTMLFrameHelper = require('./html/HTMLFrameHelper');
 const TerminusDBViewer = require('./TerminusDB');
-const TerminusHTMLViewer = require('./TerminusHTMLViewer');
+const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const TerminusClient = require('@terminusdb/terminus-client');
 const UTILS=require('./Utils');
 

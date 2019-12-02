@@ -4,7 +4,7 @@
  */
 const TerminusClassChooser = require('./client/TerminusClassChooser');
 const TerminusDocumentViewer = require('./TerminusDocument');
-const TerminusHTMLViewer = require('./TerminusHTMLViewer');
+const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const UTILS=require('./Utils')
 const TerminusClient = require('@terminusdb/terminus-client');
 

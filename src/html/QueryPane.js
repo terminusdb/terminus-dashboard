@@ -7,7 +7,7 @@ const HTMLFrameHelper = require('./HTMLFrameHelper');
 function QueryPane(client, query, result){
 	this.client = client;
 	this.query = query;
-	this.result = result;	
+	this.result = result;
 	this.views = [];
 	this.container = document.createElement('span');
     this.container.setAttribute('class', 'terminus-query-pane-cont');
@@ -18,7 +18,7 @@ QueryPane.prototype.options = function(opts){
 	this.editQuery = (opts && typeof opts.editQuery != "undefined" ? opts.editQuery : true);
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: "true", editConfig: "true" }; 
+	this.defaultResultView = { showConfig: "true", editConfig: "true" };
     return this;
 }
 
@@ -26,7 +26,8 @@ QueryPane.prototype.getAsDOM = function(){
 	if(this.intro){
 		this.container.appendChild(UTILS.getHeaderDom(this.intro));
 	}
-	if(this.showQuery){	
+	//this.container.appendChild(document.createElement('BR'));
+	if(this.showQuery) {
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
 		this.container.appendChild(configspan);
@@ -36,18 +37,19 @@ QueryPane.prototype.getAsDOM = function(){
 		var ispan = document.createElement("span");
 		ispan.setAttribute("class", "query-pane-config");
 		var ic = document.createElement("i");
+		ic.setAttribute('style', 'margin:10px;')
 		configspan.appendChild(ic);
 		var self = this;
 		function showQueryConfig(){
 			configspan.title="Click to Hide Query";
 			ic.setAttribute("class", "fas fa fa-times-circle");
-			if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);            
+			if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);
 			else self.container.appendChild(ipdom);
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Query";
             ic.setAttribute("class", "fas fa fa-atom");
-			self.container.removeChild(ipdom);            
+			self.container.removeChild(ipdom);
 		}
 		configspan.addEventListener("click", () => {
 			if(this.showingQuery) hideQueryConfig();
@@ -58,7 +60,7 @@ QueryPane.prototype.getAsDOM = function(){
 		if(this.showQuery == "icon") hideQueryConfig();
     }
 	this.resultDOM = document.createElement("span");
-	this.resultDOM.setAttribute("class", "terminus-query-results"); 
+	this.resultDOM.setAttribute("class", "terminus-query-results");
 	//var form = (this.input.format == "js" ? "javascript" : "json");
 	//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
 	if(this.views.length == 0){
@@ -69,7 +71,7 @@ QueryPane.prototype.getAsDOM = function(){
 		var vdom = this.views[i].getAsDOM();
 		if(vdom){
 			this.resultDOM.appendChild(vdom);
-		}				
+		}
 	}
 	this.container.appendChild(this.resultDOM);
 	if(this.addViews) this.container.appendChild(this.getAddViewControl());
@@ -127,12 +129,12 @@ QueryPane.prototype.submitQuery = function(qObj){
 
 QueryPane.prototype.refreshViews = function(){
 	for(var i = 0; i<this.views.length; i++){
-		this.views[i].updateResult(this.result);						
+		this.views[i].updateResult(this.result);
 	}
 }
 
 
-QueryPane.prototype.getAddViewControl = function(){ 
+QueryPane.prototype.getAddViewControl = function(){
 	var vd = document.createElement('div');
 	vd.setAttribute('class', 'terminus-add-view-selector');
 	var self = this;
@@ -147,7 +149,7 @@ QueryPane.prototype.getAddViewControl = function(){
 		var vdom = nv.getAsDOM();
 		if(vdom){
 			self.resultDOM.appendChild(vdom);
-		}				
+		}
 	}
 	var opts = [
 		{ value: "", label: "Add another view of results"},
@@ -258,7 +260,7 @@ QueryPane.prototype.showConfig = function(result, config, span, cdom){
 	if(ruleviewer) rv.setRuleViewer(ruleviewer);
 	this.result_viewers[label] = rv;
 	return this;
-} 
+}
 
 QueryPane.prototype.addResultViewer = function(rule){
 	alert("rule " + JSON.stringify(rule));
