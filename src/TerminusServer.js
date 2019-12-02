@@ -7,7 +7,8 @@
  const Datatables = require('./plugins/datatables.terminus');
  const UTILS =require('./Utils');
  const HTMLFrameHelper = require('./html/HTMLFrameHelper');
- const TerminusHTMLViewer = require("./TerminusHTMLViewer");
+ 
+ const TerminusHTMLViewer = require("./html/TerminusHTMLViewer");
  const TerminusClient = require('@terminusdb/terminus-client');
 
  function TerminusServerController(ui){

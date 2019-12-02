@@ -19,7 +19,7 @@ WOQLChooser.prototype.options = function(config){
 WOQLChooser.prototype.set = function(id){
 	if(this.selected != id){
 		this.selected = id;
-		let ch = this.config.change();
+		let ch = this.config.change;
 		if(ch) ch(id);
 	}
 }

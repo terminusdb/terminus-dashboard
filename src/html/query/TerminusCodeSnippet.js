@@ -14,7 +14,6 @@ function TerminusCodeSnippet(language, mode, format, width, height, placeholder)
 	this.placeholder = (placeholder ? placeholder : "");
     this.format = (format ? format : "js");
     this.formats = {'js': "WOQL.js", 'jsonld': "JSON-LD"};
-    this.view_types = {'table': "Table", "graph": "Graph", "chooser": "Drop-down List", "stream": "Result Stream" };
     if(this.mode == 'view')
         this.snippet = document.createElement('pre');
     else {
@@ -43,6 +42,10 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 		var WOQL = TerminusClient.WOQL;
 		if(format == "js"){
 			var nw = eval(text);
+			if(this.language == "rule"){
+				this.view = view;
+				return view;
+			}
 			return nw;
 		}
 		else {
@@ -51,7 +54,7 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 		}
 	}
 	catch(e){
-		this.error = "Failed to parse Query " + e.toString();
+		this.error = "Failed to parse Query " + e.toString() + " " + text;
 		console.error(this.error);
 		return false;
 	}
@@ -73,7 +76,7 @@ TerminusCodeSnippet.prototype.get = function(){
 	return this.readInput();
 }
 
-TerminusCodeSnippet.prototype.getAsDOM = function(){
+TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     var scont = document.createElement('div');
     // query
     var snpc = document.createElement('div');
@@ -86,7 +89,7 @@ TerminusCodeSnippet.prototype.getAsDOM = function(){
     	snpc.appendChild(this.getFormatButtons());
     }
     else {
-    	snpc.appendChild(this.getViewTypeButtons());
+    	if(with_buttons) snpc.appendChild(this.getViewTypeButtons());
     }
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
@@ -106,28 +109,56 @@ TerminusCodeSnippet.prototype.getAsDOM = function(){
     return scont;
 }
 
+TerminusCodeSnippet.prototype.changeRuleView = function(nview){
+	this.snippet.value = "view = WOQL."+ nview + "()";
+	this.readInput();
+	this.submit(this.qObj);
+}
+
+
+TerminusCodeSnippet.prototype.getIconsDOM = function(){
+    var bsp = document.createElement('span');
+    bsp.setAttribute('class', 'terminus-snippet-icons');
+    for(var i = 0; i<this.view_types.length; i++){
+		var isp = document.createElement('span');
+		var icon = document.createElement("i");
+		icon.title = this.view_types[i].label;
+		icon.setAttribute("class", this.view_types[i].icon);
+		isp.appendChild(icon);
+		isp.name = this.view_types[i].id;
+		var self = this;
+		isp.addEventListener('click', function(){
+			if(!(self.view && self.view.type == this.name)){
+				self.changeRuleView(this.name);
+			}
+		});
+		isp.addEventListener('mouseover', function(){
+			if(!(self.view && self.view.type == this.name)){
+				this.style.cursor = "pointer";
+			}
+		});
+		bsp.appendChild(isp);
+    }
+    return bsp;
+}
 
 TerminusCodeSnippet.prototype.getViewTypeButtons = function(){
     var bsp = document.createElement('span');
     bsp.setAttribute('class', 'terminus-snippet-panel');
-    //if(this.width) bsp.setAttribute("style", "width: "+ this.width +"px;");
-    for(f in this.view_types){
+    /*for(var i = 0; i<this.view_types.length; i++){
         var btn = document.createElement('button');
-        btn.setAttribute('value', f);
+        btn.setAttribute('value', this.view_types[i].id);
         btn.setAttribute('class', 'terminus-snippet-button');
-        btn.appendChild(document.createTextNode(this.view_types[f]));
+		btn.appendChild(document.createTextNode(this.view_types[i].label));
+		var icon = document.createElement("i");
+		icon.setAttribute("class", this.view_types[i].icon);
+		btn.appendChild(icon);
         var self = this;
         btn.addEventListener('click', function(){
-        	if(self.readInput()){
-        		self.view = this.value;
-        		self.refreshContents();
-        	}
-        	else {
-        		alert(self.error);
-        	}
+        	self.changeRuleView(this.value);
         })
         bsp.appendChild(btn);
-    }
+    }*/
     return bsp;
 }
 
@@ -155,15 +186,24 @@ TerminusCodeSnippet.prototype.getFormatButtons = function(){
     return bsp;
 }
 
-
 TerminusCodeSnippet.prototype.getSubmitButton = function(){
     var actbtn = document.createElement('button');
     actbtn.setAttribute('class', 'terminus-btn');
-    actbtn.setAttribute('type', 'submit');
-    actbtn.appendChild(document.createTextNode('Submit Query'));
+	actbtn.setAttribute('type', 'submit');
+	var txt = "Submit";
+	if(this.language == "WOQL"){
+		txt = "Submit Query";
+	}
+	else if(this.language == "rule") {
+		txt = "Update View";
+	}
+	else if(this.language == "code"){
+		txt = "Run Script";
+	}
+    actbtn.appendChild(document.createTextNode(txt));
     actbtn.addEventListener('click', () => {
-    	this.readInput();
-    	this.submit(this.qObj);
+		this.readInput();
+		this.submit(this.qObj);
     });
     return actbtn;
 }

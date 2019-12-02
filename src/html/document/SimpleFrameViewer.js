@@ -9,35 +9,38 @@ SimpleFrameViewer.prototype.getScope = function(frame){
 	if(frame.isData()) return "data";
 }
 
-SimpleFrameViewer.prototype.getDatatypeViewer = function(frame){
-	if(this.terminus){
-		var dv = frame.display_options.dataviewer;
-		if(!dv){
-			if(frame.isChoice()) var t = "oneOf";
-			else if(frame.isDocument()) var t = "document";
-			else t = frame.getType();
-			var r = this.terminus.datatypes.getRenderer(t);
-			dv = r.name;
-		}
-		if(frame.display_options.args){
-			var args = frame.display_options.args ;
+SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
+	var dv = frame.display_options.dataviewer;
+	if(!dv){
+		if(frame.isChoice()) var t = "oneOf";
+		else if(frame.isDocument()) var t = "document";
+		else t = frame.getType();
+		if(mode && mode == "edit"){
+			var r = this.terminus.datatypes.getEditor(t);
 		}
 		else {
-			if(r && r.args) args = r.args;
-			else args = false;
+			var r = this.terminus.datatypes.getRenderer(t);
 		}
-		return this.terminus.datatypes.createRenderer(dv, args);
+		dv = r.name;
 	}
+	if(frame.display_options.args){
+		var args = frame.display_options.args ;
+	}
+	else {
+		if(r && r.args) args = r.args;
+		else args = false;
+	}
+	return this.terminus.datatypes.createRenderer(dv, args);
 }
 
 SimpleFrameViewer.prototype.render = function(frame){
 	var scope = this.getScope(frame);
 	if(frame.display_options.header_features){
-		var hfeatures = this.getFeaturesDOM(frame.display_options.header_features, frame.display_options.feature_renderers, scope, frame)
+		var hfeatures = this.getFeaturesDOM(frame.display_options.header_features, frame.display_options.feature_renderers, scope, frame, frame.display_options.mode)
 	}
 	else var hfeatures = false;
 	if(frame.display_options.features){
-		var features = this.getFeaturesDOM(frame.display_options.features, frame.display_options.feature_renderers, scope, frame);
+		var features = this.getFeaturesDOM(frame.display_options.features, frame.display_options.feature_renderers, scope, frame, frame.display_options.mode);
 	}
 	else var features = false;
 	var orient = (scope == "object" || scope == "property") ? "page" : "line";
@@ -50,7 +53,7 @@ SimpleFrameViewer.prototype.render = function(frame){
 	return this.framedom;
 }	
 
-SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, frame){
+SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, frame, mode){
 	var features = document.createElement("span");
 	features.setAttribute("class", featuresToCSS(flist));
 	for(var i = 0; i<flist.length; i++){
@@ -64,7 +67,7 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, f
 			}				
 			else {
 				if(flist[i] == "value" && scope == "data"){
-					var dv = this.getDatatypeViewer(frame);
+					var dv = this.getDatatypeViewer(frame, mode);
 					if(dv) {
 						var dom = dv.renderFrame(frame, this);
 					}
@@ -87,7 +90,6 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, f
 				else {
 					var dom = HTMLFrameHelper.getFeatureDOM(flist[i], scope, frame);
 					if(dom)	features.appendChild(dom);
-					else alert("No dom");
 				}
 			}
 		}

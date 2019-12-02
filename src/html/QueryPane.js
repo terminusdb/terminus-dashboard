@@ -1,85 +1,169 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
-const WOQLRule = require("../viewer/WOQLRule");
+const ResultPane = require("./ResultPane");
 const UTILS = require('../Utils');
+const HTMLFrameHelper = require('./HTMLFrameHelper');
 
 function QueryPane(client, query, result){
 	this.client = client;
 	this.query = query;
 	this.result = result;	
-    this.input = new TerminusCodeSnippet("woql", "edit");
-    this.views = [];
-    if(this.query){
-    	this.input.setQuery(this.query);
-    }
-    this.container = document.createElement('div');
+	this.views = [];
+	this.container = document.createElement('span');
     this.container.setAttribute('class', 'terminus-query-pane-cont');
 }
 
-QueryPane.prototype.addView = function(config){
-	this.views.push(config);
+QueryPane.prototype.options = function(opts){
+	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : true);
+	this.editQuery = (opts && typeof opts.editQuery != "undefined" ? opts.editQuery : true);
+	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
+	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
+	this.defaultResultView = { showConfig: "true", editConfig: "true" }; 
+    return this;
 }
 
-QueryPane.prototype.getAsDOM = function(ui){
-	this.container.appendChild(UTILS.getHeaderDom('Enter New Query'));
-	this.container.appendChild(this.input.getAsDOM()); 
-	var form = (this.input.format == "js" ? "javascript" : "json");
-	UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
-	if(this.views.length){
-		for(var i = 0; i<this.views.length; i++){
-			var vdom = this.getViewDOM(this.views[i], ui);
-			if(vdom){
-				this.container.appendChild(vdom); 
-			}				
-		}
+QueryPane.prototype.getAsDOM = function(){
+	if(this.intro){
+		this.container.appendChild(UTILS.getHeaderDom(this.intro));
 	}
-	else {
-		var nview = TerminusClient.WOQL.table();
-		var vdom = this.getViewDOM(nview, ui);
+	if(this.showQuery){	
+		var configspan = document.createElement("span");
+		configspan.setAttribute("class", "pane-config-icons");
+		this.container.appendChild(configspan);
+		var mode = (this.editQuery ? "edit" : "view");
+		this.input = this.createInput(mode);
+		var ipdom = this.input.getAsDOM(true);
+		var ispan = document.createElement("span");
+		ispan.setAttribute("class", "query-pane-config");
+		var ic = document.createElement("i");
+		configspan.appendChild(ic);
+		var self = this;
+		function showQueryConfig(){
+			configspan.title="Click to Hide Query";
+			ic.setAttribute("class", "fas fa fa-times-circle");
+			if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);            
+			else self.container.appendChild(ipdom);
+		}
+		function hideQueryConfig(){
+			configspan.title="Click to View Query";
+            ic.setAttribute("class", "fas fa fa-atom");
+			self.container.removeChild(ipdom);            
+		}
+		configspan.addEventListener("click", () => {
+			if(this.showingQuery) hideQueryConfig();
+			else showQueryConfig();
+			this.showingQuery = !this.showingQuery;
+		});
+		showQueryConfig();
+		if(this.showQuery == "icon") hideQueryConfig();
+    }
+	this.resultDOM = document.createElement("span");
+	this.resultDOM.setAttribute("class", "terminus-query-results"); 
+	//var form = (this.input.format == "js" ? "javascript" : "json");
+	//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
+	if(this.views.length == 0){
+		this.addView(TerminusClient.WOQL.table(), this.defaultResultView);
+	}
+	//this is where we want to put in the view headers in the case of the query page
+	for(var i = 0; i<this.views.length; i++){
+		var vdom = this.views[i].getAsDOM();
 		if(vdom){
-			this.container.appendChild(vdom); 
-		}
-		this.views.push(nview);
+			this.resultDOM.appendChild(vdom);
+		}				
 	}
+	this.container.appendChild(this.resultDOM);
+	if(this.addViews) this.container.appendChild(this.getAddViewControl());
 	return this.container;
 }
 
-QueryPane.prototype.options = function(options){
-	this.options = options;
-	return this;
-}
-
-/*
-descr: Returns Add View button
-params: query object, query snippet
-*/
-QueryPane.prototype.getViewDOM = function(config, ui){
-	let editor = new TerminusCodeSnippet("rule", "edit");
+QueryPane.prototype.createInput = function(mode){
+    let input = new TerminusCodeSnippet("woql", mode);
+    if(this.query){
+    	input.setQuery(this.query);
+	}
 	var self = this;
-	editor.submit = function(qObj){
-		self.submitQuery(qObj, ui);
-	}
-	if(editor.setQuery(config)){
-		config.editor = editor;
-	}
-	else {
-		//if(config.)
-	}
-	if(this.result){
-		
-	}
-	return editor.getAsDOM();
+	input.submit = function(qObj){
+		self.submitQuery(qObj);
+	};
+	return input;
 }
 
-QueryPane.prototype.submitQuery = function(qObj, ui){
-    if(ui) ui.clearMessages();
-    this.query = qObj;
-    qObj.execute(self.client).then((results) => {
-        self.processResults(qObj, WOQL, self.thv, results, qSnippet);
-        self.addView(WOQL, qSnippet);
-        self.generateResultsFromRules(WOQL, qSnippet);
-    })
+QueryPane.prototype.updateQuery = function(qObj){
+	this.query = qObj;
+	if(this.input) this.input.setQuery(this.query);
 }
+
+QueryPane.prototype.updateResult = function(result){
+	this.result = result;
+	this.updateQuery(result.query);
+	this.refreshViews();
+}
+
+QueryPane.prototype.addView = function(config, options){
+	var nrp = new ResultPane(this.client, this, config).options(options);
+	if(this.result){
+		nrp.setResult(this.result);
+	}
+	this.views.push(nrp);
+	return nrp;
+}
+
+QueryPane.prototype.empty = function(){
+	return (typeof this.query == "undefined");
+}
+
+QueryPane.prototype.clearMessages = function(){}
+QueryPane.prototype.showError = function(){}
+
+QueryPane.prototype.submitQuery = function(qObj){
+	this.clearMessages();
+    this.query = qObj;
+    qObj.execute(this.client).then((results) => {
+		var r = new TerminusClient.WOQLResult(results, qObj);
+		this.result = r;
+		this.refreshViews();
+	})
+}
+
+QueryPane.prototype.refreshViews = function(){
+	for(var i = 0; i<this.views.length; i++){
+		this.views[i].updateResult(this.result);						
+	}
+}
+
+
+QueryPane.prototype.getAddViewControl = function(){ 
+	var vd = document.createElement('div');
+	vd.setAttribute('class', 'terminus-add-view-selector');
+	var self = this;
+	var WOQL = TerminusClient.WOQL;
+	var newView = function(val){
+		self.selector.value = "";
+		var c= eval('WOQL.' + val + "()");
+		var nv = self.addView(c, self.defaultResultView);
+		if(self.result){
+			nv.setResult(self.result);
+		}
+		var vdom = nv.getAsDOM();
+		if(vdom){
+			self.resultDOM.appendChild(vdom);
+		}				
+	}
+	var opts = [
+		{ value: "", label: "Add another view of results"},
+		{ value: "table", label: "Add Table View"},
+		{ value: "stream", label: "Add Stream View"},
+		{ value: "graph", label: "Add Graph View"},
+		{ value: "chooser", label: "Add Drop-down View"},
+		{ value: "map", label: "Add Map View"}
+	];
+	var sel = HTMLFrameHelper.getSelectionControl("view", opts, false,newView);
+	this.selector = sel;
+	vd.appendChild(sel);
+	return vd;
+}
+
+
 
 
 /*
@@ -117,22 +201,7 @@ return rSnippet;
 */
 
 
-QueryPane.prototype.getAddViewControl = function(){ 
-	var vd = document.createElement('div');
-	vd.setAttribute('class', 'terminus-add-view-editor');
-	var cbtn = document.createElement('button');
-	vd.appendChild(cbtn);
-	cbtn.setAttribute('style', 'margin-top: 10px;');
-	cbtn.setAttribute('class', 'terminus-btn');
-	cbtn.appendChild(document.createTextNode('Add View'));
-	qSnippet.result.appendChild(vd);
-	var self = this;
-	cbtn.addEventListener('click', function(){
-	    let editor = self.showRuleEditor(woql, vd, qSnippet);
-	})
-	return vd;
-}
-
+/*
 
 QueryPane.prototype.getWOQLEditor = function(){
     var tcs = new TerminusCodeSnippet("woql", "edit");
@@ -189,7 +258,7 @@ QueryPane.prototype.showConfig = function(result, config, span, cdom){
 	if(ruleviewer) rv.setRuleViewer(ruleviewer);
 	this.result_viewers[label] = rv;
 	return this;
-} */
+} 
 
 QueryPane.prototype.addResultViewer = function(rule){
 	alert("rule " + JSON.stringify(rule));
@@ -243,6 +312,6 @@ ResultViewer.prototype.setRuleViewer = function(rv){
 	this.ruleviewer = rv;
 }
 
-
+*/
 
 module.exports = QueryPane;

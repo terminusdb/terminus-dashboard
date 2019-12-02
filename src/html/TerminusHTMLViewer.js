@@ -1,35 +1,36 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const WOQLRule = require("./viewer/WOQLRule");
-const WOQLTable = require("./viewer/WOQLTable");
-const WOQLChooser = require("./viewer/WOQLChooser");
+const WOQLRule = require("../viewer/WOQLRule");
+const WOQLTable = require("../viewer/WOQLTable");
+const WOQLChooser = require("../viewer/WOQLChooser");
 //const WOQLQueryViewer = require("./viewer/WOQLQueryView");
-const WOQLGraph = require("./viewer/WOQLGraph");
-const WOQLStream = require("./viewer/WOQLStream");
-const TerminusFrame = require("./viewer/TerminusFrame");
-const Datatypes = require("./html/Datatypes");
-const QueryPane = require("./html/QueryPane");
-const SimpleTable = require("./html/table/SimpleTable");
-const SimpleGraph = require("./html/graph/SimpleGraph");
-//const SimpleStream = require("./html/stream/SimpleStream");
+const WOQLGraph = require("../viewer/WOQLGraph");
+const WOQLStream = require("../viewer/WOQLStream");
+const TerminusFrame = require("../viewer/TerminusFrame");
+const Datatypes = require("./Datatypes");
+const SimpleTable = require("./table/SimpleTable");
+const SimpleGraph = require("./graph/SimpleGraph");
+const SimpleStream = require("./stream/SimpleStream");
 //const SimpleTextbox = require("./html/query/SimpleTextbox");
-const SimpleChooser = require("./html/chooser/SimpleChooser");
-const SimpleDocument = require("./html/document/SimpleDocument");
-const DocumentTable = require("./html/document/DocumentTable");
-const SimpleFrameViewer = require("./html/document/SimpleFrameViewer");
-const HTMLObjectViewer = require("./html/document/ObjectViewer");
-const HTMLPropertyViewer = require("./html/document/PropertyViewer");
-const HTMLDataViewer = require("./html/document/DataViewer");
-const TerminusCodeSnippet = require('./html/query/TerminusCodeSnippet');
-const UTILS = require('./Utils');
+const SimpleChooser = require("./chooser/SimpleChooser");
+const SimpleDocument = require("./document/SimpleDocument");
+const DocumentTable = require("./document/DocumentTable");
+const SimpleFrameViewer = require("./document/SimpleFrameViewer");
+const HTMLObjectViewer = require("./document/ObjectViewer");
+const HTMLPropertyViewer = require("./document/PropertyViewer");
+const HTMLDataViewer = require("./document/DataViewer");
+const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
+const UTILS = require('../Utils');
 
-/*
- * Simple wrapper functions for initialising
- * table, stream, graph, chooser, woql and documents
+/**
+ * Provides access to the two basic HTML views supported by the system: 
+ * QueryPane(, [rvs])
+ * DocumentPane(qeditor, [rvs])
+ * ScriptPane(seditor, sv)
  */
 
-function TerminusHTMLViewer(ui, client, config){
-	this.ui = ui;
-	this.client = ui.client;
+
+function TerminusHTMLViewer(client){
+	this.client = client;
 	this.config = config;
 }
 
@@ -93,7 +94,7 @@ TerminusHTMLViewer.prototype.showResult = function(result, config){
 	let renderers = {
 		table: new SimpleTable(),
 		graph: new SimpleGraph(),
-		//stream: new SimpleStream(),
+		stream: new SimpleStream(),
 		chooser: new SimpleChooser()
 	}
 	let viewer = config.create(this.client, renderers, Datatypes.initialiseDataRenderers);
@@ -317,6 +318,5 @@ TerminusHTMLViewer.prototype.loadRenderer = function(rendname, frame, args, term
 		return false;
 	}
 }
-
 
 module.exports = TerminusHTMLViewer;
