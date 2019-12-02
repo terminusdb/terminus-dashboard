@@ -58,7 +58,7 @@ DatatypeRenderers.prototype.getEditorForDataFrame = function(datatype){
 	}
 	//last added is default if no explicit default is set
 	if(vals){
-		return vals[Object.keys(vals)[vals.length-1]];
+		return vals[Object.keys(vals)[0]];
 	}
 	else {
 		if(this.universalEditor) return this.universalEditor;
@@ -105,17 +105,44 @@ DatatypeRenderers.prototype.getRenderer = function(type, value){
 	var r = {};
 	let v = this.getViewerForDataFrame(type);
 	if(v){
-		r.name = Object.keys(v)[0];
-		if(v[r.name].label){
-			r.label = v[r.name].label;
+		if(typeof v == "object"){
+			r.name = Object.keys(v)[0];
+			if(v[r.name].label){
+				r.label = v[r.name].label;
+			}
+			if(v[r.name].args){
+				r.args = v[r.name].args;
+			}
 		}
-		if(v[r.name].args){
-			r.args = v[r.name].args;
+		else {
+			r.name = v;
 		}
 		return r;
 	}
 	return false;
 }
+
+DatatypeRenderers.prototype.getEditor = function(type, value){
+	var r = {};
+	let v = this.getEditorForDataFrame(type);
+	if(v){
+		if(typeof v == "object"){
+			r.name = Object.keys(v)[0];
+			if(v[r.name].label){
+				r.label = v[r.name].label;
+			}
+			if(v[r.name].args){
+				r.args = v[r.name].args;
+			}
+		}
+		else {
+			r.name = v;
+		}
+		return r;
+	}
+	return false;
+}
+
 
 module.exports=DatatypeRenderers;
 
