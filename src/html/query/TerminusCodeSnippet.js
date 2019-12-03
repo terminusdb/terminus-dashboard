@@ -93,6 +93,7 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     }
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
+		console.log('serial', serial);
     	if(this.mode == "edit"){
     		this.snippet.value = serial;
     	}
@@ -239,7 +240,7 @@ TerminusCodeSnippet.prototype.refreshContents = function(){
 			if(this.format == 'js') var mode = 'javascript';
 			else var mode = 'application/ld+json';
 			UTILS.stylizeEditor(null,
-								this.snippet, 
+								this.snippet,
 								{width: this.width, height: this.height},
 								mode);
 		}
