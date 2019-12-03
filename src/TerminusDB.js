@@ -122,12 +122,38 @@ function TerminusDBViewer(ui){
 	this.pages = ["home"];
 }
 
+TerminusDBViewer.prototype.getAsDOM = function(){
+	TerminusClient.FrameHelper.removeChildren(this.container);
+	var limit = 20;
+	this.getDeleteOnHomePage(this.container);
+	var WOQL = TerminusClient.WOQL;
+	var dburl = this.ui.client.connectionConfig.dbURL();
+	var q = WOQL.from(dburl).limit(limit).documentMetadata();
+	q.execute(this.ui.client).then( (result) => {
+		var docs = new TerminusClient.WOQLResult(result, q);
+		var q2 = WOQL.from(dburl).concreteDocumentClasses();
+		q2.execute(this.ui.client).then( (result2) => {
+			var docClasses = new TerminusClient.WOQLResult(result2, q2);
+			var bdom = this.getBodyAsDOM(docs, docClasses);
+			if(bdom) this.container.appendChild(bdom);
+		});
+	}).catch((e) => {
+		this.ui.showError(e);
+	});
+	return this.container;
+}
+
 TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
-	//TerminusClient.FrameHelper.removeChildren(this.container);
 	var WOQL = TerminusClient.WOQL;
 	var self = this;
-	var body = document.createElement("div");
-	body.setAttribute("class", "terminus-home-body terminus-document-view");
+	if(this.body){
+		TerminusClient.FrameHelper.removeChildren(this.body);
+		var body = this.body;
+	}
+	else {
+		var body = document.createElement("div");
+		body.setAttribute("class", "terminus-home-body terminus-document-view");
+	}
 	var page_actions = document.createElement("div");
 	page_actions.setAttribute("class", "terminus-home-actions");
 	body.appendChild(page_actions);
@@ -186,7 +212,8 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 			body.appendChild(this.showHappyBox("happy", "query"));
 		}
 	}
-	//return body;
+	this.body = body;
+	return body;
 }
 
 
@@ -216,25 +243,6 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
     d.appendChild(del);
 }
 
-TerminusDBViewer.prototype.getAsDOM = function(){
-	var limit = 5;
-	this.getDeleteOnHomePage(this.container);
-	var WOQL = TerminusClient.WOQL;
-	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = WOQL.from(dburl).limit(limit).documentMetadata();
-	q.execute(this.ui.client).then((result) => {
-		var docs = new TerminusClient.WOQLResult(result, q);
-		var q2 = WOQL.from(dburl).concreteDocumentClasses();
-		q2.execute(this.ui.client).then( (result2) => {
-			var docClasses = new TerminusClient.WOQLResult(result2, q2);
-			var bdom = this.getBodyAsDOM(docs, docClasses);
-			//this.container.appendChild(bdom);
-		});
-	}).catch((e) => {
-		this.ui.showError(e);
-	});
-	return this.container;
-}
 
 TerminusDBViewer.prototype.styleCreateDocumentChooser = function(){
 	var select = document.getElementsByClassName('woql-chooser');
