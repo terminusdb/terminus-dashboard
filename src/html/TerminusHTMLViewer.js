@@ -22,7 +22,7 @@ const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const UTILS = require('../Utils');
 
 /**
- * Provides access to the two basic HTML views supported by the system: 
+ * Provides access to the two basic HTML views supported by the system:
  * QueryPane(, [rvs])
  * DocumentPane(qeditor, [rvs])
  * ScriptPane(seditor, sv)
@@ -31,7 +31,6 @@ const UTILS = require('../Utils');
 
 function TerminusHTMLViewer(client){
 	this.client = client;
-	//this.config = config;
 }
 
 TerminusHTMLViewer.prototype.setRenderers = function(config){
