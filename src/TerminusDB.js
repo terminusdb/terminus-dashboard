@@ -127,6 +127,7 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 	this.getDeleteOnHomePage(this.container);
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
+	
 	var q = WOQL.from(dburl).limit(limit).documentMetadata();
 	q.execute(this.ui.client).then( (result) => {
 		var docs = new TerminusClient.WOQLResult(result, q);

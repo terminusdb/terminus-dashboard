@@ -31,7 +31,7 @@ const UTILS = require('../Utils');
 
 function TerminusHTMLViewer(client){
 	this.client = client;
-	this.config = config;
+	//this.config = config;
 }
 
 TerminusHTMLViewer.prototype.setRenderers = function(config){
