@@ -7,10 +7,10 @@ const SimpleStream = require("./stream/SimpleStream");
 const SimpleChooser = require("./chooser/SimpleChooser");
 
 /**
- * Result Pane is defined by a WOQL configuration object 
- * Visually it consists of a single rule editor (showing the current state of the configuration object) which may be collapsed behind a configuration link 
- * and a single result view which shows the result of the rule when applied to the current results.  
- * 
+ * Result Pane is defined by a WOQL configuration object
+ * Visually it consists of a single rule editor (showing the current state of the configuration object) which may be collapsed behind a configuration link
+ * and a single result view which shows the result of the rule when applied to the current results.
+ *
  */
 function ResultPane(client, querypane, config){
     this.client = client;
@@ -54,7 +54,7 @@ ResultPane.prototype.getAsDOM = function(){
 	}
 	this.container.appendChild(this.resultDOM);
 	if(this.showConfig){
-        this.showingQuery = (this.showConfig != "icon");	
+        this.showingQuery = (this.showConfig != "icon");
 		var mode = (this.editConfig ? "edit" : "view");
 		this.input = this.createInput(mode);
 		var ipdom = this.input.getAsDOM();
@@ -70,13 +70,13 @@ ResultPane.prototype.getAsDOM = function(){
 		function showQueryConfig(){
 			configspan.title="Click to Hide View Configuration";
 			ic.setAttribute("class", "fas fa fa-times-circle");
-            if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);            
+            if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);
             else self.container.appendChild(ipdom);
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Configuration";
             ic.setAttribute("class", self.getViewConfigIconClass());
-			self.container.removeChild(ipdom);            
+			self.container.removeChild(ipdom);
 		}
 		ispan.addEventListener("click", () => {
 			if(this.showingQuery) hideQueryConfig();
@@ -90,7 +90,7 @@ ResultPane.prototype.getAsDOM = function(){
         cvicons = this.getViewTypeIconDOM(ipdom);
         if(cvicons) configspan.prepend(cvicons);
     }
-	return this.container;	
+	return this.container;
 }
 
 ResultPane.prototype.getViewConfigIconClass = function(){
@@ -121,15 +121,15 @@ ResultPane.prototype.changeViewerType = function(viewer, index){
     this.currentViewer = index;
     this.config = viewer;
     this.input.setQuery(viewer);
-    this.input.submit(this.input.qObj);    
+    this.input.submit(this.input.qObj);
 }
 
 
 ResultPane.prototype.getDefaultViewerIcon = function(viewer){
     var view_types = {
-        table: {label: "Table", icon: "fa fa-table"},  
-		graph: {label: "Graph", icon: "fas fa-project-diagram"}, 
-		chooser: {label: "Drop-down List", icon: "fas fa-caret-down"}, 
+        table: {label: "Table", icon: "fa fa-table"},
+		graph: {label: "Graph", icon: "fas fa-project-diagram"},
+		chooser: {label: "Drop-down List", icon: "fas fa-caret-down"},
 		stream: {label: "Result Stream", icon: "fa fa-list"}
     }
     return view_types[viewer.type];
@@ -139,8 +139,8 @@ ResultPane.prototype.getDefaultViewerIcon = function(viewer){
 ResultPane.prototype.getIconForViewer = function(viewer, index, container){
     var isp = document.createElement('span');
     if(this.currentViewer == index){
-        isp.setAttribute("class", "result-icon-selected selected");
-        isp.setAttribute("style", "border: 1px solid blue");        
+        isp.setAttribute("class", "result-icon-selected selected terminus-result-selected");
+        //isp.setAttribute("style", "position:absolute;");
     }
     else {
         isp.setAttribute("class", "result-icon-selectable selectable");
@@ -153,6 +153,7 @@ ResultPane.prototype.getIconForViewer = function(viewer, index, container){
     icon.title = (viewer.label) ? viewer.label : def.label;
     var ic = (viewer.icon ? viewer.icon : def.icon);
     icon.setAttribute("class", ic);
+    icon.classList.add('terminus-result-view-icon');
     isp.appendChild(icon);
     isp.addEventListener("click", () => {
         this.changeViewerType(viewer, index);

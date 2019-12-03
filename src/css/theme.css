@@ -137,7 +137,9 @@ h3.terminus-query-head{
 	margin-bottom: 10px;
 	float: right;
 }
-
+div.terminus-document-view{
+	margin-top: 50px;
+}
 .terminus-lat-long,
 .latlong {
 	display: block !important;
@@ -402,7 +404,6 @@ span.terminus-snippet-panel{
     display: inline-flex;
 }
 button.terminus-snippet-button{
-	width: 100%;
 	padding: 10px;
 }
 button.terminus-new-query-btn{
@@ -437,6 +438,10 @@ icon.terminus-cancel-rule-editor{
 	float: right;
     margin: 20px 10px 10px 10px;
 }
+.terminus-icon-padding{
+	padding-left: 5px;
+}
+
 /* terminus buttons */
 .terminus-send-api-btn{
 	margin-left:935px;
@@ -461,11 +466,6 @@ icon.terminus-cancel-rule-editor{
     -ms-user-select: none;
     user-select: none;
 	border-radius: 0.2rem !important;
-}
-
-button.terminus-btn-float-right{
-	float: right;
-	margin: 50px 20px 20px 0px;
 }
 div.terminus-form-margin-top{
 	min-height: 30px;
@@ -924,7 +924,7 @@ div.terminus-margin-top, table.terminus-margin-top{
 	margin: 20px;
 }
 
-.terminus-db-info-box .terminus-icon {
+.terminus-db-info-box, .terminus-icon {
 	margin-right: 10px;
 	padding-right:10px;
 	font-size: larger;
@@ -993,17 +993,22 @@ span.terminus-violation-property-label{
 div.terminus-violation{
 	border-bottom: 0.5px solid #856404;
 }
+.terminus-result-selected{
+	border: 1px solid blue;
+}
 
+.terminus-result-view-icon{
+	margin: 10px;
+	font-size: 25px;
+}
 .terminus-doc-control-label{
 	float: right;
-    width: 160px !important;
+    width: 400px !important;
     padding-top: 12px;
 	font-size: 18px;
     text-align: left;
 }
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+
 /* frameviewer styling */
 .terminus-zebra-frame:nth-child(odd) {
 	background-color: #EBEDEF;
@@ -1628,8 +1633,16 @@ div.terminus-margin-left-auto {
 	background-color: #f8d7da;
 	border-color: #f5c6cb;
 }
-.terminus-save-btn{
+.terminus-save-btn, .terminus-create-panel, .terminus-back-to-home{
 	float: right;
+}
+.terminus-backtohome-span:link {
+  text-decoration: none;
+}
+
+.terminus-backtohome-span:hover {
+  text-decoration: underline;
+  color: blue;
 }
 .terminus-content-layout{
 	background-color: #f8f8ff;
@@ -1742,7 +1755,7 @@ span.terminus-property-header-info{
 	/*text-align: right;*/
 	/*float: left;*/
 }
-span.terminus-span-float-right button.terminus-btn-float-right{
+span.terminus-span-float-right, button.terminus-btn-float-right{
 	float: right;
 }
 span.property-value-view {

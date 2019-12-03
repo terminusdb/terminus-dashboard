@@ -23,27 +23,60 @@ TerminusSchemaViewer.prototype.getOWLView = function(){
 	this.loadSchema();
 }
 
-TerminusSchemaViewer.prototype.appendViews = function(config){
-	this.qRes.first();
-	var n = this.thv.showResult(this.qRes, config, false);
+TerminusSchemaViewer.prototype.appendRuleViews = function(){
+	this.view.appendChild(UTILS.getHeaderDom('Classes'));
+	this.appendClassViews(this.woql.table());
+	this.appendClassViews(this.woql.graph());
+	this.view.appendChild(UTILS.getHeaderDom('Properties'));
+	this.appendPropertyViews(this.woql.table());
+	this.appendPropertyViews(this.woql.graph());
+}
+
+TerminusSchemaViewer.prototype.appendPropertyViews = function(config){
+	this.qprops.first();
+	var n = this.thv.showResult(this.qprops, config, false);
+	this.view.appendChild(n);
+}
+
+TerminusSchemaViewer.prototype.appendClassViews = function(config){
+	this.qclasses.first();
+	var n = this.thv.showResult(this.qclasses, config, false);
 	this.view.appendChild(n);
 }
 
 TerminusSchemaViewer.prototype.getAllProperties = function(){
-
-}
-
-TerminusSchemaViewer.prototype.getAllSchema = function(){
 	let query = this.woql.from(this.ui.client.connectionConfig.dbURL())
 						 .limit(25)
 						 .start(0)
-						 .elementMetadata();
+						 .propertyMetadata();
     var self = this;
     query.execute(this.ui.client).then((results) => {
 		let qres = new TerminusClient.WOQLResult(results, query);
-		self.qRes = qres;
-		self.appendViews(this.woql.table()); // get default viewers
-		self.appendViews(this.woql.graph());
+		self.qprops = qres;
+		this.view.appendChild(UTILS.getHeaderDom('Properties'));
+		self.appendPropertyViews(this.woql.table());
+		self.appendPropertyViews(this.woql.graph());
+	})
+}
+
+TerminusSchemaViewer.prototype.getAllClasses = function(){
+	let query = this.woql.from(this.ui.client.connectionConfig.dbURL())
+						 .limit(25)
+						 .start(0)
+						 .classMetadata();
+    var self = this;
+    query.execute(this.ui.client).then((results) => {
+		let qres = new TerminusClient.WOQLResult(results, query);
+		self.qclasses = qres;
+		self.view.appendChild(UTILS.getHeaderDom('Classes'));
+		self.appendClassViews(this.woql.table());
+
+		var g = this.woql.graph();
+		g.source("v:Subject");
+		var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
+		g.edge("v:Subject", "v:Object").icon(licon2);
+
+		self.appendClassViews(g);
 	})
 }
 
@@ -52,8 +85,7 @@ TerminusSchemaViewer.prototype.defineViewAction = function(a, view){
 	UTILS.setSelectedSubMenu(a);
 	switch(view){
 		case 'table':
-			this.appendViews(this.woql.table());
-			this.appendViews(this.woql.graph());
+			this.appendRuleViews();
 		break;
 		case 'owl':
 			this.getOWLView();
@@ -87,7 +119,7 @@ TerminusSchemaViewer.prototype.getSchemaViews = function(){
 	ul.appendChild(tview);
 	ul.appendChild(this.getTabs('owl'));
 	this.controldom.appendChild(ul);
-	this.getAllSchema();
+	this.getAllClasses();
 	this.getAllProperties();
 }
 
