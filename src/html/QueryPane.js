@@ -37,7 +37,7 @@ QueryPane.prototype.getAsDOM = function(){
 		var ispan = document.createElement("span");
 		ispan.setAttribute("class", "query-pane-config");
 		var ic = document.createElement("i");
-		ic.setAttribute('style', 'margin:10px;')
+		//ic.setAttribute('style', 'margin:10px;')
 		configspan.appendChild(ic);
 		var self = this;
 		function showQueryConfig(){
@@ -56,7 +56,7 @@ QueryPane.prototype.getAsDOM = function(){
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Query";
-            ic.setAttribute("class", "fas fa fa-atom");
+            ic.setAttribute("class", "fas fa fa-search terminus-query-view-icon");
 			self.container.removeChild(ipdom);
 		}
 		configspan.addEventListener("click", () => {

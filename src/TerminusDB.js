@@ -143,7 +143,6 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 												{showConfig: false, editConfig: "true"},
 												 ch );
 		if(docs.count() > 1) span.appendChild(dchooser);
-		this.styleCreateDocumentChooser();
 	}
 	else {
 		this.ui.showError("No document classes found in schema - you must define a document, entity or relationship class before you can create documents");
@@ -156,21 +155,21 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		var g = WOQL.graph();
 		var options =  { showConfig: "icon", editConfig: "true", viewers: [g] };
 		dp.addView(table, options);
+		body.appendChild(UTILS.getHeaderDom('Displaying Up to 20 Documents'));
 		body.appendChild(dp.getAsDOM());
 		var WOQL = TerminusClient.WOQL;
 		var dburl = this.ui.client.connectionConfig.dbURL();
 		var q = WOQL.from(dburl).limit(1000).documentMetadata();
 		q.execute(this.ui.client).then( (result) => {
 			var g = new TerminusClient.WOQLResult(result, q);
-			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
+			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: true});
 			var table = WOQL.table();
 			var g2 = WOQL.graph();
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
-			this.container.appendChild(UTILS.getHeaderDom('Document View with limit 1000'));
+			body.appendChild(UTILS.getHeaderDom('All available Documents'));
 			ddp.addView(g2, options);
 			body.appendChild(ddp.getAsDOM());
 			this.container.appendChild(body);
-
 		}).catch((e) => {
 			this.ui.showError(e);
 		});
@@ -228,7 +227,6 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 		var q2 = WOQL.from(dburl).concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			var docClasses = new TerminusClient.WOQLResult(result2, q2);
-			this.container.appendChild(UTILS.getHeaderDom('Document View with limit 20'));
 			var bdom = this.getBodyAsDOM(docs, docClasses);
 			//this.container.appendChild(bdom);
 		});
