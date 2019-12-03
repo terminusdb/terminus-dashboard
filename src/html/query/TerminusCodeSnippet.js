@@ -1,6 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const UTILS= require('../../Utils');
-
+const UTILS = require('../../Utils');
 /*
 qObj: WOQL object
 width: width of snippet in px
@@ -19,6 +18,7 @@ function TerminusCodeSnippet(language, mode, format, width, height, placeholder)
     else {
     	this.snippet = document.createElement('textarea');
     	this.snippet.setAttribute("spellcheck", "false");
+		this.snippet.setAttribute("class", "terminus-code-snippet");
     }
 }
 
@@ -169,11 +169,13 @@ TerminusCodeSnippet.prototype.getFormatButtons = function(){
     for(f in this.formats){
         var btn = document.createElement('button');
         btn.setAttribute('value', f);
-        btn.setAttribute('class', 'terminus-snippet-button terminus-btn');
+        btn.setAttribute('class', 'terminus-snippet-button');
+		if(f == 'js') btn.classList.add('terminus-snippet-format-selected');
         btn.appendChild(document.createTextNode(this.formats[f]));
         var self = this;
         btn.addEventListener('click', function(){
         	if(self.readInput()){
+				UTILS.selectWithinParent(this, 'terminus-snippet-format-selected');
         		self.format = this.value;
         		self.refreshContents();
         	}
@@ -212,6 +214,19 @@ TerminusCodeSnippet.prototype.submit = function(){
 	alert("Submitted " + JSON.stringify(this.qObj));
 }
 
+TerminusCodeSnippet.prototype.removeCodeMirror = function(){
+	var cm = this.snippet.nextSibling;
+	if(cm.classList.contains('CodeMirror')) // remove code mirror
+		TerminusClient.FrameHelper.removeElement(cm);
+}
+
+TerminusCodeSnippet.prototype.stylizeSnippet = function(){
+	var dimensions = {};
+	dimensions.width = this.width;
+	dimensions.height = this.height;
+	this.removeCodeMirror();
+	UTILS.stylizeEditor(null, this.snippet, dimensions, 'javascript'); // default view is js
+}
 
 TerminusCodeSnippet.prototype.refreshContents = function(){
     TerminusClient.FrameHelper.removeChildren(this.snippet);
@@ -219,6 +234,15 @@ TerminusCodeSnippet.prototype.refreshContents = function(){
 	var serial = this.serialise(this.qObj, this.format);
 	if(this.mode == "edit"){
 		this.snippet.value = serial;
+		if(this.snippet.nextSibling){
+			this.removeCodeMirror();
+			if(this.format == 'js') var mode = 'javascript';
+			else var mode = 'application/ld+json';
+			UTILS.stylizeEditor(null,
+								this.snippet, 
+								{width: this.width, height: this.height},
+								mode);
+		}
 	}
 	else {
 		this.snippet.appendChild(document.createTextNode(serial));

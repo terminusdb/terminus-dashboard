@@ -285,9 +285,14 @@ function deleteStylizedEditor(ui, qip){
    mode: format to be displayed in
 */
 function stylizeEditor(ui, txt, view, mode){
-    var cmConfig = ui.pluginAvailable("codemirror");
-    if(!(cmConfig)) return;
-	var cm = new Codemirror(txt, mode, cmConfig);
+    if(ui){
+        var cmConfig = ui.pluginAvailable("codemirror");
+        if(!(cmConfig)) return;
+        var cm = new Codemirror(txt, mode, cmConfig);
+    }
+	else{
+        var cm = new Codemirror(txt, mode, {});
+    }
 	var ar = cm.colorizeTextArea(view);
 	cm.updateTextArea(ar);
 }
@@ -319,6 +324,15 @@ function removeSelectedNavClass(name){
 function setSelectedSubMenu(a){
     removeSelectedNavClass("terminus-submenu-selected");
     a.classList.add("terminus-submenu-selected");
+}
+
+function selectWithinParent(el, className){
+    var par = el.parentElement;
+    for(var i=0; i<par.childNodes.length; i++){
+        if(par.childNodes[i].classList.contains(className))
+            par.childNodes[i].classList.remove(className);
+    }
+    el.classList.add(className);
 }
 
 // toggles between contents
@@ -495,4 +509,5 @@ module.exports={tolggleContent,
                getCurrentWoqlQueryObject,
                getButton,
                trimValue,
+               selectWithinParent,
                getqObjFromInput}

@@ -151,7 +151,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	if(docs.count() > 0){
 		var show_doc_action = this.getShowDocumentControl();
 		span.prepend(show_doc_action);
-		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: false});
+		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: true});
 		var table = WOQL.table();
 		var g = WOQL.graph();
 		var options =  { showConfig: "icon", editConfig: "true", viewers: [g] };
@@ -166,6 +166,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 			var table = WOQL.table();
 			var g2 = WOQL.graph();
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
+			this.container.appendChild(UTILS.getHeaderDom('Document View with limit 1000'));
 			ddp.addView(g2, options);
 			body.appendChild(ddp.getAsDOM());
 			this.container.appendChild(body);
@@ -217,7 +218,7 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 }
 
 TerminusDBViewer.prototype.getAsDOM = function(){
-	var limit = 20;
+	var limit = 5;
 	this.getDeleteOnHomePage(this.container);
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
@@ -227,6 +228,7 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 		var q2 = WOQL.from(dburl).concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			var docClasses = new TerminusClient.WOQLResult(result2, q2);
+			this.container.appendChild(UTILS.getHeaderDom('Document View with limit 20'));
 			var bdom = this.getBodyAsDOM(docs, docClasses);
 			//this.container.appendChild(bdom);
 		});
@@ -239,7 +241,7 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 TerminusDBViewer.prototype.styleCreateDocumentChooser = function(){
 	var select = document.getElementsByClassName('woql-chooser');
 	for(i=0; i<select.length; i++){
-		if(select[i].type == 'select-one'){
+		if(select[i].type == 'select'){
 			select[i].classList.add('terminus-form-doc-value');
 			var self = this;
 			select[i].addEventListener('change', function(){
@@ -447,9 +449,9 @@ TerminusDBViewer.prototype.getShowDocumentControl = function(){
 	lab.setAttribute("class", "terminus-document-chooser-label terminus-doc-control-label terminus-control-label-padding");
 	var dcip = document.createElement("input");
 	dcip.setAttribute("class", "terminus-form-doc-value terminus-document-chooser terminus-doc-input-text");
-	dcip.setAttribute("placeholder", "Enter Document ID. Ex: doc:myDocId");
+	dcip.setAttribute("placeholder", "Enter Document ID to view ...");
 	var nbut = document.createElement("button");
-	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-doc-btn")
+	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-btn");
 	nbut.setAttribute('title', 'Enter Document ID to view');
 	var is = document.createElement('i');
 	is.setAttribute('class', 'fa fa-caret-left');

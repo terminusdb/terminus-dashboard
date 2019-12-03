@@ -137,7 +137,9 @@ h3.terminus-query-head{
 	margin-bottom: 10px;
 	float: right;
 }
-
+div.terminus-document-view{
+	margin-top: 50px;
+}
 .terminus-lat-long,
 .latlong {
 	display: block !important;
@@ -402,7 +404,6 @@ span.terminus-snippet-panel{
     display: inline-flex;
 }
 button.terminus-snippet-button{
-	width: 100%;
 	padding: 10px;
 }
 button.terminus-new-query-btn{
@@ -437,6 +438,10 @@ icon.terminus-cancel-rule-editor{
 	float: right;
     margin: 20px 10px 10px 10px;
 }
+.terminus-icon-padding{
+	padding-left: 5px;
+}
+
 /* terminus buttons */
 .terminus-send-api-btn{
 	margin-left:935px;
@@ -454,18 +459,13 @@ icon.terminus-cancel-rule-editor{
     cursor: pointer;
     white-space: nowrap;
     padding: 4px 10px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 	margin-right: 5px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 	border-radius: 0.2rem !important;
-}
-
-button.terminus-btn-float-right{
-	float: right;
-	margin: 50px 20px 20px 0px;
 }
 div.terminus-form-margin-top{
 	min-height: 30px;
@@ -924,7 +924,7 @@ div.terminus-margin-top, table.terminus-margin-top{
 	margin: 20px;
 }
 
-.terminus-db-info-box .terminus-icon {
+.terminus-db-info-box, .terminus-icon {
 	margin-right: 10px;
 	padding-right:10px;
 	font-size: larger;
@@ -993,10 +993,9 @@ span.terminus-violation-property-label{
 div.terminus-violation{
 	border-bottom: 0.5px solid #856404;
 }
-
 .terminus-doc-control-label{
 	float: right;
-    width: 160px !important;
+    width: 400px !important;
     padding-top: 12px;
 	font-size: 18px;
     text-align: left;
@@ -1626,8 +1625,50 @@ div.terminus-margin-left-auto {
 	background-color: #f8d7da;
 	border-color: #f5c6cb;
 }
-.terminus-save-btn{
+.terminus-save-btn, .terminus-create-panel, .terminus-back-to-home{
 	float: right;
+}
+.terminus-backtohome-span:link {
+  text-decoration: none;
+}
+.terminus-result-view-icon{
+	font-size: 20px;
+	margin: 0px 10px 10px 0px;
+	padding: 10px;
+    font-size: 20px;
+    margin: 0px 2px 10px 0px;
+	background-color: #00C08B;
+	border: 1px solid green;
+	color: #002856;
+	/*border-radius: 50px;*/
+}
+.terminus-result-view-icon:hover{
+    /*transform: scale(1.2); */
+	border: 2px solid #002856;
+}
+.terminus-view-selected{
+	background: #002856;
+	color: #00C08B;
+}
+.terminus-result-selected{
+	/*background: #eee;
+	border: 2px solid #2a3547;*/
+	/*font-size: 25px;
+	background-color: #002856;
+	border: 1px solid #00C08B;
+	color: #00C08B;*/
+}
+
+
+/* Smaller buttons styles */
+
+.terminus-result-view-icon.small{
+  padding: 4px 12px;
+}
+
+.terminus-backtohome-span:hover {
+  text-decoration: underline;
+  color: blue;
 }
 .terminus-content-layout{
 	background-color: #f8f8ff;
@@ -1740,7 +1781,7 @@ span.terminus-property-header-info{
 	/*text-align: right;*/
 	/*float: left;*/
 }
-span.terminus-span-float-right button.terminus-btn-float-right{
+span.terminus-span-float-right, button.terminus-btn-float-right{
 	float: right;
 }
 span.property-value-view {
