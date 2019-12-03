@@ -20,7 +20,7 @@ let TerminusConfig = {
 			loaded: true
 		}
 	},
-	location: { server: "http://195.201.12.87:6365/",  db:"testtutorial", key: "connectors wanna plans compressed"}
+	location: { server: "http://195.201.12.87:6363/",  db:"MyFirstTerminusDB", key: "connectors wanna plans compressed"}
 };
 
 var FrameConfig = {

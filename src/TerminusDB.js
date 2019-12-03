@@ -153,6 +153,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	else {
 		var body = document.createElement("div");
 		body.setAttribute("class", "terminus-home-body terminus-document-view");
+		body.setAttribute('style', 'display: table-caption;');
 	}
 	var page_actions = document.createElement("div");
 	page_actions.setAttribute("class", "terminus-home-actions");
@@ -166,7 +167,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		}
 		var dchooser = this.getCreateDataChooser(docClasses,
 												{showQuery: false, editQuery: false},
-												{showConfig: false, editConfig: "true"},
+												{showConfig: false, editConfig: true},
 												 ch );
 		if(docs.count() > 1) span.appendChild(dchooser);
 	}
@@ -176,7 +177,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	if(docs.count() > 0){
 		var show_doc_action = this.getShowDocumentControl();
 		span.prepend(show_doc_action);
-		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: true});
+		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: false});
 		var table = WOQL.table();
 		var g = WOQL.graph();
 		var options =  { showConfig: "icon", editConfig: "true", viewers: [g] };
@@ -188,7 +189,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		var q = WOQL.from(dburl).limit(1000).documentMetadata();
 		q.execute(this.ui.client).then( (result) => {
 			var g = new TerminusClient.WOQLResult(result, q);
-			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: true});
+			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
 			var table = WOQL.table();
 			var g2 = WOQL.graph();
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
