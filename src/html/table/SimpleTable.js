@@ -1,7 +1,7 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 
 
-function SimpleTable(){	
+function SimpleTable(){
 	this.holder = document.createElement("div");
 }
 
@@ -50,7 +50,7 @@ SimpleTable.prototype.getTableHeader = function(cols){
 		var th = this.getColumnHeader(cols[i]);
 		thr.appendChild(th);
 	}
-	thead.appendChild(thr);	
+	thead.appendChild(thr);
 	return thead;
 }
 
@@ -164,7 +164,7 @@ SimpleTable.prototype.getPageSize = function(){
 		ctl.value = this.woqltable.getPageSize();
 		ctl.addEventListener("blur", function(){
 			var pval = (this.value ? parseInt(this.value) : false);
-			self.woqltable.setPageSize(pval).then(() => self.render());
+			self.woqltable.setPageSize(pval);
 		});
 		chunk.appendChild(ctl);
 	}
@@ -181,7 +181,7 @@ SimpleTable.prototype.getPageNumber = function(){
 	var self = this;
 	ctl.addEventListener("blur", function(){
 		var pval = (this.value ? parseInt(this.value) : false);
-		self.woqltable.setPage(pval).then(() => self.render());
+		self.woqltable.setPage(pval);
 	});
 	return ctl;
 }
@@ -195,7 +195,7 @@ SimpleTable.prototype.getNext = function(result){
 	}
 	else {
 		ctl.addEventListener("click", function(){
-			self.woqltable.nextPage().then(() => self.render());
+			self.woqltable.nextPage();
 		});
 	}
 	return ctl;
@@ -210,7 +210,7 @@ SimpleTable.prototype.getPrev = function(result){
 	}
 	else {
 		ctl.addEventListener("click", function(){
-			self.woqltable.previousPage().then(() => self.render());
+			self.woqltable.previousPage();
 		});
 	}
 	return ctl;
@@ -225,7 +225,7 @@ SimpleTable.prototype.getFirst = function(result){
 	}
 	else {
 		ctl.addEventListener("click", function(){
-			self.woqltable.firstPage().then(() => self.render());
+			self.woqltable.firstPage();
 		});
 	}
 	return ctl;

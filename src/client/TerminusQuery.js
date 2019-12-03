@@ -57,7 +57,7 @@ TerminusQueryViewer.prototype.loadGenerator = function(){
 TerminusQueryViewer.prototype.init = function(){
 	//var wq = new WOQLQuery(this.ui.client, this.options, this.ui);
 	var wq = TerminusClient.WOQL
-				.limit(20)
+				.limit(25)
 				.start(0)
 				.elementMetadata();
 	var self = this;

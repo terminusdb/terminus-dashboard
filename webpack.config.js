@@ -4,7 +4,7 @@ const CopyWebPackPlugin = require("copy-webpack-plugin");
 require("@babel/register");
 // Webpack Configuration
 const config = {
-  
+
   // Entry
   entry: path.resolve(__dirname, 'src/index.js'),
   // Output
@@ -39,12 +39,12 @@ module.exports = function(env, argv){
   if (argv.mode === 'development') {
        // webpack-dev-server configuration
      config.devServer={
-        // Can be omitted unless you are using 'docker' 
+        // Can be omitted unless you are using 'docker'
         contentBase: path.resolve(__dirname,'dist'),
         // 'Live-reloading' happens when you make changes to code
         // dependency pointed to by 'entry' parameter explained earlier.
         // To make live-reloading happen even when changes are made
-        // to the static html pages in 'contentBase', add 
+        // to the static html pages in 'contentBase', add
         // 'watchContentBase'
         watchContentBase: true,
         compress: true
@@ -60,6 +60,8 @@ module.exports = function(env, argv){
       new CopyWebPackPlugin([
         { from: path.resolve(__dirname, 'src/css'), to: 'css' },
         { from: path.resolve(__dirname, 'src/UIconfig.json'), to:'./' },
+        { from: path.resolve(__dirname, 'src/terminus-client.min.js'), to:'./' },
+        { from: path.resolve(__dirname, 'src/terminus-client.min.js.map'), to:'./' },
       ])
 
     ]

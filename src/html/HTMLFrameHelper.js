@@ -214,7 +214,7 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 	lspacer.appendChild(document.createTextNode(" "));
 	infoDOM.appendChild(lspacer);
 	var lval = document.createElement("span");
-	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value terminus-property-label-align");
+	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
 	if(input){
 		input.value = value;
 		lval.appendChild(input);
@@ -241,7 +241,7 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 
 HTMLFrameHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, features){
 	if(frame.display_options.hidden) return false;
-	var framedom = HTMLFrameHelper.getFrameHolderDOM(scope, frame, "page");
+	var framedom = HTMLFrameHelper.getFrameHolderDOM(scope, frame, orientation);
 	if(typeof frame.display_options.header != "undefined"){
 		if(typeof frame.display_options.header == "function"){
 			var hd = frame.display_options.header(frame.display_options.header_features, hfeatures);
@@ -249,14 +249,14 @@ HTMLFrameHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, fea
 		}
 	}
 	else {
-		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, "page");
+		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, orientation, hfeatures);
 		if(hfeatures) hd.appendChild(hfeatures);
 		framedom.appendChild(hd);
 	}
-	return framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, "page", features));
+	return framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, orientation, features));
 }
 
-HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation, features){
+HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	var pcls = "terminus-" + scope + "-frame";
 	if(orientation == "page"){
 		var sp = document.createElement("div");
@@ -288,7 +288,7 @@ HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation, features
 	return sp;
 }
 
-HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation){
+HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-header";
 	if(orientation == "page"){
 		var objDOM = document.createElement("div");
@@ -297,10 +297,11 @@ HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation){
 		var objDOM = document.createElement("span");
 	}
 	objDOM.setAttribute("class", css + " " + css + "-" + orientation);
+    if(features) objDOM.appendChild(features);
 	return objDOM;
 }
 
-HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation){
+HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-properties";
 	if(orientation == "page"){
 		var vholder = document.createElement("div");
@@ -309,6 +310,7 @@ HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation){
 		var vholder = document.createElement("span");
 	}
     vholder.setAttribute('class', css + " " + css + "-" + orientation);
+    if(features) vholder.appendChild(features);
     return vholder;
 }
 
@@ -327,7 +329,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 	if(feature == "id"){	
 		if(scope == "object") var val = frame.subject();
 		else if(scope == "property") var val = frame.property();
-		if(frame.isNewDocument() && val == "_:") val = "New Document";
+		if(val == "_:") var val = "New Document";
 		return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "The URL that identifies this data object");
 	}
 	else if(feature == "summary"){
@@ -335,7 +337,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 		return HTMLFrameHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status);
 	}
 	else if(feature == "label"){
-		var lab = renderer.getLabel();
+		var lab = frame.getLabel();
 		if(lab){
 			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", false, lab);
 		}
@@ -364,7 +366,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 	else if(feature == "delete"){
 		var callback = function(){frame.delete()};
 		var disabled = false;
-		if(!this.cardControlAllows(frame, "delete", scope)){
+		if(!frame.cardControlAllows("delete", scope)){
 			if(!frame.display_options.show_disabled_buttons){
 				return false;
 			}
@@ -375,7 +377,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 	else if(feature == "clone"){
 		var callback = function(){frame.clone()};
 		var disabled = false;
-		if(!this.cardControlAllows(frame, "clone", scope)){
+		if(!frame.cardControlAllows("clone", scope)){
 			if(!frame.display_options.show_disabled_buttons){
 				return false;
 			}
@@ -425,7 +427,9 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 }
 
 HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
-	var viewers = frame.getAvailableViewers();
+	var viewers = frame.terminus.datatypes.getAvailableViewers();
+	var r = this.terminus.datatypes.getRenderer(t);
+
 	if(viewers && viewers.length){
 		var mpropDOM = document.createElement("span");
 		mpropDOM.setAttribute("class", "terminus-" + scope + "-viewer");
@@ -445,7 +449,12 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
 
 /* needs html viewer context for goto */
 HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
-	var viewables = frame.getViewableProperties();
+	if(scope == "object"){
+		var viewables = frame.getFilledPropertyList();
+	}
+	else if(scope == "property"){
+		
+	}
 	var self = this;
 	if(viewables && viewables.length){
 		var mpropDOM = document.createElement("span");
@@ -532,12 +541,12 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 		}
 		if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 			var callback = function(){frame.add("edit")};
-			var disabled = (renderer.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
+			var disabled = (frame.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
 			return HTMLFrameHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled);
 		}
 	}
 	else {
-		var addables = frame.getAddableProperties();
+		var addables = frame.getMissingPropertyList();
 		if(addables && addables.length){
 			var mpropDOM = document.createElement("span");
 			mpropDOM.setAttribute("class", "terminus-" + scope + "-add-entry");

@@ -110,20 +110,39 @@ WOQLTextboxGenerator.prototype.getQueryFormatSelect = function(qip){
 	fsel.addEventListener('change', function(){
 		self.queryMode = this.value;
 		self.ui.clearMessages();
+		updatePagination(qip.value);
 		UTILS.deleteStylizedEditor(self.ui, qip);
 		// self.datatable should hold the current datatables pagination  values
-		var qval = UTILS.getCurrentWoqlQueryObject(self.currentQuery, self.datatable);
-		if(self.queryMode == 'woql')
-			qip.value = JSON.stringify(qval.prettyPrint(),undefined, 2);
-		else qip.value = JSON.stringify(qval, undefined, 2);
+		var qObj = UTILS.getCurrentWoqlQueryObject(self.currentQuery, self.datatable);
+		if(!qObj){
+			qip.value = 'Enter new query or load queries from example buttons provided on right hand side ...';
+		}
+		else{
+			if(self.queryMode == 'woql')
+				qip.value = 'WOQL.' + qObj.prettyPrint();
+			else qip.value = JSON.stringify(qObj.query, undefined, 2);
+		}
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
-			self.gathersettings(qip, 'Show_All_Schema_Elements');
-			self.query(qval, self.datatable);
+			//self.gathersettings(qip, 'Show_All_Schema_Elements');
+			self.query(qObj, self.datatable);
 		}
-		else self.query(qval);
+		else self.query(qObj);
 	})
 	return fsel;
+}
+
+WOQLTextboxGenerator.prototype.updatePagination = function(query){
+
+}
+
+WOQLTextboxGenerator.prototype.processDynamicQuery = function(query){
+	query = query;
+    query = 'const WOQL = TerminusClient.WOQL ; return ' + query;
+    var qObj = new Function(query)();
+    var qJson = qObj.json();
+    var newQObj= TerminusClient.WOQL.json(JSON.parse(JSON.stringify(qJson)))
+    return newQObj;
 }
 
 WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
@@ -131,7 +150,6 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qbox.setAttribute("class", "terminus-query-textbox-input terminus-query-section");
 
 	var head = document.createElement('span');
-	head.setAttribute('class', 'terminus-display-flex');
 	var eqh = document.createElement("H3");
 	eqh.appendChild(document.createTextNode("Enter Query in format"));
 	eqh.setAttribute('class', 'terminus-full-css-margin-top terminus-query-head');
@@ -155,14 +173,13 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 	qbut.addEventListener("click", function(){
 		self.ui.clearMessages();
 		try {
-			var qval = JSON.parse(qip.value);
+			var qObj = self.processDynamicQuery(qip.value);
 			if(self.ui.pluginAvailable("datatables")){
 				// pass current Example query scope while editing the text editor
 				self.gathersettings(qip, self.datatable.query);
-				self.setsettings(qval);
-				self.query(qval, self.datatable);
+				self.query(qObj, self.datatable);
 			}
-			else self.query(qval);
+			else self.query(qObj);
 		}
 		catch(e){
 			alert("Failed to parse Query " + e.toString());
@@ -177,15 +194,16 @@ WOQLTextboxGenerator.prototype.getQueryTextAreaDOM = function(q, box){
 WOQLTextboxGenerator.prototype.redrawQueryPage = function(qip){
 	this.ui.clearMessages();
 	UTILS.deleteStylizedEditor(this.ui, qip);
-	var qval = UTILS.getCurrentWoqlQueryObject(this.currentQuery, this.datatable);
-	if(this.queryMode == 'woql') qip.value = JSON.stringify(qval.prettyPrint(), undefined, 2);
-	else qip.value = JSON.stringify(qval, undefined, 2);
+	var qObj = UTILS.getCurrentWoqlQueryObject(this.currentQuery, this.datatable);
+	if(this.queryMode == 'woql')
+		qip.value = 'WOQL.' + qObj.prettyPrint();
+	else qip.value =  JSON.stringify(qObj.query, undefined, 2);
 	UTILS.stylizeEditor(this.ui, qip, 'query', 'javascript');
 	if(this.ui.pluginAvailable("datatables")){
 		this.gathersettings(qip, this.currentQuery);
-		this.query(qval, this.datatable);
+		this.query(qObj, this.datatable);
 	}
-	else this.query(qval);
+	else this.query(qObj);
 }
 
 WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
@@ -220,17 +238,20 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	aqbut.appendChild(document.createTextNode("Show Document Classes"));
 	aqbut.setAttribute("class", "terminus-control-button terminus-q-btn");
 	aqbut.addEventListener("click", function(){
-		self.ui.clearMessages();
+		self.currentQuery =  'Show_Document_Classes';
+		self.redrawQueryPage(qip);
+
+		/*self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		var qvalue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern("v:Element"),
+		var qObjue = self.wquery.getClassMetaDataQuery(self.wquery.getConcreteDocumentClassPattern("v:Element"),
 														self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue,undefined, 2);
+		qip.value = JSON.stringify(qObjue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gathersettings(qip, 'Show_Document_Classes');
-			self.query(qvalue, self.datatable);
+			self.query(qObjue, self.datatable);
 		}
-		else self.query(qvalue);
+		else self.query(qObjue); */
 	})
 
 	var ebut = document.createElement("button");
@@ -267,62 +288,62 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	/* grouping data queries */
 	var qdGroup = this.qGroupQueries(qrow, 'Data Queries', '');
 
-	/*var termcc = new TerminusClassChooser(this.ui);
+	var termcc = new TerminusClassChooser(this.ui);
 	termcc.empty_choice = "Show data of type";
 	var self = this;
 	termcc.change = function(new_class){
 		self.ui.clearMessages();
 		if(new_class){
 			UTILS.deleteStylizedEditor(self.ui, qip);
-			var qvalue = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
-			qip.value = JSON.stringify(qvalue,undefined, 2);
+			var qObjue = self.wquery.getDataOfChosenClassQuery(new_class, self.datatable.pageLength, self.datatable.start);
+			qip.value = JSON.stringify(qObjue,undefined, 2);
 			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gathersettings(qip, 'Show_Data_Class');
 				self.datatable.chosenValue = new_class; // set chosen val from drop down
-				self.query(qvalue, self.datatable);
+				self.query(qObjue, self.datatable);
 			}
-			else self.query(qvalue);
+			else self.query(qObjue);
 		}
-	} */
-	//var tcdom = termcc.getAsDOM('terminus-query-select');
+	}
+	var tcdom = termcc.getAsDOM('terminus-query-select');
 
-	/*var termpc = new TerminusPropertyChooser(this.ui);
+	var termpc = new TerminusPropertyChooser(this.ui);
 	termpc.empty_choice = "Show property data";
 	var self = this;
 	termpc.change = function(new_property){
 		if(new_property){
 			UTILS.deleteStylizedEditor(self.ui, qip);
-			var qvalue = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
-			qip.value = JSON.stringify(qvalue,undefined, 2);
+			var qObjue = self.wquery.getDataOfChosenPropertyQuery(new_property, self.datatable.pageLength, self.datatable.start);
+			qip.value = JSON.stringify(qObjue,undefined, 2);
 			UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 			if(self.ui.pluginAvailable("datatables")){
 				self.gathersettings(qip, 'Show_Property_Class');
 				self.datatable.chosenValue = new_property; // set chosen val from drop down
-				self.query(qvalue, self.datatable);
+				self.query(qObjue, self.datatable);
 			}
-			else self.query(qvalue);
+			else self.query(qObjue);
 		}
-	}*/
+	}
 
 	/* grouping document queries */
 	var qdocGroup = this.qGroupQueries(qrow, 'Document Queries', '');
 
-	//var pdom = termpc.getAsDOM();
+	var pdom = termpc.getAsDOM();
 
 	var docch = new TerminusDocumentChooser(this.ui);
 	docch.change = function(val){
 		self.ui.clearMessages();
 		UTILS.deleteStylizedEditor(self.ui, qip);
-		var qvalue = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
-		qip.value = JSON.stringify(qvalue,undefined, 2);
+		var qObjue = self.wquery.getDocumentQuery(val, self.datatable.pageLength, self.datatable.start);
+		qip.value = JSON.stringify(qObjue,undefined, 2);
 		UTILS.stylizeEditor(self.ui, qip, 'query', 'javascript');
 		if(self.ui.pluginAvailable("datatables")){
 			self.gathersettings(qip, 'Show_Document_Info_by_Id');
 			self.datatable.chosenValue = val;
-			self.query(qvalue, self.datatable);
+			self.query(qObjue, self.datatable);
 		}
-		else self.query(qvalue);
+		else self.query(qObjue);
 	}
 	var docdom = docch.getAsDOM('terminus-query-select');
 
@@ -355,8 +376,8 @@ WOQLTextboxGenerator.prototype.getAsDOM = function(q, qip){
 	/* data queries */
 	var dtGroup = document.createElement('div');
 	dtGroup.setAttribute('class', 'terminus-hide');
-	//dtGroup.appendChild(tcdom);
-	//dtGroup.appendChild(pdom);
+	dtGroup.appendChild(tcdom);
+	dtGroup.appendChild(pdom);
 
 	var br = document.createElement('BR');
 	dtGroup.appendChild(br);

@@ -6,9 +6,10 @@
 	   <!-- <script src="http://localhost/terminus-client/dist/terminus-client.min.js"></script> -->
 		<link rel="shortcut icon" type="image/png" href="https://terminusdb.com/t/favicon.png"/>
 		<script src="UIconfig.json"></script>
+		<!--<script src="terminus-client.min.js"></script>--> 
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-		
+
 		<script type="text/javascript" src="<%= htmlWebpackPlugin.options.bundleFileName %>"></script>
 	</head>
 	<BODY>
@@ -39,7 +40,7 @@
 				</td>
 			</tr>
 	</table>
-	<script>	
+	<script>
 		var terminator = new TerminusDashboard.TerminusUI(TerminusConfig);
 		var pconfig = {};
 		pconfig.buttons = {'client'   : document.getElementById("terminus-client-btn"),

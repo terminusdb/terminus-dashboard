@@ -1,7 +1,7 @@
 let TerminusConfig = {
 	controls: [
 		"server", "db", "api_explorer", "change-server", "import_schema", "create_database",
-		"create_document", "get_document", "get_schema", "update_schema", "woql_select"
+		"create_document", "get_document", "get_schema", "update_schema", "woql_select", "add_new_library"
 	],
 	css: "theme",
 	plugins: {
@@ -12,14 +12,15 @@ let TerminusConfig = {
 		},
 		jquery: true,
 		jqueryui: false,
-		datatables: true,
+		datatables: false,
 		quill: true,
 		select2: false,
 		codemirror: {
 			darkMode: false, // true for dark theamed text editor
 			loaded: true
 		}
-	}
+	},
+	location: { server: "http://195.201.12.87:6363/", db: "myFirstTerminusDB", key: "connectors wanna plans compressed"}
 };
 
 var FrameConfig = {
@@ -176,5 +177,5 @@ var FrameConfig = {
 		facet: "page",
 		mode: "view",
 		viewer: "html"
-	} 
+	}
 };
