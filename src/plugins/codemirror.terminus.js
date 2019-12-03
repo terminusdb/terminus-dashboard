@@ -1,11 +1,11 @@
 function Codemirror(text, format, config){
   this.textdom = text;
   this.mode = format;
-  this.darkMode = config.darkMode;
+  if(objectIsEmpty(config)) this.darkMode = config.darkMode;
   if(this.jsonldCheck(format)) this.mode = 'javascript';
 }
 // checks if a json object is empty
-function isEmpty(arg) {
+function objectIsEmpty(arg) {
   for (var item in arg) {
     return false;
   }
@@ -16,7 +16,7 @@ function isEmpty(arg) {
 txtar    : editor is attached to textar
 mode     : format for highlighting, ex: json, html etc.
 editable : readOnly false/ nocursor is special value in code editor to set readonly true */
-Codemirror.prototype.colorizeTextArea = function(mode){
+Codemirror.prototype.colorizeTextArea = function(dimensions){
     //initize auto complete
     /*CodeMirror.commands.autocomplete = function(cm) {
     cm.showHint({hint: CodeMirror.hint.anyword});
@@ -37,9 +37,9 @@ Codemirror.prototype.colorizeTextArea = function(mode){
         extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },
         refresh             : true
     });
-    if(!(isEmpty(mode)))
-        editor.setSize(mode.width, mode.height);
-    else this.setCodemirrorSize(editor, mode);
+    if(!(objectIsEmpty(dimensions)))
+        editor.setSize(dimensions.width, dimensions.height);
+    else this.setCodemirrorSize(editor, dimensions);
     editor.defaultCharWidth('20px');
     if(this.darkMode) editor.setOption("theme", 'erlang-dark');
     else editor.setOption("theme", 'neo');
@@ -50,8 +50,8 @@ Codemirror.prototype.colorizeTextArea = function(mode){
   set editor size according to screens
   editor : code mirror editor Object
   mode   : editor being viewed from schema/ doc/ query page*/
-Codemirror.prototype.setCodemirrorSize = function(editor, mode){
-  switch(mode){
+Codemirror.prototype.setCodemirrorSize = function(editor, dimensions){
+  switch(dimensions){
     case 'query':
       editor.setSize('800', '400');
     break;
@@ -70,7 +70,7 @@ Codemirror.prototype.setCodemirrorSize = function(editor, mode){
     case 'doc-json-create':
         editor.setSize('1410', '500');
     break;
-  } // switch(mode)
+  } // switch(dimensions)
 } // setCodemirrorSize()
 
 // updateTextArea(): highlights new changes on editor
