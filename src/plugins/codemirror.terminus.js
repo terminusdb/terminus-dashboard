@@ -41,8 +41,8 @@ Codemirror.prototype.colorizeTextArea = function(dimensions){
         editor.setSize(dimensions.width, dimensions.height);
     else this.setCodemirrorSize(editor, dimensions);
     editor.defaultCharWidth('20px');
-    if(this.darkMode) editor.setOption("theme", 'erlang-dark');
-    else editor.setOption("theme", 'neo');
+    //if(this.darkMode) editor.setOption("theme", 'erlang-dark');
+    //else editor.setOption("theme", 'neo');
     return editor;
 } // colorizeTextArea()
 
