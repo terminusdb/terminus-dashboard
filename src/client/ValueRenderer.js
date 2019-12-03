@@ -11,15 +11,15 @@ function ValueRenderer(dataframe, index, parent, options){
 	this.options = this.setOptions(options);
 }
 
-ValueRenderer.prototype.depth = function(){return (this.parent ? this.parent.depth() : false);};
-ValueRenderer.prototype.property = function(){ return (this.parent ? this.parent.property() : false);};
-ValueRenderer.prototype.subject = function(){ return (this.parent ? this.parent.subject() : false);};
-ValueRenderer.prototype.subjectClass = function(){ return (this.parent ? this.parent.subjectClass() : false);};
-ValueRenderer.prototype.type = function(){	return (this.frame ? this.frame.range : false);};
-ValueRenderer.prototype.range = function(){	return (this.frame ? this.frame.range : false);};
-ValueRenderer.prototype.value = function(){	return (this.frame ? this.frame.get() : false);};
-ValueRenderer.prototype.isDocument = function(){	return (this.frame ? this.frame.isDocument() : false);};
-ValueRenderer.prototype.currentViewer = function(){	return this.viewerType;}
+ValueRenderer.prototype.depth = () => this.parent ? this.parent.depth() : false;
+ValueRenderer.prototype.property = () => this.parent ? this.parent.property() : false;
+ValueRenderer.prototype.subject = () => this.parent ? this.parent.subject() : false;
+ValueRenderer.prototype.subjectClass = () => this.parent ? this.parent.subjectClass() : false;
+ValueRenderer.prototype.type = () => this.frame ? this.frame.range : false;
+ValueRenderer.prototype.range = () => this.frame ? this.frame.range : false;
+ValueRenderer.prototype.value = () => this.frame ? this.frame.get() : false;
+ValueRenderer.prototype.isDocument = () => this.frame ? this.frame.isDocument() : false;
+ValueRenderer.prototype.currentViewer = () => this.viewerType;
 
 ValueRenderer.prototype.copy = function(nf){
 	var nvr = new ValueRenderer(nf, false, this.parent, this.options);

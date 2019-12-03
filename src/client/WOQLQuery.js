@@ -254,6 +254,7 @@ WOQLQuery.prototype.getDocumentQuery = function(id, limit, start){
 	return this.queryWrappedWithLimit(wjson, limit, start);
 }
 
+//documentMetadata
 WOQLQuery.prototype.getClassesQuery = function(limit, start){
 	var wjson = {
 		and: [

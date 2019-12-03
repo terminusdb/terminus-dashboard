@@ -1,3 +1,5 @@
+const TerminusClient = require('@terminusdb/terminus-client');
+
 function WOQLQueryView(client){
 	this.client = client;
 }
@@ -44,7 +46,9 @@ WOQLQueryView.prototype.parseText = function(text, format){
 	}
 }
 
-WOQLQueryView.prototype.submitQuery = function (query) {}
+WOQLQueryView.prototype.submitQuery = function(qObj){
+
+}
 
 WOQLQueryView.prototype.error = function(msg){
 	console.log(msg);

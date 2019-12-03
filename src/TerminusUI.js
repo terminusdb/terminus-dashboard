@@ -14,7 +14,7 @@ const TerminusSchemaViewer = require('./TerminusSchema');
 const TerminusServersdk = require('./TerminusServer');
 const TerminusURLLoader = require('./TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
-const UTILS=require('./Utils');
+const UTILS = require('./Utils');
 const RenderingMap = require('./client/RenderingMap');
 const TerminusClient = require('@terminusdb/terminus-client');
 
@@ -407,10 +407,7 @@ TerminusUI.prototype.draw = function(comps, slocation){
 
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();
-	if(this.controller){
-		TerminusClient.FrameHelper.removeChildren(this.controller);
-		this.drawControls();
-	}
+	this.redrawControls();
 	if(this.explorer){
 		TerminusClient.FrameHelper.removeChildren(this.explorer);
 		//this.drawExplorer();
@@ -440,6 +437,13 @@ TerminusUI.prototype.toggleControl = function(){
     self.toggleDashboardWidget(this);
     self.drawExplorer();
   })
+}
+
+TerminusUI.prototype.redrawControls = function(){
+	if(this.controller){
+		TerminusClient.FrameHelper.removeChildren(this.controller);
+		this.drawControls();
+	}
 }
 
 TerminusUI.prototype.drawControls = function(){
@@ -556,7 +560,7 @@ TerminusUI.prototype.showBusy = function(msg){
 };
 
 TerminusUI.prototype.pseudoCapability = function(el){
-	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "schema_format"];
+	var pseuds = ["server", "db", "change-server", "api_explorer", "import_schema", "add_new_library"];
 	if(pseuds.indexOf(el) == -1) return false;
 	return true;
 }

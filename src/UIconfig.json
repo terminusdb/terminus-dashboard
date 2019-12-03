@@ -1,7 +1,7 @@
 let TerminusConfig = {
 	controls: [
 		"server", "db", "api_explorer", "change-server", "import_schema", "create_database",
-		"create_document", "get_document", "get_schema", "update_schema", "woql_select"
+		"create_document", "get_document", "get_schema", "update_schema", "woql_select", "add_new_library"
 	],
 	css: "theme",
 	plugins: {
@@ -20,7 +20,7 @@ let TerminusConfig = {
 			loaded: true
 		}
 	},
-	location: { server: "http://localhost:6363/", db: "terminus", key: "root"}
+	location: { server: "http://195.201.12.87:6365/",  db:"testtutorial", key: "***REMOVED***"}
 };
 
 var FrameConfig = {
@@ -177,5 +177,5 @@ var FrameConfig = {
 		facet: "page",
 		mode: "view",
 		viewer: "html"
-	} 
+	}
 };

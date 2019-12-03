@@ -4,6 +4,7 @@
  */
 const TerminusClassChooser = require('./client/TerminusClassChooser');
 const TerminusDocumentViewer = require('./TerminusDocument');
+const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const UTILS=require('./Utils')
 const TerminusClient = require('@terminusdb/terminus-client');
 
@@ -12,6 +13,114 @@ function TerminusSchemaViewer(ui){
 	this.mode = "view";
 	this.format = "turtle";
 	this.confirm_before_update = false;
+	this.thv = new TerminusHTMLViewer(this.ui.client);
+	let WOQL = TerminusClient.WOQL;
+	this.woql = WOQL;
+}
+
+TerminusSchemaViewer.prototype.getOWLView = function(){
+	this.mode = 'view'; // reset mode
+	this.loadSchema();
+}
+
+TerminusSchemaViewer.prototype.appendRuleViews = function(){
+	this.view.appendChild(UTILS.getHeaderDom('Classes'));
+	this.appendClassViews(this.woql.table());
+	this.appendClassViews(this.woql.graph());
+	this.view.appendChild(UTILS.getHeaderDom('Properties'));
+	this.appendPropertyViews(this.woql.table());
+	this.appendPropertyViews(this.woql.graph());
+}
+
+TerminusSchemaViewer.prototype.appendPropertyViews = function(config){
+	this.qprops.first();
+	var n = this.thv.showResult(this.qprops, config, false);
+	this.view.appendChild(n);
+}
+
+TerminusSchemaViewer.prototype.appendClassViews = function(config){
+	this.qclasses.first();
+	var n = this.thv.showResult(this.qclasses, config, false);
+	this.view.appendChild(n);
+}
+
+TerminusSchemaViewer.prototype.getAllProperties = function(){
+	let query = this.woql.from(this.ui.client.connectionConfig.dbURL())
+						 .limit(25)
+						 .start(0)
+						 .propertyMetadata();
+    var self = this;
+    query.execute(this.ui.client).then((results) => {
+		let qres = new TerminusClient.WOQLResult(results, query);
+		self.qprops = qres;
+		this.view.appendChild(UTILS.getHeaderDom('Properties'));
+		self.appendPropertyViews(this.woql.table());
+		self.appendPropertyViews(this.woql.graph());
+	})
+}
+
+TerminusSchemaViewer.prototype.getAllClasses = function(){
+	let query = this.woql.from(this.ui.client.connectionConfig.dbURL())
+						 .limit(25)
+						 .start(0)
+						 .classMetadata();
+    var self = this;
+    query.execute(this.ui.client).then((results) => {
+		let qres = new TerminusClient.WOQLResult(results, query);
+		self.qclasses = qres;
+		self.view.appendChild(UTILS.getHeaderDom('Classes'));
+		self.appendClassViews(this.woql.table());
+
+		var g = this.woql.graph();
+		g.source("v:Subject");
+		var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
+		g.edge("v:Subject", "v:Object").icon(licon2);
+
+		self.appendClassViews(g);
+	})
+}
+
+TerminusSchemaViewer.prototype.defineViewAction = function(a, view){
+	TerminusClient.FrameHelper.removeChildren(this.view);
+	UTILS.setSelectedSubMenu(a);
+	switch(view){
+		case 'table':
+			this.appendRuleViews();
+		break;
+		case 'owl':
+			this.getOWLView();
+		break;
+		default:
+			console.log('Invalid view passed in TerminusSchema.js')
+		break;
+	}
+}
+
+TerminusSchemaViewer.prototype.getTabs = function(view){
+	var a = document.createElement('a');
+    a.setAttribute('class', 'terminus-a terminus-hz-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+    //if(navConfig.defaultSelected) a.classList.add('terminus-selected');
+    var self = this;
+    a.addEventListener("click", function(){
+        self.defineViewAction(this, view);
+    })
+	if(view == 'owl')
+		var t = view.toUpperCase();
+	else var t = view.charAt(0).toUpperCase() + view.slice(1)
+	a.appendChild(document.createTextNode(t + ' View'));
+    return a;
+}
+
+TerminusSchemaViewer.prototype.getSchemaViews = function(){
+	var ul = document.createElement('ul');
+    ul.setAttribute('class', 'terminus-ul-horizontal');
+	var tview = this.getTabs('table');
+	tview.classList.add('terminus-submenu-selected'); // default view is table
+	ul.appendChild(tview);
+	ul.appendChild(this.getTabs('owl'));
+	this.controldom.appendChild(ul);
+	this.getAllClasses();
+	this.getAllProperties();
 }
 
 /*
@@ -21,10 +130,14 @@ TerminusSchemaViewer.prototype.getAsDOM = function(){
 	this.holder = document.createElement("div");
 	this.controldom = document.createElement("div");
 	this.controldom.setAttribute("class", "terminus-schema-controls");
+	this.view = document.createElement("div");
+	this.view.setAttribute("class", "terminus-schema-view");
+	this.getSchemaViews();
 	this.pagedom = document.createElement("div");
 	this.pagedom.setAttribute("class", "terminus-schema-viewer");
-	this.loadSchema();
+	//this.loadSchema();
 	this.holder.appendChild(this.controldom);
+	this.controldom.appendChild(this.view);
 	this.holder.appendChild(this.pagedom);
 	return this.holder;
 }
@@ -45,37 +158,37 @@ TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 }
 
 TerminusSchemaViewer.prototype.resetControlDOM = function(){
-	TerminusClient.FrameHelper.removeChildren(this.controldom);
+	TerminusClient.FrameHelper.removeChildren(this.view);
 	if(this.mode == "edit"){
-		this.controldom.appendChild(this.getSchemaSaveButtons());
+		this.view.appendChild(this.getSchemaSaveButtons());
 	}
 	else if(this.mode == "import"){
-		this.controldom.appendChild(this.getSchemaImportActionButtons());
+		this.view.appendChild(this.getSchemaImportActionButtons());
 	}
 	else if(this.mode == "class_frame"){
 		if(this.ui.showControl("get_schema")){
-			this.controldom.appendChild(this.getShowSchemaButton());
+			this.view.appendChild(this.getShowSchemaButton());
 		}
 		if(this.ui.showControl("class_frame")){
-			this.controldom.appendChild(this.getClassFrameChooser());
+			this.view.appendChild(this.getClassFrameChooser());
 		}
 	}
 	else if(this.mode == "view"){
 		if(this.ui.showControl("update_schema")){
-			this.controldom.appendChild(this.getSchemaEditButton());
+			this.view.appendChild(this.getSchemaEditButton());
 		}
 		if(this.ui.showControl("import_schema")){
-			this.controldom.appendChild(this.getImportButton());
+			this.view.appendChild(this.getImportButton());
 		}
-		if(this.ui.showControl("schema_format")){
-			this.controldom.appendChild(this.getFormatChoices());
+		if(this.ui.showControl("add_new_library")){
+			this.view.appendChild(this.getNewLibaryButton());
 		}
 		if(this.ui.showControl("class_frame")){
-			this.controldom.appendChild(this.getClassFrameChooser());
+			this.view.appendChild(this.getClassFrameChooser());
 		}
 	}
 }
-
+/*
 TerminusSchemaViewer.prototype.getFormatChoices = function(){
 	var fc = document.createElement("select");
 	fc.setAttribute("class", "terminus-form-select terminus-schema-format terminus-type-select");
@@ -98,26 +211,30 @@ TerminusSchemaViewer.prototype.getFormatChoices = function(){
 	});
 	return fc;
 }
-
+*/
 
 TerminusSchemaViewer.prototype.refreshPage = function(msg, msgtype){
-	if(this.controldom) this.resetControlDOM();
-	if(this.pagedom) this.refreshMainPage(msg, msgtype);
+	if(this.view) {
+		this.resetControlDOM();
+		this.refreshMainPage(msg, msgtype);
+	}
+	/*if(this.controldom)	this.resetControlDOM();
+	if(this.pagedom) this.refreshMainPage(msg, msgtype);*/
 }
 
 TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
 	TerminusClient.FrameHelper.removeChildren(this.pagedom);
 	if(this.mode == 'view'){
-		this.pagedom.appendChild(this.getSchemaViewDOM());
+		this.view.appendChild(this.getSchemaViewDOM());
 	}
 	else if(this.mode == "edit"){
-		this.pagedom.appendChild(this.getSchemaEditDOM());
+		this.view.appendChild(this.getSchemaEditDOM());
 	}
 	else if(this.mode == "import"){
-		this.pagedom.appendChild(this.getSchemaImportDOM());
+		this.view.appendChild(this.getSchemaImportDOM());
 	}
 	else if(this.mode == "class_frame"){
-		this.pagedom.appendChild(this.getClassFrameDOM());
+		this.view.appendChild(this.getClassFrameDOM());
 	}
 	if(msg){
 		this.ui.showMessage(msg, msgtype);
@@ -194,7 +311,10 @@ TerminusSchemaViewer.prototype.getSaveButton = function(){
 		if(typeof(self.schema) == "object"){
 			text = JSON.parse(text);
 		}
-		return self.updateSchema(text, {"terminus:encoding": "terminus:" + self.format});
+		var opts = {};
+		opts['terminus:encoding'] =  'terminus:' + self.format;
+		opts['schemaId'] = self.ui.client.connectionConfig.dbURL() + '/' + self.schema_edit_dom_name.value;
+		return self.updateSchema(text, opts);
 	}
 	return this.getSchemaButton("Save", "update_schema", func);
 }
@@ -206,6 +326,16 @@ TerminusSchemaViewer.prototype.getSchemaEditButton = function(){
 		self.refreshPage();
 	}
 	return this.getSchemaButton("Edit", "update_schema", func);
+}
+
+TerminusSchemaViewer.prototype.getNewLibaryButton = function(){  //add_new_library
+	var self = this;
+	var func = function(){
+		self.ui.clearMessages();
+		self.mode = "edit";
+		self.refreshPage();
+	}
+	return this.getSchemaButton("New Library", "add_new_library", func);
 }
 
 TerminusSchemaViewer.prototype.getImportButton = function(){
@@ -229,7 +359,7 @@ TerminusSchemaViewer.prototype.getSchemaButton = function(label, action, func){
 /*
  * Updates schema, then fetches updated version and updates the page with it
  */
-TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
+TerminusSchemaViewer.prototype.updateSchema  = function(text, opts) {
 	this.ui.showBusy("Updating Database Schema");
 	var self = this;
 	return this.ui.client.updateSchema(false, text, opts)
@@ -251,7 +381,7 @@ TerminusSchemaViewer.prototype.updateSchema  = function(text, opts){
 	.catch(function(error){
 		self.ui.clearBusy();
 		if(error.data && error.data['terminus:witnesses']){
-			self.ui.showViolations(error.data['terminus:witnesses'], "schema");			
+			self.ui.showViolations(error.data['terminus:witnesses'], "schema");
 		}
 		else {
 			self.ui.showError(error);
@@ -350,6 +480,15 @@ TerminusSchemaViewer.prototype.showConfirmPage = function(newschema){
 TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	var np = document.createElement("div");
 	np.setAttribute("class", "terminus-schema-page terminus-schema-edit-page");
+	var label = document.createElement('label');
+    label.setAttribute('class', 'terminus-control-label');
+	label.setAttribute('for', 'basicinput');
+    label.appendChild(document.createTextNode('Schema name:'));
+	var sid = document.createElement('input');
+	sid.setAttribute('class', 'terminus-input-text terminus-schema-id-display');
+	sid.setAttribute('placeholder', 'Enter schema name');
+	np.appendChild(label);
+	np.appendChild(sid);
 	var ipval = document.createElement("textarea");
 	ipval.setAttribute("class", "terminus-schema-edit terminus-schema-textarea");
 	ipval.setAttribute("width", "100%");
@@ -360,6 +499,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	else if(typeof (this.schema) == "object") {
 		ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
 	}
+	this.schema_edit_dom_name = sid;
 	this.schema_edit_dom = ipval;
 	np.appendChild(ipval);
 	UTILS.stylizeEditor(this.ui, ipval, 'schema', 'turtle');

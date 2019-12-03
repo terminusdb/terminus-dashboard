@@ -21,6 +21,21 @@ TerminusClient.WOQL.document = function(){ return new FrameConfig(); }
 
 function FrameConfig(){
 	this.rules = [];
+	this.type = "document";
+}
+
+FrameConfig.prototype.prettyPrint = function(){
+	var str = "view = WOQL.document();\n";
+	if(this.renderer()){
+		str += "view.renderer('" + this.renderer() + "')\n";
+	}
+	if(typeof this.load_schema() != "undefined"){
+		str += "view.load_schema(" + this.load_schema() + ")\n";		
+	}
+	for(var i = 0; i<this.rules.length ; i++){
+		str += "view." + this.rules[i].prettyPrint("frame") + "\n";
+	}
+	return str;
 }
 
 FrameConfig.prototype.create = function(client, renderers){
@@ -95,22 +110,24 @@ FrameConfig.prototype.all = function(){
 
 FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
 	if(typeof frame.display_options == "undefined") frame.display_options = {};
-	if(typeof rule.mode() != "undefined") frame.display_options.mode = rule.mode();
+	if(typeof rule.mode() != "undefined") {	frame.display_options.mode = rule.mode();}
 	if(typeof rule.view() != "undefined") frame.display_options.view = rule.view();
 	//if(typeof rule.facets() != "undefined") frame.display_options.facets = rule.facets();
 	//if(typeof rule.facet() != "undefined") frame.display_options.facet = rule.facet();
-	if(typeof rule.show_disabled_buttons() != "undefined") frame.display_options.show_disabled_buttons = rule.hide_disabled_buttons();
-	if(typeof rule.features() != "undefined") frame.display_options.features = rule.features();
+	if(typeof rule.showDisabledButtons() != "undefined") frame.display_options.show_disabled_buttons = rule.showDisabledButtons();
+	if(typeof rule.features() != "undefined") {
+		frame.display_options.features = rule.features();
+	}
 	if(typeof rule.header() != "undefined") frame.display_options.header = rule.header();
 	if(typeof rule.hidden() != "undefined") frame.display_options.hidden = rule.hidden();
 	if(typeof rule.collapse() != "undefined") frame.display_options.collapse = rule.collapse();
-	if(typeof rule.header_features() != "undefined") frame.display_options.header_features = rule.header_features();
-	if(typeof rule.show_empty() != "undefined") frame.display_options.show_empty = rule.show_empty();
-	if(typeof rule.feature_renderers() != "undefined") frame.display_options.feature_renderers = rule.feature_renderers();
+	if(typeof rule.headerFeatures() != "undefined") frame.display_options.header_features = rule.headerFeatures();
+	if(typeof rule.showEmpty() != "undefined") frame.display_options.show_empty = rule.showEmpty();
+	if(typeof rule.featureRenderers() != "undefined") frame.display_options.feature_renderers = rule.featureRenderers();
 	if(typeof rule.dataviewer() != "undefined") {
 		frame.display_options.dataviewer = rule.dataviewer();
-		if(typeof rule.dataviewer_options() != "undefined")
-			frame.display_options.dataviewer_options = rule.dataviewer_options();
+		if(typeof rule.args() != "undefined")
+			frame.display_options.args = rule.args();
 	}
 }	
 
@@ -124,7 +141,17 @@ FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
 
 function WOQLStreamConfig(){
 	this.rules = [];
+	this.type = "stream";
 }
+
+WOQLStreamConfig.prototype.prettyPrint = function(){
+	var str = "view = WOQL.stream();\n";
+	for(var i = 0; i<this.rules.length ; i++){
+		str += "view." + this.rules[i].prettyPrint("stream") + "\n";
+	}
+	return str;
+}
+
 
 WOQLStreamConfig.prototype.getMatchingRules = function(row, key, context, action){
 	return getMatchingRules(this.rules, row, key, context, action);
@@ -142,6 +169,7 @@ WOQLStreamConfig.prototype.create = function(client, renderers){
 
 function WOQLChooserConfig(){
 	this.rules = [];
+	this.type = "chooser";
 }
 
 WOQLChooserConfig.prototype.getMatchingRules = function(row, key, context, action){
@@ -156,6 +184,36 @@ WOQLChooserConfig.prototype.create = function(client, renderers){
 	}
 	return wqt;
 }
+
+WOQLChooserConfig.prototype.prettyPrint = function(){
+	var str = "view = WOQL.chooser();\n";
+	if(typeof this.change() != "undefined"){
+		str += "view.change(" + this.change() + ")\n";		
+	}
+	if(typeof this.show_empty() != "undefined"){
+		str += "view.show_empty('" + this.show_empty() + "')\n";		
+	}
+	if(typeof this.values() != "undefined"){
+		str += "view.values('" + removeNamespaceFromVariable(this.values()) + "')\n";		
+	}
+	if(typeof this.labels() != "undefined"){
+		str += "view.labels('" + removeNamespaceFromVariable(this.labels()) + "')\n";		
+	}
+	if(typeof this.titles() != "undefined"){
+		str += "view.titles('" + removeNamespaceFromVariable(this.titles()) + "')\n";		
+	}
+	if(typeof this.sort() != "undefined"){
+		str += "view.sort(" + this.sort() + ")\n";		
+	}
+	if(typeof this.direction() != "undefined"){
+		str += "view.direction('" + this.direction() + "')\n";		
+	}
+	for(var i = 0; i<this.rules.length ; i++){
+		str += "view." + this.rules[i].prettyPrint("chooser") + "\n";
+	}
+	return str;
+}
+
 
 WOQLChooserConfig.prototype.change = function(v){
 	if(typeof v != "undefined"){
@@ -172,7 +230,6 @@ WOQLChooserConfig.prototype.show_empty = function(p){
 	}
 	return this.placeholder;	
 }
-
 
 WOQLChooserConfig.prototype.rule = function(v){
 	let nr = new WOQLRule("row");
@@ -230,10 +287,7 @@ WOQLChooserConfig.prototype.direction = function(v){
 
 function WOQLTableConfig(){
 	this.rules = [];
-	this.show_pager = true;
-	this.show_pagesize = true;	
-	this.change_pagesize = true;
-	this.show_pagenumber = true;
+	this.type = "table";
 }
 
 WOQLTableConfig.prototype.getMatchingRules = function(row, key, context, action){
@@ -250,7 +304,31 @@ WOQLTableConfig.prototype.create = function(client, renderers, dtypes){
 	return wqt;
 }
 
+WOQLTableConfig.prototype.prettyPrint = function(){
+	var str = "view = WOQL.table();\n";
+	if(typeof this.column_order() != "undefined"){
+		str += "view.column_order('" + this.column_order() + "')\n";		
+	}
+	if(typeof this.pagesize() != "undefined"){
+		str += "view.pagesize(" + this.pagesize() + ")\n";		
+	}
+	if(typeof this.renderer() != "undefined"){
+		str += "view.renderer('" + this.renderer() + "')\n";		
+	}
+	if(typeof this.pager() != "undefined"){
+		str += "view.pager(" + this.pager() + ")\n";		
+	}
+	if(typeof this.page() != "undefined"){
+		str += "view.page(" + this.page() + ")\n";		
+	}
+	for(var i = 0; i<this.rules.length ; i++){
+		str += "view." + this.rules[i].prettyPrint("table") + "\n";
+	}
+	return str;
+}
+
 WOQLTableConfig.prototype.renderer = function(rend){
+	if(!rend) return this.trenderer;
 	this.trenderer = rend;
 	return this;
 }
@@ -302,7 +380,8 @@ WOQLTableConfig.prototype.row = function(){
 }
 
 WOQLGraphConfig = function(){
-	this.rules = [];	
+	this.rules = [];
+	this.type = "graph";	
 }
 
 WOQLGraphConfig.prototype.create = function(client, renderers){
@@ -316,6 +395,49 @@ WOQLGraphConfig.prototype.create = function(client, renderers){
 
 WOQLGraphConfig.prototype.getMatchingRules = function(row, key, context, action){
 	return getMatchingRules(this.rules, row, key, context, action);
+}
+
+WOQLGraphConfig.prototype.prettyPrint = function(){
+	var str = "view = WOQL.graph();\n";
+	if(typeof this.literals() != "undefined"){
+		str += "view.literals('" + this.literals() + "')\n";		
+	}
+	if(typeof this.source() != "undefined"){
+		str += "view.source('" + removeNamespaceFromVariable(this.source()) + "')\n";		
+	}
+	if(typeof this.fontfamily() != "undefined"){
+		str += "view.fontfamily('" + this.fontfamily() + "')\n";		
+	}
+	if(typeof this.show_force() != "undefined"){
+		str += "view.show_force('" + this.show_force() + "')\n";		
+	}
+	if(typeof this.fix_nodes() != "undefined"){
+		str += "view.fix_nodes('" + this.fix_nodes() + "')\n";		
+	}
+	if(typeof this.explode_out() != "undefined"){
+		str += "view.explode_out('" + this.explode_out() + "')\n";		
+	}
+	if(typeof this.selected_grows() != "undefined"){
+		str += "view.selected_grows('" + this.selected_grows() + "')\n";		
+	}
+	if(typeof this.width() != "undefined"){
+		str += "view.width('" + this.width() + "')\n";		
+	}
+	if(typeof this.height() != "undefined"){
+		str += "view.height('" + this.height() + "')\n";		
+	}
+	if(typeof this.edges() != "undefined"){
+		var nedges = this.edges();
+		var estrs = [];
+		for(var i = 0; i<nedges.length; i++){
+			estrs.push("['" + nedges[i][0] + ", " + nedges[i][1] + "']");
+		}
+		str += "view.edges('" + estrs.join(", ") + "')\n";		
+	}
+	for(var i = 0; i<this.rules.length ; i++){
+		str += "view." + this.rules[i].prettyPrint("graph") + "\n";
+	}
+	return str;
 }
 
 WOQLGraphConfig.prototype.literals = function(v){
@@ -367,6 +489,14 @@ WOQLGraphConfig.prototype.explode_out = function(v){
 	return this.explode;
 }
 
+WOQLGraphConfig.prototype.selected_grows = function(v){
+	if(typeof v != "undefined"){
+		this.bigsel = v;
+		return this;
+	}
+	return this.bigsel;
+}
+
 WOQLGraphConfig.prototype.width = function(v){
 	if(typeof v != "undefined"){
 		this.gwidth = v;
@@ -383,19 +513,16 @@ WOQLGraphConfig.prototype.height = function(v){
 	return this.gheight;
 }
 
-WOQLGraphConfig.prototype.selected_grows = function(v){
-	if(typeof v != "undefined"){
-		this.bigsel = v;
+WOQLGraphConfig.prototype.edges = function(...edges){
+	if(edges && edges.length){
+		var nedges = [];
+		for(var i = 0; i<edges.length; i++){
+			nedges.push(addNamespacesToVariables(edges[i]));
+		}
+		this.show_edges = nedges;
 		return this;
 	}
-	return this.bigsel;
-}
-
-WOQLGraphConfig.prototype.node = function(...cols){
-	let nr = new WOQLRule("node");
-	nr.setVariables(cols);
-	this.rules.push(nr);
-	return nr;
+	return this.show_edges;
 }
 
 WOQLGraphConfig.prototype.edge = function(source, target){
@@ -409,21 +536,101 @@ WOQLGraphConfig.prototype.edge = function(source, target){
 	return nr;
 }
 
-WOQLGraphConfig.prototype.edges = function(...edges){
-	if(edges && edges.length){
-		var nedges = [];
-		for(var i = 0; i<edges.length; i++){
-			nedges.push(addNamespacesToVariables(edges[i]));
-		}
-		this.show_edges = nedges;
-		return this;
-	}
-	return this.show_edges;
+WOQLGraphConfig.prototype.node = function(...cols){
+	let nr = new WOQLRule("node");
+	nr.setVariables(cols);
+	this.rules.push(nr);
+	return nr;
 }
+
 
 function WOQLRule(s){
 	this.rule = { scope: s };
 }
+
+WOQLRule.prototype.prettyPrint = function(type){
+	//starts with obj. ...
+	var str = "."+ this.rule.scope + "('" + this.rule.variables.join("', '") + "')";
+	if(typeof this.literal() != "undefined"){
+		str += ".literal(" + this.literal() + ")";
+	}
+	if(typeof this.type() != "undefined"){
+		str += ".type(" + JSON.stringify(removeNamespacesFromVariables(this.type())) + ")";
+	}
+	if(typeof this.selected() != "undefined"){
+		str += ".selected(" + this.selected() + ")";
+	}
+	if(typeof this.label() != "undefined"){
+		str += ".label(" + this.label() + ")";
+	}
+	if(typeof this.size() != "undefined"){
+		str += ".size('" + this.size() + "')";
+	}
+	if(typeof this.color() != "undefined"){
+		str += ".color([" + this.color().join(",") + "])";
+	}
+	if(typeof this.charge() != "undefined"){
+		str += ".charge('" + this.charge() + "')";
+	}
+	if(typeof this.distance() != "undefined"){
+		str += ".distance('" + this.distance() + "')";
+	}
+	if(typeof this.weight() != "undefined"){
+		str += ".distance('" + this.weight() + "')";
+	}
+	if(typeof this.symmetric() != "undefined"){
+		str += ".symmetric(" + this.symmetric() + ")";
+	}
+	if(typeof this.collisionRadius() != "undefined"){
+		str += ".collisionRadius(" + this.collisionRadius() + ")";
+	}
+	if(typeof this.icon() != "undefined"){
+		str += ".icon(" + JSON.stringify(this.icon()) + ")";
+	}
+	if(typeof this.text() != "undefined"){
+		str += ".text(" + JSON.stringify(this.text()) + ")";
+	}
+	if(typeof this.arrow() != "undefined"){
+		str += ".arrow(" + JSON.stringify(this.arrow()) + ")";
+	}
+	if(typeof this.border() != "undefined"){
+		str += ".border(" + JSON.stringify(this.border()) + ")";
+	}
+	if(typeof this.args() != "undefined"){
+		str += ".args(" + JSON.stringify(this.args()) + ")";
+	}
+	if(typeof this.renderer() != "undefined"){
+		str += ".renderer('" + this.renderer() + "')";
+	}
+	if(typeof this.render() != "undefined"){
+		str += ".render(" + this.render() + ")";
+	}
+	if(typeof this.header() != "undefined"){
+		str += ".header('" + this.header() + "')";
+	}
+	if(typeof this.click() != "undefined"){
+		str += ".click(" + this.click() + ")";
+	}
+	if(typeof this.hover() != "undefined"){
+		str += ".hover(" + this.hover() + ")";
+	}
+	for(var v in this.rule.constraints){
+		str += ".v('" + v + "')";
+		for(var i = 0; i<this.rule.constraints[v].length; i++){
+			if(typeof(this.rule.constraints[v][i]) == "function"){
+				str += ".filter(" + this.rule.constraints[v][i] + ")";
+			}
+			else {
+				str += ".in(" + JSON.stringify(this.rule.constraints[v][i]) + ")";
+			}
+		}
+	}
+	return str;
+}
+
+/*
+ * Graph
+ */
 
 WOQLRule.prototype.size = function(size){
 	if(typeof size == "undefined"){
@@ -514,6 +721,9 @@ WOQLRule.prototype.weight = function(w){
 	return this.rule.weight;
 }
 
+/*
+ * Table 
+ */
 
 WOQLRule.prototype.renderer = function(rend){
 	if(typeof rend == "undefined"){
@@ -556,6 +766,11 @@ WOQLRule.prototype.hover = function(onHover){
 	return this.rule.hover;
 }
 
+/*
+ * All
+ */
+
+
 WOQLRule.prototype.hidden = function(hidden){
 	if(typeof hidden == "undefined"){
 		return this.rule.hidden;
@@ -565,16 +780,28 @@ WOQLRule.prototype.hidden = function(hidden){
 }
 
 WOQLRule.prototype.args = function(args){
+	if(typeof args == "undefined"){
+		return this.rule.args;
+	}
 	this.rule.args = args;
 	return this;
 }
 
+/*
+ * The below are conditions
+ */
 WOQLRule.prototype.literal = function(tf){
+	if(typeof tf == "undefined"){
+		return this.rule.literal;
+	}
 	this.rule.literal = tf;
 	return this;
 }
 
 WOQLRule.prototype.type = function(...list){
+	if(typeof list == "undefined"){
+		return this.rule.type;
+	}
 	this.rule.type = list;
 	return this;
 }
@@ -630,6 +857,10 @@ WOQLRule.prototype.title = function(l){
 	return this.rule.title;
 }
 
+/*
+ * This is for chooser
+ */
+
 WOQLRule.prototype.selected = function(s){
 	if(typeof s != "undefined"){
 		this.rule.selected = s;
@@ -683,23 +914,26 @@ WOQLRule.prototype.match = function(data, key, context, action){
 		}
 		if(typeof key == "object"){
 			if(this.rule.constraints && this.rule.constraints[key[0]]){
+				if(!data) return false;
 				for(var i = 0; i<this.rule.constraints[key[0]].length; i++){
-					if(!this.test(row[key[0]], this.rule.constraints[key][0])){
+					if(!this.test(data[key[0]], this.rule.constraints[key][0])){
 						return false;
 					}
 				}			
 			}
 			if(this.rule.constraints && this.rule.constraints[key[1]]){
+				if(!data) return false;
 				for(var i = 0; i<this.rule.constraints[key[1]].length; i++){
-					if(!this.test(row[key[1]], this.rule.constraints[key][1])){
+					if(!this.test(data[key[1]], this.rule.constraints[key][1])){
 						return false;
 					}
 				}			
 			}
 		}
 		else if(this.rule.constraints && this.rule.constraints[key]){
+			if(!data) return false;
 			for(var i = 0; i<this.rule.constraints[key].length; i++){
-				if(!this.test(row[key], this.rule.constraints[key])){
+				if(!this.test(data[key], this.rule.constraints[key])){
 					return false;
 				}
 			}			
@@ -711,6 +945,7 @@ WOQLRule.prototype.match = function(data, key, context, action){
 	}
 	else {
 		for(var k in this.rule.constraints){
+			if(!data) return false;
 			for(var i = 0; i<this.rule.constraints[k].length; i++){
 				if(!this.test(data[k], this.rule.constraints[k])){
 					return false;
@@ -744,6 +979,21 @@ function addNamespacesToVariables(vars){
 	}	
 	return nvars;
 }
+
+function removeNamespaceFromVariable(mvar){
+	if(mvar.substring(0, 2) == "v:") return mvar.substring(2) 
+	return mvar;
+}
+
+
+function removeNamespacesFromVariables(vars){
+	var nvars = [];
+	for(var i = 0; i<vars.length; i++){
+		nvars.push(removeNamespaceFromVariable(vars[i]));
+	}	
+	return nvars;
+}
+
 
 function getMatchingRules(rules, row, key, context, action){
 	var matches = [];
