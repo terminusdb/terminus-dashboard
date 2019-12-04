@@ -303,11 +303,14 @@ function stylizeEditor(ui, txt, view, mode){
    mode: format to be displayed in
 */
 function stylizeCodeDisplay(ui, txt, dom, mode){
-    var cmConfig = ui.pluginAvailable("codemirror");
-    if(!(cmConfig)) return false;
-    var cm = new Codemirror(txt, mode, cmConfig);
+    if(ui){
+        var cmConfig = ui.pluginAvailable("codemirror");
+        if(!(cmConfig)) return false;
+        var cm = new Codemirror(txt, mode, cmConfig);
+    }
+    else var cm = new Codemirror(txt, mode, {});
     var pr = cm.colorizePre();
-    dom.appendChild(pr);
+    if(dom) dom.appendChild(pr);
     return true;
 }
 
@@ -326,7 +329,7 @@ function setSelectedSubMenu(a){
     a.classList.add("terminus-submenu-selected");
 }
 
-function selectWithinParent(el, className){
+function setSelected(el, className){
     var par = el.parentElement;
     for(var i=0; i<par.childNodes.length; i++){
         if(par.childNodes[i].classList.contains(className))
@@ -509,5 +512,5 @@ module.exports={tolggleContent,
                getCurrentWoqlQueryObject,
                getButton,
                trimValue,
-               selectWithinParent,
+               setSelected,
                getqObjFromInput}
