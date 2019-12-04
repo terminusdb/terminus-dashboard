@@ -177,7 +177,8 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	if(docs.count() > 0){
 		var show_doc_action = this.getShowDocumentControl();
 		span.prepend(show_doc_action);
-		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: false});
+		var dp = new QueryPane(this.ui.client, docs.query, docs)
+					.options({showQuery: "icon", editQuery: true});
 		var table = WOQL.table();
 		var g = WOQL.graph();
 		var options =  { showConfig: "icon", editConfig: "true", viewers: [g] };
@@ -399,7 +400,7 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 	var dburl = this.ui.client.connectionConfig.dbURL();
 	var df = new DocumentPane(this.ui.client).options({
 		showQuery: "icon",
-		editQuery: false,
+		editQuery: true,
 		loadDocument: this.getShowDocumentControl(),
 	});
 	var q2 = WOQL.from(dburl).concreteDocumentClasses();
@@ -442,11 +443,6 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 		})*/
 	})
 	.catch((e) => this.ui.showError(e));
-
-
-	//pane for document
-	//pane for table
-	//pane for graph
 }
 
 TerminusDBViewer.prototype.getShowDocumentControl = function(){

@@ -462,8 +462,8 @@ WOQLGraphConfig.prototype.fontfamily = function(v){
 		this.fontfam = v;
 		return this;
 	}
-	return 'Font Awesome 5 Free';
-	//return this.fontfam;
+	//return 'Font Awesome 5 Free';
+	return this.fontfam;
 }
 
 WOQLGraphConfig.prototype.show_force = function(v){

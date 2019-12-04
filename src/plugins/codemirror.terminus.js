@@ -12,6 +12,34 @@ function objectIsEmpty(arg) {
   return true;
 }
 
+function autocomplete(){
+    var orig = CodeMirror.hint.javascript = function (cm) {
+        var list = ["limit()","start()","triple()"];//Session.get(Template.strSessionDistinctFields) || [];
+        var cursor = cm.getCursor();
+        var currentLine = cm.getLine(cursor.line);
+        var start = cursor.ch;
+        var end = start;
+        while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end))) ++end;
+        while (start && /[\w$]+/.test(currentLine.charAt(start - 1))) --start;
+        var curWord = start != end && currentLine.slice(start, end);
+        var regex = new RegExp('^' + curWord, 'i');
+        var result = {
+            list: (!curWord ? list : list.filter(function (item) {
+                return item.match(regex);
+            })).sort(),
+            from: CodeMirror.Pos(cursor.line, start),
+            to: CodeMirror.Pos(cursor.line, end)
+        };
+        return result;
+    };
+    // codeMirror.hint.sql is defined when importing codemirror/addon/hint/sql-hint
+    // (this is mentioned in codemirror addon documentation)
+    // Reference the hint function imported here when including other hint addons
+    // or supply your own
+   	//cm.replaceSelection(".");
+    //codeMirror.showHint(cm, CodeMirror.hint.javascript, hintOptions);
+}
+
 /*
 txtar    : editor is attached to textar
 mode     : format for highlighting, ex: json, html etc.
@@ -34,15 +62,21 @@ Codemirror.prototype.colorizeTextArea = function(dimensions){
         newlineAndIndent    : true,
         autoCloseBrackets   : true,
         matchBrackets       : {afterCursor: true},
-        extraKeys           : {"Ctrl-F": "find", "Tab": "autocomplete" },
-        refresh             : true
+        extraKeys           : {"Ctrl-F": "find",
+                               //"Tab": "autocomplete",
+                               "Tab": "autocomplete",
+                               "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+        refresh             : true,
+        foldGutter          : true,
+        gutters             : ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
+    editor.foldCode(CodeMirror.Pos(13, 0));
     if(!(objectIsEmpty(dimensions)))
         editor.setSize(dimensions.width, dimensions.height);
     else this.setCodemirrorSize(editor, dimensions);
     editor.defaultCharWidth('20px');
-    //if(this.darkMode) editor.setOption("theme", 'erlang-dark');
-    //else editor.setOption("theme", 'neo');
+    if(this.darkMode) editor.setOption("theme", 'erlang-dark');
+    else editor.setOption("theme", 'neo');
     return editor;
 } // colorizeTextArea()
 
