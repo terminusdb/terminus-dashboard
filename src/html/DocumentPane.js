@@ -48,7 +48,7 @@ DocumentPane.prototype.options = function(opts){
 	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : true);
 	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : true);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: "true", editConfig: "true" }; 
+	this.defaultResultView = { showConfig: "true", editConfig: "true" };
 	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
     return this;
 }
@@ -83,13 +83,13 @@ DocumentPane.prototype.getAsDOM = function(){
 		function showQueryConfig(){
 			ispan.title="Click to Hide Query";
 			ic.setAttribute("class", "fas fa fa-times-circle");
-			if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);            
+			if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);
 			else self.container.appendChild(ipdom);
 		}
 		function hideQueryConfig(){
 			ispan.title="Click to View Query";
             ic.setAttribute("class", "fas fa fa-search");
-			self.container.removeChild(ipdom);            
+			self.container.removeChild(ipdom);
 		}
 		ispan.addEventListener("click", () => {
 			if(this.showingQuery) hideQueryConfig();
@@ -101,7 +101,7 @@ DocumentPane.prototype.getAsDOM = function(){
 		this.queryPane = ipdom;
 	}
 	if(this.showConfig){
-        this.showingConfig = (this.showConfig != "icon");	
+        this.showingConfig = (this.showConfig != "icon");
 		var mode = (this.editConfig ? "edit" : "view");
 		this.input = this.createInput(mode);
 		var ndom = this.input.getAsDOM();
@@ -117,13 +117,16 @@ DocumentPane.prototype.getAsDOM = function(){
 		function showDocConfig(){
 			nspan.title="Click to Hide View Configuration";
 			nc.setAttribute("class", "fas fa fa-times-circle");
-			if(configspan.nextSibling) self.container.insertBefore(ndom, configspan.nextSibling);            
+			if(configspan.nextSibling) self.container.insertBefore(ndom, configspan.nextSibling);
 			else self.container.appendChild(ndom);
+			//stylize only after ta or pre have been appended
+			if((self.input.snippet.value) || (self.input.snippet.innerHTML))
+				self.input.stylizeSnippet();
 		}
 		function hideDocConfig(){
 			nspan.title="Click to View Configuration";
             nc.setAttribute("class", "fas fa fa-vial");
-			self.container.removeChild(ndom);            
+			self.container.removeChild(ndom);
 		}
 		nspan.addEventListener("click", () => {
 			if(this.showingConfig) hideDocConfig();
@@ -134,7 +137,7 @@ DocumentPane.prototype.getAsDOM = function(){
 		if(this.showConfig == "icon") hideDocConfig();
     }
 	this.resultDOM = document.createElement("span");
-	this.resultDOM.setAttribute("class", "terminus-document-results"); 
+	this.resultDOM.setAttribute("class", "terminus-document-results");
 	//var form = (this.input.format == "js" ? "javascript" : "json");
 	//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
 	this.container.appendChild(this.resultDOM);

@@ -1656,7 +1656,7 @@ div.terminus-margin-left-auto {
 }
 .terminus-result-view-icon:hover, .terminus-snippet-button:hover, .terminus-query-view-icon:hover{
     /*transform: scale(1.2); */
-	border: 2px solid #002856;
+	border: 1px solid #002856;
 }
 .terminus-view-selected, .terminus-snippet-format-selected{
 	background: #002856 !important;

@@ -143,6 +143,14 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 	return this.container;
 }
 
+TerminusDBViewer.prototype.getRulesForListOfDocuments = function(woql) {
+	var table = woql.table();
+	table.column('Label').header('Document');
+	table.column('Comment').header('Description');
+	table.column('Type_Comment').header('Type Description');
+	return table;
+}
+
 TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	var WOQL = TerminusClient.WOQL;
 	var self = this;
@@ -177,12 +185,13 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	if(docs.count() > 0){
 		var show_doc_action = this.getShowDocumentControl();
 		span.prepend(show_doc_action);
-		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: false});
-		var table = WOQL.table();
+		var dp = new QueryPane(this.ui.client, docs.query, docs)
+					.options({showQuery: "icon", editQuery: true});
+		var table = this.getRulesForListOfDocuments(WOQL);
 		var g = WOQL.graph();
-		var options =  { showConfig: "icon", editConfig: "true", viewers: [g] };
+		var options =  { showConfig: "icon", editConfig: "true", viewers: [g]};
 		dp.addView(table, options);
-		body.appendChild(UTILS.getHeaderDom('Displaying Up to 20 Documents'));
+		body.appendChild(UTILS.getHeaderDom('Table view of documents'));
 		body.appendChild(dp.getAsDOM());
 		var WOQL = TerminusClient.WOQL;
 		var dburl = this.ui.client.connectionConfig.dbURL();
@@ -190,10 +199,9 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		q.execute(this.ui.client).then( (result) => {
 			var g = new TerminusClient.WOQLResult(result, q);
 			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
-			var table = WOQL.table();
 			var g2 = WOQL.graph();
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
-			body.appendChild(UTILS.getHeaderDom('All available Documents'));
+			body.appendChild(UTILS.getHeaderDom('Graph view of Documents'));
 			ddp.addView(g2, options);
 			body.appendChild(ddp.getAsDOM());
 			this.container.appendChild(body);
@@ -273,12 +281,11 @@ TerminusDBViewer.prototype.getCreateDataChooser = function(docClasses, qopts, ro
 	dp.addView(chooser, ropts);
 	var dchooser = dp.getAsDOM();
 	return dchooser;
-
 }
 
 TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	var hbox = document.createElement("div");
-	hbox.setAttribute("class", "terminus-welcome-box");
+	hbox.setAttribute("class", "terminus-welcome-box terminus-no-res-alert");
 	var self = this;
 	var sets = {};
 	if(type == "schema"){
@@ -399,7 +406,7 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 	var dburl = this.ui.client.connectionConfig.dbURL();
 	var df = new DocumentPane(this.ui.client).options({
 		showQuery: "icon",
-		editQuery: false,
+		editQuery: true,
 		loadDocument: this.getShowDocumentControl(),
 	});
 	var q2 = WOQL.from(dburl).concreteDocumentClasses();
@@ -442,11 +449,6 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 		})*/
 	})
 	.catch((e) => this.ui.showError(e));
-
-
-	//pane for document
-	//pane for table
-	//pane for graph
 }
 
 TerminusDBViewer.prototype.getShowDocumentControl = function(){
