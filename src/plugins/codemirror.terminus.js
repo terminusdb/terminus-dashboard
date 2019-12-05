@@ -63,7 +63,6 @@ Codemirror.prototype.colorizeTextArea = function(dimensions){
         autoCloseBrackets   : true,
         matchBrackets       : {afterCursor: true},
         extraKeys           : {"Ctrl-F": "find",
-                               //"Tab": "autocomplete",
                                "Tab": "autocomplete",
                                "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
         refresh             : true,
