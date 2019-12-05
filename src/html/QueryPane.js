@@ -45,14 +45,11 @@ QueryPane.prototype.getAsDOM = function(){
 			ic.setAttribute("class", "fas fa fa-times-circle");
 			if(configspan.nextSibling){
 				self.container.insertBefore(ipdom, configspan.nextSibling);
-				if(self.input.snippet.value)
-					self.input.stylizeSnippet();
 			}
 			else {
 				self.container.appendChild(ipdom);
-				if(self.input.snippet.value)
-					self.input.stylizeSnippet();
 			}
+			self.input.stylizeSnippet();
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Query";

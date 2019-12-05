@@ -322,10 +322,13 @@ span.terminus-format-button-align{
 
 .terminus-hover-table{
 	/*width:100%;*/
-	border-collapse:collapse;
+	/*border-collapse:collapse;*/
+	display: table;
+    table-layout: fixed;
+    width: 100%;
 }
 .terminus-hover-table td{
-	 border:lightgrey 0.5px solid;
+	 border:lightgrey 0.2px solid;
 	 height: 10px;
 	 padding: 7px;
 }
@@ -940,7 +943,14 @@ div.terminus-margin-top, table.terminus-margin-top{
 	font-size: larger;
 	color: #00C08B;
 }
-
+span.woql-chooser select.woql-chooser{
+	padding: 5px;
+	height: 40px;
+}
+div.terminus-welcome-box{
+	width: 900px;
+	margin: 30px;
+}
 .terminus-db-info-box .terminus-info-heading {
 	font-size: 26px;
 	color: #00C08B;
@@ -1656,7 +1666,7 @@ div.terminus-margin-left-auto {
 }
 .terminus-result-view-icon:hover, .terminus-snippet-button:hover, .terminus-query-view-icon:hover{
     /*transform: scale(1.2); */
-	border: 2px solid #002856;
+	border: 1px solid #002856;
 }
 .terminus-view-selected, .terminus-snippet-format-selected{
 	background: #002856 !important;
