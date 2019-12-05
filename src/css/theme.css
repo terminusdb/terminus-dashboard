@@ -943,7 +943,14 @@ div.terminus-margin-top, table.terminus-margin-top{
 	font-size: larger;
 	color: #00C08B;
 }
-
+span.woql-chooser select.woql-chooser{
+	padding: 5px;
+	height: 40px;
+}
+div.terminus-welcome-box{
+	width: 900px;
+	margin: 30px;
+}
 .terminus-db-info-box .terminus-info-heading {
 	font-size: 26px;
 	color: #00C08B;

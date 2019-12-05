@@ -49,9 +49,7 @@ QueryPane.prototype.getAsDOM = function(){
 			else {
 				self.container.appendChild(ipdom);
 			}
-			//stylize only after ta or pre have been appended
-			if((self.input.snippet.value) || (self.input.snippet.innerHTML))
-				self.input.stylizeSnippet();
+			self.input.stylizeSnippet();
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Query";
