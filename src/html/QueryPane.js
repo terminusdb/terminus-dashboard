@@ -43,6 +43,7 @@ QueryPane.prototype.getAsDOM = function(){
 		function showQueryConfig(){
 			configspan.title="Click to Hide Query";
 			ic.setAttribute("class", "fas fa fa-times-circle");
+			configspan.classList.remove('terminus-click-to-view-query');
 			if(configspan.nextSibling){
 				self.container.insertBefore(ipdom, configspan.nextSibling);
 			}
@@ -54,6 +55,7 @@ QueryPane.prototype.getAsDOM = function(){
 		function hideQueryConfig(){
 			configspan.title="Click to View Query";
             ic.setAttribute("class", "fas fa fa-search terminus-query-view-icon");
+			configspan.classList.add('terminus-click-to-view-query');
 			self.container.removeChild(ipdom);
 		}
 		configspan.addEventListener("click", () => {

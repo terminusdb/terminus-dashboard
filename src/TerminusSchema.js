@@ -18,6 +18,21 @@ function TerminusSchemaViewer(ui){
 	this.woql = WOQL;
 }
 
+TerminusSchemaViewer.prototype.changeHeaders = function() {
+	var table = this.woql.table();
+	table.column('Comment').header('Description');
+	return table;
+}
+
+TerminusSchemaViewer.prototype.setGraphSize = function(){
+	var graph = this.woql.graph();
+	graph.source("v:Subject");
+	var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
+	graph.edge("v:Subject", "v:Object").icon(licon2);
+	graph.width(1223);
+	return graph;
+}
+
 TerminusSchemaViewer.prototype.getOWLView = function(){
 	this.mode = 'view'; // reset mode
 	this.loadSchema();
@@ -53,9 +68,11 @@ TerminusSchemaViewer.prototype.getAllProperties = function(){
     query.execute(this.ui.client).then((results) => {
 		let qres = new TerminusClient.WOQLResult(results, query);
 		self.qprops = qres;
-		this.view.appendChild(UTILS.getHeaderDom('Properties'));
-		self.appendPropertyViews(this.woql.table());
-		self.appendPropertyViews(this.woql.graph());
+		this.view.appendChild(UTILS.getHeaderDom('Table & Graph View of Properties'));
+		var table = self.changeHeaders();
+		var graph = self. setGraphSize();
+		self.appendPropertyViews(table);
+		self.appendPropertyViews(graph);
 	})
 }
 
@@ -68,15 +85,11 @@ TerminusSchemaViewer.prototype.getAllClasses = function(){
     query.execute(this.ui.client).then((results) => {
 		let qres = new TerminusClient.WOQLResult(results, query);
 		self.qclasses = qres;
-		self.view.appendChild(UTILS.getHeaderDom('Classes'));
-		self.appendClassViews(this.woql.table());
-
-		var g = this.woql.graph();
-		g.source("v:Subject");
-		var licon2 = { color: [255,255,25], weight: 100, unicode: "\uf2bb", size:2 };
-		g.edge("v:Subject", "v:Object").icon(licon2);
-
-		self.appendClassViews(g);
+		self.view.appendChild(UTILS.getHeaderDom('Table & Graph View of Classes'));
+		var table = self.changeHeaders();
+		var graph = self. setGraphSize();
+		self.appendClassViews(table);
+		self.appendClassViews(graph);
 	})
 }
 
@@ -313,7 +326,9 @@ TerminusSchemaViewer.prototype.getSaveButton = function(){
 		}
 		var opts = {};
 		opts['terminus:encoding'] =  'terminus:' + self.format;
-		opts['schemaId'] = self.ui.client.connectionConfig.dbURL() + '/' + self.schema_edit_dom_name.value;
+		if(!(TerminusClient.FrameHelper.empty(self.schema_edit_dom_name)))
+			opts['schemaId'] = self.ui.client.connectionConfig.dbURL() + '/' + self.schema_edit_dom_name.value;
+		else opts['schemaId'] = self.ui.client.connectionConfig.dbURL() + '/' + 'schema';
 		return self.updateSchema(text, opts);
 	}
 	return this.getSchemaButton("Save", "update_schema", func);
@@ -477,9 +492,7 @@ TerminusSchemaViewer.prototype.showConfirmPage = function(newschema){
 	this.refreshPage("Confirm new schema");
 }
 
-TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
-	var np = document.createElement("div");
-	np.setAttribute("class", "terminus-schema-page terminus-schema-edit-page");
+TerminusSchemaViewer.prototype.getSchemaNameInputDOM = function(np){
 	var label = document.createElement('label');
     label.setAttribute('class', 'terminus-control-label');
 	label.setAttribute('for', 'basicinput');
@@ -489,6 +502,13 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	sid.setAttribute('placeholder', 'Enter schema name');
 	np.appendChild(label);
 	np.appendChild(sid);
+	return sid;
+}
+
+TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
+	var np = document.createElement("div");
+	np.setAttribute("class", "terminus-schema-page terminus-schema-edit-page");
+	if(this.ui.showControl("add_new_library")) var sid = this.getSchemaNameInputDOM(np);
 	var ipval = document.createElement("textarea");
 	ipval.setAttribute("class", "terminus-schema-edit terminus-schema-textarea");
 	ipval.setAttribute("width", "100%");
@@ -499,7 +519,7 @@ TerminusSchemaViewer.prototype.getSchemaEditDOM = function(){
 	else if(typeof (this.schema) == "object") {
 		ipval.innerHTML = JSON.stringify(this.schema, 0, 4);
 	}
-	this.schema_edit_dom_name = sid;
+	if(this.ui.showControl("add_new_library")) this.schema_edit_dom_name = sid;
 	this.schema_edit_dom = ipval;
 	np.appendChild(ipval);
 	UTILS.stylizeEditor(this.ui, ipval, 'schema', 'turtle');
