@@ -83,7 +83,7 @@ ResultPane.prototype.getAsDOM = function(){
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Configuration";
-            ic.setAttribute("class", "terminus-result-view-icon " + self.getViewConfigIconClass());
+            ic.setAttribute("class", "terminus-result-icons terminus-result-view-icon " + self.getViewConfigIconClass());
 			self.container.removeChild(ipdom);
 		}
 		ispan.addEventListener("click", () => {

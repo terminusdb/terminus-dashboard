@@ -151,6 +151,12 @@ TerminusDBViewer.prototype.getRulesForListOfDocuments = function(woql) {
 	return table;
 }
 
+TerminusDBViewer.prototype.getRulesForGraphOfDocuments = function(woql){
+	var graph = woql.graph();
+	graph.height(500).width(1250);
+	return graph;
+}
+
 TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	var WOQL = TerminusClient.WOQL;
 	var self = this;
@@ -188,7 +194,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		var dp = new QueryPane(this.ui.client, docs.query, docs)
 					.options({showQuery: "icon", editQuery: true});
 		var table = this.getRulesForListOfDocuments(WOQL);
-		var g = WOQL.graph();
+		var g = this.getRulesForGraphOfDocuments(WOQL);
 		var options =  { showConfig: "icon", editConfig: "true", viewers: [g]};
 		dp.addView(table, options);
 		body.appendChild(UTILS.getHeaderDom('Table view of documents'));
@@ -199,9 +205,9 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		q.execute(this.ui.client).then( (result) => {
 			var g = new TerminusClient.WOQLResult(result, q);
 			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
-			var g2 = WOQL.graph();
+			var g2 = this.getRulesForGraphOfDocuments(WOQL);
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
-			body.appendChild(UTILS.getHeaderDom('Graph view of Documents'));
+			body.appendChild(UTILS.getHeaderDom('Graph view of Documents linked to each other'));
 			ddp.addView(g2, options);
 			body.appendChild(ddp.getAsDOM());
 			this.container.appendChild(body);
