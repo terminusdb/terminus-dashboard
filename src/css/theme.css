@@ -427,6 +427,20 @@ span.terminus-query-results{
 	max-width: 1250px;
     width: 100%;
 	display: -webkit-inline-box;
+	margin: 10px 0px 20px 0px;
+
+}
+span.terminus-click-to-view-query{
+	margin-top: 10px;
+	z-index: 10;
+	position: absolute;
+}
+span.terminus-result-icons, i.terminus-result-icons{
+	float: right;
+}
+span.pane-config-icons{
+	/*float: right;*/
+	margin-right: 20px;
 }
 div.terminus-query-pane-cont{
 	border: 1px solid grey;
@@ -945,7 +959,7 @@ div.terminus-margin-top, table.terminus-margin-top{
 }
 span.woql-chooser select.woql-chooser{
 	padding: 5px;
-	height: 40px;
+	height: 36px;
 }
 div.terminus-welcome-box{
 	width: 900px;
@@ -1734,7 +1748,7 @@ div.terminus-margin-left-auto {
 	color: #fff;
 }
 
-.terminus-query-inp-layout {
+.terminus-query-inp-layout{
 	display: flex !important;
 }
 
