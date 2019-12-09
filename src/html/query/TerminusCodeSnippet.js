@@ -36,14 +36,6 @@ TerminusCodeSnippet.prototype.serialise = function(query, format){
 	}
 }
 
-function replacer(key, value) {
-  // Filtering out properties
-  if (typeof value === '\n') {
-    return undefined;
-  }
-  return value;
-}
-
 //parses a string encoding a woql in either json or js notation
 TerminusCodeSnippet.prototype.parseText = function(text, format){
 	try {
@@ -58,7 +50,12 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 		}
 		else {
 			var qval = JSON.parse(text);
-			return WOQL.json(qval);
+			if(this.language == "woql"){
+				return WOQL.json(qval);
+			}
+			else {
+				return WOQL.loadConfig(qval);
+			}
 		}
 	}
 	catch(e){
@@ -94,12 +91,12 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
 		this.snippet.setAttribute("placeholder", this.placeholder);
     if(this.width && this.height)
 		this.snippet.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");
-    if(this.language == "woql"){
+    //if(this.language == "woql"){
     	snpc.appendChild(this.getFormatButtons());
-    }
-    else {
-    	if(with_buttons) snpc.appendChild(this.getViewTypeButtons());
-    }
+    //}
+    //else {
+    //	if(with_buttons) snpc.appendChild(this.getViewTypeButtons());
+    //}
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
     	if(this.mode == "edit"){
