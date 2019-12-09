@@ -86,6 +86,7 @@ TerminusCodeSnippet.prototype.get = function(){
 
 TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     var scont = document.createElement('div');
+	scont.setAttribute('class', 'terminus-snippet-container terminus-display-flex')
     // query
     var snpc = document.createElement('div');
     snpc.setAttribute('style', 'display:table-caption; margin: 20px');
@@ -101,7 +102,6 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     }
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
-		console.log('serial', serial);
     	if(this.mode == "edit"){
     		this.snippet.value = serial;
     	}
