@@ -1006,6 +1006,10 @@ function getMatchingRules(rules, row, key, context, action){
 }
 
 
+
+module.exports=TerminusClient.WOQL
+
+
 /*
  * 
 var x = WOQL.schema();
