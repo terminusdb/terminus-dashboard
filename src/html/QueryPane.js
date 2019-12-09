@@ -37,18 +37,25 @@ QueryPane.prototype.getAsDOM = function(){
 		var ispan = document.createElement("span");
 		ispan.setAttribute("class", "query-pane-config");
 		var ic = document.createElement("i");
-		ic.setAttribute('style', 'margin:10px;')
+		//ic.setAttribute('style', 'margin:10px;')
 		configspan.appendChild(ic);
 		var self = this;
 		function showQueryConfig(){
 			configspan.title="Click to Hide Query";
 			ic.setAttribute("class", "fas fa fa-times-circle");
-			if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);
-			else self.container.appendChild(ipdom);
+			configspan.classList.remove('terminus-click-to-view-query');
+			if(configspan.nextSibling){
+				self.container.insertBefore(ipdom, configspan.nextSibling);
+			}
+			else {
+				self.container.appendChild(ipdom);
+			}
+			self.input.stylizeSnippet();
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Query";
-            ic.setAttribute("class", "fas fa fa-atom");
+            ic.setAttribute("class", "fas fa fa-search terminus-query-view-icon");
+			configspan.classList.add('terminus-click-to-view-query');
 			self.container.removeChild(ipdom);
 		}
 		configspan.addEventListener("click", () => {

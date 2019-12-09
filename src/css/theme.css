@@ -322,10 +322,13 @@ span.terminus-format-button-align{
 
 .terminus-hover-table{
 	/*width:100%;*/
-	border-collapse:collapse;
+	/*border-collapse:collapse;*/
+	display: table;
+    table-layout: fixed;
+    width: 100%;
 }
 .terminus-hover-table td{
-	 border:lightgrey 0.5px solid;
+	 border:lightgrey 0.2px solid;
 	 height: 10px;
 	 padding: 7px;
 }
@@ -405,6 +408,16 @@ span.terminus-snippet-panel{
 }
 button.terminus-snippet-button{
 	padding: 10px;
+	background-color: #00C08B;
+    border: 1px solid green;
+    color: #002856;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-block;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 0.2rem !important;
 }
 button.terminus-new-query-btn{
 	float: right;
@@ -414,6 +427,20 @@ span.terminus-query-results{
 	max-width: 1250px;
     width: 100%;
 	display: -webkit-inline-box;
+	margin: 10px 0px 20px 0px;
+
+}
+span.terminus-click-to-view-query{
+	margin-top: 10px;
+	z-index: 10;
+	position: absolute;
+}
+span.terminus-result-icons, i.terminus-result-icons{
+	float: right;
+}
+span.pane-config-icons{
+	/*float: right;*/
+	margin-right: 20px;
 }
 div.terminus-query-pane-cont{
 	border: 1px solid grey;
@@ -459,7 +486,7 @@ icon.terminus-cancel-rule-editor{
     cursor: pointer;
     white-space: nowrap;
     padding: 4px 10px;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 	margin-right: 5px;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -683,9 +710,9 @@ div.ql-editor{
 
 /* terminus module header */
 .terminus-module-head {
-	padding: 15px 5px 0;
-    font-size: 24px;
-    font-weight: 500 !important;
+	font-size: 24px;
+	font-weight: 500 !important;
+	margin: 20px 0px 20px 0px;
 }
 .terminus-full-css-margin-top{
     margin-top: 10px;
@@ -890,7 +917,7 @@ div.terminus-margin-top, table.terminus-margin-top{
 }
 
 .CodeMirror {
-	border: 2px solid #eee;
+	border: 2px solid #002856;
     height: auto;
     /* margin: 50px; */
     font-size: 16px;
@@ -930,7 +957,14 @@ div.terminus-margin-top, table.terminus-margin-top{
 	font-size: larger;
 	color: #00C08B;
 }
-
+span.woql-chooser select.woql-chooser{
+	padding: 5px;
+	height: 36px;
+}
+div.terminus-welcome-box{
+	width: 900px;
+	margin: 30px;
+}
 .terminus-db-info-box .terminus-info-heading {
 	font-size: 26px;
 	color: #00C08B;
@@ -993,17 +1027,9 @@ span.terminus-violation-property-label{
 div.terminus-violation{
 	border-bottom: 0.5px solid #856404;
 }
-.terminus-result-selected{
-	border: 1px solid blue;
-}
-
-.terminus-result-view-icon{
-	margin: 10px;
-	font-size: 25px;
-}
 .terminus-doc-control-label{
 	float: right;
-    width: 400px !important;
+    width: 710px !important;
     padding-top: 12px;
 	font-size: 18px;
     text-align: left;
@@ -1639,6 +1665,33 @@ div.terminus-margin-left-auto {
 .terminus-backtohome-span:link {
   text-decoration: none;
 }
+.terminus-result-view-icon{
+	font-size: 20px;
+	margin: 0px 10px 10px 0px;
+	padding: 10px;
+    font-size: 20px;
+    margin: 0px 2px 10px 0px;
+	background-color: #00C08B;
+	border: 1px solid green;
+	color: #002856;
+	cursor: pointer;
+	border-radius: 0.2rem !important;
+	/*border-radius: 50px;*/
+}
+.terminus-result-view-icon:hover, .terminus-snippet-button:hover, .terminus-query-view-icon:hover{
+    /*transform: scale(1.2); */
+	border: 1px solid #002856;
+}
+.terminus-view-selected, .terminus-snippet-format-selected{
+	background: #002856 !important;
+	color: #00C08B !important;
+}
+
+/* Smaller buttons styles */
+
+.terminus-result-view-icon.small{
+  padding: 4px 12px;
+}
 
 .terminus-backtohome-span:hover {
   text-decoration: underline;
@@ -1695,13 +1748,26 @@ div.terminus-margin-left-auto {
 	color: #fff;
 }
 
-.terminus-query-inp-layout {
+.terminus-query-inp-layout{
 	display: flex !important;
 }
 
 .terminus-form-doc-value{
 	width: 220px;
 	padding: 6px 4px;
+	margin-right: 10px;
+}
+
+.terminus-query-view-icon{
+	font-size: 20px;
+	padding: 10px;
+	font-size: 20px;
+	cursor: pointer;
+	margin: 0px 2px 10px 0px;
+	background-color: #00C08B;
+	border: 1px solid green;
+	color: #002856;
+	border-radius: 0.2rem !important;
 }
 
 .terminus-doc-nav {

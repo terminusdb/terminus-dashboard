@@ -30,7 +30,7 @@ FrameConfig.prototype.prettyPrint = function(){
 		str += "view.renderer('" + this.renderer() + "')\n";
 	}
 	if(typeof this.load_schema() != "undefined"){
-		str += "view.load_schema(" + this.load_schema() + ")\n";		
+		str += "view.load_schema(" + this.load_schema() + ")\n";
 	}
 	for(var i = 0; i<this.rules.length ; i++){
 		str += "view." + this.rules[i].prettyPrint("frame") + "\n";
@@ -90,21 +90,21 @@ FrameConfig.prototype.property = function(){
 	let fp = TerminusClient.WOQL.rule();
 	fp.scope("property");
 	this.rules.push(fp);
-	return fp;	
+	return fp;
 }
 
 FrameConfig.prototype.data = function(){
 	let fp = TerminusClient.WOQL.rule();
 	fp.scope("data")
 	this.rules.push(fp);
-	return fp;	
+	return fp;
 }
 
 FrameConfig.prototype.all = function(){
 	let fp = TerminusClient.WOQL.rule();
 	fp.scope("*")
 	this.rules.push(fp);
-	return fp;	
+	return fp;
 }
 
 
@@ -129,7 +129,7 @@ FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
 		if(typeof rule.args() != "undefined")
 			frame.display_options.args = rule.args();
 	}
-}	
+}
 
 
 
@@ -188,25 +188,25 @@ WOQLChooserConfig.prototype.create = function(client, renderers){
 WOQLChooserConfig.prototype.prettyPrint = function(){
 	var str = "view = WOQL.chooser();\n";
 	if(typeof this.change() != "undefined"){
-		str += "view.change(" + this.change() + ")\n";		
+		str += "view.change(" + this.change() + ")\n";
 	}
 	if(typeof this.show_empty() != "undefined"){
-		str += "view.show_empty('" + this.show_empty() + "')\n";		
+		str += "view.show_empty('" + this.show_empty() + "')\n";
 	}
 	if(typeof this.values() != "undefined"){
-		str += "view.values('" + removeNamespaceFromVariable(this.values()) + "')\n";		
+		str += "view.values('" + removeNamespaceFromVariable(this.values()) + "')\n";
 	}
 	if(typeof this.labels() != "undefined"){
-		str += "view.labels('" + removeNamespaceFromVariable(this.labels()) + "')\n";		
+		str += "view.labels('" + removeNamespaceFromVariable(this.labels()) + "')\n";
 	}
 	if(typeof this.titles() != "undefined"){
-		str += "view.titles('" + removeNamespaceFromVariable(this.titles()) + "')\n";		
+		str += "view.titles('" + removeNamespaceFromVariable(this.titles()) + "')\n";
 	}
 	if(typeof this.sort() != "undefined"){
-		str += "view.sort(" + this.sort() + ")\n";		
+		str += "view.sort(" + this.sort() + ")\n";
 	}
 	if(typeof this.direction() != "undefined"){
-		str += "view.direction('" + this.direction() + "')\n";		
+		str += "view.direction('" + this.direction() + "')\n";
 	}
 	for(var i = 0; i<this.rules.length ; i++){
 		str += "view." + this.rules[i].prettyPrint("chooser") + "\n";
@@ -220,7 +220,7 @@ WOQLChooserConfig.prototype.change = function(v){
 		this.onChange = v;
 		return this;
 	}
-	return this.onChange;	
+	return this.onChange;
 }
 
 WOQLChooserConfig.prototype.show_empty = function(p){
@@ -228,13 +228,13 @@ WOQLChooserConfig.prototype.show_empty = function(p){
 		this.placeholder = p;
 		return this;
 	}
-	return this.placeholder;	
+	return this.placeholder;
 }
 
 WOQLChooserConfig.prototype.rule = function(v){
 	let nr = new WOQLRule("row");
 	this.rules.push(nr);
-	return nr.v(v);	
+	return nr.v(v);
 }
 
 WOQLChooserConfig.prototype.values = function(v){
@@ -307,19 +307,19 @@ WOQLTableConfig.prototype.create = function(client, renderers, dtypes){
 WOQLTableConfig.prototype.prettyPrint = function(){
 	var str = "view = WOQL.table();\n";
 	if(typeof this.column_order() != "undefined"){
-		str += "view.column_order('" + this.column_order() + "')\n";		
+		str += "view.column_order('" + this.column_order() + "')\n";
 	}
 	if(typeof this.pagesize() != "undefined"){
-		str += "view.pagesize(" + this.pagesize() + ")\n";		
+		str += "view.pagesize(" + this.pagesize() + ")\n";
 	}
 	if(typeof this.renderer() != "undefined"){
-		str += "view.renderer('" + this.renderer() + "')\n";		
+		str += "view.renderer('" + this.renderer() + "')\n";
 	}
 	if(typeof this.pager() != "undefined"){
-		str += "view.pager(" + this.pager() + ")\n";		
+		str += "view.pager(" + this.pager() + ")\n";
 	}
 	if(typeof this.page() != "undefined"){
-		str += "view.page(" + this.page() + ")\n";		
+		str += "view.page(" + this.page() + ")\n";
 	}
 	for(var i = 0; i<this.rules.length ; i++){
 		str += "view." + this.rules[i].prettyPrint("table") + "\n";
@@ -338,7 +338,7 @@ WOQLTableConfig.prototype.column_order = function(...val){
 		return this.order;
 	}
 	this.order = addNamespacesToVariables(val);
-	return this;		
+	return this;
 }
 
 WOQLTableConfig.prototype.pager = function(val){
@@ -346,14 +346,14 @@ WOQLTableConfig.prototype.pager = function(val){
 		return this.show_pager;
 	}
 	this.show_pager = val;
-	return this;	
+	return this;
 }
 
 WOQLTableConfig.prototype.pagesize = function(val, editable){
 	if(typeof val == "undefined"){
 		return this.show_pagesize;
 	}
-	this.show_pagesize = val;	
+	this.show_pagesize = val;
 	this.change_pagesize = editable;
 	return this;
 }
@@ -381,7 +381,7 @@ WOQLTableConfig.prototype.row = function(){
 
 WOQLGraphConfig = function(){
 	this.rules = [];
-	this.type = "graph";	
+	this.type = "graph";
 }
 
 WOQLGraphConfig.prototype.create = function(client, renderers){
@@ -400,31 +400,31 @@ WOQLGraphConfig.prototype.getMatchingRules = function(row, key, context, action)
 WOQLGraphConfig.prototype.prettyPrint = function(){
 	var str = "view = WOQL.graph();\n";
 	if(typeof this.literals() != "undefined"){
-		str += "view.literals('" + this.literals() + "')\n";		
+		str += "view.literals('" + this.literals() + "')\n";
 	}
 	if(typeof this.source() != "undefined"){
-		str += "view.source('" + removeNamespaceFromVariable(this.source()) + "')\n";		
+		str += "view.source('" + removeNamespaceFromVariable(this.source()) + "')\n";
 	}
 	if(typeof this.fontfamily() != "undefined"){
-		str += "view.fontfamily('" + this.fontfamily() + "')\n";		
+		str += "view.fontfamily('" + this.fontfamily() + "')\n";
 	}
 	if(typeof this.show_force() != "undefined"){
-		str += "view.show_force('" + this.show_force() + "')\n";		
+		str += "view.show_force('" + this.show_force() + "')\n";
 	}
 	if(typeof this.fix_nodes() != "undefined"){
-		str += "view.fix_nodes('" + this.fix_nodes() + "')\n";		
+		str += "view.fix_nodes('" + this.fix_nodes() + "')\n";
 	}
 	if(typeof this.explode_out() != "undefined"){
-		str += "view.explode_out('" + this.explode_out() + "')\n";		
+		str += "view.explode_out('" + this.explode_out() + "')\n";
 	}
 	if(typeof this.selected_grows() != "undefined"){
-		str += "view.selected_grows('" + this.selected_grows() + "')\n";		
+		str += "view.selected_grows('" + this.selected_grows() + "')\n";
 	}
 	if(typeof this.width() != "undefined"){
-		str += "view.width('" + this.width() + "')\n";		
+		str += "view.width('" + this.width() + "')\n";
 	}
 	if(typeof this.height() != "undefined"){
-		str += "view.height('" + this.height() + "')\n";		
+		str += "view.height('" + this.height() + "')\n";
 	}
 	if(typeof this.edges() != "undefined"){
 		var nedges = this.edges();
@@ -432,7 +432,7 @@ WOQLGraphConfig.prototype.prettyPrint = function(){
 		for(var i = 0; i<nedges.length; i++){
 			estrs.push("['" + nedges[i][0] + ", " + nedges[i][1] + "']");
 		}
-		str += "view.edges('" + estrs.join(", ") + "')\n";		
+		str += "view.edges('" + estrs.join(", ") + "')\n";
 	}
 	for(var i = 0; i<this.rules.length ; i++){
 		str += "view." + this.rules[i].prettyPrint("graph") + "\n";
@@ -462,6 +462,7 @@ WOQLGraphConfig.prototype.fontfamily = function(v){
 		this.fontfam = v;
 		return this;
 	}
+	//return 'Font Awesome 5 Free';
 	return this.fontfam;
 }
 
@@ -722,7 +723,7 @@ WOQLRule.prototype.weight = function(w){
 }
 
 /*
- * Table 
+ * Table
  */
 
 WOQLRule.prototype.renderer = function(rend){
@@ -901,13 +902,13 @@ WOQLRule.prototype.match = function(data, key, context, action){
 		if(this.rule && typeof this.rule.literal != "undefined"){
 			if(typeof key == "object"){
 				if(data[key[0]]['@value']) {
-					if(!this.rule.literal) return false; 
+					if(!this.rule.literal) return false;
 				}
 				else if(this.rule.literal) return false;
 			}
 			else {
 				if(data[key]['@value']) {
-					if(!this.rule.literal) return false; 
+					if(!this.rule.literal) return false;
 				}
 				else if(this.rule.literal) return false;
 			}
@@ -919,7 +920,7 @@ WOQLRule.prototype.match = function(data, key, context, action){
 					if(!this.test(data[key[0]], this.rule.constraints[key][0])){
 						return false;
 					}
-				}			
+				}
 			}
 			if(this.rule.constraints && this.rule.constraints[key[1]]){
 				if(!data) return false;
@@ -927,7 +928,7 @@ WOQLRule.prototype.match = function(data, key, context, action){
 					if(!this.test(data[key[1]], this.rule.constraints[key][1])){
 						return false;
 					}
-				}			
+				}
 			}
 		}
 		else if(this.rule.constraints && this.rule.constraints[key]){
@@ -936,7 +937,7 @@ WOQLRule.prototype.match = function(data, key, context, action){
 				if(!this.test(data[key], this.rule.constraints[key])){
 					return false;
 				}
-			}			
+			}
 		}
 		if(context == "edge"){
 			if(this.rule.source && this.rule.source != key[0]) return false;
@@ -950,7 +951,7 @@ WOQLRule.prototype.match = function(data, key, context, action){
 				if(!this.test(data[k], this.rule.constraints[k])){
 					return false;
 				}
-			}						
+			}
 		}
 	}
 	if(action && typeof this.rule[action] == "undefined") return false;
@@ -964,7 +965,7 @@ WOQLRule.prototype.test = function(value, constraint){
 	}
 	if(typeof constraint == "function"){
 		return constraint(value);
-	}	
+	}
 }
 
 
@@ -976,12 +977,12 @@ function addNamespacesToVariables(vars){
 	for(var i = 0; i<vars.length; i++){
 		var nvar = (vars[i].substring(0, 2) == "v:") ? vars[i] : "v:" + vars[i];
 		nvars.push(nvar);
-	}	
+	}
 	return nvars;
 }
 
 function removeNamespaceFromVariable(mvar){
-	if(mvar.substring(0, 2) == "v:") return mvar.substring(2) 
+	if(mvar.substring(0, 2) == "v:") return mvar.substring(2)
 	return mvar;
 }
 
@@ -990,7 +991,7 @@ function removeNamespacesFromVariables(vars){
 	var nvars = [];
 	for(var i = 0; i<vars.length; i++){
 		nvars.push(removeNamespaceFromVariable(vars[i]));
-	}	
+	}
 	return nvars;
 }
 
@@ -1001,7 +1002,7 @@ function getMatchingRules(rules, row, key, context, action){
 		if(rules[i].match(row, key, context, action)){
 			matches.push(rules[i].rule);
 		}
-	}	
+	}
 	return matches;
 }
 
@@ -1011,11 +1012,9 @@ module.exports=TerminusClient.WOQL
 
 
 /*
- * 
+ *
 var x = WOQL.schema();
 x.addClass("my:Class").label("A class").comment("A comment").abstract().relationship();
 x.addProperty("my:prop", "xsd:string").domain("my:Class").label("x").comment("x").max(2).min(1);
 x.execute(client).then ...
  */
-
-
