@@ -70,12 +70,20 @@ ResultPane.prototype.getAsDOM = function(){
 		function showQueryConfig(){
 			configspan.title="Click to Hide View Configuration";
 			ic.setAttribute("class", "fas fa fa-times-circle");
-            if(configspan.nextSibling) self.container.insertBefore(ipdom, configspan.nextSibling);
-            else self.container.appendChild(ipdom);
+            if(configspan.nextSibling){
+                self.container.insertBefore(ipdom, configspan.nextSibling);
+                if(self.input.snippet.value)
+					self.input.stylizeSnippet();
+            }
+            else{
+                self.container.appendChild(ipdom);
+                if(self.input.snippet.value)
+					self.input.stylizeSnippet();
+            }
 		}
 		function hideQueryConfig(){
 			configspan.title="Click to View Configuration";
-            ic.setAttribute("class", self.getViewConfigIconClass());
+            ic.setAttribute("class", "terminus-result-icons terminus-result-view-icon " + self.getViewConfigIconClass());
 			self.container.removeChild(ipdom);
 		}
 		ispan.addEventListener("click", () => {
@@ -128,7 +136,7 @@ ResultPane.prototype.changeViewerType = function(viewer, index){
 ResultPane.prototype.getDefaultViewerIcon = function(viewer){
     var view_types = {
         table: {label: "Table", icon: "fa fa-table"},
-		graph: {label: "Graph", icon: "fas fa-project-diagram"},
+		graph: {label: "Graph", icon: "fas fa-code-branch"},
 		chooser: {label: "Drop-down List", icon: "fas fa-caret-down"},
 		stream: {label: "Result Stream", icon: "fa fa-list"}
     }
@@ -138,9 +146,17 @@ ResultPane.prototype.getDefaultViewerIcon = function(viewer){
 
 ResultPane.prototype.getIconForViewer = function(viewer, index, container){
     var isp = document.createElement('span');
+    var icon = document.createElement("i");
+    var def = this.getDefaultViewerIcon(viewer);
+    icon.title = (viewer.label) ? viewer.label : def.label;
+    var ic = (viewer.icon ? viewer.icon : def.icon);
+    icon.setAttribute("class", ic);
+    icon.classList.add('terminus-result-view-icon');
+    //icon.classList.add('circle-icon');
+    isp.appendChild(icon);
     if(this.currentViewer == index){
         isp.setAttribute("class", "result-icon-selected selected terminus-result-selected");
-        //isp.setAttribute("style", "position:absolute;");
+        icon.classList.add('terminus-view-selected');
     }
     else {
         isp.setAttribute("class", "result-icon-selectable selectable");
@@ -148,13 +164,6 @@ ResultPane.prototype.getIconForViewer = function(viewer, index, container){
             this.style.cursor = "pointer";
 		});
     }
-    var icon = document.createElement("i");
-    var def = this.getDefaultViewerIcon(viewer);
-    icon.title = (viewer.label) ? viewer.label : def.label;
-    var ic = (viewer.icon ? viewer.icon : def.icon);
-    icon.setAttribute("class", ic);
-    icon.classList.add('terminus-result-view-icon');
-    isp.appendChild(icon);
     isp.addEventListener("click", () => {
         this.changeViewerType(viewer, index);
         TerminusClient.FrameHelper.removeChildren(container);

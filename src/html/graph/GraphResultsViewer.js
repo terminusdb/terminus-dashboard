@@ -1,4 +1,4 @@
-function GraphResultsViewer(config) {	
+function GraphResultsViewer(config) {
 	this.svg;
 	this.visid = randomString(8);
 	this.currentDate = Date.now() / 1000; // nowish
@@ -13,8 +13,8 @@ function GraphResultsViewer(config) {
 	// Currently displayed nodes and links
 	this.nodes;
 	this.links;
-	// Var for selecting and deselecting elements 
-	this.selected_id;	
+	// Var for selecting and deselecting elements
+	this.selected_id;
 	this.setConfigOptions(config);
 }
 
@@ -31,7 +31,7 @@ GraphResultsViewer.prototype.load = function(show) {
 }
 
 /*
- * Called to issue a new set of datapoints 
+ * Called to issue a new set of datapoints
  */
 GraphResultsViewer.prototype.setData = function(dqr, show){
 	//this.setFocusNodeFromResult(dqr);
@@ -72,7 +72,7 @@ GraphResultsViewer.prototype.setFocusNodeFromResult = function(dqr) {
 }
 
 /*
- * Called to indicate that the filter setting has been changed on the current datapoints 
+ * Called to indicate that the filter setting has been changed on the current datapoints
  */
 GraphResultsViewer.prototype.setFilter = function(dqr, show){
 	this.simulation.stop();
@@ -93,7 +93,7 @@ GraphResultsViewer.prototype.hibernate = function() {
 GraphResultsViewer.prototype.reload = function(show, mode, no_animate) {
 	for(var i = 0 ; i<this.nodes.length; i++){
 		this.loadedNodes[this.nodes[i].id] = this.nodes[i];
-	}	
+	}
 	var nnodes = jQuery.extend(true, [], this.result.getNodesAndFringes());
 	this.nodes = [];
 	var snode = this.loadedNodes[this.selected_id];
@@ -135,7 +135,7 @@ GraphResultsViewer.prototype.clear = function() {
 	this.loadedNodes = {};
 	this.links = [];
 	this.updateGraph();
-	jQuery(this.d3DOM).empty();	
+	jQuery(this.d3DOM).empty();
 	this.scale_factor = 1;
 }
 
@@ -216,10 +216,10 @@ GraphResultsViewer.prototype.initD3 = function(jqid) {
 		.attr("height", this.height);
 
 	var distanceFun = function(link){
-		return self.getLinkDistance(link); 
+		return self.getLinkDistance(link);
 	}
-	
-	// create the force object 
+
+	// create the force object
 	this.simulation  = d3.forceSimulation()
 		//link distance varies with link type
 	    .force("link", d3.forceLink().distance(distanceFun).id(function(link) { return link.id; }))
@@ -230,8 +230,8 @@ GraphResultsViewer.prototype.initD3 = function(jqid) {
 	    	return (self.getCollisionRadius(node));
 	    }))
 		.force("center", d3.forceCenter(this.width / 2, this.height / 2));
-	
-	// node drag 
+
+	// node drag
 	this.drag_drop = d3.drag()
 		.on('start', function(node) {
 			node.fx = node.x
@@ -247,14 +247,14 @@ GraphResultsViewer.prototype.initD3 = function(jqid) {
 			node.fx = null;
 			self.simulation.stop()
 		});
-	
+
 	this.svg.append("rect")
 	   .attr("width", this.width)
 	   .attr("height", this.height)
 	   .style("fill", "none")
 	   .style("pointer-events", "all")
 	   .call(d3.zoom().on("zoom", function(){self.zoomed()}));
-	
+
 	// Append graphic element to svg which are groups for graph elements
 	this.link_group = this.svg.append("g").classed("links", true);
 	this.node_group = this.svg.append("g").classed("nodes", true);
@@ -265,7 +265,7 @@ GraphResultsViewer.prototype.zoomed = function() {
 	if(this.node_elements)
 		this.node_elements.attr("transform", d3.event.transform);
     if(this.link_elements)
-    	this.link_elements.attr("transform", d3.event.transform);    
+    	this.link_elements.attr("transform", d3.event.transform);
 }
 
 /***
@@ -273,20 +273,20 @@ GraphResultsViewer.prototype.zoomed = function() {
  */
 GraphResultsViewer.prototype.updateGraph = function(nodes, links) {
 	var self = this;
-	   
+
 	var follow_node_wrapper = function(graph_node){
 		self.nodeSelected(graph_node);
 	}
 	var zoomed = function(){
 		self.zoomed();
-	} 
-	
+	}
+
 	nodes = (typeof nodes != "undefined" ? nodes : this.nodes);
 	links = (typeof links != "undefined" ? links : this.links);
 	this.node_elements  = this.node_group.selectAll("g").data(nodes);
 	this.node_elements.exit().remove();
-	
-	/*Create and place the "blocks" containing the circle and the text */  
+
+	/*Create and place the "blocks" containing the circle and the text */
     var node_enter = this.node_elements.enter().append("g");
 
 	// enter and create new ones
@@ -300,7 +300,7 @@ GraphResultsViewer.prototype.updateGraph = function(nodes, links) {
 		.on("mouseover", function(d){ d3.select(this).style("cursor", "pointer"); })
 		.on("mouseout", function(d){ d3.select(this).style("cursor", "default"); })
 		.on('click', follow_node_wrapper);
-	
+
     node_enter.append("text")
 		.attr("x",  function(node){ return node.x})
 		.attr("y",  function(node){ return node.y})
@@ -310,9 +310,9 @@ GraphResultsViewer.prototype.updateGraph = function(nodes, links) {
 		.on("mouseout", function(d){ d3.select(this).style("cursor", "default"); })
 		.on('click', follow_node_wrapper);
 
-	// merge new and old nodes	
+	// merge new and old nodes
 	this.node_elements = node_enter.merge(this.node_elements);
-	
+
 	this.styleNodeElements();
 
 	// update LINKS ********************************************
@@ -323,11 +323,11 @@ GraphResultsViewer.prototype.updateGraph = function(nodes, links) {
 	// enter and create new ones
 	var link_enter = this.link_elements.enter().append("line");
 
-	// merge new and old links 
+	// merge new and old links
 	this.link_elements = link_enter.merge(this.link_elements)
-	
+
 	this.styleLinkElements();
-	
+
 	//execute the current state of the pan-zoom transform
 	if(this.current_transform){
 		if(this.node_elements)
@@ -357,14 +357,14 @@ GraphResultsViewer.prototype.updateSimulation = function(mode) {
 		this.simulation.nodes(this.nodes).on('tick', ticker).force('link').links(this.links);
 	}
 	else {
-		this.simulation.nodes(this.nodes).on('end', ticker).force('link').links(this.links);		
+		this.simulation.nodes(this.nodes).on('end', ticker).force('link').links(this.links);
 	}
 	if(this.nodes.length){
 		if(mode == "wake" || mode == "init"){
 			this.simulation.restart();
 		}
 		else if(mode == "filter"){
-			this.simulation.restart();					
+			this.simulation.restart();
 		}
 		else {
 			this.simulation.alpha(1).restart();
@@ -380,8 +380,8 @@ GraphResultsViewer.prototype.styleNodeElements = function() {
 			var sel = g.select("circle");
 			sel.select("title").remove();
 			sel.style("fill", self.getNodeColour(node));
-			sel.attr('r', self.getRadius(node));	
-			sel.classed("highlighted", function(node) { return self.focusNodes.indexOf(node.id) != -1});	
+			sel.attr('r', self.getRadius(node));
+			sel.classed("highlighted", function(node) { return self.focusNodes.indexOf(node.id) != -1});
 			sel.append("title")
 				.classed("terminus-gnode-title", true)
 				.text(self.getNodeText(node));
@@ -399,7 +399,7 @@ GraphResultsViewer.prototype.styleNodeElements = function() {
 					.classed("terminus-gnode-title", true)
 					.text(self.getNodeText(node));
 		});
-	}	
+	}
 }
 
 GraphResultsViewer.prototype.styleLinkElements = function() {
@@ -464,16 +464,16 @@ GraphResultsViewer.prototype.nodeSelected = function(selected_node) {
 
 GraphResultsViewer.prototype.getScaleTransform = function(x, y, scale_factor){
 	return "scale("+ scale_factor + ") translate(" + x + "," + y + ")";
-} 
+}
 
 GraphResultsViewer.prototype.scale = function(min_ratio) {
     // the new dimensions of the molecule
     new_mol_width = this.width * min_ratio;
     new_mol_height = this.height * min_ratio;
-    
-    var y_trans = (this.height - new_mol_height) ; 
-    
-    var x_trans = (this.width - new_mol_width); 
+
+    var y_trans = (this.height - new_mol_height) ;
+
+    var x_trans = (this.width - new_mol_width);
     // do the actual moving
     var self = this;
     if(this.node_elements)
@@ -504,7 +504,7 @@ GraphResultsViewer.prototype.scaleToFit = function() {
     // The width and the height of the graph
     mol_width = max_x - min_x;
     mol_height = max_y - min_y;
-    
+
     mol_width = mol_width * 1.05;
     mol_height = mol_height * 1.05;
     // how much larger the drawing area is than the width and the height
@@ -516,13 +516,13 @@ GraphResultsViewer.prototype.scaleToFit = function() {
     min_ratio = Math.min(width_ratio, height_ratio);
     if(min_ratio < 1){
     	this.scale(min_ratio);
-    }    
+    }
 };
 
 // recentre graph
 GraphResultsViewer.prototype.recentre = function(graph_node) {
 	this.translated = true;
-	// get the x and y you need to transform the nodes by 
+	// get the x and y you need to transform the nodes by
 	this.dcx = (this.width/2-graph_node.x);
 	this.dcy = (this.height/2-graph_node.y);
 	//zoom.translate([dcx,dcy]); If we do zooming we'll need to do something here
@@ -535,7 +535,7 @@ GraphResultsViewer.prototype.recentre = function(graph_node) {
 GraphResultsViewer.prototype.setConfigOptions = function(config) {
 	//configuration options for different types of behaviour
 	// Need to explicitly know font family name for unicode glyphs
-	this.fontfam = (config && config.fontfamily ? config.fontfamily() : 'Font Awesome\ 5 Free'); 
+	this.fontfam = (config && (config.fontfamily()) ? config.fontfamily() : 'Font Awesome 5 Free');
 	this.selected_grows = (config && typeof config.selected_grows() != "undefined" ? config.selected_grows() : true);
 	this.show_force = (config && typeof config.show_force() != "undefined" ? config.show_force() : true);
 	this.fix_nodes = (config && typeof config.fix_nodes() != "undefined" ? config.fix_nodes() : false);
@@ -623,7 +623,7 @@ GraphResultsViewer.prototype.getNodeIconSize = function(node) {
 		return node.icon.size + "em";
 	}
 	return (this.getMultiplier(node) + "em");
-}	
+}
 
 GraphResultsViewer.prototype.getNodeColour = function(node) {
 	var col = (node && node.color ? node.color : this.defaults.node.color);
@@ -681,7 +681,7 @@ GraphResultsViewer.prototype.getLineWidth = function(link) {
 
 GraphResultsViewer.prototype.getNodeText = function(node) {
 	if(node && node.text) return node.text;
-	return node.id; 
+	return node.id;
 }
 
 GraphResultsViewer.prototype.getLinkText = function(edge) {
@@ -700,8 +700,8 @@ GraphResultsViewer.prototype.getArrowHeight = function(edge) {
 	return (this.scale_factor ? Math.min(this.scale_factor * w, w) : w);
 }
 
-GraphResultsViewer.prototype.isNeighbourLink = function(node, link) { 
-	return link.target.id === node.id || link.source.id === node.id;  
+GraphResultsViewer.prototype.isNeighbourLink = function(node, link) {
+	return link.target.id === node.id || link.source.id === node.id;
 }
 
 GraphResultsViewer.prototype.isFringe = function(node){

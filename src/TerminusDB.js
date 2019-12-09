@@ -122,13 +122,12 @@ function TerminusDBViewer(ui){
 	this.pages = ["home"];
 }
 
-<<<<<<< HEAD
 TerminusDBViewer.prototype.getAsDOM = function(){
+	TerminusClient.FrameHelper.removeChildren(this.container);
 	var limit = 20;
 	this.getDeleteOnHomePage(this.container);
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	
 	var q = WOQL.from(dburl).limit(limit).documentMetadata();
 	q.execute(this.ui.client).then( (result) => {
 		var docs = new TerminusClient.WOQLResult(result, q);
@@ -136,7 +135,7 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 		q2.execute(this.ui.client).then( (result2) => {
 			var docClasses = new TerminusClient.WOQLResult(result2, q2);
 			var bdom = this.getBodyAsDOM(docs, docClasses);
-			this.container.appendChild(bdom);
+			if(bdom) this.container.appendChild(bdom);
 		});
 	}).catch((e) => {
 		this.ui.showError(e);
@@ -144,30 +143,32 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 	return this.container;
 }
 
+TerminusDBViewer.prototype.getRulesForListOfDocuments = function(woql) {
+	var table = woql.table();
+	table.column('Label').header('Document');
+	table.column('Comment').header('Description');
+	table.column('Type_Comment').header('Type Description');
+	return table;
+}
 
-TerminusDBViewer.prototype.getCreateDataChooser = function(docClasses, qopts, ropts, change, pholder){
-	var WOQL = TerminusClient.WOQL;
-	pholder = (pholder ? pholder : "Create a New Document");
-	qopts  = ( qopts ? qopts :  { showConfig: "icon", editConfig: "true" }); 
-	var dp = new QueryPane(this.ui.client, docClasses.query, docClasses).options(qopts);
-	var chooser = WOQL.chooser().values("Class").labels("Label").titles("Comment").show_empty(pholder);
-	var self = this;
-	chooser.change = (change ? change : function(cls){
-		if(cls)	self.loadCreateDocumentPage(cls);
-	});
-	ropts  = ( ropts ? ropts :  { showConfig: "icon", editConfig: "true" }); 
-	dp.addView(chooser, ropts);
-	var dchooser = dp.getAsDOM();
-	return dchooser;
-
+TerminusDBViewer.prototype.getRulesForGraphOfDocuments = function(woql){
+	var graph = woql.graph();
+	graph.height(500).width(1250);
+	return graph;
 }
 
 TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
-	//TerminusClient.FrameHelper.removeChildren(this.container);
 	var WOQL = TerminusClient.WOQL;
 	var self = this;
-	var body = document.createElement("div");
-	body.setAttribute("class", "terminus-home-body terminus-document-view");
+	if(this.body){
+		TerminusClient.FrameHelper.removeChildren(this.body);
+		var body = this.body;
+	}
+	else {
+		var body = document.createElement("div");
+		body.setAttribute("class", "terminus-home-body terminus-document-view");
+		body.setAttribute('style', 'display: table-caption;');
+	}
 	var page_actions = document.createElement("div");
 	page_actions.setAttribute("class", "terminus-home-actions");
 	body.appendChild(page_actions);
@@ -180,10 +181,9 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		}
 		var dchooser = this.getCreateDataChooser(docClasses,
 												{showQuery: false, editQuery: false},
-												{showConfig: false, editConfig: "true"},
+												{showConfig: false, editConfig: true},
 												 ch );
 		if(docs.count() > 1) span.appendChild(dchooser);
-		this.styleCreateDocumentChooser();
 	}
 	else {
 		this.ui.showError("No document classes found in schema - you must define a document, entity or relationship class before you can create documents");
@@ -191,11 +191,13 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	if(docs.count() > 0){
 		var show_doc_action = this.getShowDocumentControl();
 		span.prepend(show_doc_action);
-		var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: "icon", editQuery: false});
-		var table = WOQL.table();
-		var g = WOQL.graph();
-		var options =  { showConfig: "icon", editConfig: "true", viewers: [g] };
+		var dp = new QueryPane(this.ui.client, docs.query, docs)
+					.options({showQuery: "icon", editQuery: true});
+		var table = this.getRulesForListOfDocuments(WOQL);
+		var g = this.getRulesForGraphOfDocuments(WOQL);
+		var options =  { showConfig: "icon", editConfig: "true", viewers: [g]};
 		dp.addView(table, options);
+		body.appendChild(UTILS.getHeaderDom('Table view of documents'));
 		body.appendChild(dp.getAsDOM());
 		var WOQL = TerminusClient.WOQL;
 		var dburl = this.ui.client.connectionConfig.dbURL();
@@ -203,13 +205,12 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 		q.execute(this.ui.client).then( (result) => {
 			var g = new TerminusClient.WOQLResult(result, q);
 			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
-			var table = WOQL.table();
-			var g2 = WOQL.graph();
+			var g2 = this.getRulesForGraphOfDocuments(WOQL);
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
+			body.appendChild(UTILS.getHeaderDom('Graph view of Documents linked to each other'));
 			ddp.addView(g2, options);
 			body.appendChild(ddp.getAsDOM());
 			this.container.appendChild(body);
-
 		}).catch((e) => {
 			this.ui.showError(e);
 		});
@@ -226,7 +227,8 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 			body.appendChild(this.showHappyBox("happy", "query"));
 		}
 	}
-	//return body;
+	this.body = body;
+	return body;
 }
 
 
@@ -256,30 +258,11 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
     d.appendChild(del);
 }
 
-TerminusDBViewer.prototype.getAsDOM = function(){
-	var limit = 20;
-	this.getDeleteOnHomePage(this.container);
-	var WOQL = TerminusClient.WOQL;
-	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = WOQL.from(dburl).limit(limit).documentMetadata();
-	q.execute(this.ui.client).then((result) => {
-		var docs = new TerminusClient.WOQLResult(result, q);
-		var q2 = WOQL.from(dburl).concreteDocumentClasses();
-		q2.execute(this.ui.client).then( (result2) => {
-			var docClasses = new TerminusClient.WOQLResult(result2, q2);
-			var bdom = this.getBodyAsDOM(docs, docClasses);
-			//this.container.appendChild(bdom);
-		});
-	}).catch((e) => {
-		this.ui.showError(e);
-	});
-	return this.container;
-}
 
 TerminusDBViewer.prototype.styleCreateDocumentChooser = function(){
 	var select = document.getElementsByClassName('woql-chooser');
 	for(i=0; i<select.length; i++){
-		if(select[i].type == 'select-one'){
+		if(select[i].type == 'select'){
 			select[i].classList.add('terminus-form-doc-value');
 			var self = this;
 			select[i].addEventListener('change', function(){
@@ -304,12 +287,11 @@ TerminusDBViewer.prototype.getCreateDataChooser = function(docClasses, qopts, ro
 	dp.addView(chooser, ropts);
 	var dchooser = dp.getAsDOM();
 	return dchooser;
-
 }
 
 TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	var hbox = document.createElement("div");
-	hbox.setAttribute("class", "terminus-welcome-box");
+	hbox.setAttribute("class", "terminus-welcome-box terminus-no-res-alert");
 	var self = this;
 	var sets = {};
 	if(type == "schema"){
@@ -430,7 +412,7 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 	var dburl = this.ui.client.connectionConfig.dbURL();
 	var df = new DocumentPane(this.ui.client).options({
 		showQuery: "icon",
-		editQuery: false,
+		editQuery: true,
 		loadDocument: this.getShowDocumentControl(),
 	});
 	var q2 = WOQL.from(dburl).concreteDocumentClasses();
@@ -473,11 +455,6 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 		})*/
 	})
 	.catch((e) => this.ui.showError(e));
-
-
-	//pane for document
-	//pane for table
-	//pane for graph
 }
 
 TerminusDBViewer.prototype.getShowDocumentControl = function(){
@@ -487,9 +464,9 @@ TerminusDBViewer.prototype.getShowDocumentControl = function(){
 	lab.setAttribute("class", "terminus-document-chooser-label terminus-doc-control-label terminus-control-label-padding");
 	var dcip = document.createElement("input");
 	dcip.setAttribute("class", "terminus-form-doc-value terminus-document-chooser terminus-doc-input-text");
-	dcip.setAttribute("placeholder", "Enter Document ID. Ex: doc:myDocId");
+	dcip.setAttribute("placeholder", "Enter Document ID to view ...");
 	var nbut = document.createElement("button");
-	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-doc-btn")
+	nbut.setAttribute('class', "terminus-control-button terminus-document-button terminus-btn");
 	nbut.setAttribute('title', 'Enter Document ID to view');
 	var is = document.createElement('i');
 	is.setAttribute('class', 'fa fa-caret-left');
