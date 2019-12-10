@@ -13,15 +13,19 @@ function TerminusQueryViewer(ui, options){
 	this.meta = {};
 	this.container = document.createElement("div");
 	this.container.setAttribute("class", "terminus-query-page");   
-	viewers: [new Table(), ]}; 
 }
 
 TerminusQueryViewer.prototype.newPaneOptions = function(){ 
 	var opts = {showQuery: true, 
 		editQuery: true,
 		showHeader: true, 
-		addViews: true
+		addViews: true,
+		viewers: []
 	};
+	opts.viewers.push(new TerminusClient.WOQL.table());
+	opts.viewers.push(new TerminusClient.WOQL.graph());
+	opts.viewers.push(new TerminusClient.WOQL.chooser());
+	opts.viewers.push(new TerminusClient.WOQL.stream()); 
 	return opts;
 } 
 
