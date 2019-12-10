@@ -20,12 +20,12 @@ TerminusQueryViewer.prototype.newPaneOptions = function(){
 		editQuery: true,
 		showHeader: true, 
 		addViews: true,
-		viewers: []
+	//	viewers: []
 	};
-	opts.viewers.push(new TerminusClient.WOQL.table());
-	opts.viewers.push(new TerminusClient.WOQL.graph());
-	opts.viewers.push(new TerminusClient.WOQL.chooser());
-	opts.viewers.push(new TerminusClient.WOQL.stream()); 
+	//opts.viewers.push(new TerminusClient.WOQL.table());
+	//opts.viewers.push(new TerminusClient.WOQL.graph());
+	//opts.viewers.push(new TerminusClient.WOQL.chooser());
+	//opts.viewers.push(new TerminusClient.WOQL.stream()); 
 	return opts;
 } 
 
