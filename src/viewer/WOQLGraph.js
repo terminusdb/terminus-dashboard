@@ -137,9 +137,8 @@ WOQLGraph.prototype.extractFromBinding = function(row){
 		this.createEdgesFromIDs(nodes, row);
 		for(var i = 0; i<nodes.length; i++){
 			var ndid = row[nodes[i]];
-			var node = { type: "node", id: ndid, nodetype: nodes[i], text: row[nodes[i]] };
 			this.addAdornedNode(ndid, nodes[i], row);
-		}	
+		}
 	}
 }
 

@@ -8,7 +8,7 @@ height: height of snippet in px
 function TerminusCodeSnippet(language, mode, format, width, height, placeholder){
 	this.language = (language ? language : "woql");//woql / rule
 	this.mode = (mode ? mode : "view");
-    this.width = (width ? width : 800);
+    this.width = (width ? width : 1200);
 	this.height = (height ? height : 300);
 	this.placeholder = (placeholder ? placeholder : "");
     this.format = (format ? format : "js");
@@ -36,14 +36,6 @@ TerminusCodeSnippet.prototype.serialise = function(query, format){
 	}
 }
 
-function replacer(key, value) {
-  // Filtering out properties
-  if (typeof value === '\n') {
-    return undefined;
-  }
-  return value;
-}
-
 //parses a string encoding a woql in either json or js notation
 TerminusCodeSnippet.prototype.parseText = function(text, format){
 	try {
@@ -58,7 +50,12 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 		}
 		else {
 			var qval = JSON.parse(text);
-			return WOQL.json(qval);
+			if(this.language == "woql"){
+				return WOQL.json(qval);
+			}
+			else {
+				return WOQL.loadConfig(qval);
+			}
 		}
 	}
 	catch(e){
@@ -93,12 +90,12 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
 		this.snippet.setAttribute("placeholder", this.placeholder);
     if(this.width && this.height)
 		this.snippet.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");
-    if(this.language == "woql"){
+    //if(this.language == "woql"){
     	snpc.appendChild(this.getFormatButtons());
-    }
-    else {
-    	if(with_buttons) snpc.appendChild(this.getViewTypeButtons());
-    }
+    //}
+    //else {
+    //	if(with_buttons) snpc.appendChild(this.getViewTypeButtons());
+    //}
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
 		console.log('serial', serial);
@@ -151,26 +148,6 @@ TerminusCodeSnippet.prototype.getIconsDOM = function(){
     return bsp;
 }
 
-TerminusCodeSnippet.prototype.getViewTypeButtons = function(){
-    var bsp = document.createElement('span');
-    bsp.setAttribute('class', 'terminus-snippet-panel');
-    /*for(var i = 0; i<this.view_types.length; i++){
-        var btn = document.createElement('button');
-        btn.setAttribute('value', this.view_types[i].id);
-        btn.setAttribute('class', 'terminus-snippet-button');
-		btn.appendChild(document.createTextNode(this.view_types[i].label));
-		var icon = document.createElement("i");
-		icon.setAttribute("class", this.view_types[i].icon);
-		btn.appendChild(icon);
-        var self = this;
-        btn.addEventListener('click', function(){
-        	self.changeRuleView(this.value);
-        })
-        bsp.appendChild(btn);
-    }*/
-    return bsp;
-}
-
 TerminusCodeSnippet.prototype.getFormatButtons = function(){
     var bsp = document.createElement('span');
     bsp.setAttribute('class', 'terminus-snippet-panel');
@@ -183,14 +160,11 @@ TerminusCodeSnippet.prototype.getFormatButtons = function(){
         btn.appendChild(document.createTextNode(this.formats[f]));
         var self = this;
         btn.addEventListener('click', function(){
-        	if(self.readInput()){
-				UTILS.setSelected(this, 'terminus-snippet-format-selected');
-        		self.format = this.value;
-        		self.refreshContents();
-        	}
-        	else {
-        		alert(self.error);
-        	}
+			UTILS.setSelected(this, 'terminus-snippet-format-selected');
+			var qobj = self.parseText(self.snippet.value, self.format);
+			self.format = this.value;
+			if(qobj) this.qObj = qobj;
+			self.refreshContents();
         })
         bsp.appendChild(btn);
     }
@@ -241,7 +215,8 @@ TerminusCodeSnippet.prototype.stylizeSnippet = function(){
 }
 
 TerminusCodeSnippet.prototype.refreshContents = function(){
-    TerminusClient.FrameHelper.removeChildren(this.snippet);
+	TerminusClient.FrameHelper.removeChildren(this.snippet);
+	if(this.mode == "edit") this.snippet.value == "";
     if(!this.qObj) return;
 	var serial = this.serialise(this.qObj, this.format);
 	if(this.mode == "edit"){
