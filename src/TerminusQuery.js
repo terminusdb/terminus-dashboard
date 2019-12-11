@@ -20,12 +20,12 @@ TerminusQueryViewer.prototype.newPaneOptions = function(){
 		editQuery: true,
 		showHeader: true, 
 		addViews: true,
-	//	viewers: []
+		viewers: []
 	};
-	//opts.viewers.push(new TerminusClient.WOQL.table());
-	//opts.viewers.push(new TerminusClient.WOQL.graph());
-	//opts.viewers.push(new TerminusClient.WOQL.chooser());
-	//opts.viewers.push(new TerminusClient.WOQL.stream()); 
+	opts.viewers.push(new TerminusClient.WOQL.table());
+	opts.viewers.push(new TerminusClient.WOQL.graph());
+	opts.viewers.push(new TerminusClient.WOQL.chooser());
+	opts.viewers.push(new TerminusClient.WOQL.stream()); 
 	return opts;
 } 
 
@@ -85,6 +85,49 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	return this.container;
 }
 
+TerminusQueryViewer.prototype.getPanesDOM = function(q){
+	this.panesDOM = document.createElement("div");
+	this.panesDOM.setAttribute("class", "terminus-query-panes");
+	for(var i = 0; i<this.panes.length; i++){
+		var pd = this.panes[i].getAsDOM();
+		var qhdr = this.getPaneHeader();
+		pd.prepend(qhdr);
+		this.panesDOM.appendChild(pd);
+	}
+	if(!this.new_pane){
+		this.new_pane = new QueryPane(this.ui.client).options(this.newPaneOptions());
+	}
+	var npd = this.new_pane.getAsDOM();
+	var nqhdr = this.getNewPaneHeader();
+	this.new_pane.headerDOM = nqhdr;
+	this.new_pane.paneDOM = npd;
+	npd.prepend(nqhdr);
+	this.panesDOM.appendChild(npd);
+	return this.panesDOM;
+}
+
+TerminusQueryViewer.prototype.removePane = function(pane, index){
+	TerminusClient.FrameHelper.removeChildren(pane.paneDOM);
+	pane.paneDOM.appendChild(pane.headerDOM);
+	if(this.panes[i]){
+		this.panes.splice(i, 1);
+	}
+}
+
+TerminusQueryViewer.prototype.showPane = function(pane){
+	//TerminusClient.FrameHelper.removeChildren(pane.paneDOM);
+	//var pd = pane.getAsDOM();
+	//var qhdr = this.getPaneHeader();
+	//pd.prepend(qhdr);
+	//pane.headerDOM = qhdr;	
+}
+
+TerminusQueryViewer.prototype.hidePane = function(pane){
+	
+}
+
+
+
 TerminusQueryViewer.prototype.getPaneHeader = function(){
 	var hdr = document.createElement("div");
 	hdr.appendChild(this.getControlsDOM());
@@ -96,27 +139,6 @@ TerminusQueryViewer.prototype.getNewPaneHeader = function(){
 	hdr.appendChild(this.getControlsDOM("new"));
 	return hdr;
 }
-
-
-TerminusQueryViewer.prototype.getPanesDOM = function(q){
-	var pdom = document.createElement("div");
-	pdom.setAttribute("class", "terminus-query-panes");
-	for(var i = 0; i<this.panes.length; i++){
-		var pd = this.panes[i].getAsDOM();
-		var qhdr = this.getPaneHeader();
-		pd.prepend(qhdr);
-		pdom.appendChild(pd);
-	}
-	if(!this.new_pane){
-		this.new_pane = new QueryPane(this.ui.client).options(this.newPaneOptions());
-	}
-	var npd = this.new_pane.getAsDOM();
-	var nqhdr = this.getNewPaneHeader();
-	npd.prepend(nqhdr);
-	pdom.appendChild(npd);
-	return pdom;
-}
-
 
 TerminusQueryViewer.prototype.getControlsDOM = function(isnew){
 	var c = document.createElement("div");
