@@ -433,6 +433,13 @@ button.terminus-load-queries{
 	text-align: left;
 	width: 100%;
 }
+input.terminus-doc-id-input{
+	margin: 0px 10px 10px 7px;
+    padding: 5px;
+}
+button.terminus-doc-id-input-submit{
+	margin: 0px 10px 10px 0px !important;
+}
 button.terminus-load-queries:hover{
 	color: #0055B8;
 	background: #f5f5f5;

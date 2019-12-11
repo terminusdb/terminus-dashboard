@@ -53,10 +53,18 @@ QueryPane.prototype.clearSubMenus = function(btn){
 	}
 }
 
+QueryPane.prototype.getResults = function(query){
+	if(query)
+		this.input.setQuery(query);
+	TerminusClient.FrameHelper.removeChildren(this.sampleQueryDOM);
+	this.input.refreshContents();
+}
+
 QueryPane.prototype.AddEvents = function(btn){
 	var self = this;
 	btn.addEventListener('click', function(){
 		let WOQL = TerminusClient.WOQL;
+		self.clearSubMenus(this);
 		var query;
 		switch(this.value){
 			case 'Show All Schema Elements':
@@ -75,30 +83,22 @@ QueryPane.prototype.AddEvents = function(btn){
 				query = WOQL.query().getEverything();
 			break;
 			case 'Show data of chosen type':
-				var choosen = 'http://terminusdb.com/schema/tcs#' + this.innerText;
+				var choosen = 'scm:' + this.innerText;
 				query = WOQL.query().getDataOfClass(choosen);
 			break;
 			case 'Show property of chosen type':
-				var choosen = 'http://terminusdb.com/schema/tcs#' + this.innerText;
+				var choosen = 'scm:' + this.innerText;
 				query = WOQL.query().getDataOfProperty(choosen);
 			break;
 			case 'Show data of type':
-				self.clearSubMenus(this);
 				return;
-			break;
 			case 'Show property of type':
-				self.clearSubMenus(this);
 				return;
-			break;
 			default:
 				console.log('Invalid Type of query');
 			break;
 		}
-		if(query){
-	    	self.input.setQuery(query);
-		}
-		TerminusClient.FrameHelper.removeChildren(self.sampleQueryDOM);
-		self.input.refreshContents();
+		self.getResults(query);
 	})
 }
 
@@ -134,33 +134,56 @@ QueryPane.prototype.getSchemaSection = function(d){
 	d.appendChild(btn);
 }
 
+QueryPane.prototype.checkIfDataMenuOpen = function(btn){
+	var isOpen = false;
+	if(btn.children.length){
+		for(var i=0; i<btn.children.length; i++){
+			//var child = btn.children[i].getElementsByClassName('terminus-queries-submenu');
+			var child = btn.getElementsByClassName('terminus-queries-submenu');
+			if(child.length){
+				for(var j=0; j<child.length; j++){
+					TerminusClient.FrameHelper.removeElement(child[j]);
+					isOpen = true;
+				}
+			}
+		}
+	}
+	return isOpen;
+}
+
 QueryPane.prototype.showDataOfTypeEvent = function(btn){
 	var self = this;
 	btn.addEventListener('click', function(){
-		var subPar = document.createElement('div');
-		subPar.setAttribute('class', 'terminus-queries-submenu');
-		if(self.classMetaDataRes && self.classMetaDataRes.hasBindings()){
-			for(var i = 0; i<self.classMetaDataRes.bindings.length; i++){
-				var text = self.classMetaDataRes.bindings[i]['v:Label']['@value'];
-				subPar.appendChild(self.getSubDataMenu('Show data of chosen type', text));
+		var isMenuOpen = self.checkIfDataMenuOpen(this);
+		if(!isMenuOpen){
+			var subPar = document.createElement('div');
+			subPar.setAttribute('class', 'terminus-queries-submenu');
+			if(self.classMetaDataRes && self.classMetaDataRes.hasBindings()){
+				for(var i = 0; i<self.classMetaDataRes.bindings.length; i++){
+					var text = self.classMetaDataRes.bindings[i]['v:Label']['@value'];
+					subPar.appendChild(self.getSubDataMenu('Show data of chosen type', text));
+				}
 			}
+			btn.appendChild(subPar);
 		}
-		btn.appendChild(subPar);
 	})
 }
 
 QueryPane.prototype.showPropertyOfTypeEvent = function(btn){
 	var self = this;
 	btn.addEventListener('click', function(){
-		var subPar = document.createElement('div');
-		subPar.setAttribute('class', 'terminus-queries-submenu');
-		if(self.propertyMetaDataRes && self.propertyMetaDataRes.hasBindings()){
-			for(var i = 0; i<self.propertyMetaDataRes.bindings.length; i++){
-				var text = self.propertyMetaDataRes.bindings[i]['v:Label']['@value'];
-				subPar.appendChild(self.getSubDataMenu('Show property of chosen type', text));
+		var isMenuOpen = self.checkIfDataMenuOpen(this);
+		if(!isMenuOpen){
+			var subPar = document.createElement('div');
+			subPar.setAttribute('class', 'terminus-queries-submenu');
+			if(self.propertyMetaDataRes && self.propertyMetaDataRes.hasBindings()){
+				for(var i = 0; i<self.propertyMetaDataRes.bindings.length; i++){
+					var text = self.propertyMetaDataRes.bindings[i]['v:Label']['@value'];
+					subPar.appendChild(self.getSubDataMenu('Show property of chosen type', text));
+				}
 			}
+			btn.appendChild(subPar);
 		}
-		btn.appendChild(subPar);
 	})
 }
 
@@ -194,12 +217,37 @@ QueryPane.prototype.getDataSection = function(d){
 	d.appendChild(btn);
 }
 
+QueryPane.prototype.fireDocumentEvent = function(document){
+	let WOQL = TerminusClient.WOQL;
+	var query = WOQL.query().documentProperties(document);
+	this.getResults(query);
+}
+
+QueryPane.prototype.getEnterDocumentIdDOM = function(){
+	var sp = document.createElement('span');
+	sp.setAttribute('class', 'terminus-display-flex');
+	var inp = document.createElement('input');
+	inp.setAttribute('class', 'terminus-doc-id-input');
+	inp.setAttribute('placeholder', 'doc:myDocId');
+	var sub = document.createElement('button');
+	sub.setAttribute('class', 'terminus-btn terminus-doc-id-input-submit');
+	sub.appendChild(document.createTextNode('Submit'));
+	var self = this;
+	sub.addEventListener('click', function(){
+		self.fireDocumentEvent(inp.value);
+	})
+	sp.appendChild(inp);
+	sp.appendChild(sub);
+	return sp;
+}
+
 // document queries
 QueryPane.prototype.getDocumentSection = function(d){
 	var section = this.getSection('Document Queries');
 	d.appendChild(section);
 	var btn = this.getQueryMenu('Show All Documents');
 	d.appendChild(btn);
+	d.appendChild(this.getEnterDocumentIdDOM());
 }
 
 // bottom color transaprent
@@ -314,13 +362,13 @@ QueryPane.prototype.getResultPaneHeader = function(closable){
 	}
 	var collapsePaneButton = document.createElement('button');
 	collapsePaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
-	collapsePaneButton.appendChild(document.createTextNode('Collapse'));		
+	collapsePaneButton.appendChild(document.createTextNode('Collapse'));
 	c.appendChild(collapsePaneButton);
 	return c;
 }
 
 QueryPane.prototype.createInput = function(mode){
-    let input = new TerminusCodeSnippet("woql", mode);
+    let input = new TerminusCodeSnippet("woql", mode, null, 800);
     if(this.query){
     	input.setQuery(this.query);
 	}
