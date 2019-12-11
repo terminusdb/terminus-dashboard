@@ -8,7 +8,7 @@ height: height of snippet in px
 function TerminusCodeSnippet(language, mode, format, width, height, placeholder){
 	this.language = (language ? language : "woql");//woql / rule
 	this.mode = (mode ? mode : "view");
-    this.width = (width ? width : 800);
+    this.width = (width ? width : 1200);
 	this.height = (height ? height : 300);
 	this.placeholder = (placeholder ? placeholder : "");
     this.format = (format ? format : "js");
