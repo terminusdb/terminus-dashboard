@@ -16,12 +16,12 @@ function QueryPane(client, query, result){
 
 QueryPane.prototype.fireDefaultQueries = function(){
 	let WOQL = TerminusClient.WOQL;
-	var query = WOQL.limit(25).start(0).classMetadata();
+	var query = WOQL.query().classMetadata();
 	query.execute(this.client).then((results) => {
 		let qcres = new TerminusClient.WOQLResult(results, query);
 		this.classMetaDataRes = qcres;
 	})
-	var query = WOQL.limit(25).start(0).propertyMetadata();
+	var query = WOQL.query().propertyMetadata();
 	query.execute(this.client).then((results) => {
 		let qpres = new TerminusClient.WOQLResult(results, query);
 		this.propertyMetaDataRes = qpres;
@@ -59,25 +59,27 @@ QueryPane.prototype.AddEvents = function(btn){
 		var query;
 		switch(this.value){
 			case 'Show All Schema Elements':
-				query = WOQL.limit(25).start(0).elementMetadata();
+				query = WOQL.query().elementMetadata();
 			break;
 			case 'Show All Classes':
-				query = WOQL.limit(25).start(0).classMetadata();
+				query = WOQL.query().classMetadata();
 			break;
 			case 'Show Document Classes':
-				query = WOQL.limit(25).start(0).documentMetadata();
+				query = WOQL.query().documentMetadata();
 			break;
 			case 'Show All Properties':
-				query = WOQL.limit(25).start(0).propertyMetadata();
+				query = WOQL.query().propertyMetadata();
 			break;
 			case 'Show All Data':
-				query = WOQL.limit(25).start(0).getEverything();
+				query = WOQL.query().getEverything();
 			break;
 			case 'Show data of chosen type':
-				query = WOQL.limit(25).start(0).getDataOfClass(this.innerText);
+				var choosen = 'http://terminusdb.com/schema/tcs#' + this.innerText;
+				query = WOQL.query().getDataOfClass(choosen);
 			break;
 			case 'Show property of chosen type':
-				query = WOQL.limit(25).start(0).getDataOfClass(this.innerText);
+				var choosen = 'http://terminusdb.com/schema/tcs#' + this.innerText;
+				query = WOQL.query().getDataOfProperty(choosen);
 			break;
 			case 'Show data of type':
 				self.clearSubMenus(this);
@@ -94,6 +96,7 @@ QueryPane.prototype.AddEvents = function(btn){
 		if(query){
 	    	self.input.setQuery(query);
 		}
+		TerminusClient.FrameHelper.removeChildren(self.sampleQueryDOM);
 		self.input.refreshContents();
 	})
 }
@@ -213,12 +216,16 @@ QueryPane.prototype.getSampleQueriesDOM = function(){
 	i.setAttribute('class', 'fa fa-ellipsis-v terminus-ellipsis-icon');
 	i.setAttribute('title', 'Click to load sample Queries');
 	i.setAttribute('value', false);
+	this.sampleQueryDOM = i;
 	var self = this;
 	i.addEventListener('click', function(e){
 		if(e.target !== this) return;
-		TerminusClient.FrameHelper.removeChildren(this);
-		var d = self.getQueryMenuBlock();
-		this.appendChild(d);
+		if(this.children.length)
+			TerminusClient.FrameHelper.removeChildren(this);
+		else{
+			var d = self.getQueryMenuBlock();
+			this.appendChild(d);
+		}
 	})
 	return i;
 }

@@ -415,6 +415,13 @@ div.terminus-queries-submenu{
 	display: grid;
 	background-color: #fff;
 	text-align: left;
+	min-height: 300px;
+	max-height: 500px;
+	overflow-y: auto;
+}
+@media only screen and (min-width: 1200px)
+.terminus-client-ui {
+    min-height: 600px;
 }
 div.terminus-load-queries{
 	display: grid;
@@ -425,7 +432,7 @@ div.terminus-load-queries{
 button.terminus-load-queries{
 	border: 0px;
 	background: #fff;
-	margin: 5px;
+	margin: 5px 0px 5px 0px;
 	padding: 5px;
 	text-align: left;
 	width: 100%;
@@ -1012,9 +1019,22 @@ span.woql-chooser select.woql-chooser{
 	padding: 5px;
 	height: 36px;
 }
+p.terminus-welcome-body, span.terminus-welcome-chooser{
+	margin-left: 65px;
+}
+span.terminus-welcome-title{
+	margin: 10px 10px 10px 15px;
+    font-size: larger;
+    font-weight: 600;
+    vertical-align: super;
+}
 div.terminus-welcome-box{
 	width: 900px;
 	margin: 30px;
+	border-radius: 8px;
+}
+i.terminus-welcome-icons{
+	margin: 10px;
 }
 .terminus-db-info-box .terminus-info-heading {
 	font-size: 26px;
