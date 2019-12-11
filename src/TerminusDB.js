@@ -29,16 +29,8 @@ TerminusDBController.prototype.getAsDOM = function(){
 	if(this.ui && this.ui.db()){
 		var scd = document.createElement("div");
 		scd.setAttribute("class", "terminus-field terminus-db-connection");
-		var lab = document.createElement("span");
-		lab.setAttribute("class", "terminus-label terminus-db-label terminus-control-panel-label");
-		lab.appendChild(document.createTextNode("DB "));
-		var val = document.createElement("span");
-		val.setAttribute("class", "terminus-value terminus-db-value terminus-control-panel-value");
 		var dbrec = this.ui.client.connection.getDBRecord();
 		var nm = (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
-		val.appendChild(document.createTextNode(nm));
-		scd.appendChild(lab);
-		scd.appendChild(val);
 		//dbc.appendChild(scd);
 		var nav = document.createElement('div');
 		nav.setAttribute('class', 'span3');
@@ -48,17 +40,25 @@ TerminusDBController.prototype.getAsDOM = function(){
 		nav.appendChild(ul);
 		// connected to db
 		var a = document.createElement('a');
-        a.setAttribute('class', 'terminus-dashboard-info terminus-list-group-a terminus-nav-width');
-        var txt = 'Database: ' + nm;
-        a.appendChild(document.createTextNode(txt));
+        a.setAttribute('class', 'terminus-dashboard-info terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer"');
+        a.appendChild(document.createTextNode(nm));
 		ul.appendChild(a);
-		var p = this.ui.page ? this.ui.page : "docs";
+		var p = this.ui.page ? this.ui.page : "db";
 		if(this.ui.showControl("db")){
-			//var item = this.getControlHTML("Database Home", "fa-home");
-			var item = this.getControlHTML("Documents", "fa-home");
+			if(p == "db") a.classList.add("terminus-selected");
+			self.ui.page = "db";
+			a.addEventListener("click", function(){
+				self.ui.showDBMainPage();
+				self.ui.page = "db";
+				self.ui.redrawControls();
+			});
+		}
+
+		if(this.ui.showControl("get_document")){
+			var item = this.getControlHTML("Documents", "fas fa-file");
 			if(p == "docs") item.classList.add("terminus-selected");
 		    item.addEventListener("click", function(){
-				self.ui.showDBMainPage();
+				self.ui.showDocumentPage();
 				self.ui.page = "docs";
 				self.ui.redrawControls();
 			 });
@@ -126,7 +126,6 @@ function TerminusDBViewer(ui){
 TerminusDBViewer.prototype.getAsDOM = function(){
 	TerminusClient.FrameHelper.removeChildren(this.container);
 	var limit = 20;
-	this.getDeleteOnHomePage(this.container);
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
 	var q = WOQL.from(dburl).limit(limit).documentMetadata();
@@ -159,6 +158,29 @@ TerminusDBViewer.prototype.getRulesForGraphOfDocuments = function(woql){
 }
 
 TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
+	 if(this.page == "docs"){
+		 return this.getDocumentsDOM(docs, docClasses);
+	 }
+	 else {
+		 return this.getHomeDOM(docs, docClasses);
+	 }
+}
+
+TerminusDBViewer.prototype.getHomeDOM = function(docs, docClasses){
+	if(this.body){
+		TerminusClient.FrameHelper.removeChildren(this.body);
+	}
+	else {
+		this.body = document.createElement("div");
+		this.body.setAttribute("class", "terminus-home-body terminus-document-view");
+		//this.body.setAttribute('style', 'display: table-caption;');
+	}
+	this.body.appendChild(this.showHappyBox("dbhome", "demo"));
+	return this.body;
+}
+
+
+TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses){
 	var WOQL = TerminusClient.WOQL;
 	var self = this;
 	if(this.body){
@@ -168,7 +190,7 @@ TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	else {
 		var body = document.createElement("div");
 		body.setAttribute("class", "terminus-home-body terminus-document-view");
-		body.setAttribute('style', 'display: table-caption;');
+		//body.setAttribute('style', 'display: table-caption;');
 	}
 	var page_actions = document.createElement("div");
 	page_actions.setAttribute("class", "terminus-home-actions");
@@ -309,6 +331,11 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 		sets.css = "fa fa-search fa-2x terminus-welcome-icons";
 		sets.title = "Update Queries";
 		sets.text = (happy == "happy") ? "You can add data to the system with queries and scripts, and import data directly from CSVs and URLs" : "You can write WOQL queries to create a schema through our query interface";
+	}
+	else if(type == "demo"){
+		sets.css = "fa fa-question fa-2x";
+		sets.title = "Database Level Management";
+		sets.text = "On this level we just want functions that have database granularity - collaboration, access control, database meta-data...";
 	}
 	var ispan =  document.createElement("span");
 	var ic = document.createElement("i");
@@ -697,7 +724,7 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	scd.setAttribute("class", "terminus-db-creator");
 	var sct = document.createElement("h3");
 	sct.setAttribute("class", "terminus-db-creator-title terminus-module-head");
-	sct.appendChild(UTILS.getHeaderDom("Create New Database"));
+	sct.appendChild(UTILS.getHeaderDom("Create Database"));
 	scd.appendChild(sct);
 	var mfd = document.createElement('div');
 	mfd.setAttribute('class', 'terminus-form-border ');

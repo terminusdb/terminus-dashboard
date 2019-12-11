@@ -35,7 +35,7 @@ SimpleTable.prototype.getControlsDOM = function(result){
 SimpleTable.prototype.getTableDOM = function(){
 	const columns = this.woqltable.getColumnsToRender();
 	var tab = document.createElement("table");
-	tab.setAttribute("class", "terminus-hover-table");
+	tab.setAttribute("class", "terminus-hover-table terminus-simple-table");
 	var thead = this.getTableHeader(columns);
 	tab.appendChild(thead);
 	var tbody = this.getTableBody(columns);
