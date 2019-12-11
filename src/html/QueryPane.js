@@ -31,6 +31,7 @@ QueryPane.prototype.fireDefaultQueries = function(){
 QueryPane.prototype.options = function(opts){
 	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : true);
 	this.editQuery = (opts && typeof opts.editQuery != "undefined" ? opts.editQuery : true);
+	this.showHeader = (opts && typeof opts.showHeader != "undefined" ? opts.showHeader : false);
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
 	this.defaultResultView = { showConfig: "true", editConfig: "true" };
@@ -285,12 +286,37 @@ QueryPane.prototype.getAsDOM = function(){
 	for(var i = 0; i<this.views.length; i++){
 		var vdom = this.views[i].getAsDOM();
 		if(vdom){
+			if(this.showHeader){
+				var closable = (this.views.length != 1);
+				var qhdr = this.getResultPaneHeader(closable);
+				vdom.prepend(qhdr);
+			}
 			this.resultDOM.appendChild(vdom);
 		}
 	}
 	this.container.appendChild(this.resultDOM);
 	if(this.addViews) this.container.appendChild(this.getAddViewControl());
 	return this.container;
+}
+
+
+QueryPane.prototype.getResultPaneHeader = function(closable){
+	var c = document.createElement('div');
+	var savePaneButton = document.createElement('button');
+	savePaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
+	savePaneButton.appendChild(document.createTextNode('Save'));
+	c.appendChild(savePaneButton);
+	if(closable){
+		var closePaneButton = document.createElement('button');
+		closePaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
+		closePaneButton.appendChild(document.createTextNode('Close'));
+		c.appendChild(closePaneButton);
+	}
+	var collapsePaneButton = document.createElement('button');
+	collapsePaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
+	collapsePaneButton.appendChild(document.createTextNode('Collapse'));		
+	c.appendChild(collapsePaneButton);
+	return c;
 }
 
 QueryPane.prototype.createInput = function(mode){
