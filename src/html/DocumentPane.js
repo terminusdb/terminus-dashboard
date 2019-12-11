@@ -69,10 +69,10 @@ DocumentPane.prototype.getAsDOM = function(){
 	if(this.intro){
 		this.container.appendChild(UTILS.getHeaderDom(this.intro));
 	}
+	var configspan = document.createElement("span");
+	configspan.setAttribute("class", "pane-config-icons");
+	this.container.appendChild(configspan);
 	if(this.showQuery && (this.documentLoader || this.classLoader)){
-        var configspan = document.createElement("span");
-		configspan.setAttribute("class", "pane-config-icons");
-        this.container.appendChild(configspan);
 		var ipdom = this.getQueryPane();
 		var ispan = document.createElement("span");
 		ispan.setAttribute("class", "document-pane-config");
@@ -147,7 +147,7 @@ DocumentPane.prototype.getAsDOM = function(){
 
 DocumentPane.prototype.renderResult = function(){
 	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
-	if(this.frame.render){
+	if(this.frame && this.frame.render){
 		var fpt = this.frame.render();
 		if(fpt){
 			this.resultDOM.appendChild(fpt);

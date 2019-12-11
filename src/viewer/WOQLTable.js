@@ -102,7 +102,7 @@ WOQLTable.prototype.getColumnsToRender = function(){
 		var cols = this.result.getVariableList();
 	}
 	var self = this;
-	return cols.filter(col => !self.hidden(col));
+	return (cols ? cols.filter(col => !self.hidden(col)) : []);
 }
 
 WOQLTable.prototype.getColumnHeaderContents = function(colid){
@@ -213,13 +213,14 @@ WOQLTable.prototype.renderValue = function(renderer, val, key, row){
 	}
 	else if(val && typeof val == "string"){
 		renderer.type = "id";
-		var dv = new DataValue(val['@value'], "id", key, row);
+		var dv = new DataValue(val, "id", key, row);
 	}
 	if(dv) return renderer.renderValue(dv);
+	return "";
 }
 
 function DataValue(val, type){
-	this.datavalue = val;
+	this.datavalue = (val == "unknown" ? "" : val);
 	this.datatype = type;
 }
 
