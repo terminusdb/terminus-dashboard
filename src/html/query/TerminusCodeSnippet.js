@@ -83,6 +83,7 @@ TerminusCodeSnippet.prototype.get = function(){
 
 TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     var scont = document.createElement('div');
+	scont.setAttribute('class', 'terminus-snippet-container terminus-display-flex')
     // query
     var snpc = document.createElement('div');
     snpc.setAttribute('style', 'display:table-caption; margin: 20px');

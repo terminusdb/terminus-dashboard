@@ -20,7 +20,6 @@ TerminusQueryViewer.prototype.newPaneOptions = function(){
 		showQuery: true, 
 		editQuery: true,
 		showHeader: true, 
-		addViews: false,
 	};
 	return opts;
 } 
@@ -30,6 +29,7 @@ TerminusQueryViewer.prototype.defaultResultOptions = function(){
 		showConfig: "icon", 
 		editConfig: true,
 		showHeader: false, 
+		viewers: [new TerminusClient.WOQL.graph()],
 	};
 	return opts;
 } 
@@ -37,7 +37,6 @@ TerminusQueryViewer.prototype.defaultResultOptions = function(){
 TerminusQueryViewer.prototype.getNewQueryPane = function(){
 	let qpane = new QueryPane(this.ui.client).options(this.newPaneOptions());
 	qpane.addView(new TerminusClient.WOQL.table(), this.defaultResultOptions());
-	qpane.addView(new TerminusClient.WOQL.graph(), this.defaultResultOptions());
 	return qpane;
 }
 
