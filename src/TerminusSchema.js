@@ -2,8 +2,6 @@
  * Draws the screen for viewing and updating the schema
  * and provides wrappers around the client's schema API
  */
-const TerminusClassChooser = require('./client/TerminusClassChooser');
-const TerminusDocumentViewer = require('./TerminusDocument');
 const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const UTILS=require('./Utils')
 const TerminusClient = require('@terminusdb/terminus-client');
@@ -246,9 +244,6 @@ TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
 	else if(this.mode == "import"){
 		this.view.appendChild(this.getSchemaImportDOM());
 	}
-	else if(this.mode == "class_frame"){
-		this.view.appendChild(this.getClassFrameDOM());
-	}
 	if(msg){
 		this.ui.showMessage(msg, msgtype);
 	}
@@ -452,38 +447,8 @@ TerminusSchemaViewer.prototype.appendSchema = function(s2){
 	return nschema;
 }
 
-TerminusSchemaViewer.prototype.getClassFrameChooser = function(){
-	var np = document.createElement("span");
-	np.setAttribute("class", "terminus-class frame-chooser");
-	var termcc = new TerminusClassChooser(this.ui);
-	termcc.empty_choice = "View Individual Class Frames";
-	var self = this;
-	termcc.change = function(new_class){
-		if(new_class){
-			self.cls = new_class;
-			if(self.mode != "class_frame"){
-				self.mode = "class_frame";
-				self.refreshPage();
-			}
-			else {
-				self.refreshMainPage();
-			}
-		}
-	}
-	var tcdom = termcc.getAsDOM();
-	np.appendChild(tcdom);
-	return np;
-}
 
-TerminusSchemaViewer.prototype.getClassFrameDOM = function(){
-	var np = document.createElement("div");
-	np.setAttribute("class", "terminus-schema-page terminus-schema-classframe-page");
-	var docviewer = new TerminusDocumentViewer(this.ui, "model");
-	docviewer.loadCreateDocument(this.cls);
-	docviewer.page_config = "model";
-	np.appendChild(docviewer.getAsDOM());
-	return np;
-}
+
 
 TerminusSchemaViewer.prototype.showConfirmPage = function(newschema){
 	this.schema = newschema;

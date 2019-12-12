@@ -16,7 +16,6 @@ const HTMLLinkViewer = require('./datatypes/Link');
 const HTMLNumberViewer = require('./datatypes/Number');
 const HTMLRangeViewer = require('./datatypes/Range');
 const HTMLRangeEditor = require('./datatypes/RangeEditor');
-const SantizedHTMLViewer = require('./datatypes/SanitizedHTML');
 const GoogleMapEditor = require('./datatypes/GoogleMapEditor');
 const GoogleMapViewer = require('./datatypes/GoogleMapViewer');
 const HTMLMarkupEditor = require('./datatypes/HTMLMarkupEditor');
@@ -46,7 +45,6 @@ function initialiseDataRenderers(RenderingMap, plugins){
 				"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger", "xsd:nonPositiveInteger"]);
 	RenderingMap.registerViewerForTypes("HTMLRangeViewer", {label: "Range Viewer"}, ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 	RenderingMap.registerEditorForTypes("HTMLRangeEditor", {label: "Range Editor"}, ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
-	RenderingMap.registerViewerForTypes("SantizedHTMLViewer", {label: "Sanitized HTML"}, ["xsd:string", "xdd:html"]);
 	RenderingMap.universalEditor = "HTMLStringEditor";
 	RenderingMap.universalViewer = "HTMLStringViewer";
 	addPlugins(RenderingMap, plugins);
