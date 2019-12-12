@@ -880,7 +880,8 @@ div.ql-editor{
 	padding-right: 15px
 }
 .main-table-height{
-	height: 800px;
+	/*height: 800px;*/
+	height: 100%
 }
 /* pointer cursor */
 .terminus-pointer{
@@ -1782,7 +1783,7 @@ div.terminus-margin-left-auto {
 	padding: 30px;
     overflow: hidden;
     /*max-width: 1240px;*/
-	width: 100%;
+	max-width: calc(100vw - 420px)!important;
     overflow-x: overlay;
 }
 .terminus-client-table-layout{

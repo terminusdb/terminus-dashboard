@@ -442,6 +442,14 @@ QueryPane.prototype.showError = function(e){
 		this.container.insertBefore(this.messages, this.resultDOM);
 }
 
+QueryPane.prototype.showNoBindings = function(){
+	nor = document.createElement('div');
+	nor.setAttribute('class', 'terminus-no-res-alert');
+	nor.appendChild(document.createTextNode("No results available for this query"));
+	if(this.container)
+		this.container.insertBefore(nor, this.resultDOM);
+}
+
 QueryPane.prototype.submitQuery = function(qObj){
 	this.clearMessages();
 	if(typeof qObj == 'string'){
@@ -455,7 +463,9 @@ QueryPane.prototype.submitQuery = function(qObj){
 		var r = new TerminusClient.WOQLResult(results, qObj);
 		this.result = r;
 		self.clearMessages();
-		this.refreshViews();
+		if(this.result.hasBindings())
+			this.refreshViews();
+		else this.showNoBindings();
 	})
 }
 
