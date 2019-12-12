@@ -6,7 +6,6 @@
  * @param opts - options array
  */
 const ApiExplorer = require('./ApiExplorer');
-const TerminusDocumentViewer = require('./TerminusDocument');
 const TerminusDBsdk = require('./TerminusDB');
 const TerminusViolations = require('./html/TerminusViolation');
 const TerminusQueryViewer = require('./TerminusQuery');
@@ -15,7 +14,6 @@ const TerminusServersdk = require('./TerminusServer');
 const TerminusURLLoader = require('./TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils');
-const RenderingMap = require('./client/RenderingMap');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusUI(opts){
@@ -341,6 +339,36 @@ TerminusUI.prototype.redrawMainPage = function(){
 	}
 }
 
+TerminusUI.prototype.deleteDBPermitted = function(dbid){
+	if(dbid == "terminus") return false;
+	if(this.client.connection.capabilitiesPermit("delete_database", dbid)){
+		return true;
+	}
+	return false;
+}
+
+TerminusUI.prototype.getDeleteDBButton = function(dbid){
+	if(!this.deleteDBPermitted(dbid)) return false;
+	var delbut = document.createElement('button');
+	var icon = document.createElement('i');
+	icon.setAttribute("class", "terminus-db-list-del-icon fa fa-trash");
+	delbut.appendChild(icon);
+	delbut.appendChild(document.createTextNode("Delete Database"));
+	delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
+		// function to fix db in a closure
+	var self = this;
+	var delDB = function(db){
+		return function(){
+			let deleteConfirm = confirm(`This action is irreversible, it will remove the database from the system permanently. Are you sure you want to delete ${db} Database?`);
+			if (deleteConfirm == true) {
+				self.deleteDatabase(db);
+			}
+		}
+	};
+	delbut.addEventListener("click", delDB(dbid));
+	return delbut;
+}
+
 TerminusUI.prototype.showResult = function(response){
 	this.showMessage(response, "success");
 };
@@ -408,8 +436,6 @@ TerminusUI.prototype.draw = function(comps, slocation){
 		this.showLoadURLPage();
 	};
 }
-
-
 
 TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();
@@ -591,7 +617,7 @@ TerminusUI.prototype.setOptions = function(opts){
 		var pins = ["gmaps", "quill", "select2"];
 		for(var i = 0; i<pins.length; i++){
 			if(self.piman.pluginAvailable(pins[i])){
-				RenderingMap.addPlugin(pins[i]);
+				//RenderingMap.addPlugin(pins[i]);
 			}
 		}
 		self.redraw();

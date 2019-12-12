@@ -16,21 +16,34 @@ function TerminusQueryViewer(ui, options){
 }
 
 TerminusQueryViewer.prototype.newPaneOptions = function(){ 
-	var opts = {showQuery: true, 
+	var opts = {
+		showQuery: true, 
 		editQuery: true,
 		showHeader: true, 
-		addViews: true,
-		viewers: []
+		addViews: false,
 	};
-	opts.viewers.push(new TerminusClient.WOQL.table());
-	opts.viewers.push(new TerminusClient.WOQL.graph());
-	opts.viewers.push(new TerminusClient.WOQL.chooser());
-	opts.viewers.push(new TerminusClient.WOQL.stream()); 
 	return opts;
 } 
 
-TerminusQueryViewer.prototype.addQueryPane = function(){
+TerminusQueryViewer.prototype.defaultResultOptions = function(){ 
+	var opts = {
+		showConfig: "icon", 
+		editConfig: true,
+		showHeader: false, 
+	};
+	return opts;
+} 
+
+TerminusQueryViewer.prototype.getNewQueryPane = function(){
 	let qpane = new QueryPane(this.ui.client).options(this.newPaneOptions());
+	qpane.addView(new TerminusClient.WOQL.table(), this.defaultResultOptions());
+	qpane.addView(new TerminusClient.WOQL.graph(), this.defaultResultOptions());
+	return qpane;
+}
+
+
+TerminusQueryViewer.prototype.addQueryPane = function(){
+	var qpane = this.getNewQueryPane();
 	this.panes.push(qpane);
 	return qpane;
 }
@@ -63,13 +76,13 @@ TerminusQueryViewer.prototype.addDocumentPaneDOM = function(){
 
 TerminusQueryViewer.prototype.addNewPaneDOM = function(qpane){
 	var lpane = this.panes[this.panes.length-1];
-	if(lpane && lpane.empty()){
-		this.panes[this.panes.length-1] = qpane;
-		this.paneDOM.removeChild(this.paneDOM.lastChild)		 
-	}
-	else {
+	//if(lpane && lpane.empty()){
+	//	this.panes[this.panes.length-1] = qpane;
+	//	this.paneDOM.removeChild(this.paneDOM.lastChild)		 
+	//}
+	//else {
 		this.panes.push(qpane);
-	}
+	//}
 	var qdom = qpane.getAsDOM();
 	var qhdr = this.getPaneHeader();
 	qdom.prepend(qhdr);
@@ -81,7 +94,12 @@ TerminusQueryViewer.prototype.getAsDOM = function(q){
 	if(!this.paneDOM) this.paneDOM = this.getPanesDOM();
 	this.container.appendChild(this.paneDOM);
 	this.controlDOM = this.getControlsDOM();
-	this.container.appendChild(this.controlDOM);
+	//this.container.appendChild(this.controlDOM);
+	var newPaneButton = document.createElement('button');
+		newPaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
+		newPaneButton.appendChild(document.createTextNode('Add New Query'));
+		newPaneButton.addEventListener('click', () => this.addQueryPaneDOM());	    
+	this.container.appendChild(newPaneButton);
 	return this.container;
 }
 
@@ -95,7 +113,7 @@ TerminusQueryViewer.prototype.getPanesDOM = function(q){
 		this.panesDOM.appendChild(pd);
 	}
 	if(!this.new_pane){
-		this.new_pane = new QueryPane(this.ui.client).options(this.newPaneOptions());
+		this.new_pane = this.getNewQueryPane();
 	}
 	var npd = this.new_pane.getAsDOM();
 	var nqhdr = this.getNewPaneHeader();
@@ -130,13 +148,13 @@ TerminusQueryViewer.prototype.hidePane = function(pane){
 
 TerminusQueryViewer.prototype.getPaneHeader = function(){
 	var hdr = document.createElement("div");
-	hdr.appendChild(this.getControlsDOM());
+	//hdr.appendChild(this.getControlsDOM());
 	return hdr;
 }
 
 TerminusQueryViewer.prototype.getNewPaneHeader = function(){
 	var hdr = document.createElement("div");
-	hdr.appendChild(this.getControlsDOM("new"));
+	//hdr.appendChild(this.getControlsDOM("new"));
 	return hdr;
 }
 

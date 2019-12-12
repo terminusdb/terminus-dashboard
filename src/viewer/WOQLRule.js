@@ -822,7 +822,11 @@ function WOQLRule(s){
 
 WOQLRule.prototype.prettyPrint = function(type){
 	//starts with obj. ...
-	var str = this.rule.scope + "('" + this.rule.variables.join("', '") + "')";
+	var str = this.rule.scope + "('";
+	if(this.rule.variables){
+		str += this.rule.variables.join("', '");
+	 }
+	 str += "')";
 	if(typeof this.literal() != "undefined"){
 		str += ".literal(" + this.literal() + ")";
 	}

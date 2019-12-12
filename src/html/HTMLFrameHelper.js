@@ -163,7 +163,7 @@ HTMLFrameHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word
 		wrap.setAttribute("title", text);
 		text = text.substring(0, max_cell_size) + "...";
 	}
-	if(max_word_size){
+	if(text && text.length > max_word_size){
 		const replacements = {}
 		const words = text.split(" ");
 		for(var i = 0; i < words.length; i++){
