@@ -436,6 +436,7 @@ button.terminus-load-queries{
 input.terminus-doc-id-input{
 	margin: 0px 10px 10px 7px;
     padding: 5px;
+	width: 130px;
 }
 button.terminus-doc-id-input-submit{
 	margin: 0px 10px 10px 0px !important;
