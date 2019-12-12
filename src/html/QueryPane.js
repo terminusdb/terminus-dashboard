@@ -34,7 +34,7 @@ QueryPane.prototype.options = function(opts){
 	this.showHeader = (opts && typeof opts.showHeader != "undefined" ? opts.showHeader : false);
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: "true", editConfig: "true" };
+	this.defaultResultView = { showConfig: "icon", editConfig: "true" };
     return this;
 }
 
@@ -283,7 +283,6 @@ QueryPane.prototype.getAsDOM = function(){
 	if(this.intro){
 		this.container.appendChild(UTILS.getHeaderDom(this.intro));
 	}
-	//this.container.appendChild(document.createElement('BR'));
 	if(this.showQuery) {
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
@@ -336,8 +335,8 @@ QueryPane.prototype.getAsDOM = function(){
 		if(vdom){
 			if(this.showHeader){
 				var closable = (this.views.length != 1);
-				var qhdr = this.getResultPaneHeader(closable);
-				vdom.prepend(qhdr);
+				//var qhdr = this.getResultPaneHeader(closable);
+				//vdom.prepend(qhdr);
 			}
 			this.resultDOM.appendChild(vdom);
 		}
