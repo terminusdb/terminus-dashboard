@@ -11,6 +11,21 @@ function QueryPane(client, query, result){
 	this.views = [];
 	this.container = document.createElement('span');
     this.container.setAttribute('class', 'terminus-query-pane-cont');
+	this.fireDefaultQueries();
+}
+
+QueryPane.prototype.fireDefaultQueries = function(){
+	let WOQL = TerminusClient.WOQL;
+	var query = WOQL.query().classMetadata();
+	query.execute(this.client).then((results) => {
+		let qcres = new TerminusClient.WOQLResult(results, query);
+		this.classMetaDataRes = qcres;
+	})
+	var query = WOQL.query().propertyMetadata();
+	query.execute(this.client).then((results) => {
+		let qpres = new TerminusClient.WOQLResult(results, query);
+		this.propertyMetaDataRes = qpres;
+	})
 }
 
 QueryPane.prototype.options = function(opts){
@@ -21,6 +36,247 @@ QueryPane.prototype.options = function(opts){
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
 	this.defaultResultView = { showConfig: "icon", editConfig: "true" };
     return this;
+}
+
+QueryPane.prototype.getSection = function(sName){
+	var btn = document.createElement('button');
+	btn.setAttribute('class', 'terminus-query-section');
+	btn.appendChild(document.createTextNode(sName));
+	return btn;
+}
+
+QueryPane.prototype.clearSubMenus = function(btn){
+	var par = btn.parentElement.parentElement;
+	var smenus = par.getElementsByClassName('terminus-queries-submenu');
+	for(var i=0; i<smenus.length; i++){
+		TerminusClient.FrameHelper.removeChildren(smenus[i]);
+	}
+}
+
+QueryPane.prototype.getResults = function(query){
+	if(query)
+		this.input.setQuery(query);
+	TerminusClient.FrameHelper.removeChildren(this.sampleQueryDOM);
+	this.input.refreshContents();
+}
+
+QueryPane.prototype.AddEvents = function(btn){
+	var self = this;
+	btn.addEventListener('click', function(){
+		let WOQL = TerminusClient.WOQL;
+		self.clearSubMenus(this);
+		var query;
+		switch(this.value){
+			case 'Show All Schema Elements':
+				query = WOQL.query().elementMetadata();
+			break;
+			case 'Show All Classes':
+				query = WOQL.query().classMetadata();
+			break;
+			case 'Show Document Classes':
+				query = WOQL.query().documentMetadata();
+			break;
+			case 'Show All Properties':
+				query = WOQL.query().propertyMetadata();
+			break;
+			case 'Show All Data':
+				query = WOQL.query().getEverything();
+			break;
+			case 'Show data of chosen type':
+				var choosen = 'scm:' + this.innerText;
+				query = WOQL.query().getDataOfClass(choosen);
+			break;
+			case 'Show property of chosen type':
+				var choosen = 'scm:' + this.innerText;
+				query = WOQL.query().getDataOfProperty(choosen);
+			break;
+			case 'Show data of type':
+				return;
+			case 'Show property of type':
+				return;
+			default:
+				console.log('Invalid Type of query');
+			break;
+		}
+		self.getResults(query);
+	})
+}
+
+QueryPane.prototype.getQueryMenu = function(qName){
+	var btn = document.createElement('button');
+	btn.setAttribute('class', 'terminus-load-queries');
+	btn.setAttribute('value', qName);
+	btn.appendChild(document.createTextNode(qName));
+	this.AddEvents(btn);
+	return btn;
+}
+
+QueryPane.prototype.getSubDataMenu = function(qName, val){
+	var btn = document.createElement('button');
+	btn.setAttribute('class', 'terminus-load-queries');
+	btn.setAttribute('value', qName);
+	btn.appendChild(document.createTextNode(val));
+	this.AddEvents(btn);
+	return btn;
+}
+
+// schema queries
+QueryPane.prototype.getSchemaSection = function(d){
+	var section = this.getSection('Schema Queries');
+	d.appendChild(section);
+	var btn = this.getQueryMenu('Show All Schema Elements');
+	d.appendChild(btn);
+	var btn = this.getQueryMenu('Show All Classes');
+	d.appendChild(btn);
+	var btn = this.getQueryMenu('Show Document Classes');
+	d.appendChild(btn);
+	var btn = this.getQueryMenu('Show All Properties');
+	d.appendChild(btn);
+}
+
+QueryPane.prototype.checkIfDataMenuOpen = function(btn){
+	var isOpen = false;
+	if(btn.children.length){
+		for(var i=0; i<btn.children.length; i++){
+			//var child = btn.children[i].getElementsByClassName('terminus-queries-submenu');
+			var child = btn.getElementsByClassName('terminus-queries-submenu');
+			if(child.length){
+				for(var j=0; j<child.length; j++){
+					TerminusClient.FrameHelper.removeElement(child[j]);
+					isOpen = true;
+				}
+			}
+		}
+	}
+	return isOpen;
+}
+
+QueryPane.prototype.showDataOfTypeEvent = function(btn){
+	var self = this;
+	btn.addEventListener('click', function(){
+		var isMenuOpen = self.checkIfDataMenuOpen(this);
+		if(!isMenuOpen){
+			var subPar = document.createElement('div');
+			subPar.setAttribute('class', 'terminus-queries-submenu');
+			if(self.classMetaDataRes && self.classMetaDataRes.hasBindings()){
+				for(var i = 0; i<self.classMetaDataRes.bindings.length; i++){
+					var text = self.classMetaDataRes.bindings[i]['v:Label']['@value'];
+					subPar.appendChild(self.getSubDataMenu('Show data of chosen type', text));
+				}
+			}
+			btn.appendChild(subPar);
+		}
+	})
+}
+
+QueryPane.prototype.showPropertyOfTypeEvent = function(btn){
+	var self = this;
+	btn.addEventListener('click', function(){
+		var isMenuOpen = self.checkIfDataMenuOpen(this);
+		if(!isMenuOpen){
+			var subPar = document.createElement('div');
+			subPar.setAttribute('class', 'terminus-queries-submenu');
+			if(self.propertyMetaDataRes && self.propertyMetaDataRes.hasBindings()){
+				for(var i = 0; i<self.propertyMetaDataRes.bindings.length; i++){
+					var text = self.propertyMetaDataRes.bindings[i]['v:Label']['@value'];
+					subPar.appendChild(self.getSubDataMenu('Show property of chosen type', text));
+				}
+			}
+			btn.appendChild(subPar);
+		}
+	})
+}
+
+QueryPane.prototype.addCheveronIcon = function(btn){
+	var i = document.createElement('i');
+	i.setAttribute('class', 'fa fa-chevron-right terminus-query-section');
+	btn.appendChild(i);
+}
+
+// data queries
+QueryPane.prototype.getDataSection = function(d){
+	var section = this.getSection('Data Queries');
+	d.appendChild(section);
+	// div to populate submenu on data of type
+	var bd = document.createElement('div');
+	bd.setAttribute('class', 'terminus-query-submenu');
+	d.appendChild(bd);
+	var btn = this.getQueryMenu('Show data of type');
+	bd.appendChild(btn);
+	this.addCheveronIcon(btn);
+	this.showDataOfTypeEvent(btn);
+	// div to populate submenu on property of type
+	var bd = document.createElement('div');
+	bd.setAttribute('class', 'terminus-query-submenu');
+	d.appendChild(bd);
+	var btn = this.getQueryMenu('Show property of type');
+	bd.appendChild(btn);
+	this.showPropertyOfTypeEvent(btn);
+	this.addCheveronIcon(btn);
+	var btn = this.getQueryMenu('Show All Data');
+	d.appendChild(btn);
+}
+
+QueryPane.prototype.fireDocumentEvent = function(document){
+	let WOQL = TerminusClient.WOQL;
+	var query = WOQL.query().documentProperties(document);
+	this.getResults(query);
+}
+
+QueryPane.prototype.getEnterDocumentIdDOM = function(){
+	var sp = document.createElement('span');
+	sp.setAttribute('class', 'terminus-display-flex');
+	var inp = document.createElement('input');
+	inp.setAttribute('class', 'terminus-doc-id-input');
+	inp.setAttribute('placeholder', 'doc:myDocId');
+	var sub = document.createElement('button');
+	sub.setAttribute('class', 'terminus-btn terminus-doc-id-input-submit');
+	sub.appendChild(document.createTextNode('Submit'));
+	var self = this;
+	sub.addEventListener('click', function(){
+		self.fireDocumentEvent(inp.value);
+	})
+	sp.appendChild(inp);
+	sp.appendChild(sub);
+	return sp;
+}
+
+// document queries
+QueryPane.prototype.getDocumentSection = function(d){
+	var section = this.getSection('Document Queries');
+	d.appendChild(section);
+	var btn = this.getQueryMenu('Show All Documents');
+	d.appendChild(btn);
+	d.appendChild(this.getEnterDocumentIdDOM());
+}
+
+// bottom color transaprent
+QueryPane.prototype.getQueryMenuBlock = function(){
+	var d = document.createElement('div');
+	d.setAttribute('class', 'terminus-load-queries');
+	this.getSchemaSection(d);
+	this.getDataSection(d);
+	this.getDocumentSection(d);
+	return d;
+}
+
+QueryPane.prototype.getSampleQueriesDOM = function(){
+	var i = document.createElement('icon');
+	i.setAttribute('class', 'fa fa-ellipsis-v terminus-ellipsis-icon');
+	i.setAttribute('title', 'Click to load sample Queries');
+	i.setAttribute('value', false);
+	this.sampleQueryDOM = i;
+	var self = this;
+	i.addEventListener('click', function(e){
+		if(e.target !== this) return;
+		if(this.children.length)
+			TerminusClient.FrameHelper.removeChildren(this);
+		else{
+			var d = self.getQueryMenuBlock();
+			this.appendChild(d);
+		}
+	})
+	return i;
 }
 
 QueryPane.prototype.getAsDOM = function(){
@@ -44,11 +300,13 @@ QueryPane.prototype.getAsDOM = function(){
 			configspan.title="Click to Hide Query";
 			ic.setAttribute("class", "fas fa fa-times-circle");
 			configspan.classList.remove('terminus-click-to-view-query');
+			var qicon = self.getSampleQueriesDOM();
 			if(configspan.nextSibling){
 				self.container.insertBefore(ipdom, configspan.nextSibling);
 			}
 			else {
 				self.container.appendChild(ipdom);
+				ipdom.appendChild(qicon);
 			}
 			self.input.stylizeSnippet();
 		}
@@ -68,8 +326,6 @@ QueryPane.prototype.getAsDOM = function(){
     }
 	this.resultDOM = document.createElement("span");
 	this.resultDOM.setAttribute("class", "terminus-query-results");
-	//var form = (this.input.format == "js" ? "javascript" : "json");
-	//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
 	if(this.views.length == 0){
 		this.addView(TerminusClient.WOQL.table(), this.defaultResultView);
 	}
@@ -105,13 +361,13 @@ QueryPane.prototype.getResultPaneHeader = function(closable){
 	}
 	var collapsePaneButton = document.createElement('button');
 	collapsePaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
-	collapsePaneButton.appendChild(document.createTextNode('Collapse'));		
+	collapsePaneButton.appendChild(document.createTextNode('Collapse'));
 	c.appendChild(collapsePaneButton);
 	return c;
 }
 
 QueryPane.prototype.createInput = function(mode){
-    let input = new TerminusCodeSnippet("woql", mode);
+    let input = new TerminusCodeSnippet("woql", mode, null, 800);
     if(this.query){
     	input.setQuery(this.query);
 	}

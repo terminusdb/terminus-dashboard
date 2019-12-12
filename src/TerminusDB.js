@@ -45,7 +45,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		ul.appendChild(a);
 		var p = this.ui.page ? this.ui.page : "db";
 		if(this.ui.showControl("db")){
-			if(p == "db") a.classList.add("terminus-selected");		
+			if(p == "db") a.classList.add("terminus-selected");
 			self.ui.page = "db";
 			a.addEventListener("click", function(){
 				self.ui.showDBMainPage();
@@ -53,7 +53,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 				self.ui.redrawControls();
 			});
 		}
-		
+
 		if(this.ui.showControl("get_document")){
 			var item = this.getControlHTML("Documents", "fas fa-file");
 			if(p == "docs") item.classList.add("terminus-selected");
@@ -357,10 +357,10 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	if(type == "schema"){
 		sets.title = (happy == "happy") ? "Document Classes Created" : "No Schema Created";
 		sets.text = (happy == "happy") ? "You have successfully created a schema with valid document classes!" : "You should create a schema and add at least one document classes before you add data to the system";
-		sets.css = "fa fa-cog fa-2x";
+		sets.css = "fa fa-cog fa-2x terminus-welcome-icons";
 	}
 	else if(type == "docs"){
-		sets.css = "fa fa-book fa-2x";
+		sets.css = "fa fa-book fa-2x terminus-welcome-icons";
 		sets.title = "Create Documents";
 		sets.text = (happy == "happy") ? "Add data to the system through easy to use automatically generated forms for each document type" : "You should create a schema and add at least one document classes before you add data to the system";
 	}
@@ -372,10 +372,12 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	else if(type == "query"){
 		sets.css = "fa fa-search fa-2x";
 		sets.title = "Run Queries";
+		sets.css = "fa fa-search fa-2x terminus-welcome-icons";
+		sets.title = "Run Queries";
 		sets.text = (happy == "happy") ? "You can add data to the system with queries and scripts, and import data directly from CSVs and URLs" : "You can write WOQL queries to create a schema through our query interface";
 	}
 	else if(type == "demo"){
-		sets.css = "fa fa-database fa-2x";
+		sets.css = "fa fa-database fa-2x terminus-welcome-icons";
 		var dbrec = this.ui.getDBRecord();
 		if(dbrec)
 			var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
@@ -389,9 +391,11 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	ispan.appendChild(ic);
 	hbox.appendChild(ispan);
 	var htit = document.createElement("span");
-	htit.appendChild(document.createElement("strong").appendChild(document.createTextNode(" " + sets.title)));
+	htit.appendChild(document.createElement("strong").appendChild(document.createTextNode(sets.title)));
+	htit.classList.add('terminus-welcome-title');
 	hbox.appendChild(htit);
 	var body = document.createElement("p");
+	body.setAttribute('class', 'terminus-welcome-body');
 	body.appendChild(document.createTextNode(sets.text));
 	hbox.appendChild(body);
 	if(type == "schema"){
@@ -421,7 +425,10 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 		});
 	}
 	if(type == "docs"){
-		hbox.appendChild(chooser);
+		var sp = document.createElement('span');
+		sp.setAttribute('class', 'terminus-welcome-chooser');
+		sp.appendChild(chooser);
+		hbox.appendChild(sp);
 	}
 	return hbox;
 }
