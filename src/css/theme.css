@@ -487,7 +487,6 @@ button.terminus-new-query-btn{
 }
 span.terminus-query-results{
 	width: 100%;
-	display: -webkit-inline-box;
 	margin: 10px 0px 20px 0px;
 }
 span.terminus-click-to-view-query{
@@ -502,6 +501,12 @@ span.pane-config-icons{
 	/*float: right;*/
 	margin-right: 20px;
 }
+
+span.terminus-toggle-documents {
+	float: right;
+	margin-right: 1em;
+}
+
 div.terminus-query-pane-cont{
 	border: 1px solid grey;
     padding: 10px;
@@ -604,6 +609,10 @@ div.terminus-form-margin-top{
     margin-right: 15px;
     padding: 5px;
     margin-left: 4px;
+}
+
+div.terminus-home-actions div {
+	display: inline-block;
 }
 
 .terminus-doc-btn:hover{

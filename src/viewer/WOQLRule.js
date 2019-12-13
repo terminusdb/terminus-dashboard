@@ -424,6 +424,8 @@ WOQLChooserConfig.prototype.direction = function(v){
 function WOQLTableConfig(){
 	this.rules = [];
 	this.type = "table";
+	this.show_pager = true;
+	this.show_pagesize = true;
 }
 
 WOQLTableConfig.prototype.getMatchingRules = function(row, key, context, action){
