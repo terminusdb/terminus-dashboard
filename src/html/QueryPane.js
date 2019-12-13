@@ -11,6 +11,8 @@ function QueryPane(client, query, result){
 	this.views = [];
 	this.container = document.createElement('span');
     this.container.setAttribute('class', 'terminus-query-pane-cont');
+	this.messages = document.createElement('div');
+	this.messages.setAttribute('class', 'terminus-query-messages');
 	this.fireDefaultQueries();
 }
 
@@ -286,6 +288,7 @@ QueryPane.prototype.getAsDOM = function(){
 	if(this.showQuery) {
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
+		this.querySnippet = configspan;
 		this.container.appendChild(configspan);
 		var mode = (this.editQuery ? "edit" : "view");
 		this.input = this.createInput(mode);
@@ -402,16 +405,67 @@ QueryPane.prototype.empty = function(){
 	return (typeof this.query == "undefined");
 }
 
-QueryPane.prototype.clearMessages = function(){}
-QueryPane.prototype.showError = function(){}
+QueryPane.prototype.clearMessages = function(){
+	if(this.messages.children.length) TerminusClient.FrameHelper.removeChildren(this.messages);
+}
+
+QueryPane.prototype.getBusyLoader = function(){
+     var pd = document.createElement('div');
+     var pbc = document.createElement('div');
+     pbc.setAttribute('class', 'term-progress-bar-container');
+     pd.appendChild(pbc);
+
+     var pbsa = document.createElement('div');
+     pbsa.setAttribute('class', 'term-progress-bar term-stripes animated reverse slower');
+     pbc.appendChild(pbsa);
+     var pbia = document.createElement('span');
+     pbia.setAttribute('class', 'term-progress-bar-inner');
+     pbsa.appendChild(pbia);
+	 return pd;
+}
+
+QueryPane.prototype.showBusy = function(msg){
+	var msgHolder = document.createElement('div');
+	msgHolder.setAttribute('class', 'terminus-busy-msg')
+	msgHolder.appendChild(document.createTextNode(msg));
+	msgHolder.appendChild(this.getBusyLoader());
+	this.messages.appendChild(msgHolder);
+	this.container.insertBefore(this.messages, this.querySnippet);
+}
+
+QueryPane.prototype.showError = function(e){
+	var md = document.createElement('div');
+	md.setAttribute('class', 'terminus-show-msg-error');
+	md.appendChild(document.createTextNode(e));
+	this.messages.appendChild(md);
+	if(this.container)
+		this.container.insertBefore(this.messages, this.resultDOM);
+}
+
+QueryPane.prototype.showNoBindings = function(){
+	nor = document.createElement('div');
+	nor.setAttribute('class', 'terminus-no-res-alert');
+	nor.appendChild(document.createTextNode("No results available for this query"));
+	if(this.container)
+		this.container.insertBefore(nor, this.resultDOM);
+}
 
 QueryPane.prototype.submitQuery = function(qObj){
 	this.clearMessages();
+	if(typeof qObj == 'string'){
+		this.showError(qObj);
+		return;
+	}
     this.query = qObj;
+	this.showBusy('Fetching results ...');
+	var self = this;
     qObj.execute(this.client).then((results) => {
 		var r = new TerminusClient.WOQLResult(results, qObj);
 		this.result = r;
-		this.refreshViews();
+		self.clearMessages();
+		if(this.result.hasBindings())
+			this.refreshViews();
+		else this.showNoBindings();
 	})
 }
 

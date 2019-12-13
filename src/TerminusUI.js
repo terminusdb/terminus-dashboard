@@ -349,12 +349,12 @@ TerminusUI.prototype.deleteDBPermitted = function(dbid){
 
 TerminusUI.prototype.getDeleteDBButton = function(dbid){
 	if(!this.deleteDBPermitted(dbid)) return false;
-	var delbut = document.createElement('button');
+	//var delbut = document.createElement('button');
 	var icon = document.createElement('i');
 	icon.setAttribute("class", "terminus-db-list-del-icon fa fa-trash");
-	delbut.appendChild(icon);
-	delbut.appendChild(document.createTextNode("Delete Database"));
-	delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
+	//delbut.appendChild(icon);
+	//delbut.appendChild(document.createTextNode("Delete Database"));
+	//delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
 		// function to fix db in a closure
 	var self = this;
 	var delDB = function(db){
@@ -365,8 +365,8 @@ TerminusUI.prototype.getDeleteDBButton = function(dbid){
 			}
 		}
 	};
-	delbut.addEventListener("click", delDB(dbid));
-	return delbut;
+	icon.addEventListener("click", delDB(dbid));
+	return icon;
 }
 
 TerminusUI.prototype.showResult = function(response){
