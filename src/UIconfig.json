@@ -1,6 +1,5 @@
 let TerminusConfig = {
-	controls: ["collaborate",
-		"server", "db", "import_schema", "create_database",
+	controls: ["collaborate", "server", "db", "import_schema", "create_database",
 		"get_document", "get_schema", "update_schema", "woql_select"
 	],
 	css: "theme",
@@ -20,7 +19,7 @@ let TerminusConfig = {
 			loaded: true
 		}
 	},
-	location: { server: "http://195.201.12.87:6365/",  db: "musgrave", key: "***REMOVED***"}
+	location: { server: "http://195.201.12.87:6365/",  key: "***REMOVED***"}
 };
 
 var FrameConfig = {

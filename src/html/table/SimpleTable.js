@@ -135,7 +135,10 @@ SimpleTable.prototype.getPaging = function(){
 	if(this.woqltable.result.query.isPaged()){
 		var pdom = document.createElement("div");
 		pdom.setAttribute("class", "table-page-size");
-		if(this.woqltable.config.pagesize()) pdom.appendChild(this.getPageSize());
+		if(this.woqltable.config.pagesize()){
+			let psdom = this.getPageSize();
+			if(psdom) pdom.appendChild(psdom);
+		} 
 		if(this.woqltable.canChangePage()){
 			var pn = this.woqltable.result.query.getPage();
 			if(pn > 2){
@@ -151,27 +154,36 @@ SimpleTable.prototype.getPaging = function(){
 	}
 }
 
+SimpleTable.prototype.showPaging = function(){
+	if(this.woqltable.result.query.isPaged() && this.woqltable.config.pager() && this.woqltable.canChangePage()) return true;
+	return false;
+}
+
+
 SimpleTable.prototype.getPageSize = function(){
-	var chunk = document.createElement("span");
-	chunk.setAttribute("class", "woql-table-pagesize");
-	clabel = document.createElement("span");
-	clabel.appendChild(document.createTextNode("Page Size"));
-	chunk.appendChild(clabel);
-	if(this.woqltable.config.change_pagesize){
-		var ctl = document.createElement("input");
-		ctl.setAttribute("size", 6);
-		var self = this;
-		ctl.value = this.woqltable.getPageSize();
-		ctl.addEventListener("blur", function(){
-			var pval = (this.value ? parseInt(this.value) : false);
-			self.woqltable.setPageSize(pval);
-		});
-		chunk.appendChild(ctl);
+	if(this.showPaging()){
+		var chunk = document.createElement("span");
+		chunk.setAttribute("class", "woql-table-pagesize");
+		clabel = document.createElement("span");
+		clabel.appendChild(document.createTextNode("Page Size"));
+		chunk.appendChild(clabel);
+		if(this.woqltable.config.change_pagesize){
+			var ctl = document.createElement("input");
+			ctl.setAttribute("size", 6);
+			var self = this;
+			ctl.value = this.woqltable.getPageSize();
+			ctl.addEventListener("blur", function(){
+				var pval = (this.value ? parseInt(this.value) : false);
+				self.woqltable.setPageSize(pval);
+			});
+			chunk.appendChild(ctl);
+		}
+		else {
+			chunk.appendChild(document.createTextNode(this.woqltable.getPageSize()));
+		}
+		return chunk;
 	}
-	else {
-		chunk.appendChild(document.createTextNode(this.woqltable.getPageSize()));
-	}
-	return chunk;
+	return false;
 }
 
 SimpleTable.prototype.getPageNumber = function(){

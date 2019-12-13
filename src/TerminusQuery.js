@@ -1,4 +1,3 @@
-//const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const TerminusClient = require('@terminusdb/terminus-client');
 const QueryPane = require("./html/QueryPane");
 const ScriptPane = require("./html/ScriptPane");
