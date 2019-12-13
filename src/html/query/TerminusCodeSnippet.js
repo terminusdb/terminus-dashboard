@@ -60,8 +60,8 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 	}
 	catch(e){
 		this.error = "Failed to parse Query " + e.toString() + " " + text;
-		console.error(this.error);
-		return false;
+		return this.error;
+		//return false;
 	}
 }
 
