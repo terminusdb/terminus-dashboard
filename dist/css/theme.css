@@ -415,10 +415,10 @@ div.terminus-queries-submenu{
 	max-height: 500px;
 	overflow-y: auto;
 }
-@media only screen and (min-width: 1200px)
+/*@media only screen and (min-width: 1200px)
 .terminus-client-ui {
     min-height: 600px;
-}
+}*/
 div.terminus-load-queries{
 	display: grid;
 	background-color: #fff;
@@ -880,7 +880,8 @@ div.ql-editor{
 	padding-right: 15px
 }
 .main-table-height{
-	height: 800px;
+	/*height: 800px;*/
+	height: 100%
 }
 /* pointer cursor */
 .terminus-pointer{
@@ -1257,14 +1258,14 @@ div.terminus-violation{
   overflow: auto;
 }
 
-@media screen and (max-width: 700px){
+/*@media screen and (max-width: 700px){
   .terminus-popup{
     width: 70%;
   }
   .terminus-popup-property{
     width: 70%;
   }
-}
+} */
 .select2-results-options {
     font-size:20px !important;
 }
@@ -1309,7 +1310,7 @@ div.terminus-mapping-field {
 	margin-bottom: 1em;
 }
 
-@media(max-width:767px){body{padding:0!important}.wrapper{padding:20px 15px}}
+/*@media(max-width:767px){body{padding:0!important}.wrapper{padding:20px 15px*/
 
 /* ----- terminus control panel links -----*/
 a.terminus-a {
@@ -1721,11 +1722,11 @@ div.terminus-margin-left-auto {
   color: #fff !important;
 }
 
-@media (min-width: 768px)
+/*@media (min-width: 768px)
 .terminus-content-layout {
     flex: 0 0 100%;
     max-width: 100%;
-}
+}*/
 
 
 .terminus-home-del{
@@ -1782,7 +1783,7 @@ div.terminus-margin-left-auto {
 	padding: 30px;
     overflow: hidden;
     /*max-width: 1240px;*/
-	width: 100%;
+	max-width: calc(100vw - 420px)!important;
     overflow-x: overlay;
 }
 .terminus-client-table-layout{
