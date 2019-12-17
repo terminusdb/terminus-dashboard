@@ -83,14 +83,14 @@ TerminusCodeSnippet.prototype.get = function(){
 
 TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     var scont = document.createElement('div');
-	scont.setAttribute('class', 'terminus-snippet-container terminus-display-flex')
+	scont.setAttribute('class', 'terminus-snippet-container')
     // query
     var snpc = document.createElement('div');
-    snpc.setAttribute('style', 'display:table-caption; margin: 20px');
+    //snpc.setAttribute('style', 'display:table-caption; margin: 20px');
     if(this.placeholder)
 		this.snippet.setAttribute("placeholder", this.placeholder);
-    if(this.width && this.height)
-		this.snippet.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");
+    //if(this.width && this.height)
+	//	this.snippet.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");
     //if(this.language == "woql"){
     	snpc.appendChild(this.getFormatButtons());
     //}
@@ -209,9 +209,10 @@ TerminusCodeSnippet.prototype.removeCodeMirror = function(){
 }
 
 TerminusCodeSnippet.prototype.stylizeSnippet = function(){
-	var dimensions = {};
-	dimensions.width = this.width;
-	dimensions.height = this.height;
+	var dimensions = "query";
+	//dimensions.width = "1000";//this.width;
+	//dimensions.height = "1000";//this.height;
+
 	this.removeCodeMirror();
 	if(this.mode == 'view')
 		UTILS.stylizeCodeDisplay(null, this.snippet, null, 'javascript');

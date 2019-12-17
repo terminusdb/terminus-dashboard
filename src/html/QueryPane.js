@@ -300,17 +300,19 @@ QueryPane.prototype.getAsDOM = function(){
 		configspan.appendChild(ic);
 		var self = this;
 		function showQueryConfig(){
-			configspan.title="Click to Hide Query";
-			ic.setAttribute("class", "fas fa fa-times-circle");
+			if(self.showQuery != "always"){
+				configspan.title="Click to Hide Query";
+				ic.setAttribute("class", "fas fa fa-times-circle");
+			}
 			configspan.classList.remove('terminus-click-to-view-query');
-			var qicon = self.getSampleQueriesDOM();
 			if(configspan.nextSibling){
 				self.container.insertBefore(ipdom, configspan.nextSibling);
 			}
 			else {
 				self.container.appendChild(ipdom);
-				ipdom.appendChild(qicon);
 			}
+			var qicon = self.getSampleQueriesDOM();
+			ipdom.appendChild(qicon);
 			self.input.stylizeSnippet();
 		}
 		function hideQueryConfig(){

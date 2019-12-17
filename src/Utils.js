@@ -285,14 +285,14 @@ function deleteStylizedEditor(ui, qip){
    mode: format to be displayed in
 */
 function stylizeEditor(ui, txt, view, mode){
-    if(ui){
-        var cmConfig = ui.pluginAvailable("codemirror");
-        if(!(cmConfig)) return;
-        var cm = new Codemirror(txt, mode, cmConfig);
-    }
-	else{
-        var cm = new Codemirror(txt, mode, {});
-    }
+  if(ui){
+      var cmConfig = ui.pluginAvailable("codemirror");
+      if(!(cmConfig)) return;
+      var cm = new Codemirror(txt, mode, cmConfig);
+  }
+  else{
+      var cm = new Codemirror(txt, mode, {});
+  }
 	var ar = cm.colorizeTextArea(view);
 	cm.updateTextArea(ar);
 }
