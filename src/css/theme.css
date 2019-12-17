@@ -1019,7 +1019,9 @@ div.terminus-margin-top, table.terminus-margin-top{
     flex: 0 0 56.666667%;
    /*  max-width: 56.666667%;*/
     word-wrap: break-word;
-    overflow: hidden;
+    /*overflow: hidden; */
+	overflow: auto !important;
+	resize: auto;
 }
 
 .cm-s-neo.CodeMirror{

@@ -6,6 +6,9 @@ const WOQLStream = require("./WOQLStream");
 const TerminusFrame = require("./TerminusFrame");
 
 TerminusClient.WOQL.table = function(){ return new WOQLTableConfig(); }
+TerminusClient.WOQL.chart = function(){ return new WOQLChartConfig(); }
+
+
 TerminusClient.WOQL.graph = function(){ return new WOQLGraphConfig(); }
 TerminusClient.WOQL.chooser = function(){ return new WOQLChooserConfig(); }
 TerminusClient.WOQL.stream = function(){ return new WOQLStreamConfig(); }
@@ -226,6 +229,14 @@ FrameConfig.prototype.setFrameArgs = function(existing, fresh){
 	}
 	return existing;
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1326,6 +1337,10 @@ function getMatchingRules(rules, row, key, context, action){
 }
 
 
+
+module.exports=TerminusClient.WOQL
+
+
 /*
  *
 var x = WOQL.schema();
@@ -1333,3 +1348,153 @@ x.addClass("my:Class").label("A class").comment("A comment").abstract().relation
 x.addProperty("my:prop", "xsd:string").domain("my:Class").label("x").comment("x").max(2).min(1);
 x.execute(client).then ...
  */
+
+function WOQLChartRule(scope){
+	WOQLRule.call(this,scope); 
+};
+
+WOQLChartRule.prototype = Object.create(WOQLRule.prototype);
+WOQLChartRule.prototype.constructor = WOQLRule;
+
+WOQLChartRule.prototype.style=function(key,value){
+	if(value){
+		this.rule[key]=value;
+		return this;
+	}
+	return this.rule[key];
+}
+
+WOQLChartRule.prototype.fill=function(color){
+	if(color){
+		this.rule.fill = color;
+		return this;
+	}
+	return this.rule.fill;
+}
+
+WOQLChartRule.prototype.stroke=function(color){
+	if(color){
+		this.rule['stroke'] = color;
+		return this;
+	}
+	return this.rule['stroke'];
+}
+
+
+WOQLChartRule.prototype.strokeWidth=function(size){
+	if(color){
+		this.rule.strokeWidth = size;
+		return this;
+	}
+	return this.rule.strokeWidth;
+}
+
+
+WOQLChartRule.prototype.dot=function(isVisible){
+	if(isVisible){
+		this.rule.dot = isVisible;
+		return this;
+	}
+	return this.rule.dot;
+}
+
+WOQLChartRule.prototype.labelRotate=function(angle){
+	if(angle){
+		this.rule.labelRotate = angle;
+		return this
+	}
+	return this.rule.labelRotate;
+}
+
+WOQLChartRule.prototype.axisType=function(type){
+	if(type){
+		this.rule.type=type
+		return this;
+	}
+	return this.rule.type
+}
+/*
+* works only if type is number
+* domainArr =[min,max];
+*/
+WOQLChartRule.prototype.axisDomain=function(domainArr){
+	if(domainArr){
+		this.rule.domain=domainArr
+		return this;
+	}
+	return this.rule.domain
+}
+
+
+
+
+
+function WOQLChartConfig(){
+	this.rules = [];
+	this.type = "chart";
+}
+
+
+
+/*
+{"XAxis":{dataKey:"date_i",type:'number'}
+							,"chartObj":
+							[{'label':'Confident','dataKey':'conf',"chartType":"Area",
+							"style":{"stroke":"#82ca9d", "fillOpacity":1, "fill":"#82ca9d"}},
+							 {'label':'Predictions','dataKey':'predictions',"chartType":"Line",
+							 "style":{"strokeWidth":2, "stroke":"#ff8000"}},
+							 {'label':'Picks','dataKey':'picks',"chartType":"Point","style": 
+							 {"stroke": '#8884d8', "fill": '#8884d8'}},
+							 {'label':'Stock','dataKey':'stock',"chartType":"Line","style":
+							  {"stroke": '#0000ff', "fill": '#0000ff'}}]}
+
+{"XAxis":{dataKey:"v:Date","label":{rotate:"-50"}},"chartObj":
+							  	[{'dot':true, 'label':'Quantity','dataKey':'v:Quantity',"chartType":"Line",  
+							  	  "style": {"stroke": '#FF9800', "fill": '#FF9800'}}]
+							  }
+*/
+
+
+WOQLChartConfig.prototype.xAxis = function(...vars){
+	let woqlRule = new WOQLChartRule("XAxis");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.bar = function(...vars){
+	let woqlRule=new WOQLChartRule("Bar");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.line=function(...vars){
+	let woqlRule=new WOQLChartRule("Line");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.point=function(...vars){
+	let woqlRule=new WOQLChartRule("Point");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.area=function(...vars){
+	let woqlRule=new WOQLChartRule("Area");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+//WOQLChartConfig.prototype.style()
+
+
+//const woqlChart=new WOQLChartConfig();//TerminusClient.woql.chart();
+
+//woqlChart.Bar('test');
+
+
