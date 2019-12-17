@@ -31,12 +31,12 @@ QueryPane.prototype.fireDefaultQueries = function(){
 }
 
 QueryPane.prototype.options = function(opts){
-	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : true);
-	this.editQuery = (opts && typeof opts.editQuery != "undefined" ? opts.editQuery : true);
+	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : false);
+	this.editQuery = (opts && typeof opts.editQuery != "undefined" ? opts.editQuery : false);
 	this.showHeader = (opts && typeof opts.showHeader != "undefined" ? opts.showHeader : false);
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: "icon", editConfig: "true" };
+	this.defaultResultView = { showConfig: false, editConfig: false };
     return this;
 }
 

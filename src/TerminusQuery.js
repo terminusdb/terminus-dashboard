@@ -39,7 +39,6 @@ TerminusQueryViewer.prototype.getNewQueryPane = function(){
 	return qpane;
 }
 
-
 TerminusQueryViewer.prototype.addQueryPane = function(){
 	var qpane = this.getNewQueryPane();
 	this.panes.push(qpane);
