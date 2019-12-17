@@ -60,8 +60,8 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 	}
 	catch(e){
 		this.error = "Failed to parse Query " + e.toString() + " " + text;
-		console.error(this.error);
-		return false;
+		return this.error;
+		//return false;
 	}
 }
 
@@ -83,6 +83,7 @@ TerminusCodeSnippet.prototype.get = function(){
 
 TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     var scont = document.createElement('div');
+	scont.setAttribute('class', 'terminus-snippet-container terminus-display-flex')
     // query
     var snpc = document.createElement('div');
     snpc.setAttribute('style', 'display:table-caption; margin: 20px');
@@ -98,14 +99,17 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
     //}
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
-		console.log('serial', serial);
+		//console.log('serial', serial);
     	if(this.mode == "edit"){
     		this.snippet.value = serial;
     	}
     	else {
     		this.snippet.appendChild(document.createTextNode(serial));
     	}
-    }
+	}
+	else {
+		this.snippet.value = "";
+	}
     snpc.appendChild(this.snippet);
     if(this.mode == "edit"){
     	var actbtn = this.getSubmitButton();
@@ -163,7 +167,7 @@ TerminusCodeSnippet.prototype.getFormatButtons = function(){
 			UTILS.setSelected(this, 'terminus-snippet-format-selected');
 			var qobj = self.parseText(self.snippet.value, self.format);
 			self.format = this.value;
-			if(qobj) this.qObj = qobj;
+			if(qobj) self.qObj = qobj;
 			self.refreshContents();
         })
         bsp.appendChild(btn);
@@ -214,10 +218,11 @@ TerminusCodeSnippet.prototype.stylizeSnippet = function(){
 	else UTILS.stylizeEditor(null, this.snippet, dimensions, 'javascript'); // default view is js
 }
 
-TerminusCodeSnippet.prototype.refreshContents = function(){
+TerminusCodeSnippet.prototype.refreshContents = function(qObj){
+	qObj = qObj ? qObj : this.qObj;
 	TerminusClient.FrameHelper.removeChildren(this.snippet);
 	if(this.mode == "edit") this.snippet.value == "";
-    if(!this.qObj) return;
+	if(!qObj) return;
 	var serial = this.serialise(this.qObj, this.format);
 	if(this.mode == "edit"){
 		this.snippet.value = serial;

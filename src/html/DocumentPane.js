@@ -44,11 +44,11 @@ DocumentPane.prototype.setClassLoader = function(cloader){
 }
 
 DocumentPane.prototype.options = function(opts){
-	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : true);
-	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : true);
-	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : true);
+	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : false);
+	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : false);
+	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: "true", editConfig: "true" };
+	this.defaultResultView = { showConfig: false, editConfig: false };
 	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
     return this;
 }

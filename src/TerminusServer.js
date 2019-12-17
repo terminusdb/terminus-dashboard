@@ -8,7 +8,6 @@
  const UTILS =require('./Utils');
  const HTMLFrameHelper = require('./html/HTMLFrameHelper');
  
- //const TerminusHTMLViewer = require("./html/TerminusHTMLViewer");
  const TerminusClient = require('@terminusdb/terminus-client');
 
  function TerminusServerController(ui){
@@ -270,29 +269,8 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 		td5.appendChild(this.wrapTableLinkCell(td5,dbid, txt));
 		var td6 = document.createElement("td");
 		td6.setAttribute("class", "db-delete");
-        if(this.deleteDBPermitted(dbid)){
-            if(this.ui.pluginAvailable("font-awesome")){
-                var delbut = document.createElement('i');
-        		delbut.setAttribute("class", "terminus-db-list-del-icon fa fa-times-circle");
-        	}
-            else{
-                var delbut = document.createElement("button");
-    			delbut.appendChild(document.createTextNode("Delete"));
-    			delbut.setAttribute("class", "terminus-control-button terminus-delete-db-button");
-            }
-			// function to fix db in a closure
-			var delDB = function(db){
-				return function(){
-					let deleteConfirm = confirm(`Do you want to delete ${db} Database?`);
-					if (deleteConfirm == true) {
-			  			self.ui.deleteDatabase(db);
-					}
-					//self.ui.deleteDatabase(db);
-				}
-			};
-			delbut.addEventListener("click", delDB(dbid));
-			td6.appendChild(delbut);
-		}
+		var delbut = this.ui.getDeleteDBButton(dbid);
+		if(delbut) td6.appendChild(delbut);
 
 		tr.appendChild(td1);
 		tr.appendChild(td2);
@@ -312,10 +290,5 @@ TerminusServerViewer.prototype.getDBListDOM = function(){
 	return sec;
 }
 
-TerminusServerViewer.prototype.deleteDBPermitted = function(dbid){
-	if(dbid == "terminus") return false;
-	if(this.ui.client.connection.capabilitiesPermit("delete_database", dbid)) return true;
-	return false;
-}
 
 module.exports = {TerminusServerViewer,TerminusServerController}
