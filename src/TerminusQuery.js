@@ -16,7 +16,7 @@ function TerminusQueryViewer(ui, options){
 
 TerminusQueryViewer.prototype.newPaneOptions = function(){ 
 	var opts = {
-		showQuery: true, 
+		showQuery: "always", 
 		editQuery: true,
 		showHeader: true, 
 	};
