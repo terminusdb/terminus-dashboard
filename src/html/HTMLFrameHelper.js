@@ -2,56 +2,6 @@ const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const TerminusClient = require('@terminusdb/terminus-client');
 let HTMLFrameHelper = {};
 
-HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled){
-	var pman = new TerminusPluginManager();
-	var dpropDOM = document.createElement("span");
-	dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
-	var pman = new TerminusPluginManager();
-    /*if(pman.pluginAvailable("font-awesome")){
-		var icon = document.createElement('icon');
-		var faic = this.getControlIcon(control);
-		if(disabled){
-			icon.setAttribute("class", "terminus-frame-control frame-control-action action-disabled fa fa" + faic + " " + type + "-" + control + "-disabled terminus-font-align");
-			icon.setAttribute("title", disabled);
-		}
-		else {
-			icon.setAttribute("class", "terminus-frame-control frame-control-action frame-control-action fa fa" + faic + " " + type + "-" + control + " terminus-font-align");
-			icon.addEventListener("click", function(){
-				callback(control);
-			});
-		}
-		dpropDOM.appendChild(icon);
-	}
-	else{*/
-		var button = document.createElement("button");
-		button.appendChild(document.createTextNode(label));
-		if(disabled){
-			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
-			button.setAttribute("title", disabled);
-		}
-		else {
-			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action " + type + "-" + control);
-			button.addEventListener("click", function(){
-				if(this.innerHTML == 'Save'){
-					var objId = document.getElementsByClassName('terminus-object-id-input');
-					if(objId.length>0){
-						if(!objId[0].value){
-							objId[0].setAttribute('placeholder', 'Required field');
-							objId[0].style.background = '#f8d7da';
-						}
-						else callback(control);
-					}
-					else callback(control);
-				}
-				else callback(control);
-				//(control);
-			});
-		}
-		dpropDOM.appendChild(button);
-	//}
-	return dpropDOM;
-}
-
 HTMLFrameHelper.getSettingsControl = function(view){
 	var pman = new TerminusPluginManager();
 	if(pman.pluginAvailable("font-awesome")){
@@ -194,46 +144,6 @@ HTMLFrameHelper.getVariableValueFromBinding = function(varname, bind){
 }
 
 
-HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
-	/*var frow = this.getFrameRow();
-	var fgroup = this.getFrameGroup(frow);*/
-	var infoDOM = document.createElement("span");
-	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type );
-	//fgroup.appendChild(infoDOM);
-	if(help){
-		infoDOM.setAttribute("title", help);
-	}
-	if(label){
-		var linfo = document.createElement("span");
-		linfo.setAttribute("class", "terminus-frame-infobox-label " + "terminus-" +type + "-label");
-		linfo.appendChild(document.createTextNode(label));
-		infoDOM.appendChild(linfo);
-	}
-	var lspacer = document.createElement("span");
-	lspacer.setAttribute("class", "terminus-frame-infobox-spacer " + "terminus-" +type + "-spacer");
-	lspacer.appendChild(document.createTextNode(" "));
-	infoDOM.appendChild(lspacer);
-	var lval = document.createElement("span");
-	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
-	if(input){
-		input.value = value;
-		lval.appendChild(input);
-	}
-	else if(value) {
-		var sh = TerminusClient.FrameHelper.getShorthand(value);
-        if(sh){
-    	   	var bits = sh.split(":");
-            sh = bits[1];
-   			lval.setAttribute("title", value);
-			lval.appendChild(document.createTextNode(sh));
-		}
-		else {
-			lval.appendChild(document.createTextNode(value));
-		}
-	}
-	infoDOM.appendChild(lval);
-	return infoDOM;
-}
 
 /*
  * HTML drawing function for document rendering 
@@ -242,18 +152,19 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
 HTMLFrameHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, features){
 	if(frame.display_options.hidden) return false;
 	var framedom = HTMLFrameHelper.getFrameHolderDOM(scope, frame, orientation);
-	if(typeof frame.display_options.header != "undefined"){
-		if(typeof frame.display_options.header == "function"){
-			var hd = frame.display_options.header(frame.display_options.header_features, hfeatures);
-			framedom.appendChild(hd);
-		}
+	if(typeof frame.display_options.header == "function"){
+		var hd = frame.display_options.header(hfeatures);
+		framedom.appendChild(hd);
 	}
 	else {
 		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, orientation, hfeatures);
-		if(hfeatures) hd.appendChild(hfeatures);
+		if(typeof frame.display_options.header_style != "undefined"){
+			hd.setAttribute("style", frame.display_options.header_style);
+		}
 		framedom.appendChild(hd);
 	}
-	return framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, orientation, features));
+	framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, orientation, features));
+	return framedom;
 }
 
 HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
@@ -284,7 +195,7 @@ HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-" + scope + "-idmarker");
 	idm.setAttribute("name", hid);				
-    sp.appendChild(idm);
+	sp.appendChild(idm);
 	return sp;
 }
 
@@ -297,7 +208,7 @@ HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features
 		var objDOM = document.createElement("span");
 	}
 	objDOM.setAttribute("class", css + " " + css + "-" + orientation);
-    if(features) objDOM.appendChild(features);
+	if(features) objDOM.appendChild(features);
 	return objDOM;
 }
 
@@ -325,41 +236,42 @@ HTMLFrameHelper.hash = function(s) {
 	return hash;
 };
 
-HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
+HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend){
+
 	if(feature == "id"){	
 		if(scope == "object") var val = frame.subject();
 		else if(scope == "property") var val = frame.property();
 		if(val == "_:") var val = "New Document";
-		return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "The URL that identifies this data object");
+		return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "The ID that identifies this document", mode, args, rend);
 	}
 	else if(feature == "summary"){
 		var sum = frame.getSummary();
-		return HTMLFrameHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status);
+		return HTMLFrameHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status, mode, args);
 	}
 	else if(feature == "label"){
 		var lab = frame.getLabel();
 		if(lab){
-			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", false, lab);
+			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", false, lab, false, mode, args);
 		}
 		return false;
 	}
 	else if(feature == "status"){
 		var sum = frame.getSummary();
-		return HTMLFrameHelper.getInfoboxDOM(scope + "-status-"+sum.status, false, sum.status, sum.status);
+		return HTMLFrameHelper.getInfoboxDOM(scope + "-status-"+sum.status, false, sum.status, sum.status, mode, args);
 	}
 	else if(feature == "comment"){
 		var lab = frame.getComment();
-		return HTMLFrameHelper.getInfoboxDOM("property-comment", false, lab);
+		return HTMLFrameHelper.getInfoboxDOM("property-comment", false, lab, false, mode, args);
 	}
 	else if(feature == "type"){
-		if(scope == "property" && frame.display_options.mode == "edit" && frame.parent && frame.parent.isClassChoice() && frame.isNew()){
-			return this.getClassChoiceTypeSelector(frame);
+		if(scope == "property" && mode == "edit" && frame.parent && frame.parent.isClassChoice() && frame.isNew()){
+			return this.getClassChoiceTypeSelector(frame, mode, args);
 		}
 		if(scope == "object") var lab = frame.subjectClass();
 		else if(scope == "property") var lab = frame.range();
 		else if(scope == "data") var lab = frame.getType();
 		if(lab){
-			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", "Type", lab);
+			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", "Type", lab, false, mode, args);
 		}
 		return false;
 	}
@@ -372,7 +284,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 			}
 			disabled = "Cardinality rules prevent deleting this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "delete", "Delete", callback, disabled);
+		return HTMLFrameHelper.getActionControl(scope, "delete", "Delete", callback, disabled, mode, args);
 	}
 	else if(feature == "clone"){
 		var callback = function(){frame.clone()};
@@ -383,7 +295,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 			}
 			disabled = "Cardinality rules prevent cloning this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "clone", "Clone", callback, disabled);
+		return HTMLFrameHelper.getActionControl(scope, "clone", "Clone", callback, disabled, mode, args);
 	}
 	else if(feature == "reset"){
 		var callback = function(){frame.reset()};
@@ -394,41 +306,41 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 			}
 			disabled = "No changes have been made to this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "reset", "Reset", callback, disabled);
+		return HTMLFrameHelper.getActionControl(scope, "reset", "Reset", callback, disabled, mode, args);
+	}
+	else if(feature == "mode"){
+		var callback = function(){frame.mode("edit")};
+		return HTMLFrameHelper.getActionControl(scope, "mode", "Edit", callback, mode, args);
 	}
 	else if(feature == "hide"){
-		var callback = function(){frame.hide()};
-		return HTMLFrameHelper.getActionControl(scope, "hide", "Hide", callback);
-	}
-	else if(feature == "show"){
 		var callback = function(){frame.show()};
-		return HTMLFrameHelper.getActionControl(scope, "show", "Show", callback);
+		return HTMLFrameHelper.getActionControl(scope, "hide", "Hide", callback, mode, args);
 	}
 	else if(feature == "update"){
 		var callback = function(){frame.save()};
-		if(!frame.isUpdated() && !frame.display_options.show_disabled_buttons){
+		if(!frame.isUpdated() && !frame.display_options.show_disabled_buttons, mode, args){
 			return false;
 		}
 		var disabled = frame.isUpdated() ? false : "No changes have been made to this element";
-		return HTMLFrameHelper.getActionControl(scope, "save", "Save", callback, disabled);
+		return HTMLFrameHelper.getActionControl(scope, "save", "Save", callback, disabled, mode, args);
 	}
 	else if(feature == "viewer"){
-		return this.getViewerSelectorDOM(scope, frame);
+		return false;//this.getViewerSelectorDOM(scope, frame, mode, args);
 	}
 	else if(feature == "view"){
-		return this.getViewEntryDOM(scope, frame);
+		return this.getViewEntryDOM(scope, frame, mode, args);
 	}
 	else if(feature == "cardinality"){
-		return this.getCardinalityDOM(scope, frame);
+		return this.getCardinalityDOM(scope, frame, mode, args);
 	}
 	else if(feature == "add"){
-		return this.getAddDOM(scope, frame);
+		return this.getAddDOM(scope, frame, mode, args);
 	}
 }
 
-HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
-	var viewers = frame.terminus.datatypes.getAvailableViewers();
-	var r = this.terminus.datatypes.getRenderer(t);
+HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame, mode, args){
+	//var viewers = frame.datatypes.getAvailableViewers();
+	//var r = frame.datatypes.getRenderer(t);
 
 	if(viewers && viewers.length){
 		var mpropDOM = document.createElement("span");
@@ -439,7 +351,7 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
 			}
 		}
 		var selected = frame.currentViewer();
-		var sel = HTMLFrameHelper.getSelectionControl(scope + '-viewer', viewers, selected, callback);
+		var sel = HTMLFrameHelper.getSelectionControl(scope + '-viewer', viewers, selected, callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -448,7 +360,7 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
 
 
 /* needs html viewer context for goto */
-HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
+HTMLFrameHelper.getViewEntryDOM = function(scope, frame, mode, args){
 	if(scope == "object"){
 		var viewables = frame.getFilledPropertyList();
 	}
@@ -465,7 +377,7 @@ HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
 				frame.goToEntry(add);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl(scope + "-view-entry", viewables, "", callback);
+		var sel = HTMLFrameHelper.getSelectionControl(scope + "-view-entry", viewables, "", callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -473,7 +385,7 @@ HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
 	
 }
 
-HTMLFrameHelper.getCardinalityDOM = function(scope, frame){
+HTMLFrameHelper.getCardinalityDOM = function(scope, frame, mode, args){
 	var restriction = frame.getRestriction();
 	if(restriction.min && restriction.max){
 		if(restriction.min == restriction.max){
@@ -497,10 +409,10 @@ HTMLFrameHelper.getCardinalityDOM = function(scope, frame){
 	else {
 		return false;
 	}
-	return HTMLFrameHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help);
+	return HTMLFrameHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help, mode, args);
 }
 
-HTMLFrameHelper.getClassChoiceTypeSelector = function(frame){
+HTMLFrameHelper.getClassChoiceTypeSelector = function(frame, mode, args){
 	var cs = frame.parent.getAvailableClassChoices();
 	if(cs && cs.length){
 		var mpropDOM = document.createElement("span");
@@ -514,14 +426,14 @@ HTMLFrameHelper.getClassChoiceTypeSelector = function(frame){
 				frame.changeClass(cls);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, frame.subjectClass(), callback);
+		var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, frame.subjectClass(), callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
 	return false;
 }
 
-HTMLFrameHelper.getAddDOM = function(scope, frame){
+HTMLFrameHelper.getAddDOM = function(scope, frame, mode, args){
 	if(scope == "property"){
 		if(frame.isClassChoice()){
 			var cs = frame.getAvailableClassChoices();
@@ -534,7 +446,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 						frame.addClass(cls);
 					}
 				}
-				var sel = HTMLFrameHelper.getSelectionControl("add-property", cs, "", callback);
+				var sel = HTMLFrameHelper.getSelectionControl("add-property", cs, "", callback, mode, args);
 				mpropDOM.appendChild(sel);
 				return mpropDOM;
 			}
@@ -542,7 +454,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 		if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 			var callback = function(){frame.add("edit")};
 			var disabled = (frame.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
-			return HTMLFrameHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled);
+			return HTMLFrameHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled, mode, args);
 		}
 	}
 	else {
@@ -559,7 +471,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 			}
 			if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 				var disabled = (frame.cardControlAllows("add") ? false : "Cardinality rules forbid adding element");
-				var sel = HTMLFrameHelper.getSelectionControl(scope + "-add-entry", addables, "", callback, disabled);
+				var sel = HTMLFrameHelper.getSelectionControl(scope + "-add-entry", addables, "", callback, disabled, mode, args);
 				mpropDOM.appendChild(sel);
 				return mpropDOM;
 			}
@@ -567,5 +479,84 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 	}
 	return false;
 }
+
+HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, mode, args, input){
+	/*var frow = this.getFrameRow();
+	var fgroup = this.getFrameGroup(frow);*/
+	var infoDOM = document.createElement("span");
+	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type );
+	//fgroup.appendChild(infoDOM);
+	if(help){
+		infoDOM.setAttribute("title", help);
+	}
+	if(args && typeof args.label != "undefined") label = args.label;
+	if(label !== false){
+		label = (args && args.label ? args.label : label);
+		var linfo = document.createElement("span");
+		linfo.setAttribute("class", "terminus-frame-infobox-label " + "terminus-" +type + "-label");
+		linfo.appendChild(document.createTextNode(label));
+		if(args && args.headerStyle){
+			linfo.setAttribute("style", args.headerStyle);			
+		}
+		infoDOM.appendChild(linfo);
+	}
+	var lval = document.createElement("span");
+	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
+	if(input){
+		input.value = value;
+		lval.appendChild(input);
+	}
+	else if(args && args.removePrefixes && value && value.split(":").length == 2) {
+		var bits = value.split(":");
+		sh = bits[1];
+		lval.setAttribute("title", value);
+		lval.appendChild(document.createTextNode(sh));
+	}
+	else {
+		lval.appendChild(document.createTextNode(value));
+	}
+	if(args && args.bodyStyle){
+		lval.setAttribute("style", args.bodyStyle);
+	}
+	infoDOM.appendChild(lval);
+	if(args && args.style){
+		infoDOM.setAttribute("style", args.style)
+	}
+	return infoDOM;
+}
+
+
+HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled, mode, args){
+	var pman = new TerminusPluginManager();
+	var dpropDOM = document.createElement("span");
+	//dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
+	label = (args && typeof args.label != "undefined" ? args.label : label);
+	icon = (args && args.icon ? args.icon : false);
+	if(icon){
+		var i = document.createElement("i");
+		i.setAttribute("class", "fa " + icon);
+		icon = i;
+	}
+	var tag = (args && args.tag ? args.tag : "button");
+	var button = document.createElement(tag);
+	if(icon){
+		button.appendChild(icon);
+	}
+	if(label) button.appendChild(document.createTextNode(" " + label + " "));
+	if(args && args.title){
+		button.setAttribute("title", args.title);
+	}
+	if(disabled){
+		//button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
+		button.setAttribute("title", disabled);
+	}
+	else {
+		//button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action " + type + "-" + control);
+		
+	}
+	dpropDOM.appendChild(button);
+	return dpropDOM;
+}
+
 
 module.exports=HTMLFrameHelper

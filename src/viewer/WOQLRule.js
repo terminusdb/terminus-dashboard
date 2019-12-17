@@ -1,7 +1,6 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 const WOQLChooser = require("./WOQLChooser");
 const WOQLTable = require("./WOQLTable");
-const WOQLQueryViewer = require("./WOQLQueryView");
 const WOQLGraph = require("./WOQLGraph");
 const WOQLStream = require("./WOQLStream");
 const TerminusFrame = require("./TerminusFrame");
@@ -148,6 +147,13 @@ FrameConfig.prototype.property = function(){
 	return fp;
 }
 
+FrameConfig.prototype.scope = function(scope){
+	let fp = TerminusClient.WOQL.rule();
+	fp.scope(scope);
+	this.rules.push(fp);
+	return fp;
+}
+
 FrameConfig.prototype.data = function(){
 	let fp = TerminusClient.WOQL.rule();
 	fp.scope("data")
@@ -162,36 +168,65 @@ FrameConfig.prototype.all = function(){
 	return fp;
 }
 
-
+/**
+ * Attaches display options to frames from matching rules
+ */
 FrameConfig.prototype.setFrameDisplayOptions = function(frame, rule){
 	if(typeof frame.display_options == "undefined") frame.display_options = {};
 	if(typeof rule.mode() != "undefined") {	frame.display_options.mode = rule.mode();}
 	if(typeof rule.view() != "undefined") frame.display_options.view = rule.view();
-	//if(typeof rule.facets() != "undefined") frame.display_options.facets = rule.facets();
-	//if(typeof rule.facet() != "undefined") frame.display_options.facet = rule.facet();
 	if(typeof rule.showDisabledButtons() != "undefined") frame.display_options.show_disabled_buttons = rule.showDisabledButtons();
-	if(typeof rule.features() != "undefined") {
-		frame.display_options.features = rule.features();
-	}
-	if(typeof rule.header() != "undefined") frame.display_options.header = rule.header();
 	if(typeof rule.hidden() != "undefined") frame.display_options.hidden = rule.hidden();
 	if(typeof rule.collapse() != "undefined") frame.display_options.collapse = rule.collapse();
-	if(typeof rule.headerFeatures() != "undefined") frame.display_options.header_features = rule.headerFeatures();
+	if(typeof rule.style() != "undefined") frame.display_options.style = rule.style();
+	if(typeof rule.headerStyle() != "undefined") frame.display_options.header_style = rule.headerStyle();
+	if(typeof rule.features() != "undefined") {		frame.display_options.features = this.setFrameFeatures(frame.display_options.features, rule.features());	}
+	if(typeof rule.headerFeatures() != "undefined") frame.display_options.header_features = this.setFrameFeatures(frame.display_options.header_features, rule.headerFeatures());
+	if(typeof rule.header() != "undefined") frame.display_options.header = rule.header();
 	if(typeof rule.showEmpty() != "undefined") frame.display_options.show_empty = rule.showEmpty();
-	if(typeof rule.featureRenderers() != "undefined") frame.display_options.feature_renderers = rule.featureRenderers();
-	if(typeof rule.dataviewer() != "undefined") {
-		frame.display_options.dataviewer = rule.dataviewer();
-		if(typeof rule.args() != "undefined")
-			frame.display_options.args = rule.args();
-	}
+	if(typeof rule.dataviewer() != "undefined") frame.display_options.dataviewer = rule.dataviewer();
+	if(typeof rule.args() != "undefined") frame.display_options.args = this.setFrameArgs(frame.display_options.args, rule.args());
 }
 
+/*
+Consolidates properties of features sent in in different rules
+*/
+FrameConfig.prototype.setFrameFeatures = function(existing, fresh){
+	//preserve order of existing
+	if(!existing || !existing.length) return fresh;
+	if(!fresh || !fresh.length)  return existing;
+	let got = [];
+	for(var i = 0; i< existing.length; i++){
+		var key = (typeof existing[i] == "string" ? existing[i] : Object.keys(existing[i])[0]);
+		got.push(key);
+	}
+	for(var j = 0; j< fresh.length; j++){
+		var fkey = (typeof fresh[j] == "string" ? fresh[j] : Object.keys(fresh[j])[0]);
+		var rep = got.indexOf(fkey);
+		if(rep == -1) existing.push(fresh[j]);
+		else if(typeof fresh[j] == "object"){
+			var val = existing[rep];
+			if(typeof val == 'string') existing[rep] = fresh[j];
+			else if(typeof val == 'object'){
+				var props = fresh[j][fkey];
+				for(var p in props){
+					existing[rep][fkey][p] = props[p];
+				}
+			}
+		}
+	}
+	return existing;	
+}
 
+FrameConfig.prototype.setFrameArgs = function(existing, fresh){
+	if(!existing) return fresh;
+	if(!fresh) return existing;
+	for(var k in fresh){
+		existing[k] = fresh[k];
+	}
+	return existing;
+}
 
-//WOQL.rule().renderer("object").json(),
-//WOQL.rule().renderer("property").json(),
-//WOQL.rule().renderer("data").json(),
-//WOQL.rule().renderer("data").property("rdfs:comment").render(false).json()
 
 
 function WOQLStreamConfig(){

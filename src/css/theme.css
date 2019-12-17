@@ -158,7 +158,6 @@ button.terminus-change-range {
 	padding: 4px 10px;
 }
 button.object-save, button.object-save-disabled, button.object-delete{
-	margin-top: 5px;
 }
 span.terminus-format-button-align{
 	margin-bottom: 10px;
@@ -222,19 +221,22 @@ span.terminus-format-button-align{
 	text-align: left;
 }
 
+.terminus-db-list {
+	width: 1000px;
+}
+
 .terminus-form-border {
-	border: 1px solid #00C08B;
+	border: 1px solid #afafaf;
     background: #fff;
     box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);
     display: flex;
     flex-direction: column;
     min-width: 0;
 	/*width: 1100px;*/
-	width: 100%;
+	width: 1000px;
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
-    border: .0625rem solid rgba(34,42,66,.05);
     border-radius: .7rem;
 }
 
@@ -318,15 +320,28 @@ span.terminus-format-button-align{
 
 .terminus-hover-table{
 	/*width:100%;*/
-	/*border-collapse:collapse;*/
+	border-collapse:collapse;
 	display: table;
-    table-layout: fixed;
+    /*table-layout: fixed;*/
+	border-right:lightgrey 0.2px solid;
+	border-bottom:lightgrey 0.2px solid;
     width: 100%;
 }
+
 .terminus-hover-table td{
-	 border:lightgrey 0.2px solid;
 	 height: 10px;
-	 padding: 7px;
+	 border-left:lightgrey 0.2px solid;
+
+	 padding: 7px 1em;;
+	 overflow:hidden;
+}
+
+/* frameviewer styling */
+.terminus-hover-table tr:nth-child(odd) {
+	background-color: #EBEDEF;
+}
+.terminus-hover-table:nth-child(even) {
+	background-color: #faf8f9;
 }
 
 /* Define the default color for all the table rows */
@@ -710,7 +725,16 @@ div.terminus-object-frame button:hover,
     color: #fff !important;
 }
 
+div.terminus-control-buttons {
+	width: 100%;
+	display: inline-block;
+	text-align: right;
+	margin-top: 1em;
+}
 
+.terminus-control-buttons button {
+	margin-right: 2em;
+}
 
 span.ql-snow{
 	border: none !important;
@@ -1447,14 +1471,17 @@ a.terminus-submenu-selected{
 }
 
 .terminus-db-list-del-icon {
-	margin-right: 50px;
-    margin-left: 50px;
-    color: #dc3545;
-	font-size: large;
+	color: #dc3545;
 	cursor: pointer;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
+}
+
+span.terminus-db-widget {
+	width: 50px;
+	text-align: center;
+	display: inline-block;
 }
 
 .terminus-menu-icon:hover, .terminus-db-list-del-icon:hover{
@@ -1743,7 +1770,7 @@ div.terminus-margin-left-auto {
 	background-color: #f8d7da;
 	border-color: #f5c6cb;
 }
-.terminus-save-btn, .terminus-create-panel, .terminus-back-to-home{
+.terminus-create-panel, .terminus-back-to-home{
 	float: right;
 }
 .terminus-backtohome-span:link {
@@ -1860,7 +1887,6 @@ div.terminus-margin-left-auto {
 }
 
 /* terminus frames */
-div.terminus-object-frame div.terminus-object-header,
 .terminus-application-header {
     color: #fff;
 	padding-top: 12px;
@@ -1874,24 +1900,17 @@ div.terminus-root-frame div.terminus-object-header {
 }
 
 div.terminus-object-frame div.terminus-object-header {
-	margin-top: 10px;
 }
 
 div.terminus-object-properties {
-	background-color: #f5f5f5;
-	border: 1px solid lightgrey;
-	padding-top: 4px;
-	padding-bottom: 4px;
 }
 
 div.terminus-object-header .terminus-action-control {
-	margin-top: -4px;
 }
-
 
 div.terminus-property-frame {
-	padding: 20px 0 12px 10px;
 }
+
 span.terminus-property-header-wrapper{
 	/*display: flex;*/
 }
@@ -1899,48 +1918,26 @@ span.terminus-property-header-info{
 	/*text-align: right;*/
 	/*float: left;*/
 }
-span.terminus-span-float-right, button.terminus-btn-float-right{
-	float: right;
-}
+span.terminus-span-float-right, button.terminus-btn-float-right{}
 span.property-value-view {
-	padding-top: 4px;
 }
 
 span.terminus-property-value {
-	display: block !important;
-	vertical-align: top;
 }
 
 span.terminus-property-header {
-	display: inline-block;
-	width: 240px;
-	float: left;
 }
 
 div.terminus-property-header {
-	width: 100%;
-    margin-bottom: 16px;
-    height: 30px;
-    display: block !important;
 }
 
 div.terminus-property-values div.terminus-object-frame {
-	padding-left: 20px;
-	padding-right: 4px;
 }
 
 .terminus-property-header .terminus-property-label {
-	text-align: left;
-	padding-top: 4px;
-	font-weight: 600;
-	color: #231;
-	vertical-align: middle;
 }
 
 span.terminus-property-values {
-	float: left;
-	display: inline-block;
-	margin-left: 6px;
 
 }
 /*button.terminus-schema-cancel_update, button.terminus-schema-update_schema{
@@ -2007,8 +2004,7 @@ span.terminus-entity-reference-value {
 
 
 span.terminus-object-id-label, span.terminus-object-type-label{
-	font-weight: bold;
-	color: #dfd;
+
 }
 
 .terminus-frame-infobox-spacer {

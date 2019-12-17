@@ -50,6 +50,8 @@ DocumentPane.prototype.options = function(opts){
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
 	this.defaultResultView = { showConfig: false, editConfig: false };
 	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
+	this.loadSchema = (opts && typeof opts.loadSchema != "undefined" ? opts.loadSchema : false);
+	this.viewers = (opts && typeof opts.viewers != "undefined" ? opts.viewers : false);
     return this;
 }
 

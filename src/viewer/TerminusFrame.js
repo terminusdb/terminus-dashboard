@@ -27,8 +27,9 @@ TerminusFrame.prototype.loadDocument = function(url, cls){
 	return this.client.getDocument(url, {"terminus:encoding": "terminus:frame"})
 	.then(function(response){
 		self.loadDataFrames(response);
-		if(self.config.load_schema()){
-			self.loadDocumentSchema(self.document.cls);
+		if(self.config.load_schema() ){
+			cls = (cls ? cls : self.document.cls);
+			self.loadDocumentSchema(cls).then(() => response);
 		}
 		return response;
 	});
@@ -43,7 +44,7 @@ TerminusFrame.prototype.loadDocumentSchema = function(cls){
 	});
 }
 
-TerminusFrame.prototype.loadDataFrames = function(dataframes, cls){
+TerminusFrame.prototype.loadDataFrames = function(dataframes, cls, classframes){
 	if(!cls){
 		if(this.document) cls = this.document.cls;
 		else {
@@ -54,7 +55,7 @@ TerminusFrame.prototype.loadDataFrames = function(dataframes, cls){
 	}
 	if(cls){
 		if(!this.document){
-			this.document = new TerminusClient.ObjectFrame(cls, dataframes);
+			this.document = new TerminusClient.ObjectFrame(cls, dataframes, classframes);
 		}
 		else {
 			this.document.loadDataFrames(dataframes);
@@ -84,7 +85,7 @@ TerminusFrame.prototype.loadSchemaFrames = function(classframes, cls){
 		}
 	}
 	else {
-		console.log("Missing Class", "Failed to add class frames due to missing class");
+		console.log("Missing Class", "Failed to add class frames due to missing both class and classframes");
 	}
 }
 
@@ -99,7 +100,6 @@ TerminusFrame.prototype.render = function(){
 		}
 	}
 	if(this.renderer && this.renderer.render){
-		//this.renderer.world();
 		return this.renderer.render(this.document);
 	}
 	else if(typeof this.renderer == "function"){
@@ -107,7 +107,7 @@ TerminusFrame.prototype.render = function(){
 		return x;
 	}
 	else {
-		console.log("didna make it ");
+		console.log("didna make it - no render function for document");
 	}
 }
 
@@ -135,7 +135,17 @@ TerminusFrame.prototype.applyRulesToDocument = function(doc, config){
 		}
 		config.setFrameDisplayOptions(frame, rule);
 	}
-	this.document.filter(config.rules, onmatch);
+	if(doc.render){
+		function clearDisplay(frame, rule){
+			delete(frame['render']);
+			delete(frame['display_options']);
+			frame.compare = TerminusClient.ObjectFrame.prototype.compare;
+		}
+		var nconfig = TerminusClient.WOQL.document();
+		nconfig.all();
+		doc.filter(nconfig.rules, clearDisplay);
+	}
+	doc.filter(config.rules, onmatch);
 }
 
 TerminusFrame.prototype.loadRenderer = function(rendname, frame, args){

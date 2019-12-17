@@ -68,7 +68,12 @@ WOQLGraph.prototype.makeNodeFromSource = function(sid, k, row) {
 
 WOQLGraph.prototype.makeNodeFromTarget = WOQLGraph.prototype.makeNodeFromSource ;
 
-WOQLGraph.prototype.adornNode = function(node){
+WOQLGraph.prototype.adornNode = function(node, row){
+	if(node.text && node.text.substring(0, 2) == "v:"){
+		if(row[node.text]){
+			node.text = row[node.text]["@value"];
+		}
+	}
 	return node;
 }
 

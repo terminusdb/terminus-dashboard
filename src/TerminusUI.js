@@ -45,7 +45,7 @@ TerminusUI.prototype.connect = function(opts){
 		if(opts && opts.db && self.getDBRecord(opts.db)){
 			self.connectToDB(opts.db);
 			if(opts.document && self.showView("get_document")){
-				response = self.showDocument(opts.document);
+				response = self.showDocumentPage(opts.document);
 			}
 			else if(opts.schema && self.showView("get_schema")){
 				response = self.showSchemaPage(opts.schema);
@@ -311,17 +311,13 @@ TerminusUI.prototype.showQueryPage = function(query){
 	this.redrawMainPage();
 }
 
-TerminusUI.prototype.showDocumentPage = function(){
+TerminusUI.prototype.showDocumentPage = function(durl){
 	this.viewer = new TerminusDBsdk.TerminusDBViewer(this);
-	this.viewer.page = "docs";
-	this.redraw();
-}
-
-TerminusUI.prototype.showDocument = function(durl){
-	this.viewer = new TerminusDocumentViewer(this, "view", this.getDocViewerOptions());
-	const promise = this.viewer.loadDocument(durl);
+	this.page = "docs";
+	if(durl){
+		this.viewer.docid = durl;
+	}
 	this.redrawMainPage();
-	return promise;
 }
 
 TerminusUI.prototype.showCreateDocument = function(durl){
@@ -614,13 +610,13 @@ TerminusUI.prototype.setOptions = function(opts){
 	this.piman = new TerminusPluginManager();
 	var self = this;
 	this.piman.init(opts.plugins, function(){
-		var pins = ["gmaps", "quill", "select2"];
+		/*var pins = ["gmaps", "quill", "select2"];
 		for(var i = 0; i<pins.length; i++){
 			if(self.piman.pluginAvailable(pins[i])){
 				//RenderingMap.addPlugin(pins[i]);
 			}
-		}
-		self.redraw();
+		}*/
+		//self.redraw();
 	});
 	if(opts.css && this.piman){
 		this.piman.loadPageCSS(opts.css);
