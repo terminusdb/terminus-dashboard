@@ -17,7 +17,7 @@ const HTMLLinkViewer = require('../html/datatypes/Link');
 const HTMLNumberViewer = require('../html/datatypes/Number');
 const HTMLRangeViewer = require('../html/datatypes/Range');
 const HTMLRangeEditor = require('../html/datatypes/RangeEditor');
-const SantizedHTMLViewer = require('../html/datatypes/SanitizedHTML');
+//const SantizedHTMLViewer = require('../html/datatypes/SanitizedHTML');
 const GoogleMapEditor = require('../html/datatypes/GoogleMapEditor');
 const GoogleMapViewer = require('../html/datatypes/GoogleMapViewer');
 const HTMLMarkupEditor = require('../html/datatypes/HTMLMarkupEditor');
@@ -277,6 +277,6 @@ RenderingMap.registerViewerForTypes("HTMLNumberViewer", "Number with commas",
 			"xsd:nonNegativeInteger", "xsd:positiveInteger", "xsd:negativeInteger", "xsd:nonPositiveInteger"]);
 RenderingMap.registerViewerForTypes("HTMLRangeViewer", "Range Viewer", ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
 RenderingMap.registerEditorForTypes("HTMLRangeEditor", "Range Editor", ["xdd:gYearRange", "xdd:dateRange", "xdd:integerRange", "xdd:decimalRange"]);
-RenderingMap.registerViewerForTypes("SantizedHTMLViewer", "Sanitized HTML", ["xsd:string", "xdd:html"]);
+//RenderingMap.registerViewerForTypes("SantizedHTMLViewer", "Sanitized HTML", ["xsd:string", "xdd:html"]);
 
 module.exports=RenderingMap

@@ -45,7 +45,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		ul.appendChild(a);
 		var p = this.ui.page ? this.ui.page : "db";
 		if(this.ui.showControl("db")){
-			if(p == "db") a.classList.add("terminus-selected");		
+			if(p == "db") a.classList.add("terminus-selected");
 			self.ui.page = "db";
 			a.addEventListener("click", function(){
 				self.ui.showDBMainPage();
@@ -53,7 +53,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 				self.ui.redrawControls();
 			});
 		}
-		
+
 		if(this.ui.showControl("get_document")){
 			var item = this.getControlHTML("Documents", "fas fa-file");
 			if(p == "docs") item.classList.add("terminus-selected");
@@ -175,7 +175,46 @@ TerminusDBViewer.prototype.getHomeDOM = function(docs, docClasses){
 		this.body.setAttribute("class", "terminus-home-body terminus-document-view");
 		//this.body.setAttribute('style', 'display: table-caption;');
 	}
-	this.body.appendChild(this.showHappyBox("dbhome", "demo"));
+	if(docs.count() > 0){
+		this.body.appendChild(this.showHappyBox("dbhome", "demo"));
+		this.body.appendChild(this.showHappyBox("dbhome", "intro"));
+		this.body.appendChild(this.showHappyBox("happy", "query"));
+		var delw = this.getDeleteDatabaseWidget();
+		var config = TerminusClient.WOQL.document();
+		config.show_all("SimpleFrameViewer");
+		config.object().features("id", "type", "comment", "save", "value");
+		config.property().features("label", "value");
+		config.data().features("value");
+		
+		var cont = document.createElement("span");
+		this.body.appendChild(cont);
+		var mydb = this.ui.db();
+		this.ui.connectToDB("terminus");
+		this.insertDocument("doc:" + mydb, cont, config);
+		this.ui.connectToDB(mydb); 
+	}
+	else if(docClasses.count() > 0) {
+		var dchooser = this.getCreateDataChooser(docClasses,
+			{showQuery: false, editQuery: false},
+			{showConfig: false, editConfig: false});
+		if(docClasses.count() <= 3){
+			this.body.appendChild(this.showHappyBox("empty", "schema"));
+			this.body.appendChild(this.showHappyBox("empty", "query"));
+			if(docClasses.count() > 0){
+				this.body.appendChild(this.showHappyBox("empty", "docs", dchooser));
+			}
+		}
+		else  {
+			this.body.appendChild(this.showHappyBox("happy", "schema"));
+			this.body.appendChild(this.showHappyBox("happy", "docs", dchooser));
+			this.body.appendChild(this.showHappyBox("happy", "query"));
+		}
+	}
+	else {
+		this.body.appendChild(this.showHappyBox("empty", "schema"));
+		this.body.appendChild(this.showHappyBox("empty", "query"));	
+	}
+	if(delw) this.body.appendChild(delw);
 	return this.body;
 }
 
@@ -220,17 +259,16 @@ TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses){
 		var g = this.getRulesForGraphOfDocuments(WOQL);
 		var options =  { showConfig: "icon", editConfig: "true", viewers: [g]};
 		dp.addView(table, options);
-		body.appendChild(UTILS.getHeaderDom('Table view of documents'));
 		body.appendChild(dp.getAsDOM());
 		var WOQL = TerminusClient.WOQL;
 		var dburl = this.ui.client.connectionConfig.dbURL();
-		var q = WOQL.from(dburl).limit(1000).documentMetadata();
+		var q = WOQL.from(dburl).limit(100).documentMetadata();
 		q.execute(this.ui.client).then( (result) => {
 			var g = new TerminusClient.WOQLResult(result, q);
 			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
 			var g2 = this.getRulesForGraphOfDocuments(WOQL);
 			var options =  { showConfig: "icon", editConfig: "true", viewers: [table] };
-			body.appendChild(UTILS.getHeaderDom('Graph view of Documents linked to each other'));
+			body.appendChild(UTILS.getHeaderDom('Graph showing links between documents'));
 			ddp.addView(g2, options);
 			body.appendChild(ddp.getAsDOM());
 			this.container.appendChild(body);
@@ -255,9 +293,11 @@ TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses){
 }
 
 
-TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
+TerminusDBViewer.prototype.getDeleteDatabaseWidget = function(){
 	// delete database
 	if(this.ui.db() == "terminus") return;
+	var d = document.createElement("span");
+	d.setAttribute("class", "terminus-db-widget");
 	TerminusClient.FrameHelper.removeChildren(this.container);
     var del = document.createElement('button');
     del.setAttribute('class', 'terminus-btn terminus-btn-float-right terminus-home-del');
@@ -271,16 +311,13 @@ TerminusDBViewer.prototype.getDeleteOnHomePage = function(d){
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 	else var nm = this.ui.db();
     var self = this;
-    var dbdel = this.ui.db();
-    del.addEventListener("click", function(){
-      	var deleteConfirm = confirm(`Do you really want to delete database ${nm} with id: ${dbdel} ?`);
-		if (deleteConfirm == true) {
-			self.ui.deleteDatabase(dbdel);
-		}
-    });
-    d.appendChild(del);
+	var dbdel = this.ui.db();
+	var delbut = this.ui.getDeleteDBButton(dbdel);
+	if(delbut){
+		d.appendChild(delbut);
+	}
+	return d;
 }
-
 
 TerminusDBViewer.prototype.styleCreateDocumentChooser = function(){
 	var select = document.getElementsByClassName('woql-chooser');
@@ -320,21 +357,32 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	if(type == "schema"){
 		sets.title = (happy == "happy") ? "Document Classes Created" : "No Schema Created";
 		sets.text = (happy == "happy") ? "You have successfully created a schema with valid document classes!" : "You should create a schema and add at least one document classes before you add data to the system";
-		sets.css = "fa fa-cog fa-2x";
+		sets.css = "fa fa-cog fa-2x terminus-welcome-icons";
 	}
 	else if(type == "docs"){
-		sets.css = "fa fa-book fa-2x";
+		sets.css = "fa fa-book fa-2x terminus-welcome-icons";
 		sets.title = "Create Documents";
 		sets.text = (happy == "happy") ? "Add data to the system through easy to use automatically generated forms for each document type" : "You should create a schema and add at least one document classes before you add data to the system";
 	}
+	else if(type == "intro"){
+		sets.css = "fa fa-book fa-2x";
+		sets.title = "View Documents";
+		sets.text = "View the documents in the database and add new ones";
+	}
 	else if(type == "query"){
 		sets.css = "fa fa-search fa-2x";
-		sets.title = "Update Queries";
+		sets.title = "Run Queries";
+		sets.css = "fa fa-search fa-2x terminus-welcome-icons";
+		sets.title = "Run Queries";
 		sets.text = (happy == "happy") ? "You can add data to the system with queries and scripts, and import data directly from CSVs and URLs" : "You can write WOQL queries to create a schema through our query interface";
 	}
 	else if(type == "demo"){
-		sets.css = "fa fa-question fa-2x";
-		sets.title = "Database Level Management";
+		sets.css = "fa fa-database fa-2x terminus-welcome-icons";
+		var dbrec = this.ui.getDBRecord();
+		if(dbrec)
+			var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
+		else var nm = this.ui.db();
+		sets.title = nm ;
 		sets.text = "On this level we just want functions that have database granularity - collaboration, access control, database meta-data...";
 	}
 	var ispan =  document.createElement("span");
@@ -344,14 +392,23 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	hbox.appendChild(ispan);
 	var htit = document.createElement("span");
 	htit.appendChild(document.createElement("strong").appendChild(document.createTextNode(sets.title)));
+	htit.classList.add('terminus-welcome-title');
 	hbox.appendChild(htit);
 	var body = document.createElement("p");
+	body.setAttribute('class', 'terminus-welcome-body');
 	body.appendChild(document.createTextNode(sets.text));
 	hbox.appendChild(body);
 	if(type == "schema"){
 		hbox.addEventListener("click", function(){
 			self.ui.page = "schema";
 			self.ui.showSchemaPage();
+			self.ui.redrawControls();
+		});
+	};
+	if(type == "intro"){
+		hbox.addEventListener("click", function(){
+			self.ui.page = "docs";
+			self.ui.showDocumentPage();
 			self.ui.redrawControls();
 		});
 	};
@@ -362,13 +419,16 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 			self.ui.redrawControls();
 		});
 	};
-	if(type == "query" || type == "schema"){
+	if(type == "query" || type == "schema" || type == "intro"){
 		hbox.addEventListener('mouseover', function(){
             this.style.cursor = "pointer";
 		});
 	}
 	if(type == "docs"){
-		hbox.appendChild(chooser);
+		var sp = document.createElement('span');
+		sp.setAttribute('class', 'terminus-welcome-chooser');
+		sp.appendChild(chooser);
+		hbox.appendChild(sp);
 	}
 	return hbox;
 }
@@ -431,6 +491,14 @@ TerminusDBViewer.prototype.getNavigationDOM = function(){
 	return s;
 }
 
+TerminusDBViewer.prototype.insertDocument = function(docid, insertDOM, config){
+	var df = new DocumentPane(this.ui.client).options(config);
+	return df.loadDocument(docid, config).then(() => {
+		insertDOM.appendChild(df.getAsDOM());
+	})
+	.catch((e) => this.ui.showError(e));	
+}
+
 TerminusDBViewer.prototype.showDocumentPage = function(docid){
 	this.ui.page = "docs";
 	this.ui.redrawControls();
@@ -457,32 +525,9 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid){
 	config.property().features("value");//features("id", "cardinality", "type", "comment", "delete", "reset", "hide", "show", "clone", "update", "view", "add", "value");//"summary", "status",
 	config.data().features("value");//.dataviewer("HTMLStringViewer").args({max_cell_size: 20, max_word_size: 10});
 
-	df.loadDocument(docid, config).then(() => {
-		this.pages.push(docid);
-		TerminusClient.FrameHelper.removeChildren(this.container);
-		var nav = this.getNavigationDOM();
-		this.container.appendChild(nav);
-		this.container.appendChild(df.getAsDOM());
-		/*var q = WOQL.from(dburl).limit(100).getDocumentConnections(docid);
-		q.execute(this.ui.client).then( (result) => {
-			var g = new TerminusClient.WOQLResult(result, q);
-			var ddp = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
-			var table = WOQL.table();
-			var options =  { showConfig: "icon", editConfig: "true" };
-			ddp.addView(table, options);
-			body.appendChild(ddp.getAsDOM());
-		})
-		var q2 = WOQL.from(dburl).limit(1000).getDocumentConnections(docid);
-		q2.execute(this.ui.client).then( (result2) => {
-			var g = new TerminusClient.WOQLResult(result2, q2);
-			var ddg = new QueryPane(this.ui.client, g.query, g).options({showQuery: "icon", editQuery: false});
-			var gr = WOQL.graph();
-			var options =  { showConfig: "icon", editConfig: "true" };
-			ddg.addView(gr, options);
-			body.appendChild(ddg.getAsDOM());
-		})*/
-	})
-	.catch((e) => this.ui.showError(e));
+	this.pages.push(docid);
+	TerminusClient.FrameHelper.removeChildren(this.container);
+	this.insertDocument(docid, this.container, config);
 }
 
 TerminusDBViewer.prototype.getShowDocumentControl = function(){
