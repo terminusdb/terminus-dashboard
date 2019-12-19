@@ -19,6 +19,7 @@ TerminusQueryViewer.prototype.newPaneOptions = function(){
 		showQuery: "always", 
 		editQuery: true,
 		showHeader: true, 
+		css: "terminus-full-query-pane"
 	};
 	return opts;
 } 
@@ -57,7 +58,7 @@ TerminusQueryViewer.prototype.addScriptPaneDOM = function(){
 }
 
 TerminusQueryViewer.prototype.addQueryPaneDOM = function(){
-	let qpane = new QueryPane(this.ui.client).options({showQuery: true, editQuery: true});
+	let qpane = new QueryPane(this.ui.client).options(this.newPaneOptions());
 	this.addNewPaneDOM(qpane);
 }
 

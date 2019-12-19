@@ -781,9 +781,9 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 		input.id = idip.value;
 		input.title = titip.value;
 		input.description = descip.value;
-		input.schema = schem.value;
-		input.key = kip.value;
-		input.data = datip.value;
+		//input.schema = schem.value;
+		//input.key = kip.value;
+		//input.data = datip.value;
 		return input;
 	}
 	var self = this;
