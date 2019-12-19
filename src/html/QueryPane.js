@@ -10,7 +10,6 @@ function QueryPane(client, query, result){
 	this.result = result;
 	this.views = [];
 	this.container = document.createElement('span');
-    this.container.setAttribute('class', 'terminus-query-pane-cont');
 	this.messages = document.createElement('div');
 	this.messages.setAttribute('class', 'terminus-query-messages');
 	this.fireDefaultQueries();
@@ -37,6 +36,8 @@ QueryPane.prototype.options = function(opts){
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
 	this.defaultResultView = { showConfig: false, editConfig: false };
+	var css = (opts && typeof opts.css != "undefined" ? opts.css : 'terminus-query-pane-cont');
+    this.container.setAttribute('class', css);
     return this;
 }
 
