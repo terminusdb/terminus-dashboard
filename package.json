@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
-    "@terminusdb/terminus-client": "^1.0.1",
+    "@terminusdb/terminus-client": "^1.0.2",
     "copy-webpack-plugin": "^5.0.4"
   }
 }
