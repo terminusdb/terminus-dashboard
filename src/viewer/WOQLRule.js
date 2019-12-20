@@ -1319,84 +1319,210 @@ function WOQLChartRule(scope){
 WOQLChartRule.prototype = Object.create(WOQLRule.prototype);
 WOQLChartRule.prototype.constructor = WOQLRule;
 
-WOQLChartRule.prototype.style=function(key,value){
-	if(value){
-		this.rule[key]=value;
+
+//{top:0, bottom:0, left: 30, right: 30 }
+
+WOQLChartRule.prototype.padding=function(paddingObj){
+	if(paddingObj){
+		this.rule._padding=paddingObj;
 		return this;
 	}
-	return this.rule[key];
+	return this.rule._padding=paddingObj;
+}
+
+WOQLChartRule.prototype.connectNulls =function(bool){
+	if(bool){
+		this.rule._connectNulls=bool;
+		return this;
+	}
+	return this.rule._connectNulls=bool;
+}
+
+/*
+	XAxis 'bottom' | 'top' 
+	YAxis 'left' | 'right'
+*/
+WOQLChartRule.prototype.orientation=function(orientation){
+	if(orientation){
+		this.rule._orientation = orientation;
+		return this;
+	}
+	return this.rule._orientation;
 }
 
 WOQLChartRule.prototype.fill=function(color){
 	if(color){
-		this.rule.fill = color;
+		this.rule._fill = color;
 		return this;
 	}
-	return this.rule.fill;
+	return this.rule._fill;
 }
 
 WOQLChartRule.prototype.stroke=function(color){
 	if(color){
-		this.rule['stroke'] = color;
+		this.rule._stroke = color;
 		return this;
 	}
-	return this.rule['stroke'];
+	return this.rule._stroke;
 }
 
 
 WOQLChartRule.prototype.strokeWidth=function(size){
-	if(color){
-		this.rule.strokeWidth = size;
+	if(size){
+		this.rule._strokeWidth = size;
 		return this;
 	}
-	return this.rule.strokeWidth;
+	return this.rule._strokeWidth;
+}
+
+//"preserveStart" | "preserveEnd" | "preserveStartEnd" | Number
+
+WOQLChartRule.prototype.interval=function(interval){
+	if(interval){
+		this.rule._interval = interval;
+		return this;
+	}
+	return this.rule._interval;
 }
 
 
 WOQLChartRule.prototype.dot=function(isVisible){
 	if(isVisible){
-		this.rule.dot = isVisible;
+		this.rule._dot = isVisible;
 		return this;
 	}
-	return this.rule.dot;
+	return this.rule._dot;
 }
 
 WOQLChartRule.prototype.labelRotate=function(angle){
 	if(angle){
-		this.rule.labelRotate = angle;
+		this.rule._labelRotate = angle;
 		return this
 	}
-	return this.rule.labelRotate;
+	return this.rule._labelRotate;
 }
-
-WOQLChartRule.prototype.axisType=function(type){
+/*
+* axis type number| category
+*/
+WOQLChartRule.prototype.type=function(type){
 	if(type){
-		this.rule.type=type
+		this.rule._type=type
 		return this;
 	}
-	return this.rule.type
+	return this.rule._type
 }
 /*
 * works only if type is number
 * domainArr =[min,max];
 */
-WOQLChartRule.prototype.axisDomain=function(domainArr){
+WOQLChartRule.prototype.domain=function(domainArr){
 	if(domainArr){
-		this.rule.domain=domainArr
+		this.rule._domain=domainArr
 		return this;
 	}
-	return this.rule.domain
+	return this.rule._domain
 }
 
 
+WOQLChartRule.prototype.strokeDasharray=function(dashArr){
+	if(dashArr){
+		this.rule._strokeDasharray=dashArr
+		return this
+	}
 
+	return this.rule._strokeDasharray;
+}
+
+WOQLChartRule.prototype.iconSize=function(iconSize){
+	if(iconSize){
+		this.rule._iconSize=iconSize
+		return this
+	}
+
+	return this.rule._iconSize;
+}
+
+/*
+'line' | 'square' | 'rect' | 'circle' | 'cross' | 'diamond' | 'star' | 'triangle' | 'wye
+*/
+WOQLChartRule.prototype.iconType=function(iconType){
+	if(iconType){
+		this.rule._iconType=iconType
+		return this
+	}
+
+	return this.rule._iconType;
+}
+
+WOQLChartRule.prototype.showTicks=function(showTicks){
+	if(showTicks){
+		this.rule._showTicks=showTicks
+		return this
+	}
+	return this.rule._showTicks
+}
+
+WOQLChartRule.prototype.prettyPrint = function(type){
+	//starts with obj. ...
+	var str = this.rule.scope + "('";
+	if(this.rule.variables){
+		str += this.rule.variables.join("', '");
+	 }
+	str += "')";
+	
+ 	if(typeof this.orientation() != "undefined"){
+		str += ".orientation('" + this.orientation() + "')";
+	}
+	if(typeof this.padding() != "undefined"){
+		str += ".padding(" + this.padding() + ")";
+	}
+	if(typeof this.connectNulls() != "undefined"){
+		str += ".connectNulls(" + this.connectNulls() + ")";
+	}
+	if(typeof this.fill() != "undefined"){
+		str += ".fill('" + this.fill() + "')";
+	}
+	if(typeof this.stroke() != "undefined"){
+		str += ".stroke('" + this.stroke() + "')";
+	}
+	if(typeof this.strokeWidth() != "undefined"){
+		str += ".strokeWidth(" + this.stroke() + ")";
+	}
+	if(typeof this.interval() != "undefined"){
+		str += ".interval(" + this.interval() + ")";
+	}
+	if(typeof this.dot() != "undefined"){
+		str += ".dot(" + this.dot() + ")";
+	}
+	if(typeof this.labelRotate() != "undefined"){
+		str += ".labelRotate('" + this.labelRotate() + "')";
+	}
+	if(typeof this.type() != "undefined"){
+		str += ".type('" + this.type() + "')";
+	}
+	if(typeof this.domain() != "undefined"){
+		str += ".domain(" + this.domain() + ")";
+	}
+	if(typeof this.strokeDasharray() != "undefined"){
+		str += ".strokeDasharray(" + this.strokeDasharray() + ")";
+	}
+	if(typeof this.iconSize() != "undefined"){
+		str += ".iconSize(" + this.iconSize() + ")";
+	}
+	if(typeof this.iconType() != "undefined"){
+		str += ".iconType('" + this.iconType() + "')";
+	}
+	if(typeof this.showTicks() != "undefined"){
+		str += ".showTicks('" + this.showTicks() + "')";
+	}
+	return str;
+}
 
 
 function WOQLChartConfig(){
 	this.rules = [];
 	this.type = "chart";
 }
-
 
 
 /*
@@ -1419,38 +1545,156 @@ function WOQLChartConfig(){
 
 
 WOQLChartConfig.prototype.xAxis = function(...vars){
-	let woqlRule = new WOQLChartRule("XAxis");
+	let woqlRule = new WOQLChartRule("xAxis");
 	woqlRule.setVariables(vars);
 	this.rules.push(woqlRule);
 	return woqlRule;
 }
 
 WOQLChartConfig.prototype.bar = function(...vars){
-	let woqlRule=new WOQLChartRule("Bar");
+	let woqlRule=new WOQLChartRule("bar");
 	woqlRule.setVariables(vars);
 	this.rules.push(woqlRule);
 	return woqlRule;
 }
 
 WOQLChartConfig.prototype.line=function(...vars){
-	let woqlRule=new WOQLChartRule("Line");
+	let woqlRule=new WOQLChartRule("line");
 	woqlRule.setVariables(vars);
 	this.rules.push(woqlRule);
 	return woqlRule;
 }
 
 WOQLChartConfig.prototype.point=function(...vars){
-	let woqlRule=new WOQLChartRule("Point");
+	let woqlRule=new WOQLChartRule("point");
 	woqlRule.setVariables(vars);
 	this.rules.push(woqlRule);
 	return woqlRule;
 }
 
 WOQLChartConfig.prototype.area=function(...vars){
-	let woqlRule=new WOQLChartRule("Area");
+	let woqlRule=new WOQLChartRule("area");
 	woqlRule.setVariables(vars);
 	this.rules.push(woqlRule);
 	return woqlRule;
+}
+
+WOQLChartConfig.prototype.cartesianGrid=function(...vars){
+	let woqlRule=new WOQLChartRule("cartesianGrid");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.legend=function(...vars){
+	let woqlRule=new WOQLChartRule("legend");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+
+WOQLChartConfig.prototype.title=function(title){
+	if(title){
+		this._title=title;
+		return this
+	}
+	return this._title;
+}
+
+WOQLChartConfig.prototype.description=function(description){
+	if(description){
+		this._description=description;
+		return this
+	}
+	return this._description;
+}
+
+//layout "vertical" | "horizontal"
+WOQLChartConfig.prototype.layout=function(layout){
+	if(layout){
+		this._layout=layout;
+		return this
+	}
+	return this._layout;
+}
+
+
+//default is { top: 10, right: 30, left: 0, bottom: 0 }
+WOQLChartConfig.prototype.margin=function(marginObj){
+	if(marginObj){
+		this._margin=marginObj;
+		return this
+	}
+
+	return this._margin;
+}
+
+WOQLChartConfig.prototype.json = function(){
+	let rulesArr = [];
+	for(var i = 0; i<this.rules.length; i++){
+		rulesArr.push(this.rules[i].json());
+	}
+	/*
+	*general properties 
+	*/
+	var conf = {};
+	if(typeof this.margin() != "undefined"){
+		conf['margin'] = this.margin();
+	}
+	if(typeof this.title() != "undefined"){
+		conf['title'] = this.title();
+	}
+	if(typeof this.description() != "undefined"){
+		conf['description'] = this.description();
+	}
+	if(typeof this.layout() != "undefined"){
+		conf['layout'] = this.layout();
+	}
+	let mj = {"chart" :conf, "rules": rulesArr};
+	return mj;
+}
+
+WOQLChartConfig.prototype.loadJSON = function(config, rules){
+	var jr = [];
+	for(var i = 0; i<rules.length; i++){
+		var nr = new WOQLRule();
+		nr.json(rules[i]);
+		jr.push(nr);
+	}
+	this.rules = jr;
+	if(typeof config.margin != "undefined"){
+		this.margin(config.margin);
+	}
+	if(typeof config.title != "undefined"){
+		this.title(config.title);
+	}
+	if(typeof config.description != "undefined"){
+		this.description(config.description);
+	}
+	if(typeof config.layout != "undefined"){
+		this.layout(config.layout);
+	}
+}
+
+WOQLChartConfig.prototype.prettyPrint = function(){
+	var str = "view = WOQL.chart();\n";
+	if(typeof this.margin() != "undefined"){
+		str += "view.margin(" + this.margin() + ")\n";
+	}
+	if(typeof this.title() != "undefined"){
+		str += "view.title('" + this.title() + "')\n";
+	}
+	if(typeof this.description() != "undefined"){
+		str += "view.description('" + this.description() + "')\n";
+	}
+	if(typeof this.layout() != "undefined"){
+		str += "view.layout('" + this.layout() + "')\n";
+	}
+	for(var i = 0; i<this.rules.length ; i++){
+		str += "view." + this.rules[i].prettyPrint("chart") + "\n";
+	}
+	return str;
 }
 
 //WOQLChartConfig.prototype.style()
