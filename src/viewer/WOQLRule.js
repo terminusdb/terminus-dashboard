@@ -1324,18 +1324,18 @@ WOQLChartRule.prototype.constructor = WOQLRule;
 
 WOQLChartRule.prototype.padding=function(paddingObj){
 	if(paddingObj){
-		this.rule._padding=paddingObj;
+		this.rule.padding=paddingObj;
 		return this;
 	}
-	return this.rule._padding=paddingObj;
+	return this.rule.padding=paddingObj;
 }
 
 WOQLChartRule.prototype.connectNulls =function(bool){
 	if(bool){
-		this.rule._connectNulls=bool;
+		this.rule.connectNulls=bool;
 		return this;
 	}
-	return this.rule._connectNulls=bool;
+	return this.rule.connectNulls=bool;
 }
 
 /*
@@ -1344,72 +1344,72 @@ WOQLChartRule.prototype.connectNulls =function(bool){
 */
 WOQLChartRule.prototype.orientation=function(orientation){
 	if(orientation){
-		this.rule._orientation = orientation;
+		this.rule.orientation = orientation;
 		return this;
 	}
-	return this.rule._orientation;
+	return this.rule.orientation;
 }
 
 WOQLChartRule.prototype.fill=function(color){
 	if(color){
-		this.rule._fill = color;
+		this.rule.fill = color;
 		return this;
 	}
-	return this.rule._fill;
+	return this.rule.fill;
 }
 
 WOQLChartRule.prototype.stroke=function(color){
 	if(color){
-		this.rule._stroke = color;
+		this.rule.stroke = color;
 		return this;
 	}
-	return this.rule._stroke;
+	return this.rule.stroke;
 }
 
 
 WOQLChartRule.prototype.strokeWidth=function(size){
 	if(size){
-		this.rule._strokeWidth = size;
+		this.rule.strokeWidth = size;
 		return this;
 	}
-	return this.rule._strokeWidth;
+	return this.rule.strokeWidth;
 }
 
 //"preserveStart" | "preserveEnd" | "preserveStartEnd" | Number
 
 WOQLChartRule.prototype.interval=function(interval){
 	if(interval){
-		this.rule._interval = interval;
+		this.rule.interval = interval;
 		return this;
 	}
-	return this.rule._interval;
+	return this.rule.interval;
 }
 
 
 WOQLChartRule.prototype.dot=function(isVisible){
 	if(isVisible){
-		this.rule._dot = isVisible;
+		this.rule.dot = isVisible;
 		return this;
 	}
-	return this.rule._dot;
+	return this.rule.dot;
 }
 
 WOQLChartRule.prototype.labelRotate=function(angle){
 	if(angle){
-		this.rule._labelRotate = angle;
+		this.rule.labelRotate = angle;
 		return this
 	}
-	return this.rule._labelRotate;
+	return this.rule.labelRotate;
 }
 /*
 * axis type number| category
 */
 WOQLChartRule.prototype.type=function(type){
 	if(type){
-		this.rule._type=type
+		this.rule.type=type
 		return this;
 	}
-	return this.rule._type
+	return this.rule.type
 }
 /*
 * works only if type is number
@@ -1417,29 +1417,29 @@ WOQLChartRule.prototype.type=function(type){
 */
 WOQLChartRule.prototype.domain=function(domainArr){
 	if(domainArr){
-		this.rule._domain=domainArr
+		this.rule.domain=domainArr
 		return this;
 	}
-	return this.rule._domain
+	return this.rule.domain
 }
 
 
 WOQLChartRule.prototype.strokeDasharray=function(dashArr){
 	if(dashArr){
-		this.rule._strokeDasharray=dashArr
+		this.rule.strokeDasharray=dashArr
 		return this
 	}
 
-	return this.rule._strokeDasharray;
+	return this.rule.strokeDasharray;
 }
 
 WOQLChartRule.prototype.iconSize=function(iconSize){
 	if(iconSize){
-		this.rule._iconSize=iconSize
+		this.rule.iconSize=iconSize
 		return this
 	}
 
-	return this.rule._iconSize;
+	return this.rule.iconSize;
 }
 
 /*
@@ -1447,19 +1447,19 @@ WOQLChartRule.prototype.iconSize=function(iconSize){
 */
 WOQLChartRule.prototype.iconType=function(iconType){
 	if(iconType){
-		this.rule._iconType=iconType
+		this.rule.iconType=iconType
 		return this
 	}
 
-	return this.rule._iconType;
+	return this.rule.iconType;
 }
 
 WOQLChartRule.prototype.showTicks=function(showTicks){
 	if(showTicks){
-		this.rule._showTicks=showTicks
+		this.rule.showTicks=showTicks
 		return this
 	}
-	return this.rule._showTicks
+	return this.rule.showTicks
 }
 
 WOQLChartRule.prototype.prettyPrint = function(type){
@@ -1514,6 +1514,9 @@ WOQLChartRule.prototype.prettyPrint = function(type){
 	}
 	if(typeof this.showTicks() != "undefined"){
 		str += ".showTicks('" + this.showTicks() + "')";
+	}
+	if(typeof this.label() != "undefined"){
+		str += ".label('" + this.label() + "')";
 	}
 	return str;
 }
