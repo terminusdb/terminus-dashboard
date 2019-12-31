@@ -3,6 +3,7 @@ const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const ResultPane = require("./ResultPane");
 const UTILS = require('../Utils');
 const HTMLFrameHelper = require('./HTMLFrameHelper');
+const TerminusViolations = require('./TerminusViolation');
 
 function QueryPane(client, query, result){
 	this.client = client;
@@ -290,6 +291,7 @@ QueryPane.prototype.getAsDOM = function(){
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
 		this.querySnippet = configspan;
+		this.container.appendChild(this.messages);
 		this.container.appendChild(configspan);
 		var mode = (this.editQuery ? "edit" : "view");
 		this.input = this.createInput(mode);
@@ -413,10 +415,8 @@ QueryPane.prototype.clearMessages = function(){
 }
 
 QueryPane.prototype.getBusyLoader = function(){
-     var pd = document.createElement('div');
      var pbc = document.createElement('div');
      pbc.setAttribute('class', 'term-progress-bar-container');
-     pd.appendChild(pbc);
 
      var pbsa = document.createElement('div');
      pbsa.setAttribute('class', 'term-progress-bar term-stripes animated reverse slower');
@@ -424,7 +424,7 @@ QueryPane.prototype.getBusyLoader = function(){
      var pbia = document.createElement('span');
      pbia.setAttribute('class', 'term-progress-bar-inner');
      pbsa.appendChild(pbia);
-	 return pd;
+	 return pbc;
 }
 
 QueryPane.prototype.showBusy = function(msg){
@@ -433,16 +433,17 @@ QueryPane.prototype.showBusy = function(msg){
 	msgHolder.appendChild(document.createTextNode(msg));
 	msgHolder.appendChild(this.getBusyLoader());
 	this.messages.appendChild(msgHolder);
-	this.container.insertBefore(this.messages, this.querySnippet);
 }
 
 QueryPane.prototype.showError = function(e){
+	this.showMessage(e, "error");
+}
+
+QueryPane.prototype.showMessage = function(m, type){
 	var md = document.createElement('div');
-	md.setAttribute('class', 'terminus-show-msg-error');
-	md.appendChild(document.createTextNode(e));
+	md.setAttribute('class', 'terminus-show-msg-' + type);
+	md.appendChild(document.createTextNode(m));
 	this.messages.appendChild(md);
-	if(this.container)
-		this.container.insertBefore(this.messages, this.resultDOM);
 }
 
 QueryPane.prototype.showNoBindings = function(){
@@ -462,14 +463,26 @@ QueryPane.prototype.submitQuery = function(qObj){
     this.query = qObj;
 	this.showBusy('Fetching results ...');
 	var self = this;
+	var start = Date.now();
     qObj.execute(this.client).then((results) => {
 		var r = new TerminusClient.WOQLResult(results, qObj);
 		this.result = r;
-		self.clearMessages();
-		if(this.result.hasBindings())
+		this.clearMessages();
+		if(this.result.hasBindings()){
+			var delta = Date.now() - start;
+			this.showMessage("Query returned " + this.result.count() + " results in " + delta + " seconds");
 			this.refreshViews();
+		}
 		else this.showNoBindings();
-	})
+	}).catch((error) => {
+		this.clearMessages();
+		if(error.data && error.data['terminus:witnesses']){
+			this.showViolations(error.data['terminus:witnesses']);
+		}
+		else {
+			this.showError(error);
+		}
+	});
 }
 
 QueryPane.prototype.refreshViews = function(){
@@ -478,6 +491,10 @@ QueryPane.prototype.refreshViews = function(){
 	}
 }
 
+QueryPane.prototype.showViolations = function(vios){
+    var nvios = new TerminusViolations(vios, this); 
+	this.messages.appendChild(nvios.getAsDOM(cmsg));
+}
 
 QueryPane.prototype.getAddViewControl = function(){
 	var vd = document.createElement('div');

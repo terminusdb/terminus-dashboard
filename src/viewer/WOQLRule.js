@@ -7,8 +7,6 @@ const TerminusFrame = require("./TerminusFrame");
 
 TerminusClient.WOQL.table = function(){ return new WOQLTableConfig(); }
 TerminusClient.WOQL.chart = function(){ return new WOQLChartConfig(); }
-
-
 TerminusClient.WOQL.graph = function(){ return new WOQLGraphConfig(); }
 TerminusClient.WOQL.chooser = function(){ return new WOQLChooserConfig(); }
 TerminusClient.WOQL.stream = function(){ return new WOQLStreamConfig(); }
@@ -229,16 +227,6 @@ FrameConfig.prototype.setFrameArgs = function(existing, fresh){
 	}
 	return existing;
 }
-
-
-
-
-
-
-
-
-
-
 
 function WOQLStreamConfig(){
 	this.rules = [];
