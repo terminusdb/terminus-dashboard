@@ -1,5 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const TerminusCodeSnippet = require('../viewer/TerminusCodeSnippet');
+const HTMLHelper = require('./HTMLHelper');
 const QueryPane = require('../html/QueryPane');
 const UTILS = require('../Utils');
 
@@ -21,7 +21,7 @@ function QueryPaneManager(ui, thv){
 QueryPaneManager.prototype.submitConfigRules = function(woql, cSnippet, qSnippet, rSnippet){
     this.ui.clearMessages();
     var cObj = UTILS.getqObjFromInput(cSnippet.snippetText.value);
-    TerminusClient.FrameHelper.removeChildren(rSnippet.result);
+    HTMLHelper.removeChildren(rSnippet.result);
     //rSnippet.result.appendChild(this.addConfig(woql, qSnippet, rSnippet));
     rSnippet.rules = cSnippet.snippetText.value;
     qSnippet.qres.first();
@@ -53,7 +53,7 @@ QueryPaneManager.prototype.hideAddViewEditor = function(vd){
     vd.classList.remove('terminus-rule-editor');
     vd.classList.remove('erminus-rule-editor-border');
     //vd.classList.add('terminus-rule-editor-border');
-    TerminusClient.FrameHelper.removeChildren(vd);
+    HTMLHelper.removeChildren(vd);
 }
 
 /*
@@ -75,7 +75,7 @@ QueryPaneManager.prototype.showRuleEditor = function(woql, vd, qSnippet){
     qSnippet.dom.appendChild(vd);
     var self = this;
     cancel.addEventListener('click', function(){
-        TerminusClient.FrameHelper.removeChildren(vd);
+        HTMLHelper.removeChildren(vd);
         self.addView(woql, qSnippet);
     })
     this.qpane.addRuleDom.addEventListener('click', function(){
@@ -162,7 +162,7 @@ QueryPaneManager.prototype.generateResultsFromRules = function(woql, qSnippet){
 */
 QueryPaneManager.prototype.submitQuery = function(qSnippet){
     let WOQL = TerminusClient.WOQL;
-    TerminusClient.FrameHelper.removeChildren(qSnippet.actionButton);
+    HTMLHelper.removeChildren(qSnippet.actionButton);
     qSnippet.actionButton.appendChild(document.createTextNode('Run'));
     this.qpane.submitDom = qSnippet.actionButton;
     var self = this;
@@ -172,7 +172,7 @@ QueryPaneManager.prototype.submitQuery = function(qSnippet){
             self.ui.clearMessages();
             let qObj = UTILS.getqObjFromInput(qSnippet.snippetText.value);
             qObj.execute(self.client).then((results) => {
-                TerminusClient.FrameHelper.removeChildren(qSnippet.result);
+                HTMLHelper.removeChildren(qSnippet.result);
                 self.processResults(qObj, WOQL, self.thv, results, qSnippet);
                 self.addView(WOQL, qSnippet);
                 self.generateResultsFromRules(WOQL, qSnippet);

@@ -1,10 +1,10 @@
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
-const TerminusClient = require('@terminusdb/terminus-client');
 const Datatypes = require("./Datatypes");
 const SimpleTable = require("./table/SimpleTable");
 const SimpleGraph = require("./graph/SimpleGraph");
 const SimpleStream = require("./stream/SimpleStream");
 const SimpleChooser = require("./chooser/SimpleChooser");
+const HTMLHelper = require('./HTMLHelper');
 
 /**
  * Result Pane is defined by a WOQL configuration object
@@ -166,7 +166,7 @@ ResultPane.prototype.getIconForViewer = function(viewer, index, container){
     }
     isp.addEventListener("click", () => {
         this.changeViewerType(viewer, index);
-        TerminusClient.FrameHelper.removeChildren(container);
+        HTMLHelper.removeChildren(container);
         for(var i = 0; i<this.viewers.length; i++){
             var isp = this.getIconForViewer(this.viewers[i], i, container);
             container.appendChild(isp);
@@ -193,13 +193,13 @@ ResultPane.prototype.setResult = function(wres){
 
 ResultPane.prototype.updateResult = function(wres){
 	this.result = wres;
-	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
+	HTMLHelper.removeChildren(this.resultDOM);
 	this.resultDOM.appendChild(this.getResultDOM());
 }
 
 ResultPane.prototype.updateView = function(config){
 	this.config = config;
-	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
+	HTMLHelper.removeChildren(this.resultDOM);
 	if(this.result){
 		this.resultDOM.appendChild(this.getResultDOM());
 	}

@@ -1,7 +1,4 @@
 const TerminusUI = require('./TerminusUI');
-
-const RenderingMap = require('./client/RenderingMap');
-const WOQL =require('./viewer/WOQLRule')
+const WOQL =require('./viewer/WOQLView')
 module.exports={TerminusUI:TerminusUI,
-                RenderingMap:RenderingMap,
-            	WOQL:WOQL}
+                WOQL:WOQL}

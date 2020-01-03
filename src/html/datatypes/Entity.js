@@ -1,5 +1,4 @@
-const HTMLFrameHelper = require('../HTMLFrameHelper');
-const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLHelper = require('../HTMLHelper');
 
 function HTMLEntityViewer(options){
 	this.onclick = false;
@@ -16,7 +15,6 @@ HTMLEntityViewer.prototype.renderValue = function(dataviewer){
 }
 
 HTMLEntityViewer.prototype.render = function(value){
-	//var value = TerminusClient.FrameHelper.unshorten(value);
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-literal-value terminus-entity-reference-value");
 	var self = this;
@@ -44,7 +42,7 @@ HTMLEntityViewer.prototype.getEntityViewHTML = function(value, frame, dataviewer
 		controller.getInstanceMeta(value).then(function(response){
 			var lab = self.getEntityLabel(value, response, dataviewer);
 			if(lab){ 
-				TerminusClient.FrameHelper.removeChildren(span);
+				HTMLHelper.removeChildren(span);
 				span.appendChild(lab);
 			}	
 		});
@@ -54,11 +52,11 @@ HTMLEntityViewer.prototype.getEntityViewHTML = function(value, frame, dataviewer
 
 HTMLEntityViewer.prototype.getEntityLabel = function(url, response, dv){
 	var nspan = document.createElement("span");
-	if(response && (il = HTMLFrameHelper.getVariableValueFromBinding("InstanceLabel", response))){
+	if(response && (il = HTMLHelper.getVariableValueFromBinding("InstanceLabel", response))){
 		nspan.appendChild(dv.internalLink(url, il));
-		var rt = HTMLFrameHelper.getVariableValueFromBinding("InstanceType", response);
+		var rt = HTMLHelper.getVariableValueFromBinding("InstanceType", response);
 		var tit = url + " Type: " + rt;
-		var ic = HTMLFrameHelper.getVariableValueFromBinding("InstanceComment", response);
+		var ic = HTMLHelper.getVariableValueFromBinding("InstanceComment", response);
 		if(typeof ic == "object" && ic["@value"]){
 			tit += " " + ic["@value"];
 		}

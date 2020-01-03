@@ -1,5 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const WOQLRule = require("../viewer/WOQLRule");
+const WOQLRule = require("../viewer/WOQLView");
 const WOQLTable = require("../viewer/WOQLTable");
 const WOQLChooser = require("../viewer/WOQLChooser");
 //const WOQLQueryViewer = require("./viewer/WOQLQueryView");
@@ -20,6 +20,7 @@ const HTMLPropertyViewer = require("./document/PropertyViewer");
 const HTMLDataViewer = require("./document/DataViewer");
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const UTILS = require('../Utils');
+const HTMLHelper = require('./HTMLHelper');
 
 /**
  * Provides access to the two basic HTML views supported by the system:
@@ -55,7 +56,7 @@ TerminusHTMLViewer.prototype.showConfigEditor = function(result, config, span){
         try{
             //self.submitConfigRules(woql, cSnippet, qSnippet, rSnippet);
 			var cObj = UTILS.getqObjFromInput(cSnippet.snippetText.value);
-			TerminusClient.FrameHelper.removeChildren(span);
+			HTMLHelper.removeChildren(span);
 			span.appendChild(self.showResult(result, cObj));
         }
         catch(e){
@@ -80,7 +81,7 @@ TerminusHTMLViewer.prototype.showConfig = function(result, config, span, cdom){
     //qSnippet.dom.appendChild(cbtn);
     var self = this;
     cbtn.addEventListener('click', function(){
-		TerminusClient.FrameHelper.removeChildren(cdom);
+		HTMLHelper.removeChildren(cdom);
         self.submitConfig(result, config, span, cdom);
     })
     return cbtn;

@@ -7,6 +7,8 @@
  */
 const Codemirror= require('./plugins/codemirror.terminus');
 const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLHelper = require('./html/HTMLHelper');
+
 // function to read Files
 function readFile(file){
     if (window.XMLHttpRequest){
@@ -275,7 +277,7 @@ function deleteStylizedEditor(ui, qip){
     if(ui.pluginAvailable("codemirror")){
 		var cm = qip.nextElementSibling;
 		cm.setAttribute('class', 'terminus-hide');
-		TerminusClient.FrameHelper.removeChildren(cm);
+		HTMLHelper.removeChildren(cm);
 	}
 }
 

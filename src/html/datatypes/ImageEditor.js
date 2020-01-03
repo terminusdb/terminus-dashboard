@@ -1,5 +1,3 @@
-const TerminusClient = require('@terminusdb/terminus-client');
-
 function HTMLImageEditor(options){}
 HTMLImageEditor.prototype.renderFrame = function(frame, dataviewer){
 	if(this.type == "xsd:base64Binary"){

@@ -1,4 +1,4 @@
-const HTMLFrameHelper = require('../HTMLFrameHelper');
+const HTMLHelper = require('../HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 /**
  * Property Viewer
@@ -79,7 +79,7 @@ HTMLPropertyViewer.prototype.addRenderedValue = function(renderedval){
 }
 
 HTMLPropertyViewer.prototype.clear = function(){
-	TerminusClient.FrameHelper.removeChildren(this.propDOM);
+	HTMLHelper.removeChildren(this.propDOM);
 	this.values = [];
 }
 
@@ -124,11 +124,11 @@ HTMLPropertyViewer.prototype.redrawBody = function(){
 HTMLPropertyViewer.prototype.getPropertyIDMarker = function(renderer){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-property-idmarker");
-	var subj = TerminusClient.FrameHelper.getShorthand(renderer.subject());
+	var subj = TerminusClient.UTILS.getShorthand(renderer.subject());
 	if(!subj ) subj = renderer.subject();
 	var bits = subj .split(":");
 	if(bits.length > 1) subj = bits[1];
-	var prop = TerminusClient.FrameHelper.getShorthand(renderer.property());
+	var prop = TerminusClient.UTILS.getShorthand(renderer.property());
 	if(!prop ) prop = renderer.property();
 	var bits = prop.split(":");
 	if(bits.length > 1) prop = bits[1];
@@ -137,7 +137,7 @@ HTMLPropertyViewer.prototype.getPropertyIDMarker = function(renderer){
 }
 
 HTMLPropertyViewer.prototype.goTo = function(subj, property, index){
-	HTMLFrameHelper.goToName(subj, property, index);
+	HTMLHelper.goToName(subj, property, index);
 }
 
 function HTMLPropertyHeaderViewer(){}
@@ -232,7 +232,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyFacetDOM = function(renderer){
 				renderer.setFacet(val);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("property-facet", viewables, renderer.currentFacet(), callback);
+		var sel = HTMLHelper.getSelectionControl("property-facet", viewables, renderer.currentFacet(), callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -240,31 +240,31 @@ HTMLPropertyHeaderViewer.prototype.getPropertyFacetDOM = function(renderer){
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyIDDOM = function(renderer){
-	return HTMLFrameHelper.getInfoboxDOM("property-id", "Property", renderer.property(), "This property is identified by this unique URL: " + renderer.property());
+	return HTMLHelper.getInfoboxDOM("property-id", "Property", renderer.property(), "This property is identified by this unique URL: " + renderer.property());
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyRangeDOM = function(renderer){
-	return HTMLFrameHelper.getInfoboxDOM("property-type", "Type", renderer.range(), "The type of arguments that this property accepts");
+	return HTMLHelper.getInfoboxDOM("property-type", "Type", renderer.range(), "The type of arguments that this property accepts");
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertySummaryDOM = function(renderer){
 	var sum = renderer.getSummary();
-	return HTMLFrameHelper.getInfoboxDOM("property-summary", false, sum.long, sum.status);
+	return HTMLHelper.getInfoboxDOM("property-summary", false, sum.long, sum.status);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyStatusDOM = function(renderer){
 	var sum = renderer.getSummary();
-	return HTMLFrameHelper.getInfoboxDOM("status-"+sum.status, false, sum.status, sum.status);
+	return HTMLHelper.getInfoboxDOM("status-"+sum.status, false, sum.status, sum.status);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyLabelDOM = function(renderer){
 	var lab = renderer.getLabel();
-	return HTMLFrameHelper.getInfoboxDOM("property-label", false, lab);
+	return HTMLHelper.getInfoboxDOM("property-label", false, lab);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyCommentDOM = function(renderer){
 	var lab = renderer.getComment();
-	return HTMLFrameHelper.getInfoboxDOM("property-comment", false, lab);
+	return HTMLHelper.getInfoboxDOM("property-comment", false, lab);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyCardinalityDOM = function(renderer){
@@ -291,12 +291,12 @@ HTMLPropertyHeaderViewer.prototype.getPropertyCardinalityDOM = function(renderer
 	else {
 		return false;
 	}
-	return HTMLFrameHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help);
+	return HTMLHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help);
 }
 
 HTMLPropertyHeaderViewer.prototype.getActionControlDOM = function(settingsDOM, renderer){
 	if(renderer.showFeature("mode")){
-		var viewsDOM = HTMLFrameHelper.getModeSelectorDOM("property", renderer);
+		var viewsDOM = HTMLHelper.getModeSelectorDOM("property", renderer);
 		if (viewsDOM) settingsDOM.appendChild(viewsDOM);
 	}
 	if(renderer.showFeature("delete")){
@@ -338,7 +338,7 @@ HTMLPropertyHeaderViewer.prototype.getSettingsControlDOM = function(controlsDOM,
 	controlsDOM.appendChild(settings);
 	var orientation = renderer.getContentOrientation();
 	if(false && orientation == 'page'){ // expert mode
-		var sControl = HTMLFrameHelper.getSettingsControl('property');
+		var sControl = HTMLHelper.getSettingsControl('property');
 		var menu = document.createElement('div');
 		menu.setAttribute('class', 'terminus-hide terminus-popup');
 		menu.appendChild(document.createTextNode('Edit property'));
@@ -381,7 +381,7 @@ HTMLPropertyHeaderViewer.prototype.getAddValueDOM = function(renderer){
 					renderer.addClass(cls);
 				}
 			}
-			var sel = HTMLFrameHelper.getSelectionControl("add-property", cs, "", callback);
+			var sel = HTMLHelper.getSelectionControl("add-property", cs, "", callback);
 			mpropDOM.appendChild(sel);
 			return mpropDOM;
 		}
@@ -389,7 +389,7 @@ HTMLPropertyHeaderViewer.prototype.getAddValueDOM = function(renderer){
 	else {
 		var callback = function(){renderer.add("edit")};
 		var disabled = (renderer.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
-		return HTMLFrameHelper.getActionControl("property", "add", "Add", callback, disabled);
+		return HTMLHelper.getActionControl("property", "add", "Add", callback, disabled);
 	}
 	return false;
 }
@@ -404,7 +404,7 @@ HTMLPropertyHeaderViewer.prototype.getViewValueDOM = function(renderer){
 		var callback = function(val){
 			renderer.goToValue(val);
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("view-values", viewables, "", callback);
+		var sel = HTMLHelper.getSelectionControl("view-values", viewables, "", callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -414,23 +414,23 @@ HTMLPropertyHeaderViewer.prototype.getViewValueDOM = function(renderer){
 HTMLPropertyHeaderViewer.prototype.getPropertyDeleteDOM = function(renderer){
 	var callback = function(){renderer.delete()};
 	var disabled = (renderer.cardControlAllows("delete") ? false : "Cardinality Rules Forbid Delete");
-	return HTMLFrameHelper.getActionControl("property", "delete", "Delete", callback, disabled);
+	return HTMLHelper.getActionControl("property", "delete", "Delete", callback, disabled);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyHideDOM = function(renderer){
 	var callback = function(){renderer.hide()};
-	return HTMLFrameHelper.getActionControl("property", "hide", "Hide", callback);
+	return HTMLHelper.getActionControl("property", "hide", "Hide", callback);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyResetDOM = function(renderer){
 	var callback = function(){renderer.reset()};
 	var disabled = (renderer.isUpdated() ? false : "Nothing to reset");
-	return HTMLFrameHelper.getActionControl("property", "reset", "Reset", callback, disabled);
+	return HTMLHelper.getActionControl("property", "reset", "Reset", callback, disabled);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyShowDOM = function(renderer){
 	var callback = function(){renderer.show()};
-	return HTMLFrameHelper.getActionControl("property", "show", "Show", callback);
+	return HTMLHelper.getActionControl("property", "show", "Show", callback);
 }
 
 HTMLPropertyHeaderViewer.prototype.getPropertyUpdateDOM = function(renderer){
@@ -438,7 +438,7 @@ HTMLPropertyHeaderViewer.prototype.getPropertyUpdateDOM = function(renderer){
 	dpropDOM.setAttribute("class", "terminus-property-update");
 	var disabled = (renderer.isUpdated() ? false : "No Change");
 	var saveback = function(){renderer.save()};
-	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("property", "save", "Save", saveback, disabled));
+	dpropDOM.appendChild(HTMLHelper.getActionControl("property", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
 
@@ -453,7 +453,7 @@ HTMLPropertyHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
 			}
 		}
 		var selected = renderer.currentViewer();
-		var sel = HTMLFrameHelper.getSelectionControl("property-viewers", viewers, selected, callback);
+		var sel = HTMLHelper.getSelectionControl("property-viewers", viewers, selected, callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}

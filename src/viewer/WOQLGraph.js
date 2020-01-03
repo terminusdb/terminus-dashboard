@@ -132,7 +132,7 @@ WOQLGraph.prototype.extractFromBinding = function(row){
 		//first of all we need to make the literal nodes targets of 
 		for(var i = 0; i<lits.length; i++){
 			//make an edge and put the lit in as a node...
-			var nid = TerminusClient.FrameHelper.genBNID().substring(2);
+			var nid = TerminusClient.UTILS.genBNID().substring(2);
 			let source = this.getLiteralOwner(nodes, lits[i], row);
 			if(source) {
 				this.addAdornedNode(nid, lits[i], row);

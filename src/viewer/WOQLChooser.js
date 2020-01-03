@@ -90,7 +90,7 @@ WOQLChooser.prototype.getLabelFromBinding = function(binding, rownum){
 			if(lab != "unknown") return lab;
 		}
 	}
-	return TerminusClient.FrameHelper.labelFromURL(this.getRowID(binding));
+	return TerminusClient.UTILS.labelFromURL(this.getRowID(binding));
 }
 
 WOQLChooser.prototype.getTitleFromBinding = function(binding, rownum){

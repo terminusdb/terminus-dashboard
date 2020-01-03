@@ -6,6 +6,7 @@ const UTILS=require('./Utils');
 const TerminusClient = require('@terminusdb/terminus-client');
 const QueryPane = require("./html/QueryPane");
 const DocumentPane = require("./html/DocumentPane");
+const HTMLHelper = require('./html/HTMLHelper');
 
 
 /**
@@ -153,7 +154,7 @@ TerminusDBViewer.prototype.createFullDocumentPane = function(pane_options, targe
  * before drawing the page body 
  */
 TerminusDBViewer.prototype.getAsDOM = function(){
-	TerminusClient.FrameHelper.removeChildren(this.container);
+	HTMLHelper.removeChildren(this.container);
 	var limit = 20;
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
@@ -177,7 +178,7 @@ TerminusDBViewer.prototype.getAsDOM = function(){
  */
 TerminusDBViewer.prototype.getBodyAsDOM = function(docs, docClasses){
 	if(this.body){
-		TerminusClient.FrameHelper.removeChildren(this.body);
+		HTMLHelper.removeChildren(this.body);
 	}
 	else {
 		this.body = document.createElement("div");
@@ -270,7 +271,7 @@ TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses, body){
  * Document View / Edit Page
  */
 TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target, docs){
-	TerminusClient.FrameHelper.removeChildren(target);
+	HTMLHelper.removeChildren(target);
 	this.ui.page = "docs";
 	this.ui.redrawControls();
 	var start = docid.substring(0, 4);
@@ -280,7 +281,7 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 	var config = this.getShowDocumentConfig();
 	this.pages.push(docid);
 	return df.loadDocument(docid, config).then(() => {
-		TerminusClient.FrameHelper.removeChildren(target);
+		HTMLHelper.removeChildren(target);
 		target.appendChild(df.getAsDOM());		
 	})
 	.catch((e) => this.ui.showError(e));	
@@ -316,7 +317,7 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 	}
 	var config = this.getCreateDocumentConfig();
 	df.loadClass(cls, config).then(() => {
-		TerminusClient.FrameHelper.removeChildren(this.container);
+		HTMLHelper.removeChildren(this.container);
 		var nav = this.getNavigationDOM(docClasses, docs);
 		this.container.appendChild(nav);
 		this.container.appendChild(df.getAsDOM());
@@ -444,7 +445,7 @@ TerminusDBViewer.prototype.getDeleteDatabaseWidget = function(css){
 	if(this.ui.db() == "terminus") return;
 	var d = document.createElement("span");
 	d.setAttribute("class", "terminus-db-widget");
-	TerminusClient.FrameHelper.removeChildren(this.container);
+	HTMLHelper.removeChildren(this.container);
     var del = document.createElement('button');
     del.setAttribute('class', 'terminus-btn terminus-btn-float-right terminus-home-del');
     del.setAttribute('type', 'button');
@@ -617,7 +618,7 @@ TerminusDBViewer.prototype.getNavigationDOM = function(docClasses, docs){
 TerminusDBViewer.prototype.insertDocument = function(docid, insertDOM, config, nuke){
 	var df = new DocumentPane(this.ui.client).options(config);
 	return df.loadDocument(docid, config).then(() => {
-		if(nuke) TerminusClient.FrameHelper.removeChildren(insertDOM);
+		if(nuke) HTMLHelper.removeChildren(insertDOM);
 		insertDOM.appendChild(df.getAsDOM());
 	})
 	.catch((e) => this.ui.showError(e));	

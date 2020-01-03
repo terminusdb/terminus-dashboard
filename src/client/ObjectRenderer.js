@@ -14,7 +14,7 @@ const ValueRenderer = require('./ValueRenderer');
 const ObjectViewer = require('../html/document/ObjectViewer');
 const PropertyViewer = require('../html/document/PropertyViewer');
 const HTMLDataViewer = require('../html/document/DataViewer');
-const HTMLFrameHelper = require('../html/HTMLFrameHelper');
+const HTMLHelper = require('../html/HTMLHelper');
 
 function PropertyRenderer(prop, parent, options){
 	this.predicate = prop;
@@ -107,7 +107,7 @@ PropertyRenderer.prototype.getDataFramesToRender = function(options){
  * Returns the array of child / objects that should be rendered (enables value filtering)
  */
 PropertyRenderer.prototype.getChildrenToRender = function(options){
- 	if(TerminusClient.FrameHelper.viewIncludesChildren(this.view, "property")){
+ 	if(HTMLHelper.FrameHelper.viewIncludesChildren(this.view, "property")){
  		var allkids = this.parent.objframe.getChildren(this.property());
  	}
  	else {
@@ -174,7 +174,7 @@ PropertyRenderer.prototype.getAvailableClassChoices = function(){
 			var choices = [];
 			for(var i = 0; i < cf.length; i++){
 				var clsmeta = this.parent.getClassMeta(cf[i]);
-				var lab = (clsmeta ? HTMLFrameHelper.getVariableValueFromBinding("Label", clsmeta) : false);
+				var lab = (clsmeta ? HTMLHelper.getVariableValueFromBinding("Label", clsmeta) : false);
 				var lab = (lab ? lab : TerminusClient.FrameHelper.labelFromURL(cf[i]));
 				choices.push({value: cf[i], label: lab});
 			}
@@ -656,7 +656,7 @@ ObjectRenderer.prototype.clone = function(){
 		this.setMode("edit");
 	}
 	else {
-		var nkid = this.objframe.clone(TerminusClient.FrameHelper.genBNID());
+		var nkid = this.objframe.clone(TerminusClient.UTILS.genBNID());
 		var parentobj = this.parentObject();
 		var prop = this.property();
 		if(parentobj && prop){

@@ -1,8 +1,8 @@
 const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const TerminusClient = require('@terminusdb/terminus-client');
-let HTMLFrameHelper = {};
+let HTMLHelper = {};
 
-HTMLFrameHelper.getSettingsControl = function(view){
+HTMLHelper.getSettingsControl = function(view){
 	var pman = new TerminusPluginManager();
 	if(pman.pluginAvailable("font-awesome")){
 		var icon = document.createElement('icon');
@@ -19,7 +19,7 @@ HTMLFrameHelper.getSettingsControl = function(view){
 	}
 }
 
-HTMLFrameHelper.getControlIcon = function(control){
+HTMLHelper.getControlIcon = function(control){
 	var icon;
 	switch(control){
 		case 'delete':
@@ -41,19 +41,19 @@ HTMLFrameHelper.getControlIcon = function(control){
 	return icon;
 }
 
-HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback){
+HTMLHelper.getSelectionControl = function(type, options, selected, callback){
 	var sel = document.createElement("select");
 	sel.setAttribute("class", "terminus-frame-selector frame-control-selection " + type);
 	for(var i = 0; i < options.length; i++){
 		var opt = document.createElement("option");
 		if(typeof options[i] == "object"){
 			opt.value = options[i].value;
-			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(TerminusClient.FrameHelper.labelFromURL(options[i].value)));
+			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(TerminusClient.UTILS.labelFromURL(options[i].value)));
 			opt.appendChild(label);
 		}
 		else {
 			opt.value = options[i];
-			label = TerminusClient.FrameHelper.labelFromURL(opt.value);
+			label = TerminusClient.UTILS.labelFromURL(opt.value);
 			opt.appendChild(document.createTextNode(label));
 		}
 		if(selected == opt.value){
@@ -67,35 +67,35 @@ HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback
 	return sel;
 }
 
-HTMLFrameHelper.getModeSelectorDOM = function(which, renderer){
+HTMLHelper.getModeSelectorDOM = function(which, renderer){
 	var viewsDOM = document.createElement("span");
 	viewsDOM.setAttribute("class", "terminus-mode terminus-"+which+"-mode");
 	if(renderer.mode == "view"){
 		var callback = function(){ renderer.setMode("edit");}
-		viewsDOM.appendChild(HTMLFrameHelper.getActionControl("terminus-mode terminus-"+which+"-mode", "edit", " Edit ", callback));
+		viewsDOM.appendChild(HTMLHelper.getActionControl("terminus-mode terminus-"+which+"-mode", "edit", " Edit ", callback));
 	}
 	else if(renderer.isNew()){
 		return false;
 	}
 	else {
 		var callback = function(){ renderer.cancel();}
-		viewsDOM.appendChild(HTMLFrameHelper.getActionControl(which, "cancel", "Cancel", callback));
+		viewsDOM.appendChild(HTMLHelper.getActionControl(which, "cancel", "Cancel", callback));
 	}
 	return viewsDOM;
 }
 
-HTMLFrameHelper.goToName = function(s, p, i){
+HTMLHelper.goToName = function(s, p, i){
 	var url = window.location.href;
 	if(url){
 		var wbits = url.split("#");
 		var loc = wbits[0];
-		var sh = TerminusClient.FrameHelper.getShorthand(s);
+		var sh = TerminusClient.UTILS.getShorthand(s);
 	    if(!sh) sh = s;
 		var bits = sh.split(":");
 		if(bits.length > 1) sh = bits[1];
 		var htmlid = sh;
 		if(p){
-			var prop = TerminusClient.FrameHelper.getShorthand(p);
+			var prop = TerminusClient.UTILS.getShorthand(p);
 			if(!prop ) prop = p;
 			var bits = prop.split(":");
 			if(bits.length > 1) prop = bits[1];
@@ -108,7 +108,7 @@ HTMLFrameHelper.goToName = function(s, p, i){
 	}
 }
 
-HTMLFrameHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word_size){
+HTMLHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word_size){
 	if(max_cell_size && (text.length > max_cell_size)){
 		wrap.setAttribute("title", text);
 		text = text.substring(0, max_cell_size) + "...";
@@ -131,7 +131,7 @@ HTMLFrameHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word
 	wrap.appendChild(document.createTextNode(text));
 }
 
-HTMLFrameHelper.getVariableValueFromBinding = function(varname, bind){
+HTMLHelper.getVariableValueFromBinding = function(varname, bind){
 	for(var key in bind){
 		var skey = key.substring(key.lastIndexOf("/")+1);
 		if(skey == varname){
@@ -149,25 +149,25 @@ HTMLFrameHelper.getVariableValueFromBinding = function(varname, bind){
  * HTML drawing function for document rendering 
  */
 
-HTMLFrameHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, features){
+HTMLHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, features){
 	if(frame.display_options.hidden) return false;
-	var framedom = HTMLFrameHelper.getFrameHolderDOM(scope, frame, orientation);
+	var framedom = HTMLHelper.getFrameHolderDOM(scope, frame, orientation);
 	if(typeof frame.display_options.header == "function"){
 		var hd = frame.display_options.header(hfeatures);
 		framedom.appendChild(hd);
 	}
 	else {
-		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, orientation, hfeatures);
+		var hd = HTMLHelper.getFrameHeaderDOM(scope, frame, orientation, hfeatures);
 		if(typeof frame.display_options.header_style != "undefined"){
 			hd.setAttribute("style", frame.display_options.header_style);
 		}
 		framedom.appendChild(hd);
 	}
-	framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, orientation, features));
+	framedom.appendChild(HTMLHelper.getFrameBodyDOM(scope, frame, orientation, features));
 	return framedom;
 }
 
-HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
+HTMLHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	var pcls = "terminus-" + scope + "-frame";
 	if(orientation == "page"){
 		var sp = document.createElement("div");
@@ -199,7 +199,7 @@ HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	return sp;
 }
 
-HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features){
+HTMLHelper.getFrameHeaderDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-header";
 	if(orientation == "page"){
 		var objDOM = document.createElement("div");
@@ -212,7 +212,7 @@ HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features
 	return objDOM;
 }
 
-HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
+HTMLHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-properties";
 	if(orientation == "page"){
 		var vholder = document.createElement("div");
@@ -225,7 +225,7 @@ HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
     return vholder;
 }
 
-HTMLFrameHelper.hash = function(s) {
+HTMLHelper.hash = function(s) {
 	var hash = 0, i, chr;
 	if (s.length === 0) return hash;
 	for (i = 0; i < s.length; i++) {
@@ -236,32 +236,32 @@ HTMLFrameHelper.hash = function(s) {
 	return hash;
 };
 
-HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend){
+HTMLHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend){
 
 	if(feature == "id"){	
 		if(scope == "object") var val = frame.subject();
 		else if(scope == "property") var val = frame.property();
 		if(val == "_:") var val = "New Document";
-		return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "The ID that identifies this document", mode, args, rend);
+		return HTMLHelper.getInfoboxDOM("object-id", "ID", val, "The ID that identifies this document", mode, args, rend);
 	}
 	else if(feature == "summary"){
 		var sum = frame.getSummary();
-		return HTMLFrameHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status, mode, args);
+		return HTMLHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status, mode, args);
 	}
 	else if(feature == "label"){
 		var lab = frame.getLabel();
 		if(lab){
-			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", false, lab, false, mode, args);
+			return HTMLHelper.getInfoboxDOM(scope + "-type", false, lab, false, mode, args);
 		}
 		return false;
 	}
 	else if(feature == "status"){
 		var sum = frame.getSummary();
-		return HTMLFrameHelper.getInfoboxDOM(scope + "-status-"+sum.status, false, sum.status, sum.status, mode, args);
+		return HTMLHelper.getInfoboxDOM(scope + "-status-"+sum.status, false, sum.status, sum.status, mode, args);
 	}
 	else if(feature == "comment"){
 		var lab = frame.getComment();
-		return HTMLFrameHelper.getInfoboxDOM("property-comment", false, lab, false, mode, args);
+		return HTMLHelper.getInfoboxDOM("property-comment", false, lab, false, mode, args);
 	}
 	else if(feature == "type"){
 		if(scope == "property" && mode == "edit" && frame.parent && frame.parent.isClassChoice() && frame.isNew()){
@@ -271,7 +271,7 @@ HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend
 		else if(scope == "property") var lab = frame.range();
 		else if(scope == "data") var lab = frame.getType();
 		if(lab){
-			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", "Type", lab, false, mode, args);
+			return HTMLHelper.getInfoboxDOM(scope + "-type", "Type", lab, false, mode, args);
 		}
 		return false;
 	}
@@ -284,7 +284,7 @@ HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend
 			}
 			disabled = "Cardinality rules prevent deleting this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "delete", "Delete", callback, disabled, mode, args);
+		return HTMLHelper.getActionControl(scope, "delete", "Delete", callback, disabled, mode, args);
 	}
 	else if(feature == "clone"){
 		var callback = function(){frame.clone()};
@@ -295,7 +295,7 @@ HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend
 			}
 			disabled = "Cardinality rules prevent cloning this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "clone", "Clone", callback, disabled, mode, args);
+		return HTMLHelper.getActionControl(scope, "clone", "Clone", callback, disabled, mode, args);
 	}
 	else if(feature == "reset"){
 		var callback = function(){frame.reset()};
@@ -306,15 +306,15 @@ HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend
 			}
 			disabled = "No changes have been made to this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "reset", "Reset", callback, disabled, mode, args);
+		return HTMLHelper.getActionControl(scope, "reset", "Reset", callback, disabled, mode, args);
 	}
 	else if(feature == "mode"){
 		var callback = function(){frame.mode("edit")};
-		return HTMLFrameHelper.getActionControl(scope, "mode", "Edit", callback, mode, args);
+		return HTMLHelper.getActionControl(scope, "mode", "Edit", callback, mode, args);
 	}
 	else if(feature == "hide"){
 		var callback = function(){frame.show()};
-		return HTMLFrameHelper.getActionControl(scope, "hide", "Hide", callback, mode, args);
+		return HTMLHelper.getActionControl(scope, "hide", "Hide", callback, mode, args);
 	}
 	else if(feature == "update"){
 		var callback = function(){frame.save()};
@@ -322,7 +322,7 @@ HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend
 			return false;
 		}
 		var disabled = frame.isUpdated() ? false : "No changes have been made to this element";
-		return HTMLFrameHelper.getActionControl(scope, "save", "Save", callback, disabled, mode, args);
+		return HTMLHelper.getActionControl(scope, "save", "Save", callback, disabled, mode, args);
 	}
 	else if(feature == "viewer"){
 		return false;//this.getViewerSelectorDOM(scope, frame, mode, args);
@@ -338,7 +338,7 @@ HTMLFrameHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend
 	}
 }
 
-HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame, mode, args){
+HTMLHelper.getViewerSelectorDOM = function(scope, frame, mode, args){
 	//var viewers = frame.datatypes.getAvailableViewers();
 	//var r = frame.datatypes.getRenderer(t);
 
@@ -351,7 +351,7 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame, mode, args){
 			}
 		}
 		var selected = frame.currentViewer();
-		var sel = HTMLFrameHelper.getSelectionControl(scope + '-viewer', viewers, selected, callback, mode, args);
+		var sel = HTMLHelper.getSelectionControl(scope + '-viewer', viewers, selected, callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -360,7 +360,7 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame, mode, args){
 
 
 /* needs html viewer context for goto */
-HTMLFrameHelper.getViewEntryDOM = function(scope, frame, mode, args){
+HTMLHelper.getViewEntryDOM = function(scope, frame, mode, args){
 	if(scope == "object"){
 		var viewables = frame.getFilledPropertyList();
 	}
@@ -377,7 +377,7 @@ HTMLFrameHelper.getViewEntryDOM = function(scope, frame, mode, args){
 				frame.goToEntry(add);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl(scope + "-view-entry", viewables, "", callback, mode, args);
+		var sel = HTMLHelper.getSelectionControl(scope + "-view-entry", viewables, "", callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -385,7 +385,7 @@ HTMLFrameHelper.getViewEntryDOM = function(scope, frame, mode, args){
 	
 }
 
-HTMLFrameHelper.getCardinalityDOM = function(scope, frame, mode, args){
+HTMLHelper.getCardinalityDOM = function(scope, frame, mode, args){
 	var restriction = frame.getRestriction();
 	if(restriction.min && restriction.max){
 		if(restriction.min == restriction.max){
@@ -409,10 +409,10 @@ HTMLFrameHelper.getCardinalityDOM = function(scope, frame, mode, args){
 	else {
 		return false;
 	}
-	return HTMLFrameHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help, mode, args);
+	return HTMLHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help, mode, args);
 }
 
-HTMLFrameHelper.getClassChoiceTypeSelector = function(frame, mode, args){
+HTMLHelper.getClassChoiceTypeSelector = function(frame, mode, args){
 	var cs = frame.parent.getAvailableClassChoices();
 	if(cs && cs.length){
 		var mpropDOM = document.createElement("span");
@@ -426,14 +426,14 @@ HTMLFrameHelper.getClassChoiceTypeSelector = function(frame, mode, args){
 				frame.changeClass(cls);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, frame.subjectClass(), callback, mode, args);
+		var sel = HTMLHelper.getSelectionControl("change-class", cs, frame.subjectClass(), callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
 	return false;
 }
 
-HTMLFrameHelper.getAddDOM = function(scope, frame, mode, args){
+HTMLHelper.getAddDOM = function(scope, frame, mode, args){
 	if(scope == "property"){
 		if(frame.isClassChoice()){
 			var cs = frame.getAvailableClassChoices();
@@ -446,7 +446,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame, mode, args){
 						frame.addClass(cls);
 					}
 				}
-				var sel = HTMLFrameHelper.getSelectionControl("add-property", cs, "", callback, mode, args);
+				var sel = HTMLHelper.getSelectionControl("add-property", cs, "", callback, mode, args);
 				mpropDOM.appendChild(sel);
 				return mpropDOM;
 			}
@@ -454,7 +454,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame, mode, args){
 		if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 			var callback = function(){frame.add("edit")};
 			var disabled = (frame.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
-			return HTMLFrameHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled, mode, args);
+			return HTMLHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled, mode, args);
 		}
 	}
 	else {
@@ -471,7 +471,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame, mode, args){
 			}
 			if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 				var disabled = (frame.cardControlAllows("add") ? false : "Cardinality rules forbid adding element");
-				var sel = HTMLFrameHelper.getSelectionControl(scope + "-add-entry", addables, "", callback, disabled, mode, args);
+				var sel = HTMLHelper.getSelectionControl(scope + "-add-entry", addables, "", callback, disabled, mode, args);
 				mpropDOM.appendChild(sel);
 				return mpropDOM;
 			}
@@ -480,7 +480,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame, mode, args){
 	return false;
 }
 
-HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, mode, args, input){
+HTMLHelper.getInfoboxDOM = function(type, label, value, help, mode, args, input){
 	/*var frow = this.getFrameRow();
 	var fgroup = this.getFrameGroup(frow);*/
 	var infoDOM = document.createElement("span");
@@ -526,7 +526,7 @@ HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, mode, args, i
 }
 
 
-HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled, mode, args){
+HTMLHelper.getActionControl = function(type, control, label, callback, disabled, mode, args){
 	var pman = new TerminusPluginManager();
 	var dpropDOM = document.createElement("span");
 	//dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
@@ -558,5 +558,50 @@ HTMLFrameHelper.getActionControl = function(type, control, label, callback, disa
 	return dpropDOM;
 }
 
+HTMLHelper.removeChildren = function (node) {
+	if (node) {
+		while (node.hasChildNodes()) {
+			node.removeChild(node.childNodes[0]);
+		}
+	}
+};
 
-module.exports=HTMLFrameHelper
+HTMLHelper.loadDynamicScript = function (scriptid, src, callback) {
+	const existingScript = document.getElementById(scriptid);
+	if (!existingScript) {
+		const script = document.createElement('script');
+		script.src = src; // URL for the third-party library being loaded.
+		document.body.appendChild(script);
+		script.onload = function () {
+			script.id = scriptid; // do it here so it doesn't trigger the callback below on multiple calls
+			if (callback) callback(scriptid);
+		};
+	}
+	if (existingScript && callback) {
+		callback(scriptid);
+	}
+};
+
+HTMLHelper.loadDynamicCSS = function (cssid, src, callback) {
+	const existingScript = document.getElementById(cssid);
+	if (!existingScript) {
+		const link = document.createElement('link');
+		link.href = src; // URL for the third-party library being loaded.
+		link.id = cssid; // e.g., googleMaps or stripe
+		link.rel = 'stylesheet';
+		document.body.appendChild(link);
+		link.onload = function () {
+			if (callback) callback(cssid);
+		};
+	}
+	if (existingScript && callback) callback(cssid);
+};
+
+
+HTMLHelper.removeElement = function (node) {
+	if (node) {
+			node.parentNode.removeChild(node);
+	}
+}
+
+module.exports=HTMLHelper

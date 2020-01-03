@@ -2,6 +2,7 @@ const TerminusClient = require('@terminusdb/terminus-client');
 const QueryPane = require("./html/QueryPane");
 const ScriptPane = require("./html/ScriptPane");
 const DocumentPane = require("./html/DocumentPane");
+const HTMLHelper = require('./html/HTMLHelper');
 
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;
@@ -88,7 +89,7 @@ TerminusQueryViewer.prototype.addNewPaneDOM = function(qpane){
 }
 
 TerminusQueryViewer.prototype.getAsDOM = function(q){
-	TerminusClient.FrameHelper.removeChildren(this.container);
+	HTMLHelper.removeChildren(this.container);
 	if(!this.paneDOM) this.paneDOM = this.getPanesDOM();
 	this.container.appendChild(this.paneDOM);
 	this.controlDOM = this.getControlsDOM();
@@ -123,7 +124,7 @@ TerminusQueryViewer.prototype.getPanesDOM = function(q){
 }
 
 TerminusQueryViewer.prototype.removePane = function(pane, index){
-	TerminusClient.FrameHelper.removeChildren(pane.paneDOM);
+	HTMLHelper.removeChildren(pane.paneDOM);
 	pane.paneDOM.appendChild(pane.headerDOM);
 	if(this.panes[i]){
 		this.panes.splice(i, 1);
@@ -131,7 +132,7 @@ TerminusQueryViewer.prototype.removePane = function(pane, index){
 }
 
 TerminusQueryViewer.prototype.showPane = function(pane){
-	//TerminusClient.FrameHelper.removeChildren(pane.paneDOM);
+	//HTMLHelper.removeChildren(pane.paneDOM);
 	//var pd = pane.getAsDOM();
 	//var qhdr = this.getPaneHeader();
 	//pd.prepend(qhdr);

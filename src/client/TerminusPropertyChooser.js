@@ -2,7 +2,7 @@
  * Utility Property which runs a query against the schema and presents the returned Propertyes as a drop-down / Property filter list
  */
 const WOQLQuery = require('./WOQLQuery');
-const HTMLFrameHelper = require('../html/HTMLFrameHelper');
+const HTMLHelper = require('../html/HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 TerminusPropertyChooser = function(ui, filter){
@@ -72,15 +72,15 @@ TerminusPropertyChooser.prototype.getResultsAsOptions = function(clist){
 	if(clist.bindings){
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
-			var cprop = HTMLFrameHelper.getVariableValueFromBinding("Property", clist.bindings[i]);
+			var cprop = HTMLHelper.getVariableValueFromBinding("Property", clist.bindings[i]);
 			if(cprop && added.indexOf(cprop) == -1){
 				added.push(cprop);
 				var opt = document.createElement("option");
 				opt.setAttribute("Class", "terminus-class-choice");
 				opt.value = cprop;
-				var lab = HTMLFrameHelper.getVariableValueFromBinding("Label", clist.bindings[i]);
+				var lab = HTMLHelper.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
-					lab = TerminusClient.FrameHelper.labelFromURL(cprop);
+					lab = TerminusClient.UTILS.labelFromURL(cprop);
 				}
 				if(lab["@value"]) lab = lab["@value"];
 				opt.appendChild(document.createTextNode(lab));

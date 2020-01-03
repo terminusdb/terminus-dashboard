@@ -3,7 +3,7 @@
  */
 
 const WOQLQuery = require('./WOQLQuery');
-const HTMLFrameHelper = require('../html/HTMLFrameHelper');
+const HTMLHelper = require('../html/HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 TerminusClassChooser = function(ui, filter, chosen){
@@ -69,8 +69,8 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 		}
 		var added = [];
 		for(var i = 0; i<clist.bindings.length; i++){
-			var bclass = HTMLFrameHelper.getVariableValueFromBinding("Element", clist.bindings[i]);
-			if(!bclass) bclass = HTMLFrameHelper.getVariableValueFromBinding("Class", clist.bindings[i]);
+			var bclass = HTMLHelper.getVariableValueFromBinding("Element", clist.bindings[i]);
+			if(!bclass) bclass = HTMLHelper.getVariableValueFromBinding("Class", clist.bindings[i]);
 			if(bclass && added.indexOf(bclass) == -1){
 				added.push(bclass);
 				var opt = document.createElement("option");
@@ -79,10 +79,10 @@ TerminusClassChooser.prototype.getResultsAsOptions = function(clist){
 				if(opt.value == this.choice){
 					opt.selected = true;
 				}
-				var lab = HTMLFrameHelper.getVariableValueFromBinding("Label", clist.bindings[i]);
+				var lab = HTMLHelper.getVariableValueFromBinding("Label", clist.bindings[i]);
 				if(!lab || lab == "unknown"){
 
-					lab = TerminusClient.FrameHelper.labelFromURL(bclass);
+					lab = TerminusClient.UTILS.labelFromURL(bclass);
 
 				}
 				if(lab["@value"]) lab = lab["@value"];

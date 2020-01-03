@@ -37,7 +37,7 @@ TerminusFrame.prototype.loadDocument = function(url, cls){
 
 TerminusFrame.prototype.loadDocumentSchema = function(cls){
 	var self = this;
-	var ncls = TerminusClient.FrameHelper.unshorten(cls);
+	var ncls = TerminusClient.UTILS.unshorten(cls);
 	return this.client.getClassFrame(false, ncls)
 	.then(function(response){
 		return self.loadSchemaFrames(response, cls);

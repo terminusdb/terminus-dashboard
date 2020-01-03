@@ -2,7 +2,7 @@ const TerminusClient = require('@terminusdb/terminus-client');
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const ResultPane = require("./ResultPane");
 const UTILS = require('../Utils');
-const HTMLFrameHelper = require('./HTMLFrameHelper');
+const HTMLHelper = require('./HTMLHelper');
 const TerminusViolations = require('./TerminusViolation');
 
 function QueryPane(client, query, result){
@@ -53,14 +53,14 @@ QueryPane.prototype.clearSubMenus = function(btn){
 	var par = btn.parentElement.parentElement;
 	var smenus = par.getElementsByClassName('terminus-queries-submenu');
 	for(var i=0; i<smenus.length; i++){
-		TerminusClient.FrameHelper.removeChildren(smenus[i]);
+		HTMLHelper.removeChildren(smenus[i]);
 	}
 }
 
 QueryPane.prototype.getResults = function(query){
 	if(query)
 		this.input.setQuery(query);
-	TerminusClient.FrameHelper.removeChildren(this.sampleQueryDOM);
+		HTMLHelper.removeChildren(this.sampleQueryDOM);
 	this.input.refreshContents();
 }
 
@@ -146,7 +146,7 @@ QueryPane.prototype.checkIfDataMenuOpen = function(btn){
 			var child = btn.getElementsByClassName('terminus-queries-submenu');
 			if(child.length){
 				for(var j=0; j<child.length; j++){
-					TerminusClient.FrameHelper.removeElement(child[j]);
+					HTMLHelper.removeElement(child[j]);
 					isOpen = true;
 				}
 			}
@@ -274,7 +274,7 @@ QueryPane.prototype.getSampleQueriesDOM = function(){
 	i.addEventListener('click', function(e){
 		if(e.target !== this) return;
 		if(this.children.length)
-			TerminusClient.FrameHelper.removeChildren(this);
+		    HTMLHelper.removeChildren(this);
 		else{
 			var d = self.getQueryMenuBlock();
 			this.appendChild(d);
@@ -411,7 +411,7 @@ QueryPane.prototype.empty = function(){
 }
 
 QueryPane.prototype.clearMessages = function(){
-	if(this.messages.children.length) TerminusClient.FrameHelper.removeChildren(this.messages);
+	if(this.messages.children.length) HTMLHelper.removeChildren(this.messages);
 }
 
 QueryPane.prototype.getBusyLoader = function(){
@@ -521,7 +521,7 @@ QueryPane.prototype.getAddViewControl = function(){
 		{ value: "chooser", label: "Add Drop-down View"},
 		{ value: "map", label: "Add Map View"}
 	];
-	var sel = HTMLFrameHelper.getSelectionControl("view", opts, false,newView);
+	var sel = HTMLHelper.getSelectionControl("view", opts, false,newView);
 	this.selector = sel;
 	vd.appendChild(sel);
 	return vd;

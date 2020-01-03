@@ -80,7 +80,7 @@ FrameConfig.prototype.json = function(){
 FrameConfig.prototype.loadJSON = function(config, rules){
 	var jr = [];
 	for(var i = 0; i<rules.length; i++){
-		var nr = new TerminusClient.WOQL.rule();
+		var nr = new TerminusClient.WOQL.rule("frame");
 		nr.json(rules[i]);
 		jr.push(nr);
 	}
@@ -135,36 +135,31 @@ FrameConfig.prototype.show_parts = function(o, p, d){
 }
 
 FrameConfig.prototype.object = function(){
-	let fp = TerminusClient.WOQL.rule();
-	fp.scope("object")
+	let fp = new DocumentRule("object");
 	this.rules.push(fp);
 	return fp;
 }
 
 FrameConfig.prototype.property = function(){
-	let fp = TerminusClient.WOQL.rule();
-	fp.scope("property");
+	let fp = new DocumentRule("property");
 	this.rules.push(fp);
 	return fp;
 }
 
 FrameConfig.prototype.scope = function(scope){
-	let fp = TerminusClient.WOQL.rule();
-	fp.scope(scope);
+	let fp = new DocumentRule(scope);
 	this.rules.push(fp);
 	return fp;
 }
 
 FrameConfig.prototype.data = function(){
-	let fp = TerminusClient.WOQL.rule();
-	fp.scope("data")
+	let fp = new DocumentRule("data");
 	this.rules.push(fp);
 	return fp;
 }
 
 FrameConfig.prototype.all = function(){
-	let fp = TerminusClient.WOQL.rule();
-	fp.scope("*")
+	let fp = new DocumentRule("*");
 	this.rules.push(fp);
 	return fp;
 }
@@ -228,6 +223,7 @@ FrameConfig.prototype.setFrameArgs = function(existing, fresh){
 	return existing;
 }
 
+
 function WOQLStreamConfig(){
 	this.rules = [];
 	this.type = "stream";
@@ -244,7 +240,7 @@ WOQLStreamConfig.prototype.prettyPrint = function(){
 WOQLStreamConfig.prototype.loadJSON = function(config, rules){
 	var jr = [];
 	for(var i = 0; i<rules.length; i++){
-		var nr = new WOQLRule();
+		var nr = new WOQLStreamRule();
 		nr.json(rules[i]);
 		jr.push(nr);
 	}
@@ -263,7 +259,7 @@ WOQLStreamConfig.prototype.json = function(){
 }
 
 WOQLStreamConfig.prototype.getMatchingRules = function(row, key, context, action){
-	return getMatchingRules(this.rules, row, key, context, action);
+	return TerminusClient.WOQL.getMatchingRules(this.rules, row, key, context, action)
 }
 
 WOQLStreamConfig.prototype.create = function(client, renderers){
@@ -282,7 +278,7 @@ function WOQLChooserConfig(){
 }
 
 WOQLChooserConfig.prototype.getMatchingRules = function(row, key, context, action){
-	return getMatchingRules(this.rules, row, key, context, action);
+	return TerminusClient.WOQL.getMatchingRules(this.rules, row, key, context, action)
 }
 
 WOQLChooserConfig.prototype.create = function(client, renderers){
@@ -303,13 +299,13 @@ WOQLChooserConfig.prototype.prettyPrint = function(){
 		str += "view.show_empty('" + this.show_empty() + "')\n";
 	}
 	if(typeof this.values() != "undefined"){
-		str += "view.values('" + removeNamespaceFromVariable(this.values()) + "')\n";
+		str += "view.values('" + TerminusClient.UTILS.removeNamespaceFromVariable(this.values()) + "')\n";
 	}
 	if(typeof this.labels() != "undefined"){
-		str += "view.labels('" + removeNamespaceFromVariable(this.labels()) + "')\n";
+		str += "view.labels('" + TerminusClient.UTILS.removeNamespaceFromVariable(this.labels()) + "')\n";
 	}
 	if(typeof this.titles() != "undefined"){
-		str += "view.titles('" + removeNamespaceFromVariable(this.titles()) + "')\n";
+		str += "view.titles('" + TerminusClient.UTILS.removeNamespaceFromVariable(this.titles()) + "')\n";
 	}
 	if(typeof this.sort() != "undefined"){
 		str += "view.sort(" + this.sort() + ")\n";
@@ -357,7 +353,7 @@ WOQLChooserConfig.prototype.json = function(){
 WOQLChooserConfig.prototype.loadJSON = function(config, rules){
 	var jr = [];
 	for(var i = 0; i<rules.length; i++){
-		var nr = new WOQLRule();
+		var nr = new WOQLChooserRule();
 		nr.json(rules[i]);
 		jr.push(nr);
 	}
@@ -402,7 +398,7 @@ WOQLChooserConfig.prototype.show_empty = function(p){
 }
 
 WOQLChooserConfig.prototype.rule = function(v){
-	let nr = new WOQLRule("row");
+	let nr = new WOQLChooserRule("row");
 	this.rules.push(nr);
 	return nr.v(v);
 }
@@ -463,7 +459,7 @@ function WOQLTableConfig(){
 }
 
 WOQLTableConfig.prototype.getMatchingRules = function(row, key, context, action){
-	return getMatchingRules(this.rules, row, key, context, action);
+	return TerminusClient.WOQL.getMatchingRules(this.rules, row, key, context, action)	
 }
 
 WOQLTableConfig.prototype.create = function(client, renderers, dtypes){
@@ -504,7 +500,7 @@ WOQLTableConfig.prototype.json = function(){
 WOQLTableConfig.prototype.loadJSON = function(config, rules){
 	var jr = [];
 	for(var i = 0; i<rules.length; i++){
-		var nr = new WOQLRule();
+		var nr = new WOQLTableRule();
 		nr.json(rules[i]);
 		jr.push(nr);
 	}
@@ -522,7 +518,7 @@ WOQLTableConfig.prototype.loadJSON = function(config, rules){
 		this.pager(config.pager);
 	}
 	if(typeof config.page != "undefined"){
-		this.titles(config.page);
+		this.page(config.page);
 	}
 }
 
@@ -559,7 +555,7 @@ WOQLTableConfig.prototype.column_order = function(...val){
 	if(typeof val == "undefined" || val.length == 0){
 		return this.order;
 	}
-	this.order = addNamespacesToVariables(val);
+	this.order = TerminusClient.UTILS.addNamespacesToVariables(val);
 	return this;
 }
 
@@ -589,7 +585,7 @@ WOQLTableConfig.prototype.page = function(val){
 }
 
 WOQLTableConfig.prototype.column = function(...cols){
-	let nr = new WOQLRule("column");
+	let nr = new WOQLTableRule("column");
 	nr.setVariables(cols);
 	this.rules.push(nr);
 	return nr;
@@ -616,7 +612,7 @@ WOQLGraphConfig.prototype.create = function(client, renderers){
 }
 
 WOQLGraphConfig.prototype.getMatchingRules = function(row, key, context, action){
-	return getMatchingRules(this.rules, row, key, context, action);
+	return TerminusClient.WOQL.getMatchingRules(this.rules, row, key, context, action);
 }
 
 WOQLGraphConfig.prototype.literals = function(v){
@@ -697,7 +693,7 @@ WOQLGraphConfig.prototype.edges = function(...edges){
 	if(edges && edges.length){
 		var nedges = [];
 		for(var i = 0; i<edges.length; i++){
-			nedges.push(addNamespacesToVariables(edges[i]));
+			nedges.push(TerminusClient.UTILS.addNamespacesToVariables(edges[i]));
 		}
 		this.show_edges = nedges;
 		return this;
@@ -706,7 +702,7 @@ WOQLGraphConfig.prototype.edges = function(...edges){
 }
 
 WOQLGraphConfig.prototype.edge = function(source, target){
-	let nr = new WOQLRule("edge");
+	let nr = new WOQLGraphRule("edge");
 	if(source && target) nr.setVariables([source, target]);
 	else if(source) nr.setVariables([source]);
 	else if(target) nr.setVariables([target]);
@@ -717,7 +713,7 @@ WOQLGraphConfig.prototype.edge = function(source, target){
 }
 
 WOQLGraphConfig.prototype.node = function(...cols){
-	let nr = new WOQLRule("node");
+	let nr = new WOQLGraphRule("node");
 	nr.setVariables(cols);
 	this.rules.push(nr);
 	return nr;
@@ -761,7 +757,7 @@ WOQLGraphConfig.prototype.getConfigAsJSON = function(){
 WOQLGraphConfig.prototype.loadJSON = function(config, rules){
 	var jr = [];
 	for(var i = 0; i<rules.length; i++){
-		var nr = new WOQLRule();
+		var nr = new WOQLGraphRule();
 		nr.json(rules[i]);
 		jr.push(nr);
 	}
@@ -805,7 +801,7 @@ WOQLGraphConfig.prototype.prettyPrint = function(){
 		str += "view.literals('" + this.literals() + "')\n";
 	}
 	if(typeof this.source() != "undefined"){
-		str += "view.source('" + removeNamespaceFromVariable(this.source()) + "')\n";
+		str += "view.source('" + TerminusClient.UTILS.removeNamespaceFromVariable(this.source()) + "')\n";
 	}
 	if(typeof this.fontfamily() != "undefined"){
 		str += "view.fontfamily('" + this.fontfamily() + "')\n";
@@ -851,59 +847,94 @@ WOQLGraphConfig.prototype.json = function(){
 	return mj;
 }
 
-
-function WOQLRule(s){
-	this.rule = { scope: s };
+function WOQLChartConfig(){
+	this.rules = [];
+	this.type = "chart";
 }
 
-WOQLRule.prototype.prettyPrint = function(type){
+
+
+/*
+{"XAxis":{dataKey:"date_i",type:'number'}
+							,"chartObj":
+							[{'label':'Confident','dataKey':'conf',"chartType":"Area",
+							"style":{"stroke":"#82ca9d", "fillOpacity":1, "fill":"#82ca9d"}},
+							 {'label':'Predictions','dataKey':'predictions',"chartType":"Line",
+							 "style":{"strokeWidth":2, "stroke":"#ff8000"}},
+							 {'label':'Picks','dataKey':'picks',"chartType":"Point","style": 
+							 {"stroke": '#8884d8', "fill": '#8884d8'}},
+							 {'label':'Stock','dataKey':'stock',"chartType":"Line","style":
+							  {"stroke": '#0000ff', "fill": '#0000ff'}}]}
+
+{"XAxis":{dataKey:"v:Date","label":{rotate:"-50"}},"chartObj":
+							  	[{'dot':true, 'label':'Quantity','dataKey':'v:Quantity',"chartType":"Line",  
+							  	  "style": {"stroke": '#FF9800', "fill": '#FF9800'}}]
+							  }
+*/
+
+
+WOQLChartConfig.prototype.xAxis = function(...vars){
+	let woqlRule = new WOQLChartRule("XAxis");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.bar = function(...vars){
+	let woqlRule=new WOQLChartRule("Bar");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.line=function(...vars){
+	let woqlRule=new WOQLChartRule("Line");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.point=function(...vars){
+	let woqlRule=new WOQLChartRule("Point");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+WOQLChartConfig.prototype.area=function(...vars){
+	let woqlRule=new WOQLChartRule("Area");
+	woqlRule.setVariables(vars);
+	this.rules.push(woqlRule);
+	return woqlRule;
+}
+
+function WOQLViewRule(s){
+	TerminusClient.WOQLRule.call(this,s);
+	this.rule = {}; 
+};
+	
+WOQLViewRule.prototype = Object.create(TerminusClient.WOQLRule.prototype);
+WOQLViewRule.prototype.constructor = TerminusClient.WOQLRule;
+
+WOQLViewRule.prototype.prettyPrint = function(type){
 	//starts with obj. ...
-	var str = this.rule.scope + "('";
-	if(this.rule.variables){
-		str += this.rule.variables.join("', '");
-	 }
-	 str += "')";
-	if(typeof this.literal() != "undefined"){
-		str += ".literal(" + this.literal() + ")";
-	}
-	if(typeof this.type() != "undefined"){
-		str += ".type(" + JSON.stringify(removeNamespacesFromVariables(this.type())) + ")";
-	}
-	if(typeof this.selected() != "undefined"){
-		str += ".selected(" + this.selected() + ")";
-	}
-	if(typeof this.label() != "undefined"){
-		str += ".label(" + this.label() + ")";
-	}
-	if(typeof this.size() != "undefined"){
-		str += ".size('" + this.size() + "')";
+	if(this.pattern){
+		str = this.pattern.prettyPrint(type);
 	}
 	if(typeof this.color() != "undefined"){
 		str += ".color([" + this.color().join(",") + "])";
 	}
-	if(typeof this.charge() != "undefined"){
-		str += ".charge('" + this.charge() + "')";
+	if(typeof this.hidden() != "undefined"){
+		str += ".hidden(" + this.hidden() + ")";
 	}
-	if(typeof this.distance() != "undefined"){
-		str += ".distance('" + this.distance() + "')";
-	}
-	if(typeof this.weight() != "undefined"){
-		str += ".distance('" + this.weight() + "')";
-	}
-	if(typeof this.symmetric() != "undefined"){
-		str += ".symmetric(" + this.symmetric() + ")";
-	}
-	if(typeof this.collisionRadius() != "undefined"){
-		str += ".collisionRadius(" + this.collisionRadius() + ")";
+	if(typeof this.size() != "undefined"){
+		str += ".size('" + this.size() + "')";
 	}
 	if(typeof this.icon() != "undefined"){
 		str += ".icon(" + JSON.stringify(this.icon()) + ")";
 	}
 	if(typeof this.text() != "undefined"){
 		str += ".text(" + JSON.stringify(this.text()) + ")";
-	}
-	if(typeof this.arrow() != "undefined"){
-		str += ".arrow(" + JSON.stringify(this.arrow()) + ")";
 	}
 	if(typeof this.border() != "undefined"){
 		str += ".border(" + JSON.stringify(this.border()) + ")";
@@ -917,41 +948,28 @@ WOQLRule.prototype.prettyPrint = function(type){
 	if(typeof this.render() != "undefined"){
 		str += ".render(" + this.render() + ")";
 	}
-	if(typeof this.header() != "undefined"){
-		str += ".header('" + this.header() + "')";
-	}
 	if(typeof this.click() != "undefined"){
 		str += ".click(" + this.click() + ")";
 	}
 	if(typeof this.hover() != "undefined"){
 		str += ".hover(" + this.hover() + ")";
 	}
-	for(var v in this.rule.constraints){
-		str += ".v('" + v + "')";
-		for(var i = 0; i<this.rule.constraints[v].length; i++){
-			if(typeof(this.rule.constraints[v][i]) == "function"){
-				str += ".filter(" + this.rule.constraints[v][i] + ")";
-			}
-			else {
-				str += ".in(" + JSON.stringify(this.rule.constraints[v][i]) + ")";
-			}
-		}
-	}
 	return str;
 }
 
-/*
- * Graph
- */
-
-WOQLRule.prototype.json = function(mjson){
-	if(!mjson) return this.rule;
-	this.rule = mjson;
+WOQLViewRule.prototype.json = function(mjson){
+	if(!mjson) {
+		var json = { }
+		if(this.pattern) json.pattern = this.pattern.json();
+		json.rule = this.rule;
+	    return json;
+	}
+	this.rule = mjson.rule || {};
 	return this;
 }
 
 
-WOQLRule.prototype.size = function(size){
+WOQLViewRule.prototype.size = function(size){
 	if(typeof size == "undefined"){
 		return this.rule.size;
 	}
@@ -959,7 +977,7 @@ WOQLRule.prototype.size = function(size){
 	return this;
 }
 
-WOQLRule.prototype.color = function(color){
+WOQLViewRule.prototype.color = function(color){
 	if(typeof color == "undefined"){
 		return this.rule.color;
 	}
@@ -967,23 +985,7 @@ WOQLRule.prototype.color = function(color){
 	return this;
 }
 
-WOQLRule.prototype.charge = function(v){
-	if(typeof v == "undefined"){
-		return this.rule.charge;
-	}
-	this.rule.charge = v;
-	return this;
-}
-
-WOQLRule.prototype.collisionRadius = function(v){
-	if(typeof v == "undefined"){
-		return this.rule.collisionRadius;
-	}
-	this.rule.collisionRadius = v;
-	return this;
-}
-
-WOQLRule.prototype.icon = function(json){
+WOQLViewRule.prototype.icon = function(json){
 	if(json){
 		this.rule.icon = json;
 		return this;
@@ -991,7 +993,7 @@ WOQLRule.prototype.icon = function(json){
 	return this.rule.icon;
 }
 
-WOQLRule.prototype.text = function(json){
+WOQLViewRule.prototype.text = function(json){
 	if(json){
 		this.rule.text = json;
 		return this;
@@ -999,7 +1001,7 @@ WOQLRule.prototype.text = function(json){
 	return this.rule.text;
 }
 
-WOQLRule.prototype.border = function(json){
+WOQLViewRule.prototype.border = function(json){
 	if(json){
 		this.rule.border = json;
 		return this;
@@ -1007,7 +1009,80 @@ WOQLRule.prototype.border = function(json){
 	return this.rule.border;
 }
 
-WOQLRule.prototype.arrow = function(json){
+WOQLViewRule.prototype.renderer = function(rend){
+	if(typeof rend == "undefined"){
+		return this.rule.renderer;
+	}
+	this.rule.renderer = rend;
+	return this;
+}
+
+
+WOQLViewRule.prototype.render = function(func){
+	if(typeof func == "undefined"){
+		return this.rule.render;
+	}
+	this.rule.render = func;
+	return this;
+}
+
+WOQLViewRule.prototype.click = function(onClick){
+	if(onClick){
+		this.rule.click = onClick;
+		return this;
+	}
+	return this.rule.click;
+}
+
+WOQLViewRule.prototype.hover = function(onHover){
+	if(onHover){
+		this.rule.hover = onHover;
+		return this;
+	}
+	return this.rule.hover;
+}
+
+WOQLViewRule.prototype.hidden = function(hidden){
+	if(typeof hidden == "undefined"){
+		return this.rule.hidden;
+	}
+	this.rule.hidden = hidden;
+	return this;
+}
+
+WOQLViewRule.prototype.args = function(args){
+	if(typeof args == "undefined"){
+		return this.rule.args;
+	}
+	this.rule.args = args;
+	return this;
+}
+
+
+function WOQLGraphRule(scope){
+	WOQLViewRule.call(this,scope); 
+};
+
+WOQLGraphRule.prototype = Object.create(WOQLViewRule.prototype);
+WOQLGraphRule.prototype.constructor = WOQLViewRule;
+
+WOQLGraphRule.prototype.charge = function(v){
+	if(typeof v == "undefined"){
+		return this.rule.charge;
+	}
+	this.rule.charge = v;
+	return this;
+}
+
+WOQLGraphRule.prototype.collisionRadius = function(v){
+	if(typeof v == "undefined"){
+		return this.rule.collisionRadius;
+	}
+	this.rule.collisionRadius = v;
+	return this;
+}
+
+WOQLGraphRule.prototype.arrow = function(json){
 	if(json){
 		this.rule.arrow = json;
 		return this;
@@ -1015,7 +1090,7 @@ WOQLRule.prototype.arrow = function(json){
 	return this.rule.arrow;
 }
 
-WOQLRule.prototype.distance = function(d){
+WOQLGraphRule.prototype.distance = function(d){
 	if(typeof d != "undefined"){
 		this.rule.distance = d;
 		return this;
@@ -1023,7 +1098,7 @@ WOQLRule.prototype.distance = function(d){
 	return this.rule.distance;
 }
 
-WOQLRule.prototype.symmetric = function(d){
+WOQLGraphRule.prototype.symmetric = function(d){
 	if(typeof d != "undefined"){
 		this.rule.symmetric = d;
 		return this;
@@ -1032,7 +1107,7 @@ WOQLRule.prototype.symmetric = function(d){
 }
 
 
-WOQLRule.prototype.weight = function(w){
+WOQLGraphRule.prototype.weight = function(w){
 	if(typeof w != "undefined"){
 		this.rule.weight = w;
 		return this;
@@ -1040,19 +1115,42 @@ WOQLRule.prototype.weight = function(w){
 	return this.rule.weight;
 }
 
+WOQLGraphRule.prototype.prettyPrint = function(type){
+	var str = WOQLViewRule.prototype.prettyPrint.apply(this, type);
+	if(typeof this.charge() != "undefined"){
+		str += ".charge('" + this.charge() + "')";
+	}
+	if(typeof this.distance() != "undefined"){
+		str += ".distance('" + this.distance() + "')";
+	}
+	if(typeof this.weight() != "undefined"){
+		str += ".weight('" + this.weight() + "')";
+	}
+	if(typeof this.symmetric() != "undefined"){
+		str += ".symmetric(" + this.symmetric() + ")";
+	}
+	if(typeof this.collisionRadius() != "undefined"){
+		str += ".collisionRadius(" + this.collisionRadius() + ")";
+	}	
+	if(typeof this.arrow() != "undefined"){
+		str += ".arrow(" + JSON.stringify(this.arrow()) + ")";
+	}
+	return str;
+}
+
 /*
  * Table
  */
 
-WOQLRule.prototype.renderer = function(rend){
-	if(typeof rend == "undefined"){
-		return this.rule.renderer;
-	}
-	this.rule.renderer = rend;
-	return this;
-}
+ 
+function WOQLTableRule(scope){
+	WOQLViewRule.call(this,scope); 
+};
 
-WOQLRule.prototype.header = function(hdr){
+WOQLTableRule.prototype = Object.create(WOQLViewRule.prototype);
+WOQLTableRule.prototype.constructor = WOQLViewRule;
+
+WOQLTableRule.prototype.header = function(hdr){
 	if(typeof hdr == "undefined"){
 		return this.rule.header;
 	}
@@ -1060,107 +1158,21 @@ WOQLRule.prototype.header = function(hdr){
 	return this;
 }
 
-
-WOQLRule.prototype.render = function(func){
-	if(typeof func == "undefined"){
-		return this.rule.render;
-	}
-	this.rule.render = func;
-	return this;
+WOQLTableRule.prototype.prettyPrint = function(type){
+	var str = WOQLViewRule.prototype.prettyPrint.apply(this, type);
+    if(typeof this.header() != "undefined"){
+	    str += ".header(" + this.header() + ")";
+    }
 }
 
-WOQLRule.prototype.click = function(onClick){
-	if(onClick){
-		this.rule.click = onClick;
-		return this;
-	}
-	return this.rule.click;
-}
+function WOQLChooserRule(scope){
+	WOQLViewRule.call(this,scope); 
+};
 
-WOQLRule.prototype.hover = function(onHover){
-	if(onHover){
-		this.rule.hover = onHover;
-		return this;
-	}
-	return this.rule.hover;
-}
+WOQLChooserRule.prototype = Object.create(WOQLViewRule.prototype);
+WOQLChooserRule.prototype.constructor = WOQLViewRule;
 
-/*
- * All
- */
-
-
-WOQLRule.prototype.hidden = function(hidden){
-	if(typeof hidden == "undefined"){
-		return this.rule.hidden;
-	}
-	this.rule.hidden = hidden;
-	return this;
-}
-
-WOQLRule.prototype.args = function(args){
-	if(typeof args == "undefined"){
-		return this.rule.args;
-	}
-	this.rule.args = args;
-	return this;
-}
-
-/*
- * The below are conditions
- */
-WOQLRule.prototype.literal = function(tf){
-	if(typeof tf == "undefined"){
-		return this.rule.literal;
-	}
-	this.rule.literal = tf;
-	return this;
-}
-
-WOQLRule.prototype.type = function(...list){
-	if(typeof list == "undefined" || list.length == 0){
-		return this.rule.type;
-	}
-	this.rule.type = list;
-	return this;
-}
-
-WOQLRule.prototype.setVariables = function(vars){
-	if(vars && vars.length){
-		this.rule.variables = addNamespacesToVariables(vars);
-		this.current_variable = this.rule.variables[this.rule.variables.length - 1];
-	}
-	return this;
-}
-
-WOQLRule.prototype.v = function(v){
-	if(v){
-		if(v.substring(0, 2) != "v:") v = "v:" + v;
-		this.current_variable = v;
-		return this;
-	}
-	return this.current_variable;
-}
-
-WOQLRule.prototype.in = function(...list){
-	if(this.current_variable){
-		if(!this.rule.constraints) this.rule.constraints = {};
-		if(!this.rule.constraints[this.current_variable]) this.rule.constraints[this.current_variable] = [];
-		this.rule.constraints[this.current_variable].push(list);
-	}
-	return this;
-}
-
-WOQLRule.prototype.filter = function(tester){
-	if(this.current_variable){
-		if(!this.rule.constraints) this.rule.constraints = {};
-		if(!this.rule.constraints[this.current_variable]) this.rule.constraints[this.current_variable] = [];
-		this.rule.constraints[this.current_variable].push(tester);
-	}
-	return this;
-}
-
-WOQLRule.prototype.label = function(l){
+WOQLChooserRule.prototype.label = function(l){
 	if(l){
 		this.rule.label = l;
 		return this;
@@ -1168,7 +1180,7 @@ WOQLRule.prototype.label = function(l){
 	return this.rule.label;
 }
 
-WOQLRule.prototype.title = function(l){
+WOQLChooserRule.prototype.title = function(l){
 	if(l){
 		this.rule.title = l;
 		return this;
@@ -1176,11 +1188,18 @@ WOQLRule.prototype.title = function(l){
 	return this.rule.title;
 }
 
+WOQLChooserRule.prototype.values = function(l){
+	if(l){
+		this.rule.values = l;
+		return this;
+	}
+	return this.rule.values;
+}
+
 /*
  * This is for chooser
  */
-
-WOQLRule.prototype.selected = function(s){
+WOQLChooserRule.prototype.selected = function(s){
 	if(typeof s != "undefined"){
 		this.rule.selected = s;
 		return this;
@@ -1188,161 +1207,35 @@ WOQLRule.prototype.selected = function(s){
 	return this.rule.selected;
 }
 
+WOQLChooserRule.prototype.prettyPrint = function(type){
+	var str = WOQLViewRule.prototype.prettyPrint.apply(this, type);
+    if(typeof this.selected() != "undefined"){
+	    str += ".selected(" + this.selected() + ")";
+    }
+    if(typeof this.label() != "undefined"){
+	    str += ".label(\"" + this.label() + "\")";
+    }
+    if(typeof this.title() != "undefined"){
+	    str += ".title(\"" + this.title() + "\")";
+    }
+    if(typeof this.values() != "undefined"){
+	    str += ".values(\"" + this.values() + "\")";
+	}
+	return str;
+}
 
-/*
- * Matches on
- * 1. scope (row, cell, column)
- * 2. variables - only match certain ones
- * 3. type - only match datatype
- * 4. constraints - on values of variables
+
+
+/**
+ * 
+ * @param {Chart} scope  
  */
-
-WOQLRule.prototype.match = function(data, key, context, action){
-	if(context && this.rule.scope != context) return false;
-	if(key){
-		if(this.rule.variables && this.rule.variables.length){
-			if(typeof key == "object"){
-				if(this.rule.variables.indexOf(key[0]) == -1) return false;
-				if(this.rule.variables.indexOf(key[1]) == -1) return false;
-			}
-			else if(this.rule.variables.indexOf(key) == -1) return false;
-		}
-		if(this.rule && this.rule.type){
-			if(typeof key == "object"){
-				if(!(data[key][0]["@type"] && this.rule.type.indexOf(data[key][0]["@type"]) != -1)){
-					return false;
-				}
-			}
-			else if(!(data[key]["@type"] && this.rule.type.indexOf(data[key]["@type"]) != -1)){
-				return false;
-			}
-		}
-		if(this.rule && typeof this.rule.literal != "undefined"){
-			if(typeof key == "object"){
-				if(data[key[0]]['@value']) {
-					if(!this.rule.literal) return false;
-				}
-				else if(this.rule.literal) return false;
-			}
-			else {
-				if(data[key]['@value']) {
-					if(!this.rule.literal) return false;
-				}
-				else if(this.rule.literal) return false;
-			}
-		}
-		if(typeof key == "object"){
-			if(this.rule.constraints && this.rule.constraints[key[0]]){
-				if(!data) return false;
-				for(var i = 0; i<this.rule.constraints[key[0]].length; i++){
-					if(!this.test(data[key[0]], this.rule.constraints[key][0])){
-						return false;
-					}
-				}
-			}
-			if(this.rule.constraints && this.rule.constraints[key[1]]){
-				if(!data) return false;
-				for(var i = 0; i<this.rule.constraints[key[1]].length; i++){
-					if(!this.test(data[key[1]], this.rule.constraints[key][1])){
-						return false;
-					}
-				}
-			}
-		}
-		else if(this.rule.constraints && this.rule.constraints[key]){
-			if(!data) return false;
-			for(var i = 0; i<this.rule.constraints[key].length; i++){
-				if(!this.test(data[key], this.rule.constraints[key])){
-					return false;
-				}
-			}
-		}
-		if(context == "edge"){
-			if(this.rule.source && this.rule.source != key[0]) return false;
-			if(this.rule.target && this.rule.target != key[1]) return false;
-		}
-	}
-	else {
-		for(var k in this.rule.constraints){
-			if(!data) return false;
-			for(var i = 0; i<this.rule.constraints[k].length; i++){
-				if(!this.test(data[k], this.rule.constraints[k])){
-					return false;
-				}
-			}
-		}
-	}
-	if(action && typeof this.rule[action] == "undefined") return false;
-	return true;
-}
-
-WOQLRule.prototype.test = function(value, constraint){
-	if(typeof constraint == "object" && constraint.length){
-		var vundertest = (value['@value'] ? value['@value'] : value);
-		return (constraint.indexOf(vundertest) != -1);
-	}
-	if(typeof constraint == "function"){
-		return constraint(value);
-	}
-}
-
-
-/*
- * Utility function adds v: to variables...
- */
-function addNamespacesToVariables(vars){
-	var nvars = [];
-	for(var i = 0; i<vars.length; i++){
-		var nvar = (vars[i].substring(0, 2) == "v:") ? vars[i] : "v:" + vars[i];
-		nvars.push(nvar);
-	}
-	return nvars;
-}
-
-function removeNamespaceFromVariable(mvar){
-	if(mvar.substring(0, 2) == "v:") return mvar.substring(2)
-	return mvar;
-}
-
-
-function removeNamespacesFromVariables(vars){
-	var nvars = [];
-	for(var i = 0; i<vars.length; i++){
-		nvars.push(removeNamespaceFromVariable(vars[i]));
-	}
-	return nvars;
-}
-
-
-function getMatchingRules(rules, row, key, context, action){
-	var matches = [];
-	for(var i = 0; i<rules.length; i++){
-		if(rules[i].match(row, key, context, action)){
-			matches.push(rules[i].rule);
-		}
-	}
-	return matches;
-}
-
-
-
-module.exports=TerminusClient.WOQL
-
-
-/*
- *
-var x = WOQL.schema();
-x.addClass("my:Class").label("A class").comment("A comment").abstract().relationship();
-x.addProperty("my:prop", "xsd:string").domain("my:Class").label("x").comment("x").max(2).min(1);
-x.execute(client).then ...
- */
-
 function WOQLChartRule(scope){
-	WOQLRule.call(this,scope); 
+	WOQLViewRule.call(this,scope); 
 };
 
-WOQLChartRule.prototype = Object.create(WOQLRule.prototype);
-WOQLChartRule.prototype.constructor = WOQLRule;
+WOQLChartRule.prototype = Object.create(WOQLViewRule.prototype);
+WOQLChartRule.prototype.constructor = WOQLViewRule;
 
 WOQLChartRule.prototype.style=function(key,value){
 	if(value){
@@ -1414,75 +1307,186 @@ WOQLChartRule.prototype.axisDomain=function(domainArr){
 }
 
 
+function DocumentRule(scope){
+	TerminusClient.FrameRule.call(this,scope); 
+	this.rule = {};
+};
 
+DocumentRule.prototype = Object.create(TerminusClient.FrameRule.prototype);
+DocumentRule.prototype.constructor = TerminusClient.FrameRule;
 
+DocumentRule.prototype.renderer = function(rend){
+	if(typeof rend == "undefined"){
+		return this.rule.renderer;
+	}
+	this.rule.renderer = rend;
+	return this;
+}
 
-function WOQLChartConfig(){
-	this.rules = [];
-	this.type = "chart";
+DocumentRule.prototype.render = function(func){
+	if(typeof func == "undefined"){
+		return this.rule.render;
+	}
+	this.rule.render = func;
+	return this;
+}
+
+DocumentRule.prototype.compare = function(func){
+	if(typeof func == "undefined"){
+		return this.rule.compare;
+	}
+	this.rule.compare = func;
+	return this;
+}
+
+DocumentRule.prototype.mode = function(mode){
+	if(typeof mode == "undefined"){
+		return this.rule.mode;
+	}
+	this.rule.mode = mode;
+	return this;
+}
+
+DocumentRule.prototype.collapse = function(func){
+	if(typeof func == "undefined"){
+		return this.rule.collapse;
+	}
+	this.rule.collapse = func;
+	return this;
+}
+
+DocumentRule.prototype.hidden = function(func){
+	if(typeof func == "undefined"){
+		return this.rule.hidden;
+	}
+	this.rule.hidden = func;
+	return this;
+}
+
+DocumentRule.prototype.view = function(m){
+	if(!m) return this.rule.view;
+	this.rule.view = m;
+	return this;
+}
+
+/**
+ * Should actions which are disabled in the given context be displayed?
+ */
+DocumentRule.prototype.showDisabledButtons = function(m){
+	if(!m) return this.rule.show_disabled_buttons;
+	this.rule.show_disabled_buttons = m;
+	return this;
+}
+
+DocumentRule.prototype.header = function(m){
+	if(!m) return this.rule.header;
+	this.rule.header = m;
+	return this;
+}
+
+DocumentRule.prototype.style = function(m){
+	if(!m) return this.rule.style;
+	this.rule.style = m;
+	return this;
+}
+
+DocumentRule.prototype.headerStyle = function(m){
+	if(!m) return this.rule.headerStyle;
+	this.rule.headerStyle = m;
+	return this;
+}
+
+DocumentRule.prototype.args = function(m){
+	if(!m) return this.rule.args;
+	this.rule.args = m;
+	return this;
+}
+
+DocumentRule.prototype.showEmpty = function(m){
+	if(!m) return this.rule.show_empty;
+	this.rule.show_empty = m;
+	return this;
+}
+
+DocumentRule.prototype.dataviewer = function(m){
+	if(!m) return this.rule.dataviewer;
+	this.rule.dataviewer = m;
+	return this;
+}
+
+DocumentRule.prototype.features = function(...m){
+	if(typeof m == "undefined" || m.length == 0) return this.rule.features;
+	this.rule.features = m;
+	return this;
+}
+
+DocumentRule.prototype.headerFeatures = function(...m){
+	if(typeof m == "undefined" || m.length == 0) return this.rule.header_features;
+	this.rule.header_features = m;
+	return this;
+}
+
+DocumentRule.prototype.prettyPrint = function(type){
+	if(this.pattern){
+		str = this.pattern.prettyPrint(type);
+	}
+	if(typeof this.renderer() != "undefined"){
+		str += ".renderer('" + this.renderer() + "')";
+	}
+	if(typeof this.render() != "undefined"){
+		str += ".render(" + this.render + ")";
+	}
+	if(typeof this.compare() != "undefined"){
+		str += ".compare(" + this.compare() + ")";
+	}
+	if(typeof this.mode() != "undefined"){
+		str += ".mode('" + this.mode() + "')";
+	}
+	if(typeof this.collapse() != "undefined"){
+		str += ".collapse(" + this.collapse() + ")";
+	}
+	if(typeof this.hidden() != "undefined"){
+		str += ".hidden(" + this.hidden() + ")";
+	}
+	if(typeof this.view() != "undefined"){
+		str += ".view('" + this.view() + "')";
+	}
+	if(typeof this.showDisabledButtons() != "undefined"){
+		str += ".showDisabledButtons(" + this.showDisabledButtons() + ")";
+	}
+	if(typeof this.header() != "undefined"){
+		str += ".header(" + this.header() + ")";
+	}
+	if(typeof this.style() != "undefined"){
+		str += ".style(\"" + this.style() + "\")";
+	}
+	if(typeof this.headerStyle() != "undefined"){
+		str += ".headerStyle(\"" + this.headerStyle() + "\")";
+	}
+	if(typeof this.args() != "undefined"){
+		str += ".args(" + JSON.stringify(this.args()) + ")";
+	}
+	if(typeof this.showEmpty() != "undefined"){
+		str += ".showEmpty(" + this.show_empty() + ")";
+	}
+	if(typeof this.dataviewer() != "undefined"){
+		str += ".dataviewer(\"" + this.dataviewer() + "\")";
+	}
+	if(typeof this.features() != "undefined"){
+		str += ".features(" + this.unpackFeatures(this.features()) + ")";
+	}
+	if(typeof this.headerFeatures() != "undefined"){
+		str += ".headerFeatures(" + this.unpackFeatures(this.headerFeatures()) + ")";
+	}
+	return str;
 }
 
 
+function WOQLStreamRule(scope){
+	WOQLViewRule.call(this,scope); 
+};
 
-/*
-{"XAxis":{dataKey:"date_i",type:'number'}
-							,"chartObj":
-							[{'label':'Confident','dataKey':'conf',"chartType":"Area",
-							"style":{"stroke":"#82ca9d", "fillOpacity":1, "fill":"#82ca9d"}},
-							 {'label':'Predictions','dataKey':'predictions',"chartType":"Line",
-							 "style":{"strokeWidth":2, "stroke":"#ff8000"}},
-							 {'label':'Picks','dataKey':'picks',"chartType":"Point","style": 
-							 {"stroke": '#8884d8', "fill": '#8884d8'}},
-							 {'label':'Stock','dataKey':'stock',"chartType":"Line","style":
-							  {"stroke": '#0000ff', "fill": '#0000ff'}}]}
+WOQLStreamRule.prototype = Object.create(WOQLViewRule.prototype);
+WOQLStreamRule.prototype.constructor = WOQLViewRule;
 
-{"XAxis":{dataKey:"v:Date","label":{rotate:"-50"}},"chartObj":
-							  	[{'dot':true, 'label':'Quantity','dataKey':'v:Quantity',"chartType":"Line",  
-							  	  "style": {"stroke": '#FF9800', "fill": '#FF9800'}}]
-							  }
-*/
-
-
-WOQLChartConfig.prototype.xAxis = function(...vars){
-	let woqlRule = new WOQLChartRule("XAxis");
-	woqlRule.setVariables(vars);
-	this.rules.push(woqlRule);
-	return woqlRule;
-}
-
-WOQLChartConfig.prototype.bar = function(...vars){
-	let woqlRule=new WOQLChartRule("Bar");
-	woqlRule.setVariables(vars);
-	this.rules.push(woqlRule);
-	return woqlRule;
-}
-
-WOQLChartConfig.prototype.line=function(...vars){
-	let woqlRule=new WOQLChartRule("Line");
-	woqlRule.setVariables(vars);
-	this.rules.push(woqlRule);
-	return woqlRule;
-}
-
-WOQLChartConfig.prototype.point=function(...vars){
-	let woqlRule=new WOQLChartRule("Point");
-	woqlRule.setVariables(vars);
-	this.rules.push(woqlRule);
-	return woqlRule;
-}
-
-WOQLChartConfig.prototype.area=function(...vars){
-	let woqlRule=new WOQLChartRule("Area");
-	woqlRule.setVariables(vars);
-	this.rules.push(woqlRule);
-	return woqlRule;
-}
-
-//WOQLChartConfig.prototype.style()
-
-
-//const woqlChart=new WOQLChartConfig();//TerminusClient.woql.chart();
-
-//woqlChart.Bar('test');
-
-
+module.exports = TerminusClient.WOQL;

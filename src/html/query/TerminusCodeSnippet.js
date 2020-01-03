@@ -1,5 +1,6 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 const UTILS = require('../../Utils');
+const HTMLHelper = require("../HTMLHelper")
 /*
 qObj: WOQL object
 width: width of snippet in px
@@ -205,7 +206,7 @@ TerminusCodeSnippet.prototype.removeCodeMirror = function(){
 	var cm = this.snippet.nextSibling;
 	if(!cm) return;
 	if(cm.classList.contains('CodeMirror')) // remove code mirror
-		TerminusClient.FrameHelper.removeElement(cm);
+	HTMLHelper.removeElement(cm);
 }
 
 TerminusCodeSnippet.prototype.stylizeSnippet = function(){
@@ -221,7 +222,7 @@ TerminusCodeSnippet.prototype.stylizeSnippet = function(){
 
 TerminusCodeSnippet.prototype.refreshContents = function(qObj){
 	qObj = qObj ? qObj : this.qObj;
-	TerminusClient.FrameHelper.removeChildren(this.snippet);
+	HTMLHelper.removeChildren(this.snippet);
 	if(this.mode == "edit") this.snippet.value == "";
 	if(!qObj) return;
 	var serial = this.serialise(this.qObj, this.format);
