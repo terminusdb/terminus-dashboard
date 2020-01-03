@@ -1,8 +1,7 @@
 /**
  * Draws the property as header and body components
  */
-const HTMLFrameHelper = require('../HTMLFrameHelper');
-const HTMLStringViewer = require('../datatypes/String');
+const HTMLHelper = require('../HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLDataViewer(){
@@ -69,7 +68,7 @@ HTMLDataViewer.prototype.getValueBodyDOM = function(){
     }
     if(vdom) vholder.appendChild(vdom);
 	if(false && this.renderer.currentFacet() == "page"){
-		var sControl = HTMLFrameHelper.getSettingsControl('data');
+		var sControl = HTMLHelper.getSettingsControl('data');
 		var menu = document.createElement('div');
 		menu.setAttribute('class', 'terminus-hide terminus-popup');
 		menu.appendChild(document.createTextNode('Edit property value'));
@@ -118,11 +117,11 @@ HTMLDataViewer.prototype.redrawBody = function(){
 HTMLDataViewer.prototype.getValueIDMarker = function(renderer){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-value-idmarker");
-	var subj = TerminusClient.FrameHelper.getShorthand(renderer.subject());
+	var subj = TerminusClient.UTILS.getShorthand(renderer.subject());
 	if(!subj ) subj = renderer.subject();
 	var bits = subj .split(":");
 	if(bits.length > 1) subj = bits[1];
-	var prop = TerminusClient.FrameHelper.getShorthand(renderer.property());
+	var prop = TerminusClient.UTILS.getShorthand(renderer.property());
 	if(!prop ) prop = renderer.property();
 	var bits = prop.split(":");
 	if(bits.length > 1) prop = bits[1];
@@ -132,7 +131,7 @@ HTMLDataViewer.prototype.getValueIDMarker = function(renderer){
 
 HTMLDataViewer.prototype.getSummaryDOM = function(){
 	var sum = this.renderer.getSummary();
-	return HTMLTerminusClient.FrameHelper.getInfoboxDOM("value-summary", false, sum.long, sum.long);
+	return HTMLHelper.getInfoboxDOM("value-summary", false, sum.long, sum.long);
 }
 
 HTMLDataViewer.prototype.fireInternalLink = function(link){
@@ -154,7 +153,7 @@ HTMLDataViewer.prototype.internalLink = function(link, label){
 		a.appendChild(document.createTextNode(label));
 	}
 	else {
-		var sh = TerminusClient.FrameHelper.getShorthand(link);
+		var sh = TerminusClient.UTILS.getShorthand(link);
 		if(sh){
 			a.setAttribute("title", link);
 			a.appendChild(document.createTextNode(sh));
@@ -167,7 +166,7 @@ HTMLDataViewer.prototype.internalLink = function(link, label){
 }
 
 HTMLDataViewer.prototype.clear = function(){
-	TerminusClient.FrameHelper.removeChildren(this.valDOM);
+	HTMLHelper.removeChildren(this.valDOM);
 }
 
 
@@ -215,7 +214,7 @@ HTMLDataHeaderViewer.prototype.getValueFacetDOM = function(renderer){
 				renderer.setFacet(val);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("value-facet", viewables, renderer.currentFacet(), callback);
+		var sel = HTMLHelper.getSelectionControl("value-facet", viewables, renderer.currentFacet(), callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -224,12 +223,12 @@ HTMLDataHeaderViewer.prototype.getValueFacetDOM = function(renderer){
 
 
 HTMLDataHeaderViewer.prototype.getValueTypeDOM = function(renderer){
-	return HTMLFrameHelper.getInfoboxDOM("value-type", "Type", renderer.type(), "All data values have types, identified by a unique URL");
+	return HTMLHelper.getInfoboxDOM("value-type", "Type", renderer.type(), "All data values have types, identified by a unique URL");
 }
 
 HTMLDataHeaderViewer.prototype.getValueStatusDOM = function(renderer){
 	var sum = renderer.getSummary();
-	return HTMLFrameHelper.getInfoboxDOM("status-"+sum.status, false, sum.status, sum.status);
+	return HTMLHelper.getInfoboxDOM("status-"+sum.status, false, sum.status, sum.status);
 }
 
 
@@ -237,7 +236,7 @@ HTMLDataHeaderViewer.prototype.getValueControlsDOM = function(renderer){
 	var controlsDOM = document.createElement("span");
 	controlsDOM.setAttribute("class", "terminus-value-controls");
 	if(renderer.showFeature("mode")){
-		var viewsDOM = HTMLFrameHelper.getModeSelectorDOM("value", renderer);
+		var viewsDOM = HTMLHelper.getModeSelectorDOM("value", renderer);
 		if(viewsDOM) controlsDOM.appendChild(viewsDOM);
 	}
 	if(renderer.showFeature("delete")){
@@ -270,29 +269,29 @@ HTMLDataHeaderViewer.prototype.getValueControlsDOM = function(renderer){
 HTMLDataHeaderViewer.prototype.getValueDeleteDOM = function(renderer){
 	var callback = function(){renderer.delete()};
 	var disabled = (renderer.cardControlAllows("delete") ? false : "Cardinality Rules Forbid Delete");
-	return HTMLFrameHelper.getActionControl("value", "delete", "Delete", callback, disabled);
+	return HTMLHelper.getActionControl("value", "delete", "Delete", callback, disabled);
 }
 
 HTMLDataHeaderViewer.prototype.getValueResetDOM = function(renderer){
 	var callback = function(){renderer.reset()};
 	var disabled = (renderer.isUpdated() ? false : "Nothing to reset");
-	return HTMLFrameHelper.getActionControl("value", "reset", "Reset", callback, disabled);
+	return HTMLHelper.getActionControl("value", "reset", "Reset", callback, disabled);
 }
 
 HTMLDataHeaderViewer.prototype.getValueShowDOM = function(renderer){
 	var callback = function(){renderer.show()};
-	return HTMLFrameHelper.getActionControl("value", "show", "Show", callback);
+	return HTMLHelper.getActionControl("value", "show", "Show", callback);
 }
 
 HTMLDataHeaderViewer.prototype.getValueHideDOM = function(renderer){
 	var callback = function(){renderer.hide()};
-	return HTMLFrameHelper.getActionControl("value", "hide", "Hide", callback);
+	return HTMLHelper.getActionControl("value", "hide", "Hide", callback);
 }
 
 HTMLDataHeaderViewer.prototype.getValueCloneDOM = function(renderer){
 	var callback = function(){renderer.clone()};
 	var disabled = (renderer.cardControlAllows("clone") ? false : "Cardinality Rules Forbid Clone");
-	return HTMLFrameHelper.getActionControl("value", "clone", "Clone", callback, disabled);
+	return HTMLHelper.getActionControl("value", "clone", "Clone", callback, disabled);
 }
 
 HTMLDataHeaderViewer.prototype.getValueUpdateDOM = function(renderer){
@@ -300,7 +299,7 @@ HTMLDataHeaderViewer.prototype.getValueUpdateDOM = function(renderer){
 	dpropDOM.setAttribute("class", "terminus-value-update");
 	var saveback = function(){renderer.save()};
 	var disabled = (renderer.isUpdated() ? false : "Nothing to save - no change");
-	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("value", "save", "Save", saveback, disabled));
+	dpropDOM.appendChild(HTMLHelper.getActionControl("value", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
 
@@ -315,7 +314,7 @@ HTMLDataHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
 			}
 		}
 		var selected = renderer.currentViewer();
-		var sel = HTMLFrameHelper.getSelectionControl("data-viewer", viewers, selected, callback);
+		var sel = HTMLHelper.getSelectionControl("data-viewer", viewers, selected, callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}

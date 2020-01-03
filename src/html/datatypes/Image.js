@@ -1,5 +1,3 @@
-const TerminusClient = require('@terminusdb/terminus-client');
-
 function HTMLImageViewer(options){}
 
 HTMLImageViewer.prototype.renderFrame = function(frame, dataviewer){

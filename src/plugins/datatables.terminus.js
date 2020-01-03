@@ -1,5 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
-const HTMLFrameHelper = require('../html/HTMLFrameHelper');
+const HTMLHelper = require('../html/HTMLHelper');
 const UTILS= require('../Utils')
 
 /*** client side processing ***/
@@ -159,7 +159,7 @@ Datatables.prototype.getCallbackSettings = function(dt, dtAPIChangeSettings){
 */
 Datatables.prototype.setUp = function(tab, settings, resultDOM){
     // delete previous datatable
-    TerminusClient.FrameHelper.removeChildren(this.dtdom);
+    HTMLHelper.removeChildren(this.dtdom);
     this.dtdom = document.createElement('div');
     this.dtdom.appendChild(tab);
     resultDOM.appendChild(this.dtdom);

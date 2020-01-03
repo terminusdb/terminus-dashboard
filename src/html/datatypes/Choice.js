@@ -31,7 +31,7 @@ HTMLChoiceViewer.prototype.render = function(value){
 		}
 	}
 	if(value && !lab){
-		lab = TerminusClient.FrameHelper.labelFromURL(value);					
+		lab = TerminusClient.UTILS.labelFromURL(value);					
 	}
 	if(lab){
 		input.appendChild(document.createTextNode(lab));		

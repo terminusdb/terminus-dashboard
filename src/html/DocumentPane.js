@@ -1,10 +1,8 @@
-const TerminusClient = require('@terminusdb/terminus-client');
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const UTILS = require('../Utils');
-const HTMLFrameHelper = require('./HTMLFrameHelper');
+const HTMLHelper = require('./HTMLHelper');
 const TerminusFrame = require("../viewer/TerminusFrame");
 const Datatypes = require("./Datatypes");
-const SimpleFrameViewer = require("./document/SimpleFrameViewer");
 
 
 function DocumentPane(client){
@@ -148,7 +146,7 @@ DocumentPane.prototype.getAsDOM = function(){
 }
 
 DocumentPane.prototype.renderResult = function(){
-	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
+	HTMLHelper.removeChildren(this.resultDOM);
 	if(this.frame && this.frame.render){
 		var fpt = this.frame.render();
 		if(fpt){
@@ -215,13 +213,7 @@ DocumentPane.prototype.submitQuery = function(qObj){
 		let dom = tdv.render();
 		if(dom) holder.appendChild(dom);
 	});
-	return holder;
-    this.query = qObj;
-    qObj.execute(this.client).then((results) => {
-		var r = new TerminusClient.WOQLResult(results, qObj);
-		this.result = r;
-		this.refreshViews();
-	})
+	return holder;   
 }
 
 module.exports = DocumentPane;

@@ -15,20 +15,20 @@ HTMLRangeViewer.prototype.renderValue = function(dataviewer){
 }
 	
 HTMLRangeViewer.prototype.render = function(value){
-	var vals = TerminusClient.FrameHelper.parseRangeValue(value, this.delimiter);
+	var vals = TerminusClient.UTILS.TypeHelper.parseRangeValue(value, this.delimiter);
 	var d = document.createElement("span");
 	d.setAttribute("class", this.css);
 	var rvals = document.createElement("span");
 	rvals.setAttribute("class", "terminus-range-value-left");
 	var svals = document.createElement("span");
 	svals.setAttribute("class", "terminus-range-value-right");
-	var x = (this.useCommas() ? TerminusClient.FrameHelper.numberWithCommas(vals[0]) : vals[0]);
+	var x = (this.useCommas() ? TerminusClient.UTILS.TypeHelper.numberWithCommas(vals[0]) : vals[0]);
 	var tnode = document.createTextNode(x);
 	rvals.appendChild(tnode);
 	d.appendChild(rvals);	
 	if(vals.length == 2){
 		d.appendChild(getRangeSymbolDOM());
-		var x2 = (this.useCommas(renderer) ? TerminusClient.FrameHelper.numberWithCommas(vals[1]) : vals[1]);
+		var x2 = (this.useCommas(renderer) ? TerminusClient.UTILS.TypeHelper.numberWithCommas(vals[1]) : vals[1]);
 		var t2node = document.createTextNode(x2);
 		svals.appendChild(t2node);
 		d.appendChild(svals);	

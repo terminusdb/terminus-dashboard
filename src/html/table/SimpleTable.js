@@ -1,5 +1,4 @@
-const TerminusClient = require('@terminusdb/terminus-client');
-
+const HTMLHelper = require('../HTMLHelper');
 
 function SimpleTable(){
 	this.holder = document.createElement("div");
@@ -15,7 +14,7 @@ SimpleTable.prototype.options = function(options){
 
 SimpleTable.prototype.render = function(woqltable){
 	if(woqltable) this.woqltable = woqltable;
-	TerminusClient.FrameHelper.removeChildren(this.holder);
+	HTMLHelper.removeChildren(this.holder);
 	var ctls = this.getControlsDOM();
 	var tab = this.getTableDOM();
 	if(ctls) this.holder.appendChild(ctls)

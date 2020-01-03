@@ -1,9 +1,9 @@
-const HTMLFrameHelper = require("../HTMLFrameHelper");
+const HTMLHelper = require("../HTMLHelper");
 
 function SimplePropertyViewer(){}
 
 SimplePropertyViewer.prototype.render = function(frame){
-	var ndom = HTMLFrameHelper.getFrameDOM("property", frame, "page");
+	var ndom = HTMLHelper.getFrameDOM("property", frame, "page");
 	if(!ndom) return false;
 	if(this.framedom){
 		this.framedom.replaceWith(ndom);

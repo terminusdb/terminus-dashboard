@@ -1,4 +1,4 @@
-const HTMLFrameHelper = require("../HTMLFrameHelper");
+const HTMLHelper = require("../HTMLHelper");
 
 function SimpleFrameViewer(){}
 
@@ -43,7 +43,7 @@ SimpleFrameViewer.prototype.render = function(frame){
 	}
 	else var features = false;
 	var orient = (scope == "object" || scope == "property") ? "page" : "line";
-	var ndom = HTMLFrameHelper.getFrameDOM(scope, frame, orient, hfeatures, features);
+	var ndom = HTMLHelper.getFrameDOM(scope, frame, orient, hfeatures, features);
 	if(!ndom) return false;
 	if(this.framedom){
 		this.framedom.replaceWith(ndom);
@@ -111,7 +111,7 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, scope, frame, mode)
 				var dom = rend.renderFrame(frame, this);
 			}
 			else var dom = false;
-			var dom = HTMLFrameHelper.getFeatureDOM(frame, fid, scope, mode, args, dom);
+			var dom = HTMLHelper.getFeatureDOM(frame, fid, scope, mode, args, dom);
 			if(dom){
 				if(style) dom.setAttribute("style", style);			
 				features.appendChild(dom);

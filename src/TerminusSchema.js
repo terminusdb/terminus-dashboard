@@ -5,6 +5,8 @@
 const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const UTILS=require('./Utils')
 const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLHelper = require('./html/HTMLHelper');
+
 
 function TerminusSchemaViewer(ui){
 	this.ui = ui;
@@ -92,7 +94,7 @@ TerminusSchemaViewer.prototype.getAllClasses = function(){
 }
 
 TerminusSchemaViewer.prototype.defineViewAction = function(a, view){
-	TerminusClient.FrameHelper.removeChildren(this.view);
+	HTMLHelper.removeChildren(this.view);
 	UTILS.setSelectedSubMenu(a);
 	switch(view){
 		case 'table':
@@ -169,7 +171,7 @@ TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 }
 
 TerminusSchemaViewer.prototype.resetControlDOM = function(){
-	TerminusClient.FrameHelper.removeChildren(this.view);
+	HTMLHelper.removeChildren(this.view);
 	if(this.mode == "edit"){
 		this.view.appendChild(this.getSchemaSaveButtons());
 	}
@@ -234,7 +236,7 @@ TerminusSchemaViewer.prototype.refreshPage = function(msg, msgtype){
 }
 
 TerminusSchemaViewer.prototype.refreshMainPage = function(msg, msgtype){
-	TerminusClient.FrameHelper.removeChildren(this.pagedom);
+	HTMLHelper.removeChildren(this.pagedom);
 	if(this.mode == 'view'){
 		this.view.appendChild(this.getSchemaViewDOM());
 	}
@@ -321,7 +323,7 @@ TerminusSchemaViewer.prototype.getSaveButton = function(){
 		}
 		var opts = {};
 		opts['terminus:encoding'] =  'terminus:' + self.format;
-		if(!(TerminusClient.FrameHelper.empty(self.schema_edit_dom_name)))
+		if(!(HTMLHelper.empty(self.schema_edit_dom_name)))
 			opts['schemaId'] = self.ui.client.connectionConfig.dbURL() + '/' + self.schema_edit_dom_name.value;
 		else opts['schemaId'] = self.ui.client.connectionConfig.dbURL() + '/' + 'schema';
 		return self.updateSchema(text, opts);

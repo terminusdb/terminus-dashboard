@@ -1,7 +1,7 @@
 /**
  * Object for producing a HTML view of a given object in a frame
  */
-const HTMLFrameHelper = require('../HTMLFrameHelper');
+const HTMLHelper = require('../HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLObjectViewer(renderer){
@@ -71,7 +71,7 @@ HTMLObjectViewer.prototype.getFeatureDOM = function(feature){
 }
 
 HTMLObjectViewer.prototype.redraw = function(){
-	TerminusClient.FrameHelper.removeChildren(this.renderedDOM);
+	HTMLHelper.removeChildren(this.renderedDOM);
 	this.properties = [];
 	this.renderer.render(this);
 }
@@ -100,7 +100,7 @@ HTMLObjectViewer.prototype.addRenderedProperty = function(prop, renderedprop){
 }
 
 HTMLObjectViewer.prototype.clear = function(){
-	TerminusClient.FrameHelper.removeChildren(this.renderedDOM);
+	HTMLHelper.removeChildren(this.renderedDOM);
 	this.properties = {};
 }
 
@@ -112,7 +112,7 @@ HTMLObjectViewer.prototype.remove = function(){
 }
 
 HTMLObjectViewer.prototype.goTo = function(subj, property){
-	HTMLFrameHelper.goToName(subj, property);
+	HTMLHelper.goToName(subj, property);
 }
 
 /**
@@ -121,7 +121,7 @@ HTMLObjectViewer.prototype.goTo = function(subj, property){
 HTMLObjectViewer.prototype.getObjectIDMarker = function(renderer){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-object-idmarker");
-	var sh = TerminusClient.FrameHelper.getShorthand(renderer.subject());
+	var sh = TerminusClient.UTILS.getShorthand(renderer.subject());
     if(!sh) sh = renderer.subject();
     if(sh){
 		var bits = sh.split(":");
@@ -184,7 +184,7 @@ HTMLObjectHeaderViewer.prototype.getAsDOM = function(renderer){
 
 HTMLObjectHeaderViewer.prototype.getObjectSummaryDOM = function(renderer){
 	var sum = renderer.getSummary();
-	return HTMLFrameHelper.getInfoboxDOM("object-summary", false, sum.long, sum.status);
+	return HTMLHelper.getInfoboxDOM("object-summary", false, sum.long, sum.status);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectControlsDOM = function(renderer){
@@ -195,7 +195,7 @@ HTMLObjectHeaderViewer.prototype.getObjectControlsDOM = function(renderer){
 		if(addDOM) controlsDOM.appendChild(addDOM);
 	}
 	if(renderer.showFeature("mode")){
-		var viewsDOM = HTMLFrameHelper.getModeSelectorDOM("object", renderer);
+		var viewsDOM = HTMLHelper.getModeSelectorDOM("object", renderer);
 		if(viewsDOM) controlsDOM.appendChild(viewsDOM);
 	}
 	if(renderer.showFeature("delete")){
@@ -236,7 +236,7 @@ HTMLObjectHeaderViewer.prototype.getObjectFacetDOM = function(renderer){
 				renderer.setFacet(val);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("object-facet", viewables, renderer.currentFacet(), callback);
+		var sel = HTMLHelper.getSelectionControl("object-facet", viewables, renderer.currentFacet(), callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -246,7 +246,7 @@ HTMLObjectHeaderViewer.prototype.getObjectFacetDOM = function(renderer){
 HTMLObjectHeaderViewer.prototype.getObjectLabelDOM = function(renderer){
 	var lab = renderer.getLabel();
 	if(lab){
-		return HTMLFrameHelper.getInfoboxDOM("object-label", false, lab);
+		return HTMLHelper.getInfoboxDOM("object-label", false, lab);
 	}
 	return false;
 }
@@ -265,7 +265,7 @@ HTMLObjectHeaderViewer.prototype.getObjectIDDOM = function(renderer){
 	else {
 		if(renderer.isNewDocument() && val == "_:") val = "New Document";
 	}
-	return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "Every fragment of data is identified by a unique URL", input);
+	return HTMLHelper.getInfoboxDOM("object-id", "ID", val, "Every fragment of data is identified by a unique URL", input);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectTypeDOM = function(renderer){
@@ -283,7 +283,7 @@ HTMLObjectHeaderViewer.prototype.getObjectTypeDOM = function(renderer){
 					renderer.changeClass(cls);
 				}
 			}
-			var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, renderer.subjectClass(), callback);
+			var sel = HTMLHelper.getSelectionControl("change-class", cs, renderer.subjectClass(), callback);
 			mpropDOM.appendChild(sel);
 			return mpropDOM;
 		}
@@ -292,16 +292,16 @@ HTMLObjectHeaderViewer.prototype.getObjectTypeDOM = function(renderer){
 	var lab = renderer.subjectClass();
 	var cmt = "All objects have types, identified by a unique URL";
 	if(cm){
-		lab = HTMLFrameHelper.getVariableValueFromBinding("Label", cm);
-		cmt = HTMLFrameHelper.getVariableValueFromBinding("Comment", cm);
+		lab = HTMLHelper.getVariableValueFromBinding("Label", cm);
+		cmt = HTMLHelper.getVariableValueFromBinding("Comment", cm);
 		cmt = (cmt ? renderer.subjectClass() + " " + cmt : renderer.subjectClass());
 	}
-	return HTMLFrameHelper.getInfoboxDOM("object-type", "Type", lab, cmt);
+	return HTMLHelper.getInfoboxDOM("object-type", "Type", lab, cmt);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectStatusDOM = function(renderer){
 	var sum = renderer.getSummary();
-	return HTMLFrameHelper.getInfoboxDOM("status-"+sum.status, false, sum.status, sum.status);
+	return HTMLHelper.getInfoboxDOM("status-"+sum.status, false, sum.status, sum.status);
 }
 
 HTMLObjectHeaderViewer.prototype.getAddPropertyDOM = function(renderer){
@@ -316,7 +316,7 @@ HTMLObjectHeaderViewer.prototype.getAddPropertyDOM = function(renderer){
 			}
 		}
 		var disabled = (renderer.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
-		var sel = HTMLFrameHelper.getSelectionControl("add-property", addables, "", callback, disabled);
+		var sel = HTMLHelper.getSelectionControl("add-property", addables, "", callback, disabled);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -335,7 +335,7 @@ HTMLObjectHeaderViewer.prototype.getViewPropertyDOM = function(renderer){
 				renderer.goToProperty(add);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("view-property", viewables, "", callback);
+		var sel = HTMLHelper.getSelectionControl("view-property", viewables, "", callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -345,19 +345,19 @@ HTMLObjectHeaderViewer.prototype.getViewPropertyDOM = function(renderer){
 HTMLObjectHeaderViewer.prototype.getObjectDeleteDOM = function(renderer){
 	var callback = function(){renderer.delete()};
 	var disabled = (renderer.cardControlAllows("delete") ? false : "Cardinality Rules Forbid Delete");
-	return HTMLFrameHelper.getActionControl("object", "delete", "Delete", callback, disabled);
+	return HTMLHelper.getActionControl("object", "delete", "Delete", callback, disabled);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectCloneDOM = function(renderer){
 	var callback = function(){renderer.clone()};
 	var disabled = (renderer.cardControlAllows("clone") ? false : "Cardinality Rules Forbid Clone");
-	return HTMLFrameHelper.getActionControl("object", "clone", "Clone", callback, disabled);
+	return HTMLHelper.getActionControl("object", "clone", "Clone", callback, disabled);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectResetDOM = function(renderer){
 	var callback = function(){renderer.reset()};
 	var disabled = (renderer.isUpdated() ? false : "Nothing to reset");
-	return HTMLFrameHelper.getActionControl("object", "reset", "Reset", callback, disabled);
+	return HTMLHelper.getActionControl("object", "reset", "Reset", callback, disabled);
 }
 
 HTMLObjectHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
@@ -371,7 +371,7 @@ HTMLObjectHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
 			}
 		}
 		var selected = renderer.currentViewer();
-		var sel = HTMLFrameHelper.getSelectionControl('object-viewer', viewers, selected, callback);
+		var sel = HTMLHelper.getSelectionControl('object-viewer', viewers, selected, callback);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -380,12 +380,12 @@ HTMLObjectHeaderViewer.prototype.getViewerSelectorDOM = function(renderer){
 
 HTMLObjectHeaderViewer.prototype.getObjectHideDOM = function(renderer){
 	var callback = function(){renderer.hide()};
-	return HTMLFrameHelper.getActionControl("object", "hide", "Hide", callback);
+	return HTMLHelper.getActionControl("object", "hide", "Hide", callback);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectShowDOM = function(renderer){
 	var callback = function(){renderer.show()};
-	return HTMLFrameHelper.getActionControl("object", "show", "Show", callback);
+	return HTMLHelper.getActionControl("object", "show", "Show", callback);
 }
 
 HTMLObjectHeaderViewer.prototype.getObjectUpdateDOM = function(renderer){
@@ -398,7 +398,7 @@ HTMLObjectHeaderViewer.prototype.getObjectUpdateDOM = function(renderer){
 		var disabled = (renderer.isUpdated() ? false : "No changes");
 	}
 	var saveback = function(){renderer.save()};
-	dpropDOM.appendChild(HTMLFrameHelper.getActionControl("object", "save", "Save", saveback, disabled));
+	dpropDOM.appendChild(HTMLHelper.getActionControl("object", "save", "Save", saveback, disabled));
 	return dpropDOM;
 }
 

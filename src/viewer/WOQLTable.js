@@ -118,7 +118,7 @@ WOQLTable.prototype.getColumnHeaderContents = function(colid){
 		else return h;
 	}
 	if(colid.indexOf("v:") === 0) colid = colid.substring(2);
-	var clab = (colid.indexOf("http") != -1) ? TerminusClient.FrameHelper.labelFromURL(colid) : colid;
+	var clab = (colid.indexOf("http") != -1) ? TerminusClient.UTILS.labelFromURL(colid) : colid;
 	clab = clab.replace("_", " ");
 	return document.createTextNode(clab);
 }

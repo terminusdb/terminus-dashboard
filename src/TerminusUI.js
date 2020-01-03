@@ -14,6 +14,7 @@ const TerminusServersdk = require('./TerminusServer');
 const TerminusURLLoader = require('./TerminusURL');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils');
+const HTMLHelper = require('./html/HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusUI(opts){
@@ -253,8 +254,9 @@ TerminusUI.prototype.clearServer = function(){
 
 TerminusUI.prototype.connectToDB = function(dbid){
 	this.client.connectionConfig.dbid = dbid;
-	TerminusClient.FrameHelper.standard_urls['doc'] = this.client.connectionConfig.dbURL() + "/document/";
-	TerminusClient.FrameHelper.standard_urls['scm'] = this.client.connectionConfig.dbURL() + "/schema#";
+	//set standard prefixes for the current db
+	TerminusClient.UTILS.addURLPrefix('doc', this.client.connectionConfig.dbURL() + "/document/");
+	TerminusClient.UTILS.addURLPrefix('scm', this.client.connectionConfig.dbURL() + "/schema#");
 }
 
 TerminusUI.prototype.clearDB = function(){
@@ -328,7 +330,7 @@ TerminusUI.prototype.showCreateDocument = function(durl){
 }
 
 TerminusUI.prototype.redrawMainPage = function(){
-	TerminusClient.FrameHelper.removeChildren(this.mainDOM);
+	HTMLHelper.removeChildren(this.mainDOM);
 	if(this.viewer && this.mainDOM){
 		var x = this.viewer.getAsDOM();
 		this.mainDOM.appendChild(x);
@@ -374,11 +376,11 @@ TerminusUI.prototype.showError = function(response){
 };
 
 TerminusUI.prototype.clearMessages = function(response){
-	if(this.messages) TerminusClient.FrameHelper.removeChildren(this.messages);
+	if(this.messages) HTMLHelper.removeChildren(this.messages);
 };
 
 TerminusUI.prototype.clearMainPage = function(){
-	if(this.main) TerminusClient.FrameHelper.removeChildren(this.main);
+	if(this.main) HTMLHelper.removeChildren(this.main);
 }
 
 TerminusUI.prototype.setMessageDOM = function(dom){
@@ -437,7 +439,7 @@ TerminusUI.prototype.redraw = function(msg){
 	this.clearMessages();
 	this.redrawControls();
 	if(this.explorer){
-		TerminusClient.FrameHelper.removeChildren(this.explorer);
+		HTMLHelper.removeChildren(this.explorer);
 		//this.drawExplorer();
 	}
 	if(this.viewer){
@@ -448,8 +450,8 @@ TerminusUI.prototype.redraw = function(msg){
 
 
 TerminusUI.prototype.toggleDashboardWidget = function(widget){
-    TerminusClient.FrameHelper.removeChildren(this.controller);
-    TerminusClient.FrameHelper.removeChildren(this.explorer);
+    HTMLHelper.removeChildren(this.controller);
+    HTMLHelper.removeChildren(this.explorer);
     UTILS.removeSelectedNavClass('terminus-dashboard-selected');
     widget.classList.add('terminus-dashboard-selected');
 }
@@ -469,7 +471,7 @@ TerminusUI.prototype.toggleControl = function(){
 
 TerminusUI.prototype.redrawControls = function(){
 	if(this.controller){
-		TerminusClient.FrameHelper.removeChildren(this.controller);
+		HTMLHelper.removeChildren(this.controller);
 		this.drawControls();
 	}
 }
@@ -550,7 +552,7 @@ TerminusUI.prototype.getBusyLoader = function(bsyDom){
 
 TerminusUI.prototype.showMessage = function(msg, type){
 	if(this.messages){
-		TerminusClient.FrameHelper.removeChildren(this.messages);
+		HTMLHelper.removeChildren(this.messages);
 		var md = document.createElement('div');
         switch(type){
             case 'busy':
@@ -577,7 +579,7 @@ TerminusUI.prototype.showViolations = function(vios, type){
 	var nvios = new TerminusViolations(vios, this);
 	if(this.messages){
 		var cmsg = (type == "schema" ? " in Schema" : " in Document");
-		TerminusClient.FrameHelper.removeChildren(this.messages);
+		HTMLHelper.removeChildren(this.messages);
 		this.messages.appendChild(nvios.getAsDOM(cmsg));
 	}
 }

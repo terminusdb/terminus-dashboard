@@ -24,7 +24,7 @@ HTMLDateViewer.prototype.render = function(value){
 	input.setAttribute('class', "terminus-literal-value terminus-literal-date");
 	input.setAttribute('data-value', value);
 	if(value){
-		var parsed = TerminusClient.FrameHelper.parseDate(this.type, value);
+		var parsed = TerminusClient.UTILS.DateHelper.parseDate(this.type, value);
 		var datepart = this.getDateComponentDOM(parsed);
 		var timepart = this.getTimeComponentDOM(parsed);
 		if(timepart) input.appendChild(timepart);

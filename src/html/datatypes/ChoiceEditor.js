@@ -1,4 +1,4 @@
-const HTMLFrameHelper = require('../HTMLFrameHelper');
+const HTMLHelper = require('../HTMLHelper');
 
 function HTMLChoiceEditor(options){};
 
@@ -11,7 +11,7 @@ HTMLChoiceEditor.prototype.renderFrame = function(frame, dataviewer){
 	var callback = function(val){
 		frame.set(val);
 	}
-	var sel = HTMLFrameHelper.getSelectionControl("select-choice", foptions, value, callback);
+	var sel = HTMLHelper.getSelectionControl("select-choice", foptions, value, callback);
 	return sel;
 }
 
