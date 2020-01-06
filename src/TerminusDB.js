@@ -45,12 +45,17 @@ TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
  */
 
 //documents home page table
-TerminusDBViewer.prototype.getDocumentsQueryPane = function(docs){
+TerminusDBViewer.prototype.getDocumentsQueryPane = function(docs, docClasses){
 	var table = TerminusClient.View.table();
 	table.column('ID').header('Document ID');
 	table.column('Label').header('Name');
 	table.column('Comment').header('Description');
-	table.column_order("ID", "Label", "Comment", "Type");
+	table.column_order("ID", "Label", "Type", "Comment");
+	var self = this;
+	var x = function(row){
+		self.showDocumentPage(row["v:ID"], docClasses, false, docs);
+	}
+	table.row().click(x);
 	var qp = this.tv.getResult(docs.query, table, docs);
 	return qp;
 }
@@ -97,12 +102,13 @@ TerminusDBViewer.prototype.getShowDocumentPaneConfig = function(){
 
 //Document configuration for view / edit document page
 TerminusDBViewer.prototype.getShowDocumentConfig = function(){
+	var property_style = "display: block; padding: 0.8em 1em;"
 	var config = TerminusClient.View.document().load_schema(true);
 	config.show_all("SimpleFrameViewer");
-	config.object().depth(0).headerStyle("background-color: #0055B8;	color: white;");
-	config.object().headerFeatures("hide", "mode");
-	config.object().features("id").style("display: block").args({label: "Document ID", headerStyle: "text-align: right; display: inline-block; width: 200px; padding-right: 10px; text-weight: 600px; color: #002856"});
-	config.object().features("value").style("display: block; padding: 0.5em;");
+	config.object().depth(0).style("border: 1px solid #aaa; padding-bottom: 1em; background-color: #fafafd").headerStyle("background-color: #002856; color: white; padding: 8px; display: block; margin-bottom: 1em;");
+	config.object().headerFeatures("id", "type").args({headerStyle: "text-align: right; display: inline-block; width: 200px; padding-right: 10px; text-weight: 600px; color: white"});
+	config.object().headerFeatures("mode").style("float: right");
+	config.object().features("value").style(property_style);
 	config.property().features("label", "value");
 	config.property().features("label").style("text-align: right; display: inline-block; width: 200px; padding-right: 10px; font-weight: 600; color: #002856");
 	config.data().features("value").style("color: #002856");
@@ -224,7 +230,7 @@ TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses, body){
 			this.showDocumentGraph(this.graphDOM);
 		}
 		else {
-			if(!this.document_table) this.document_table = this.getDocumentsQueryPane(docs);
+			if(!this.document_table) this.document_table = this.getDocumentsQueryPane(docs, docClasses);
 			this.tableDOM.appendChild(this.document_table.getAsDOM());
 		}
 	}
@@ -257,8 +263,6 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 	var dp = this.createFullDocumentPane(docid, config, target, docClasses, docs);
 	this.docid = docid; 
 	this.pages.push(docid);
-
-	this.container.appendChild(dp.getAsDOM());
 	return dp.load().then(() => {
 		HTMLHelper.removeChildren(this.container);
 		var nav = this.getNavigationDOM(docClasses, docs);
