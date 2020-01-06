@@ -31,6 +31,17 @@ DocumentPane.prototype.load = function(){
 	return Promise.reject("Either document id or class id must be specified before loading a document");
 }
 
+DocumentPane.prototype.options = function(opts){
+	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : false);
+	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : false);
+	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : false);
+	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
+	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
+	this.loadSchema = (opts && typeof opts.loadSchema != "undefined" ? opts.loadSchema : false);
+	this.viewers = (opts && typeof opts.viewers != "undefined" ? opts.viewers : false);
+    return this;
+}
+
 
 DocumentPane.prototype.loadDocument = function(docid, config){
 	this.docid = docid;
@@ -53,17 +64,6 @@ DocumentPane.prototype.setClassLoader = function(cloader){
 		this.queryPane.appendChild(this.classLoader);
 	}
 	return this;
-}
-
-DocumentPane.prototype.options = function(opts){
-	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : false);
-	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : false);
-	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : false);
-	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
-	this.loadSchema = (opts && typeof opts.loadSchema != "undefined" ? opts.loadSchema : false);
-	this.viewers = (opts && typeof opts.viewers != "undefined" ? opts.viewers : false);
-    return this;
 }
 
 DocumentPane.prototype.getQueryPane = function(){
@@ -91,7 +91,7 @@ DocumentPane.prototype.getAsDOM = function(){
 		ispan.setAttribute("class", "document-pane-config");
 		var ic = document.createElement("i");
 		ispan.appendChild(ic);
-		configspan.appendChild(ispan);
+		if(this.showQuery != "always") configspan.appendChild(ispan);
 		var self = this;
 		function showQueryConfig(){
 			ispan.title="Click to Hide Query";
@@ -148,7 +148,7 @@ DocumentPane.prototype.getAsDOM = function(){
         });
         showDocConfig();
 		if(this.showConfig == "icon") hideDocConfig();
-    }
+	}
 	this.resultDOM = document.createElement("span");
 	this.resultDOM.setAttribute("class", "terminus-document-results");
 	//var form = (this.input.format == "js" ? "javascript" : "json");
@@ -159,7 +159,16 @@ DocumentPane.prototype.getAsDOM = function(){
 }
 
 DocumentPane.prototype.renderResult = function(){
-	HTMLHelper.removeChildren(this.resultDOM);
+	if(this.resultDOM){
+		HTMLHelper.removeChildren(this.resultDOM);
+	}
+	else {
+		this.resultDOM = document.createElement("span");
+		this.resultDOM.setAttribute("class", "terminus-document-results");
+		//var form = (this.input.format == "js" ? "javascript" : "json");
+		//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
+		this.container.appendChild(this.resultDOM);
+	}
 	if(this.frame && this.frame.render){
 		var fpt = this.frame.render();
 		if(fpt){

@@ -115,23 +115,10 @@ TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
 	return graph;
 }
 
-TerminusDBViewer.prototype.createFullDocumentPane = function(docid, pane_options, target, docClasses, docs){
+TerminusDBViewer.prototype.createFullDocumentPane = function(docid, result_options, target, docClasses, docs){
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	pane_options.loadDocument = this.getShowDocumentControl(docClasses, docs, target);
-	var dp = this.tv.getDocument(docid, pane_options);
-	if(!(docClasses && docClasses.length)){
-		var q2 = WOQL.from(dburl).concreteDocumentClasses();
-		q2.execute(this.ui.client).then( (result2) => {
-			var docClasses = new TerminusClient.WOQLResult(result2, q2);
-			var dchooser = this.getCreateDataChooser(docClasses, docs);
-			dp.setClassLoader(dchooser);
-		});
-	}
-	else {
-		var dchooser = this.getCreateDataChooser(docClasses, docs);
-		dp.setClassLoader(dchooser);
-	}
+	var dp = this.tv.getDocumentPane(docid, result_options);	
 	return dp;
 }
 
@@ -270,9 +257,16 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 	var dp = this.createFullDocumentPane(docid, config, target, docClasses, docs);
 	this.docid = docid; 
 	this.pages.push(docid);
+
+	this.container.appendChild(dp.getAsDOM());
 	return dp.load().then(() => {
-		HTMLHelper.removeChildren(target);
-		target.appendChild(dp.getAsDOM());		
+		HTMLHelper.removeChildren(this.container);
+		var nav = this.getNavigationDOM(docClasses, docs);
+		this.container.appendChild(nav);
+		var mactions = this.getDocumentsMenu(docs, docClasses, this.container);
+		if(mactions) this.container.appendChild(mactions);
+		var dx = dp.getAsDOM();
+		this.container.appendChild(dx);
 	})
 	.catch((e) => this.ui.showError(e));	
 }
@@ -288,10 +282,10 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 	var config = this.getCreateDocumentConfig();
 
 	var dp = this.tv.getNewDocumentPane(cls, config);
-	dp.loadDocument = this.getShowDocumentControl(docClasses, docs);
+	dp.documentLoader = this.getShowDocumentControl(docClasses, docs);
 	/*var df = new DocumentPane(this.ui.client).options({
-		showQuery: false,
-		editQuery: false,
+		showQuery: true,
+		editQuery: true,
 		showConfig: false,
 		editConfig: false,
 		loadDocument: this.getShowDocumentControl(docClasses, docs)
@@ -308,6 +302,7 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 			dp.setClassLoader(dchooser);
 		});
 	}
+	this.container.appendChild(dp.getAsDOM());
 	dp.load().then(() => {
 		HTMLHelper.removeChildren(this.container);
 		var nav = this.getNavigationDOM(docClasses, docs);
@@ -350,12 +345,9 @@ TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 	var dburl = this.ui.client.connectionConfig.dbURL();
 	var q = TerminusClient.WOQL.from(dburl).limit(100).documentMetadata();
 	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
-	qp.load().then(() => {
-		insertDOM.appendChild(qp.getAsDOM());
-		this.graph_query_pane = qp;
-	}).catch((e) => {
-		this.ui.showError(e);
-	});
+	insertDOM.appendChild(qp.getAsDOM());
+	this.graph_query_pane = qp;
+	qp.load();
 }
 
 
@@ -585,7 +577,13 @@ TerminusDBViewer.prototype.getNavigationDOM = function(docClasses, docs){
 	i.setAttribute("class", "fa fas fa-arrow-left");
 	s.appendChild(i);
 	var p =  this.pages[this.pages.length-2];
-	s.appendChild(document.createTextNode(" back to " + p));
+	if(p){
+		s.appendChild(document.createTextNode(" back to " + p));
+	}
+	else {
+		this.pages.push("home");
+		s.appendChild(document.createTextNode(" back to document list"));
+	}
 	s.addEventListener("click", () => {
 		var pp = this.pages.pop();
 		p =  this.pages[this.pages.length-1];
