@@ -12,7 +12,7 @@ before_install:
    - npm install 
    - cd ../terminus-dashboard
 
-after_script: "npm run build:all"
+# after_script: "npm run build:all"
 
 branches:
   only:
