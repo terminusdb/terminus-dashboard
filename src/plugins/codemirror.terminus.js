@@ -14,7 +14,7 @@ function objectIsEmpty(arg) {
 
 function autocomplete(){
     var orig = CodeMirror.hint.javascript = function (cm) {
-        var list = ["limit()","start()","triple()"];//Session.get(Template.strSessionDistinctFields) || [];
+        var list = [];//"limit()","start()","triple()"];//Session.get(Template.strSessionDistinctFields) || [];
         var cursor = cm.getCursor();
         var currentLine = cm.getLine(cursor.line);
         var start = cursor.ch;
@@ -63,18 +63,19 @@ Codemirror.prototype.colorizeTextArea = function(dimensions){
         autoCloseBrackets   : true,
         matchBrackets       : {afterCursor: true},
         extraKeys           : {"Ctrl-F": "find",
-                               "Tab": "autocomplete",
+                               //"Tab": "autocomplete",
                                "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
         refresh             : true,
         foldGutter          : true,
         gutters             : ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
     });
     editor.foldCode(CodeMirror.Pos(13, 0));
-    if(!(objectIsEmpty(dimensions)))
-        editor.setSize(dimensions.width, dimensions.height);
+    if(false && !(objectIsEmpty(dimensions))){
+      editor.setSize(dimensions.width, dimensions.height);
+    }
     else this.setCodemirrorSize(editor, dimensions);
     editor.defaultCharWidth('20px');
-    if(this.darkMode) editor.setOption("theme", 'erlang-dark');
+    if(true || this.darkMode) editor.setOption("theme", 'erlang-dark');
     else editor.setOption("theme", 'neo');
     return editor;
 } // colorizeTextArea()
@@ -86,7 +87,7 @@ Codemirror.prototype.colorizeTextArea = function(dimensions){
 Codemirror.prototype.setCodemirrorSize = function(editor, dimensions){
   switch(dimensions){
     case 'query':
-      editor.setSize('800', '400');
+      editor.setSize('auto', '400');
     break;
     case 'schema':
       editor.setSize('auto', '1550');
@@ -126,7 +127,7 @@ output (DOM node): The tokens will be converted to spans as in an editor,
                    and inserted into the node (through innerHTML).*/
 Codemirror.prototype.colorizePre = function(){
   CodeMirror.runMode(this.textdom.innerText, this.mode, this.textdom);
-  if(this.darkMode)
+  if(true || this.darkMode)
       var theme = 'cm-s-erlang-dark';
   else var theme = 'cm-s-neo';
   this.textdom.setAttribute('class', 'CodeMirror CodeMirror-wrap ' + theme + ' terminus-wrap-text terminus-wrapper-height ');

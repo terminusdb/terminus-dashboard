@@ -1,75 +1,15 @@
-const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const TerminusClient = require('@terminusdb/terminus-client');
-let HTMLFrameHelper = {};
+let HTMLHelper = {};
 
-HTMLFrameHelper.getActionControl = function(type, control, label, callback, disabled){
-	var pman = new TerminusPluginManager();
-	var dpropDOM = document.createElement("span");
-	dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
-	var pman = new TerminusPluginManager();
-    /*if(pman.pluginAvailable("font-awesome")){
-		var icon = document.createElement('icon');
-		var faic = this.getControlIcon(control);
-		if(disabled){
-			icon.setAttribute("class", "terminus-frame-control frame-control-action action-disabled fa fa" + faic + " " + type + "-" + control + "-disabled terminus-font-align");
-			icon.setAttribute("title", disabled);
-		}
-		else {
-			icon.setAttribute("class", "terminus-frame-control frame-control-action frame-control-action fa fa" + faic + " " + type + "-" + control + " terminus-font-align");
-			icon.addEventListener("click", function(){
-				callback(control);
-			});
-		}
-		dpropDOM.appendChild(icon);
-	}
-	else{*/
-		var button = document.createElement("button");
-		button.appendChild(document.createTextNode(label));
-		if(disabled){
-			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
-			button.setAttribute("title", disabled);
-		}
-		else {
-			button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action " + type + "-" + control);
-			button.addEventListener("click", function(){
-				if(this.innerHTML == 'Save'){
-					var objId = document.getElementsByClassName('terminus-object-id-input');
-					if(objId.length>0){
-						if(!objId[0].value){
-							objId[0].setAttribute('placeholder', 'Required field');
-							objId[0].style.background = '#f8d7da';
-						}
-						else callback(control);
-					}
-					else callback(control);
-				}
-				else callback(control);
-				//(control);
-			});
-		}
-		dpropDOM.appendChild(button);
-	//}
-	return dpropDOM;
+HTMLHelper.getSettingsControl = function(view){
+	var icon = document.createElement('icon');
+	if(view == 'property') icon.setAttribute('class', 'fa fa-cog terminus-pointer');
+	else if(view == 'data') icon.setAttribute('class', 'fa fa-edit terminus-pointer');
+	icon.setAttribute('style', 'margin: 10px;')
+	return icon;
 }
 
-HTMLFrameHelper.getSettingsControl = function(view){
-	var pman = new TerminusPluginManager();
-	if(pman.pluginAvailable("font-awesome")){
-		var icon = document.createElement('icon');
-		if(view == 'property') icon.setAttribute('class', 'fa fa-cog terminus-pointer');
-		else if(view == 'data') icon.setAttribute('class', 'fa fa-edit terminus-pointer');
-		icon.setAttribute('style', 'margin: 10px;')
-		return icon;
-	}
-	else{
-		var button = document.createElement("button");
-		button.setAttribute('class', 'terminus-btn');
-		button.appendChild(document.createTextNode('Settings'));
-		return button;
-	}
-}
-
-HTMLFrameHelper.getControlIcon = function(control){
+HTMLHelper.getControlIcon = function(control){
 	var icon;
 	switch(control){
 		case 'delete':
@@ -91,19 +31,19 @@ HTMLFrameHelper.getControlIcon = function(control){
 	return icon;
 }
 
-HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback){
+HTMLHelper.getSelectionControl = function(type, options, selected, callback){
 	var sel = document.createElement("select");
 	sel.setAttribute("class", "terminus-frame-selector frame-control-selection " + type);
 	for(var i = 0; i < options.length; i++){
 		var opt = document.createElement("option");
 		if(typeof options[i] == "object"){
 			opt.value = options[i].value;
-			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(TerminusClient.FrameHelper.labelFromURL(options[i].value)));
+			var label = (options[i].label ?  document.createTextNode(options[i].label) : document.createTextNode(TerminusClient.UTILS.labelFromURL(options[i].value)));
 			opt.appendChild(label);
 		}
 		else {
 			opt.value = options[i];
-			label = TerminusClient.FrameHelper.labelFromURL(opt.value);
+			label = TerminusClient.UTILS.labelFromURL(opt.value);
 			opt.appendChild(document.createTextNode(label));
 		}
 		if(selected == opt.value){
@@ -117,35 +57,35 @@ HTMLFrameHelper.getSelectionControl = function(type, options, selected, callback
 	return sel;
 }
 
-HTMLFrameHelper.getModeSelectorDOM = function(which, renderer){
+HTMLHelper.getModeSelectorDOM = function(which, renderer){
 	var viewsDOM = document.createElement("span");
 	viewsDOM.setAttribute("class", "terminus-mode terminus-"+which+"-mode");
 	if(renderer.mode == "view"){
 		var callback = function(){ renderer.setMode("edit");}
-		viewsDOM.appendChild(HTMLFrameHelper.getActionControl("terminus-mode terminus-"+which+"-mode", "edit", " Edit ", callback));
+		viewsDOM.appendChild(HTMLHelper.getActionControl("terminus-mode terminus-"+which+"-mode", "edit", " Edit ", callback));
 	}
 	else if(renderer.isNew()){
 		return false;
 	}
 	else {
 		var callback = function(){ renderer.cancel();}
-		viewsDOM.appendChild(HTMLFrameHelper.getActionControl(which, "cancel", "Cancel", callback));
+		viewsDOM.appendChild(HTMLHelper.getActionControl(which, "cancel", "Cancel", callback));
 	}
 	return viewsDOM;
 }
 
-HTMLFrameHelper.goToName = function(s, p, i){
+HTMLHelper.goToName = function(s, p, i){
 	var url = window.location.href;
 	if(url){
 		var wbits = url.split("#");
 		var loc = wbits[0];
-		var sh = TerminusClient.FrameHelper.getShorthand(s);
+		var sh = TerminusClient.UTILS.getShorthand(s);
 	    if(!sh) sh = s;
 		var bits = sh.split(":");
 		if(bits.length > 1) sh = bits[1];
 		var htmlid = sh;
 		if(p){
-			var prop = TerminusClient.FrameHelper.getShorthand(p);
+			var prop = TerminusClient.UTILS.getShorthand(p);
 			if(!prop ) prop = p;
 			var bits = prop.split(":");
 			if(bits.length > 1) prop = bits[1];
@@ -158,7 +98,7 @@ HTMLFrameHelper.goToName = function(s, p, i){
 	}
 }
 
-HTMLFrameHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word_size){
+HTMLHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word_size){
 	if(max_cell_size && (text.length > max_cell_size)){
 		wrap.setAttribute("title", text);
 		text = text.substring(0, max_cell_size) + "...";
@@ -181,7 +121,7 @@ HTMLFrameHelper.wrapShortenedText = function(wrap, text, max_cell_size, max_word
 	wrap.appendChild(document.createTextNode(text));
 }
 
-HTMLFrameHelper.getVariableValueFromBinding = function(varname, bind){
+HTMLHelper.getVariableValueFromBinding = function(varname, bind){
 	for(var key in bind){
 		var skey = key.substring(key.lastIndexOf("/")+1);
 		if(skey == varname){
@@ -194,69 +134,30 @@ HTMLFrameHelper.getVariableValueFromBinding = function(varname, bind){
 }
 
 
-HTMLFrameHelper.getInfoboxDOM = function(type, label, value, help, input){
-	/*var frow = this.getFrameRow();
-	var fgroup = this.getFrameGroup(frow);*/
-	var infoDOM = document.createElement("span");
-	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type );
-	//fgroup.appendChild(infoDOM);
-	if(help){
-		infoDOM.setAttribute("title", help);
-	}
-	if(label){
-		var linfo = document.createElement("span");
-		linfo.setAttribute("class", "terminus-frame-infobox-label " + "terminus-" +type + "-label");
-		linfo.appendChild(document.createTextNode(label));
-		infoDOM.appendChild(linfo);
-	}
-	var lspacer = document.createElement("span");
-	lspacer.setAttribute("class", "terminus-frame-infobox-spacer " + "terminus-" +type + "-spacer");
-	lspacer.appendChild(document.createTextNode(" "));
-	infoDOM.appendChild(lspacer);
-	var lval = document.createElement("span");
-	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
-	if(input){
-		input.value = value;
-		lval.appendChild(input);
-	}
-	else if(value) {
-		var sh = TerminusClient.FrameHelper.getShorthand(value);
-        if(sh){
-    	   	var bits = sh.split(":");
-            sh = bits[1];
-   			lval.setAttribute("title", value);
-			lval.appendChild(document.createTextNode(sh));
-		}
-		else {
-			lval.appendChild(document.createTextNode(value));
-		}
-	}
-	infoDOM.appendChild(lval);
-	return infoDOM;
-}
 
 /*
  * HTML drawing function for document rendering 
  */
 
-HTMLFrameHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, features){
+HTMLHelper.getFrameDOM = function(scope, frame, orientation, hfeatures, features){
 	if(frame.display_options.hidden) return false;
-	var framedom = HTMLFrameHelper.getFrameHolderDOM(scope, frame, orientation);
-	if(typeof frame.display_options.header != "undefined"){
-		if(typeof frame.display_options.header == "function"){
-			var hd = frame.display_options.header(frame.display_options.header_features, hfeatures);
-			framedom.appendChild(hd);
-		}
-	}
-	else {
-		var hd = HTMLFrameHelper.getFrameHeaderDOM(scope, frame, orientation, hfeatures);
-		if(hfeatures) hd.appendChild(hfeatures);
+	var framedom = HTMLHelper.getFrameHolderDOM(scope, frame, orientation);
+	if(typeof frame.display_options.header == "function"){
+		var hd = frame.display_options.header(hfeatures);
 		framedom.appendChild(hd);
 	}
-	return framedom.appendChild(HTMLFrameHelper.getFrameBodyDOM(scope, frame, orientation, features));
+	else {
+		var hd = HTMLHelper.getFrameHeaderDOM(scope, frame, orientation, hfeatures);
+		if(typeof frame.display_options.header_style != "undefined"){
+			hd.setAttribute("style", frame.display_options.header_style);
+		}
+		framedom.appendChild(hd);
+	}
+	framedom.appendChild(HTMLHelper.getFrameBodyDOM(scope, frame, orientation, features));
+	return framedom;
 }
 
-HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
+HTMLHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	var pcls = "terminus-" + scope + "-frame";
 	if(orientation == "page"){
 		var sp = document.createElement("div");
@@ -284,11 +185,11 @@ HTMLFrameHelper.getFrameHolderDOM = function(scope, frame, orientation){
 	var idm = document.createElement("a");
 	idm.setAttribute("class", "terminus-" + scope + "-idmarker");
 	idm.setAttribute("name", hid);				
-    sp.appendChild(idm);
+	sp.appendChild(idm);
 	return sp;
 }
 
-HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features){
+HTMLHelper.getFrameHeaderDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-header";
 	if(orientation == "page"){
 		var objDOM = document.createElement("div");
@@ -297,11 +198,11 @@ HTMLFrameHelper.getFrameHeaderDOM = function(scope, frame, orientation, features
 		var objDOM = document.createElement("span");
 	}
 	objDOM.setAttribute("class", css + " " + css + "-" + orientation);
-    if(features) objDOM.appendChild(features);
+	if(features) objDOM.appendChild(features);
 	return objDOM;
 }
 
-HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
+HTMLHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
 	var css = "terminus-" + scope + "-properties";
 	if(orientation == "page"){
 		var vholder = document.createElement("div");
@@ -314,7 +215,7 @@ HTMLFrameHelper.getFrameBodyDOM = function(scope, frame, orientation, features){
     return vholder;
 }
 
-HTMLFrameHelper.hash = function(s) {
+HTMLHelper.hash = function(s) {
 	var hash = 0, i, chr;
 	if (s.length === 0) return hash;
 	for (i = 0; i < s.length; i++) {
@@ -325,41 +226,42 @@ HTMLFrameHelper.hash = function(s) {
 	return hash;
 };
 
-HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
+HTMLHelper.getFeatureDOM = function(frame, feature, scope, mode, args, rend){
+
 	if(feature == "id"){	
 		if(scope == "object") var val = frame.subject();
 		else if(scope == "property") var val = frame.property();
 		if(val == "_:") var val = "New Document";
-		return HTMLFrameHelper.getInfoboxDOM("object-id", "ID", val, "The URL that identifies this data object");
+		return HTMLHelper.getInfoboxDOM("object-id", "ID", val, "The ID that identifies this document", mode, args, rend);
 	}
 	else if(feature == "summary"){
 		var sum = frame.getSummary();
-		return HTMLFrameHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status);
+		return HTMLHelper.getInfoboxDOM(scope + "-summary", false, sum.long, sum.status, mode, args);
 	}
 	else if(feature == "label"){
 		var lab = frame.getLabel();
 		if(lab){
-			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", false, lab);
+			return HTMLHelper.getInfoboxDOM(scope + "-type", false, lab, false, mode, args);
 		}
 		return false;
 	}
 	else if(feature == "status"){
 		var sum = frame.getSummary();
-		return HTMLFrameHelper.getInfoboxDOM(scope + "-status-"+sum.status, false, sum.status, sum.status);
+		return HTMLHelper.getInfoboxDOM(scope + "-status-"+sum.status, false, sum.status, sum.status, mode, args);
 	}
 	else if(feature == "comment"){
 		var lab = frame.getComment();
-		return HTMLFrameHelper.getInfoboxDOM("property-comment", false, lab);
+		return HTMLHelper.getInfoboxDOM("property-comment", false, lab, false, mode, args);
 	}
 	else if(feature == "type"){
-		if(scope == "property" && frame.display_options.mode == "edit" && frame.parent && frame.parent.isClassChoice() && frame.isNew()){
-			return this.getClassChoiceTypeSelector(frame);
+		if(scope == "property" && mode == "edit" && frame.parent && frame.parent.isClassChoice() && frame.isNew()){
+			return this.getClassChoiceTypeSelector(frame, mode, args);
 		}
 		if(scope == "object") var lab = frame.subjectClass();
 		else if(scope == "property") var lab = frame.range();
 		else if(scope == "data") var lab = frame.getType();
 		if(lab){
-			return HTMLFrameHelper.getInfoboxDOM(scope + "-type", "Type", lab);
+			return HTMLHelper.getInfoboxDOM(scope + "-type", "Type", lab, false, mode, args);
 		}
 		return false;
 	}
@@ -372,7 +274,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 			}
 			disabled = "Cardinality rules prevent deleting this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "delete", "Delete", callback, disabled);
+		return HTMLHelper.getActionControl(scope, "delete", "Delete", callback, disabled, mode, args);
 	}
 	else if(feature == "clone"){
 		var callback = function(){frame.clone()};
@@ -383,7 +285,7 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 			}
 			disabled = "Cardinality rules prevent cloning this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "clone", "Clone", callback, disabled);
+		return HTMLHelper.getActionControl(scope, "clone", "Clone", callback, disabled, mode, args);
 	}
 	else if(feature == "reset"){
 		var callback = function(){frame.reset()};
@@ -394,41 +296,41 @@ HTMLFrameHelper.getFeatureDOM = function(feature, scope, frame){
 			}
 			disabled = "No changes have been made to this element";
 		}
-		return HTMLFrameHelper.getActionControl(scope, "reset", "Reset", callback, disabled);
+		return HTMLHelper.getActionControl(scope, "reset", "Reset", callback, disabled, mode, args);
+	}
+	else if(feature == "mode"){
+		var callback = function(){frame.mode("edit")};
+		return HTMLHelper.getActionControl(scope, "mode", "Edit", callback, mode, args);
 	}
 	else if(feature == "hide"){
-		var callback = function(){frame.hide()};
-		return HTMLFrameHelper.getActionControl(scope, "hide", "Hide", callback);
-	}
-	else if(feature == "show"){
 		var callback = function(){frame.show()};
-		return HTMLFrameHelper.getActionControl(scope, "show", "Show", callback);
+		return HTMLHelper.getActionControl(scope, "hide", "Hide", callback, mode, args);
 	}
 	else if(feature == "update"){
 		var callback = function(){frame.save()};
-		if(!frame.isUpdated() && !frame.display_options.show_disabled_buttons){
+		if(!frame.isUpdated() && !frame.display_options.show_disabled_buttons, mode, args){
 			return false;
 		}
 		var disabled = frame.isUpdated() ? false : "No changes have been made to this element";
-		return HTMLFrameHelper.getActionControl(scope, "save", "Save", callback, disabled);
+		return HTMLHelper.getActionControl(scope, "save", "Save", callback, disabled, mode, args);
 	}
 	else if(feature == "viewer"){
-		return this.getViewerSelectorDOM(scope, frame);
+		return false;//this.getViewerSelectorDOM(scope, frame, mode, args);
 	}
 	else if(feature == "view"){
-		return this.getViewEntryDOM(scope, frame);
+		return this.getViewEntryDOM(scope, frame, mode, args);
 	}
 	else if(feature == "cardinality"){
-		return this.getCardinalityDOM(scope, frame);
+		return this.getCardinalityDOM(scope, frame, mode, args);
 	}
 	else if(feature == "add"){
-		return this.getAddDOM(scope, frame);
+		return this.getAddDOM(scope, frame, mode, args);
 	}
 }
 
-HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
-	var viewers = frame.terminus.datatypes.getAvailableViewers();
-	var r = this.terminus.datatypes.getRenderer(t);
+HTMLHelper.getViewerSelectorDOM = function(scope, frame, mode, args){
+	//var viewers = frame.datatypes.getAvailableViewers();
+	//var r = frame.datatypes.getRenderer(t);
 
 	if(viewers && viewers.length){
 		var mpropDOM = document.createElement("span");
@@ -439,7 +341,7 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
 			}
 		}
 		var selected = frame.currentViewer();
-		var sel = HTMLFrameHelper.getSelectionControl(scope + '-viewer', viewers, selected, callback);
+		var sel = HTMLHelper.getSelectionControl(scope + '-viewer', viewers, selected, callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -448,7 +350,7 @@ HTMLFrameHelper.getViewerSelectorDOM = function(scope, frame){
 
 
 /* needs html viewer context for goto */
-HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
+HTMLHelper.getViewEntryDOM = function(scope, frame, mode, args){
 	if(scope == "object"){
 		var viewables = frame.getFilledPropertyList();
 	}
@@ -465,7 +367,7 @@ HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
 				frame.goToEntry(add);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl(scope + "-view-entry", viewables, "", callback);
+		var sel = HTMLHelper.getSelectionControl(scope + "-view-entry", viewables, "", callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
@@ -473,7 +375,7 @@ HTMLFrameHelper.getViewEntryDOM = function(scope, frame){
 	
 }
 
-HTMLFrameHelper.getCardinalityDOM = function(scope, frame){
+HTMLHelper.getCardinalityDOM = function(scope, frame, mode, args){
 	var restriction = frame.getRestriction();
 	if(restriction.min && restriction.max){
 		if(restriction.min == restriction.max){
@@ -497,10 +399,10 @@ HTMLFrameHelper.getCardinalityDOM = function(scope, frame){
 	else {
 		return false;
 	}
-	return HTMLFrameHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help);
+	return HTMLHelper.getInfoboxDOM("property-cardinality", "Cardinality", lab, help, mode, args);
 }
 
-HTMLFrameHelper.getClassChoiceTypeSelector = function(frame){
+HTMLHelper.getClassChoiceTypeSelector = function(frame, mode, args){
 	var cs = frame.parent.getAvailableClassChoices();
 	if(cs && cs.length){
 		var mpropDOM = document.createElement("span");
@@ -514,14 +416,14 @@ HTMLFrameHelper.getClassChoiceTypeSelector = function(frame){
 				frame.changeClass(cls);
 			}
 		}
-		var sel = HTMLFrameHelper.getSelectionControl("change-class", cs, frame.subjectClass(), callback);
+		var sel = HTMLHelper.getSelectionControl("change-class", cs, frame.subjectClass(), callback, mode, args);
 		mpropDOM.appendChild(sel);
 		return mpropDOM;
 	}
 	return false;
 }
 
-HTMLFrameHelper.getAddDOM = function(scope, frame){
+HTMLHelper.getAddDOM = function(scope, frame, mode, args){
 	if(scope == "property"){
 		if(frame.isClassChoice()){
 			var cs = frame.getAvailableClassChoices();
@@ -534,7 +436,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 						frame.addClass(cls);
 					}
 				}
-				var sel = HTMLFrameHelper.getSelectionControl("add-property", cs, "", callback);
+				var sel = HTMLHelper.getSelectionControl("add-property", cs, "", callback, mode, args);
 				mpropDOM.appendChild(sel);
 				return mpropDOM;
 			}
@@ -542,7 +444,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 		if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 			var callback = function(){frame.add("edit")};
 			var disabled = (frame.cardControlAllows("add") ? false : "Cardinality Rules Forbid Add");
-			return HTMLFrameHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled);
+			return HTMLHelper.getActionControl(scope + "-add-entry", "add", "Add", callback, disabled, mode, args);
 		}
 	}
 	else {
@@ -559,7 +461,7 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 			}
 			if(frame.cardControlAllows("add") || frame.display_options.show_disabled_buttons){
 				var disabled = (frame.cardControlAllows("add") ? false : "Cardinality rules forbid adding element");
-				var sel = HTMLFrameHelper.getSelectionControl(scope + "-add-entry", addables, "", callback, disabled);
+				var sel = HTMLHelper.getSelectionControl(scope + "-add-entry", addables, "", callback, disabled, mode, args);
 				mpropDOM.appendChild(sel);
 				return mpropDOM;
 			}
@@ -568,4 +470,128 @@ HTMLFrameHelper.getAddDOM = function(scope, frame){
 	return false;
 }
 
-module.exports=HTMLFrameHelper
+HTMLHelper.getInfoboxDOM = function(type, label, value, help, mode, args, input){
+	/*var frow = this.getFrameRow();
+	var fgroup = this.getFrameGroup(frow);*/
+	var infoDOM = document.createElement("span");
+	infoDOM.setAttribute("class", "terminus-frame-infobox-box " + "terminus-" +type );
+	//fgroup.appendChild(infoDOM);
+	if(help){
+		infoDOM.setAttribute("title", help);
+	}
+	if(args && typeof args.label != "undefined") label = args.label;
+	if(label !== false){
+		label = (args && args.label ? args.label : label);
+		var linfo = document.createElement("span");
+		linfo.setAttribute("class", "terminus-frame-infobox-label " + "terminus-" +type + "-label");
+		linfo.appendChild(document.createTextNode(label));
+		if(args && args.headerStyle){
+			linfo.setAttribute("style", args.headerStyle);			
+		}
+		infoDOM.appendChild(linfo);
+	}
+	var lval = document.createElement("span");
+	lval.setAttribute("class", "terminus-frame-infobox-value " + "terminus-" +type + "-value");
+	if(input){
+		input.value = value;
+		lval.appendChild(input);
+	}
+	else if(args && args.removePrefixes && value && value.split(":").length == 2) {
+		var bits = value.split(":");
+		sh = bits[1];
+		lval.setAttribute("title", value);
+		lval.appendChild(document.createTextNode(sh));
+	}
+	else {
+		lval.appendChild(document.createTextNode(value));
+	}
+	if(args && args.bodyStyle){
+		lval.setAttribute("style", args.bodyStyle);
+	}
+	infoDOM.appendChild(lval);
+	if(args && args.style){
+		infoDOM.setAttribute("style", args.style)
+	}
+	return infoDOM;
+}
+
+
+HTMLHelper.getActionControl = function(type, control, label, callback, disabled, mode, args){
+	//var pman = new TerminusPluginManager();
+	var dpropDOM = document.createElement("span");
+	//dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
+	label = (args && typeof args.label != "undefined" ? args.label : label);
+	icon = (args && args.icon ? args.icon : false);
+	if(icon){
+		var i = document.createElement("i");
+		i.setAttribute("class", "fa " + icon);
+		icon = i;
+	}
+	var tag = (args && args.tag ? args.tag : "button");
+	var button = document.createElement(tag);
+	if(icon){
+		button.appendChild(icon);
+	}
+	if(label) button.appendChild(document.createTextNode(" " + label + " "));
+	if(args && args.title){
+		button.setAttribute("title", args.title);
+	}
+	if(disabled){
+		//button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action action-disabled " + type + "-" + control + "-disabled");
+		button.setAttribute("title", disabled);
+	}
+	else {
+		//button.setAttribute("class", "terminus-frame-control terminus-frame-btn frame-control-action " + type + "-" + control);
+		
+	}
+	dpropDOM.appendChild(button);
+	return dpropDOM;
+}
+
+HTMLHelper.removeChildren = function (node) {
+	if (node) {
+		while (node.hasChildNodes()) {
+			node.removeChild(node.childNodes[0]);
+		}
+	}
+};
+
+HTMLHelper.loadDynamicScript = function (scriptid, src, callback) {
+	const existingScript = document.getElementById(scriptid);
+	if (!existingScript) {
+		const script = document.createElement('script');
+		script.src = src; // URL for the third-party library being loaded.
+		document.body.appendChild(script);
+		script.onload = function () {
+			script.id = scriptid; // do it here so it doesn't trigger the callback below on multiple calls
+			if (callback) callback(scriptid);
+		};
+	}
+	if (existingScript && callback) {
+		callback(scriptid);
+	}
+};
+
+HTMLHelper.loadDynamicCSS = function (cssid, src, callback) {
+	const existingScript = document.getElementById(cssid);
+	if (!existingScript) {
+		const link = document.createElement('link');
+		link.href = src; // URL for the third-party library being loaded.
+		link.id = cssid; // e.g., googleMaps or stripe
+		link.rel = 'stylesheet';
+		document.body.appendChild(link);
+		link.onload = function () {
+			if (callback) callback(cssid);
+		};
+	}
+	if (existingScript && callback) callback(cssid);
+};
+
+
+HTMLHelper.removeElement = function (node) {
+	if (node) {
+			node.parentNode.removeChild(node);
+	}
+}
+
+module.exports=HTMLHelper

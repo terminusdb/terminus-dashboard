@@ -17,7 +17,7 @@ HTMLDateEditor.prototype.renderFrame = function(frame, dataviewer){
 	input.setAttribute('class', "terminus-literal-value terminus-literal-date");
 	input.setAttribute('data-value', value);
 	if(value){
-		this.parsed = TerminusClient.FrameHelper.parseDate(this.type, value);
+		this.parsed = TerminusClient.UTILS.DateHelper.parseDate(this.type, value);
 	}
 	else this.parsed = {};
 	var datepart = this.getDateComponentDOM(this.parsed, this.type, frame);
@@ -30,7 +30,7 @@ HTMLDateEditor.prototype.renderFrame = function(frame, dataviewer){
 
 HTMLDateEditor.prototype.set = function(part, val, frame, ty){
 	this.parsed[part] = val;
-	var xsd = TerminusClient.FrameHelper.xsdFromParsed(this.parsed, ty);
+	var xsd = TerminusClient.UTILS.DateHelper.xsdFromParsed(this.parsed, ty);
 	if(xsd){
 		frame.set(xsd);
 	}

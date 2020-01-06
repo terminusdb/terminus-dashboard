@@ -1,4 +1,4 @@
-const HTMLFrameHelper = require('../HTMLFrameHelper');
+const HTMLHelper = require('../HTMLHelper');
 
 function HTMLStringViewer(options){
 	this.size = ((options && options.size) ? options.size : false);
@@ -25,7 +25,7 @@ HTMLStringViewer.prototype.render = function(value){
 		value += " (" + this.type + ")";
 	}
 	if(this.max_word_size || this.max_cell_size){
-		HTMLFrameHelper.wrapShortenedText(input, value, this.max_cell_size, this.max_word_size);
+		HTMLHelper.wrapShortenedText(input, value, this.max_cell_size, this.max_word_size);
 	}
 	else {
 		value = document.createTextNode(value);

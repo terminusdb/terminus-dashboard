@@ -1,4 +1,5 @@
 const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLHelper = require('../HTMLHelper');
 
 function HTMLRangeEditor(options){
 	this.commas = (options && options.commas ? options.commas : true);
@@ -8,7 +9,7 @@ function HTMLRangeEditor(options){
 
 HTMLRangeEditor.prototype.renderFrame = function(frame, dataviewer){
 	var value = frame.get();
-	var vals = TerminusClient.FrameHelper.parseRangeValue(value, this.delimiter);
+	var vals = TerminusClient.UTILS.TypeHelper.parseRangeValue(value, this.delimiter);
 	var d = document.createElement("span");
 	d.setAttribute("class", this.css);
 	var rvals = document.createElement("span");
@@ -45,7 +46,7 @@ HTMLRangeEditor.prototype.renderFrame = function(frame, dataviewer){
 		if(self.showing_range){
 			self.showing_range = false;
 			secondip.value = "";				
-			TerminusClient.FrameHelper.removeChildren(svals);
+			HTMLHelper.removeChildren(svals);
 		}
 		else {
 			self.showing_range = true;

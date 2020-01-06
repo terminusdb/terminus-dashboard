@@ -1,5 +1,4 @@
-const TerminusClient = require('@terminusdb/terminus-client');
-
+const HTMLHelper = require('../HTMLHelper');
 
 function SimpleStream(){	
 	this.holder = document.createElement("div");
@@ -15,7 +14,7 @@ SimpleStream.prototype.options = function(options){
 
 SimpleStream.prototype.render = function(stream){
 	if(stream) this.stream = stream;
-	TerminusClient.FrameHelper.removeChildren(this.holder);
+	HTMLHelper.removeChildren(this.holder);
 	//var ctls = this.getControlsDOM();
 	//var tab = this.getTableDOM();
 	//if(ctls) this.holder.appendChild(ctls)

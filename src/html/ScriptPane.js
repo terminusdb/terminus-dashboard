@@ -1,6 +1,8 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const UTILS = require('../Utils');
+const HTMLHelper = require('./HTMLHelper');
+
 
 function ScriptPane(client, script){
 	this.client = client;
@@ -53,7 +55,7 @@ ScriptPane.prototype.showOKMessage = function(){
 }
 
 ScriptPane.prototype.updateResult = function(res){
-    TerminusClient.FrameHelper.removeChildren(this.resultDOM);
+    HTMLHelper.removeChildren(this.resultDOM);
     this.resultDOM.appendChild(res);
 }
 

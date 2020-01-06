@@ -1,11 +1,11 @@
-//const TerminusHTMLViewer = require('./html/TerminusHTMLViewer');
 const TerminusClient = require('@terminusdb/terminus-client');
-const QueryPane = require("./html/QueryPane");
 const ScriptPane = require("./html/ScriptPane");
-const DocumentPane = require("./html/DocumentPane");
+const HTMLHelper = require('./html/HTMLHelper');
+const TerminusViewer = require("./html/TerminusViewer");
 
 function TerminusQueryViewer(ui, options){
 	this.ui = ui;
+	this.tv = new TerminusViewer(ui.client);
 	this.options = options;
 	this.panes = [];
 	this.new_pane = false;
@@ -17,9 +17,10 @@ function TerminusQueryViewer(ui, options){
 
 TerminusQueryViewer.prototype.newPaneOptions = function(){ 
 	var opts = {
-		showQuery: true, 
+		showQuery: "always", 
 		editQuery: true,
 		showHeader: true, 
+		css: "terminus-full-query-pane"
 	};
 	return opts;
 } 
@@ -29,17 +30,16 @@ TerminusQueryViewer.prototype.defaultResultOptions = function(){
 		showConfig: "icon", 
 		editConfig: true,
 		showHeader: false, 
-		viewers: [new TerminusClient.WOQL.graph()],
+		viewers: [new TerminusClient.View.graph()],
 	};
 	return opts;
 } 
 
 TerminusQueryViewer.prototype.getNewQueryPane = function(){
-	let qpane = new QueryPane(this.ui.client).options(this.newPaneOptions());
-	qpane.addView(new TerminusClient.WOQL.table(), this.defaultResultOptions());
+	let table = TerminusClient.View.table();
+	let qpane = this.tv.getQueryPane(false, [table], false, [this.defaultResultOptions()], this.newPaneOptions());
 	return qpane;
 }
-
 
 TerminusQueryViewer.prototype.addQueryPane = function(){
 	var qpane = this.getNewQueryPane();
@@ -59,18 +59,14 @@ TerminusQueryViewer.prototype.addScriptPaneDOM = function(){
 }
 
 TerminusQueryViewer.prototype.addQueryPaneDOM = function(){
-	let qpane = new QueryPane(this.ui.client).options({showQuery: true, editQuery: true});
+	let qpane = this.addQueryPane();
 	this.addNewPaneDOM(qpane);
 }
 
 TerminusQueryViewer.prototype.setNewDocumentPaneDOM = function(){
-	this.new_pane = new DocumentPane(this.ui.client).options({showQuery: true, editQuery: true});
+	this.new_pane = this.tv.getDocumentPane();
+	//this.new_pane = new DocumentPane(this.ui.client).options({showQuery: true, editQuery: true});
 	this.new_pane_type = "document";
-}
-
-TerminusQueryViewer.prototype.addDocumentPaneDOM = function(){
-	let qpane = new DocumentPane(this.ui.client).options({showQuery: true, editQuery: true});
-	this.addNewPaneDOM(qpane);
 }
 
 TerminusQueryViewer.prototype.addNewPaneDOM = function(qpane){
@@ -89,16 +85,19 @@ TerminusQueryViewer.prototype.addNewPaneDOM = function(qpane){
 }
 
 TerminusQueryViewer.prototype.getAsDOM = function(q){
-	TerminusClient.FrameHelper.removeChildren(this.container);
+	HTMLHelper.removeChildren(this.container);
 	if(!this.paneDOM) this.paneDOM = this.getPanesDOM();
 	this.container.appendChild(this.paneDOM);
 	this.controlDOM = this.getControlsDOM();
 	//this.container.appendChild(this.controlDOM);
+	var cont = document.createElement("span");
+	cont.setAttribute("class", "terminus-new-query-pane");
 	var newPaneButton = document.createElement('button');
 		newPaneButton.setAttribute('class', 'terminus-btn terminus-query-btn');
 		newPaneButton.appendChild(document.createTextNode('Add New Query'));
-		newPaneButton.addEventListener('click', () => this.addQueryPaneDOM());	    
-	this.container.appendChild(newPaneButton);
+		newPaneButton.addEventListener('click', () => this.addQueryPaneDOM());	   
+	cont.appendChild(newPaneButton); 
+	this.container.appendChild(cont);
 	return this.container;
 }
 
@@ -124,7 +123,7 @@ TerminusQueryViewer.prototype.getPanesDOM = function(q){
 }
 
 TerminusQueryViewer.prototype.removePane = function(pane, index){
-	TerminusClient.FrameHelper.removeChildren(pane.paneDOM);
+	HTMLHelper.removeChildren(pane.paneDOM);
 	pane.paneDOM.appendChild(pane.headerDOM);
 	if(this.panes[i]){
 		this.panes.splice(i, 1);
@@ -132,7 +131,7 @@ TerminusQueryViewer.prototype.removePane = function(pane, index){
 }
 
 TerminusQueryViewer.prototype.showPane = function(pane){
-	//TerminusClient.FrameHelper.removeChildren(pane.paneDOM);
+	//HTMLHelper.removeChildren(pane.paneDOM);
 	//var pd = pane.getAsDOM();
 	//var qhdr = this.getPaneHeader();
 	//pd.prepend(qhdr);
