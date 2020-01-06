@@ -1779,9 +1779,13 @@ div.terminus-margin-left-auto {
 	background-color: #f8d7da;
 	border-color: #f5c6cb;
 }
-.terminus-create-panel, .terminus-back-to-home{
+.terminus-create-panel{
 	float: right;
 }
+.terminus-back-to-home {
+	margin-bottom: 10px;
+}
+
 .terminus-backtohome-span:link {
   text-decoration: none;
 }
