@@ -4,9 +4,8 @@
  */
 const UTILS=require('./Utils');
 const TerminusClient = require('@terminusdb/terminus-client');
-const QueryPane = require("./html/QueryPane");
-const DocumentPane = require("./html/DocumentPane");
 const HTMLHelper = require('./html/HTMLHelper');
+const TerminusViewer = require("./html/TerminusViewer");
 
 
 /**
@@ -15,10 +14,31 @@ const HTMLHelper = require('./html/HTMLHelper');
  */
 function TerminusDBViewer(ui){
 	this.ui = ui;
+	this.tv = new TerminusViewer(ui.client);
 	this.container = document.createElement("span");
 	this.container.setAttribute("class", "terminus-main-page");
 	this.pages = ["home"];
 }
+
+//Document configuration for DB meta-data listing on DB home page
+TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
+	var property_style = "display: block; padding: 0.3em 1em;"
+	var box_style = "padding: 8px; border: 1px solid #afafaf; background-color: #efefef;"
+	var label_style = "display: inline-block; min-width: 100px; font-weight: 600; color: #446ba0;";
+	var value_style = "font-weight: 400; color: #002856;";
+	var config = TerminusClient.View.document();
+	config.show_all("SimpleFrameViewer");
+	config.object().style(box_style);
+	config.object().headerFeatures("id").style(property_style).args({headerStyle: label_style + " padding-right: 10px;", bodyStyle: value_style, label: "Database ID", removePrefixes: true});
+	config.object().headerFeatures("type").style(property_style).args({headerStyle: label_style + " padding-right: 10px;", bodyStyle: value_style})
+	config.object().features("value").style(property_style);
+	config.property().features("label").style(label_style);
+	config.property().features("label", "value");
+	config.property().property("terminus:id").hidden(true);
+	config.data().features("value").style(value_style);
+	return config;
+}
+
 
 /**
  * Query Pane Configurations
@@ -26,16 +46,13 @@ function TerminusDBViewer(ui){
 
 //documents home page table
 TerminusDBViewer.prototype.getDocumentsQueryPane = function(docs){
-	var dp = new QueryPane(this.ui.client, docs.query, docs).options({showQuery: false, editQuery: false});
-	var table = TerminusClient.WOQL.table();
+	var table = TerminusClient.View.table();
 	table.column('ID').header('Document ID');
 	table.column('Label').header('Name');
 	table.column('Comment').header('Description');
 	table.column_order("ID", "Label", "Comment", "Type");
-	//table.column('Type_Comment').header('Type Description');
-	var result_options =  { showConfig: false, editConfig: false};
-	dp.addView(table, result_options);
-	return dp;
+	var qp = this.tv.getResult(docs.query, table, docs);
+	return qp;
 }
 
 
@@ -55,7 +72,7 @@ TerminusDBViewer.prototype.getCreateDocumentConfig = function(){
 	var label_style = "display: inline-block; min-width: 100px; font-weight: 600; color: #446ba0;";
 	var value_style = "font-weight: 400; color: #002856;";
 	
-	var config = TerminusClient.WOQL.document().load_schema(true);
+	var config = TerminusClient.View.document().load_schema(true);
 	config.all().mode("edit");
 	config.show_all("SimpleFrameViewer");
 	config.object().style(box_style);
@@ -80,7 +97,7 @@ TerminusDBViewer.prototype.getShowDocumentPaneConfig = function(){
 
 //Document configuration for view / edit document page
 TerminusDBViewer.prototype.getShowDocumentConfig = function(){
-	var config = TerminusClient.WOQL.document().load_schema(true);
+	var config = TerminusClient.View.document().load_schema(true);
 	config.show_all("SimpleFrameViewer");
 	config.object().depth(0).headerStyle("background-color: #0055B8;	color: white;");
 	config.object().headerFeatures("hide", "mode");
@@ -92,57 +109,30 @@ TerminusDBViewer.prototype.getShowDocumentConfig = function(){
 	return config;
 };
 
-//Graph configuration for document main page
-TerminusDBViewer.prototype.getGraphQueryPane = function(res){
-	var graph = TerminusClient.WOQL.graph();
+TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
+	var graph = TerminusClient.View.graph();
 	graph.height(800).width(1250);
-	const opts = {
-		showQuery: false, 
-		editQuery: false
-	}
-	var ddp = new QueryPane(this.ui.client, res.query, res).options(opts);
-	const result_opts = {showConfig: false, editConfig: false}
-	ddp.addView(graph, result_opts);
-	return ddp;
-}	
-
-//Document configuration for DB meta-data listing on DB home page
-TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
-	var property_style = "display: block; padding: 0.3em 1em;"
-	var box_style = "padding: 8px; border: 1px solid #afafaf; background-color: #efefef;"
-	var label_style = "display: inline-block; min-width: 100px; font-weight: 600; color: #446ba0;";
-	var value_style = "font-weight: 400; color: #002856;";
-	var config = TerminusClient.WOQL.document();
-	config.show_all("SimpleFrameViewer");
-	config.object().style(box_style);
-	config.object().headerFeatures("id").style(property_style).args({headerStyle: label_style + " padding-right: 10px;", bodyStyle: value_style, label: "Database ID", removePrefixes: true});
-	config.object().headerFeatures("type").style(property_style).args({headerStyle: label_style + " padding-right: 10px;", bodyStyle: value_style})
-	config.object().features("value").style(property_style);
-	config.property().features("label").style(label_style);
-	config.property().features("label", "value");
-	config.property().property("terminus:id").hidden(true);
-	config.data().features("value").style(value_style);
-	return config;
+	return graph;
 }
 
-TerminusDBViewer.prototype.createFullDocumentPane = function(pane_options, target, docClasses, docs){
+TerminusDBViewer.prototype.createFullDocumentPane = function(docid, pane_options, target, docClasses, docs){
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
 	pane_options.loadDocument = this.getShowDocumentControl(docClasses, docs, target);
-	var df = new DocumentPane(this.ui.client).options(pane_options);
+	var dp = this.tv.getDocument(docid, pane_options);
 	if(!(docClasses && docClasses.length)){
 		var q2 = WOQL.from(dburl).concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			var docClasses = new TerminusClient.WOQLResult(result2, q2);
 			var dchooser = this.getCreateDataChooser(docClasses, docs);
-			df.setClassLoader(dchooser);
+			dp.setClassLoader(dchooser);
 		});
 	}
 	else {
 		var dchooser = this.getCreateDataChooser(docClasses, docs);
-		df.setClassLoader(dchooser);
+		dp.setClassLoader(dchooser);
 	}
-	return df;
+	return dp;
 }
 
 /**
@@ -276,13 +266,13 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 	this.ui.redrawControls();
 	var start = docid.substring(0, 4);
 	if(start != "doc:" && start != "http") docid = "doc:" + docid;	
-	var df = this.createFullDocumentPane(this.getShowDocumentPaneConfig(), target, docClasses, docs);
-	this.docid = docid; 
 	var config = this.getShowDocumentConfig();
+	var dp = this.createFullDocumentPane(docid, config, target, docClasses, docs);
+	this.docid = docid; 
 	this.pages.push(docid);
-	return df.loadDocument(docid, config).then(() => {
+	return dp.load().then(() => {
 		HTMLHelper.removeChildren(target);
-		target.appendChild(df.getAsDOM());		
+		target.appendChild(dp.getAsDOM());		
 	})
 	.catch((e) => this.ui.showError(e));	
 }
@@ -295,32 +285,34 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 	this.ui.redrawControls();
 	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
+	var config = this.getCreateDocumentConfig();
 
-	var df = new DocumentPane(this.ui.client).options({
+	var dp = this.tv.getNewDocumentPane(cls, config);
+	dp.loadDocument = this.getShowDocumentControl(docClasses, docs);
+	/*var df = new DocumentPane(this.ui.client).options({
 		showQuery: false,
 		editQuery: false,
 		showConfig: false,
 		editConfig: false,
 		loadDocument: this.getShowDocumentControl(docClasses, docs)
-	});
+	});*/
 	if(docClasses && docClasses.count() > 0){
 		var dchooser = this.getCreateDataChooser(docClasses, docs );
-		df.setClassLoader(dchooser);
+		dp.setClassLoader(dchooser);
 	}
 	else {
 		var q2 = WOQL.from(dburl).concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			docClasses = (docClasses ? docClasses : new TerminusClient.WOQLResult(result2, q2));
 			var dchooser = this.getCreateDataChooser(docClasses, docs );
-			df.setClassLoader(dchooser);
+			dp.setClassLoader(dchooser);
 		});
 	}
-	var config = this.getCreateDocumentConfig();
-	df.loadClass(cls, config).then(() => {
+	dp.load().then(() => {
 		HTMLHelper.removeChildren(this.container);
 		var nav = this.getNavigationDOM(docClasses, docs);
 		this.container.appendChild(nav);
-		this.container.appendChild(df.getAsDOM());
+		this.container.appendChild(dp.getAsDOM());
 	});
 }
 
@@ -355,18 +347,18 @@ TerminusDBViewer.prototype.getDocumentsMenu = function(docs, docClasses, target)
 }
 
 TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
-	var WOQL = TerminusClient.WOQL;
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = WOQL.from(dburl).limit(100).documentMetadata();
-	q.execute(this.ui.client).then( (result) => {
-		var res = new TerminusClient.WOQLResult(result, q);
-		var ddp = this.getGraphQueryPane(res);
-		insertDOM.appendChild(ddp.getAsDOM());
-		this.graph_query_pane = ddp;
+	var q = TerminusClient.WOQL.from(dburl).limit(100).documentMetadata();
+	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
+	qp.load().then(() => {
+		insertDOM.appendChild(qp.getAsDOM());
+		this.graph_query_pane = qp;
 	}).catch((e) => {
 		this.ui.showError(e);
 	});
 }
+
+
 
 /**
  * Switches between graph and table display modes on documents home page
@@ -480,19 +472,17 @@ TerminusDBViewer.prototype.styleCreateDocumentChooser = function(){
 	}
 }
 
-TerminusDBViewer.prototype.getCreateDataChooser = function(docClasses, docs, change, qopts, ropts, pholder){
-	var WOQL = TerminusClient.WOQL;
+TerminusDBViewer.prototype.getCreateDataChooser = function(docClasses, docs, change, pholder){
 	pholder = (pholder ? pholder : "Create a New Document");
-	qopts  = (qopts ? qopts :  {});
-	var dp = new QueryPane(this.ui.client, docClasses.query, docClasses).options(qopts);
-	var chooser = WOQL.chooser().values("Class").labels("Label").titles("Comment").show_empty(pholder);
-
+	//qopts  = (qopts ? qopts :  {});
+	//var dp = new QueryPane(this.ui.client, docClasses.query, docClasses).options(qopts);
+	var chooser = TerminusClient.View.chooser().values("Class").labels("Label").titles("Comment").show_empty(pholder);
+	
 	var self = this;
 	chooser.change = (change ? change : function(cls){
 		if(cls)	self.loadCreateDocumentPage(cls, docClasses, docs);
 	});
-	ropts  = (ropts ? ropts :  { showConfig: false, editConfig: false });
-	dp.addView(chooser, ropts);
+	var dp = this.tv.getResult(docClasses.query, chooser, docClasses);
 	var dchooser = dp.getAsDOM();
 	return dchooser;
 }
@@ -616,10 +606,10 @@ TerminusDBViewer.prototype.getNavigationDOM = function(docClasses, docs){
 }
 
 TerminusDBViewer.prototype.insertDocument = function(docid, insertDOM, config, nuke){
-	var df = new DocumentPane(this.ui.client).options(config);
-	return df.loadDocument(docid, config).then(() => {
+	var dp = this.tv.getDocument(docid, config);
+	dp.load().then(() => {
 		if(nuke) HTMLHelper.removeChildren(insertDOM);
-		insertDOM.appendChild(df.getAsDOM());
+		insertDOM.appendChild(dp.getAsDOM());
 	})
 	.catch((e) => this.ui.showError(e));	
 }

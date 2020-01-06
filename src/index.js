@@ -1,4 +1,4 @@
 const TerminusUI = require('./TerminusUI');
-const WOQL =require('./viewer/WOQLView')
+const TerminusViewer =require('./html/TerminusViewer')
 module.exports={TerminusUI:TerminusUI,
-                WOQL:WOQL}
+       TerminusViewer:TerminusViewer}

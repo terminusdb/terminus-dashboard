@@ -41,6 +41,7 @@ TerminusCodeSnippet.prototype.serialise = function(query, format){
 TerminusCodeSnippet.prototype.parseText = function(text, format){
 	try {
 		var WOQL = TerminusClient.WOQL;
+		var View = TerminusClient.View;
 		if(format == "js"){
 			var nw = eval(text);
 			if(this.language == "rule"){
@@ -55,7 +56,7 @@ TerminusCodeSnippet.prototype.parseText = function(text, format){
 				return WOQL.json(qval);
 			}
 			else {
-				return WOQL.loadConfig(qval);
+				return View.loadConfig(qval);
 			}
 		}
 	}
@@ -87,21 +88,13 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
 	scont.setAttribute('class', 'terminus-snippet-container')
     // query
     var snpc = document.createElement('div');
-    //snpc.setAttribute('style', 'display:table-caption; margin: 20px');
-    if(this.placeholder)
+    if(this.placeholder){
 		this.snippet.setAttribute("placeholder", this.placeholder);
-    //if(this.width && this.height)
-	//	this.snippet.setAttribute("style", "width: "+ this.width +"px; height: "+ this.height + "px;");
-    //if(this.language == "woql"){
-    	snpc.appendChild(this.getFormatButtons());
-    //}
-    //else {
-    //	if(with_buttons) snpc.appendChild(this.getViewTypeButtons());
-    //}
+	}
+    snpc.appendChild(this.getFormatButtons());
     if(this.qObj){
     	var serial = this.serialise(this.qObj, this.format);
-		//console.log('serial', serial);
-    	if(this.mode == "edit"){
+		if(this.mode == "edit"){
     		this.snippet.value = serial;
     	}
     	else {
@@ -113,8 +106,11 @@ TerminusCodeSnippet.prototype.getAsDOM = function(with_buttons){
 	}
     snpc.appendChild(this.snippet);
     if(this.mode == "edit"){
-    	var actbtn = this.getSubmitButton();
-    	snpc.appendChild(actbtn);
+		var ssb = document.createElement("span");
+		ssb.setAttribute("class", "terminus-query-submit-buttons");
+		var actbtn = this.getSubmitButton();
+		ssb.appendChild(actbtn);
+    	snpc.appendChild(ssb);
     }
     scont.appendChild(snpc);
     return scont;

@@ -1,22 +1,12 @@
-const TerminusPluginManager = require('../plugins/TerminusPlugin');
 const TerminusClient = require('@terminusdb/terminus-client');
 let HTMLHelper = {};
 
 HTMLHelper.getSettingsControl = function(view){
-	var pman = new TerminusPluginManager();
-	if(pman.pluginAvailable("font-awesome")){
-		var icon = document.createElement('icon');
-		if(view == 'property') icon.setAttribute('class', 'fa fa-cog terminus-pointer');
-		else if(view == 'data') icon.setAttribute('class', 'fa fa-edit terminus-pointer');
-		icon.setAttribute('style', 'margin: 10px;')
-		return icon;
-	}
-	else{
-		var button = document.createElement("button");
-		button.setAttribute('class', 'terminus-btn');
-		button.appendChild(document.createTextNode('Settings'));
-		return button;
-	}
+	var icon = document.createElement('icon');
+	if(view == 'property') icon.setAttribute('class', 'fa fa-cog terminus-pointer');
+	else if(view == 'data') icon.setAttribute('class', 'fa fa-edit terminus-pointer');
+	icon.setAttribute('style', 'margin: 10px;')
+	return icon;
 }
 
 HTMLHelper.getControlIcon = function(control){
@@ -527,7 +517,7 @@ HTMLHelper.getInfoboxDOM = function(type, label, value, help, mode, args, input)
 
 
 HTMLHelper.getActionControl = function(type, control, label, callback, disabled, mode, args){
-	var pman = new TerminusPluginManager();
+	//var pman = new TerminusPluginManager();
 	var dpropDOM = document.createElement("span");
 	//dpropDOM.setAttribute("class", "terminus-action-control terminus-save-btn " + type + "-" + control);
 	label = (args && typeof args.label != "undefined" ? args.label : label);

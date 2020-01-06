@@ -20,6 +20,7 @@ SimpleChooser.prototype.render = function(chooser){
 	if(this.chooser.config.show_empty()){
 		opts.push(this.getEmptyOption())
 	}
+	this.chooser.first();
 	while(choice = this.chooser.next()){
 		var opt = this.createOptionFromChoice(choice);
 		opts.push(opt);

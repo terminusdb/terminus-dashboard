@@ -1,34 +1,48 @@
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const UTILS = require('../Utils');
 const HTMLHelper = require('./HTMLHelper');
-const TerminusFrame = require("../viewer/TerminusFrame");
+//const TerminusFrame = require("../old/viewer/TerminusFrame");
+const TerminusClient = require('@terminusdb/terminus-client');
 const Datatypes = require("./Datatypes");
+const SimpleFrameViewer = require("./document/SimpleFrameViewer");
 
 
-function DocumentPane(client){
+function DocumentPane(client, docid, clsid){
 	this.client = client;
 	this.container = document.createElement('span');
-    this.container.setAttribute('class', 'terminus-document-cont');
+	this.container.setAttribute('class', 'terminus-document-cont');
+	this.defaultPaneView = { showConfig: false, editConfig: false, intro: false, loadSchema: false };
+	this.docid = (docid ? docid : false);
+	this.clsid = (clsid ? clsid : false);
 }
+
+DocumentPane.prototype.load = function(){
+	if(this.docid || this.clsid){
+		this.frame = new TerminusClient.DocumentFrame(this.client, this.view);
+		this.frame.owner = this;
+		//this.frame.setDatatypes(Datatypes.initialiseDataRenderers);		
+	}
+	if(this.docid){
+		return this.frame.load(this.docid, this.clsid);
+	}
+	if(this.clsid){
+		return this.frame.load(false, this.clsid).then(() => this.frame.document.fillFromSchema("_:"));	
+	}
+	return Promise.reject("Either document id or class id must be specified before loading a document");
+}
+
 
 DocumentPane.prototype.loadDocument = function(docid, config){
 	this.docid = docid;
-	this.clsid = false;
 	this.view = config;
-	this.frame = new TerminusFrame(this.client).options(this.view);
-	this.frame.owner = this;
-	this.frame.setDatatypes(Datatypes.initialiseDataRenderers);
-	return this.frame.loadDocument(docid);
+	return this.load();
 }
 
 DocumentPane.prototype.loadClass = function(cls, config){
 	this.clsid = cls;
 	this.docid = false;
 	this.view = config;
-	this.frame = new TerminusFrame(this.client).options(this.view);
-	this.frame.owner = this;
-	this.frame.setDatatypes(Datatypes.initialiseDataRenderers);
-	return this.frame.loadDocumentSchema(cls).then(() => this.frame.document.fillFromSchema("_:"));
+	return this.load();
 }
 
 
@@ -46,7 +60,6 @@ DocumentPane.prototype.options = function(opts){
 	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : false);
 	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: false, editConfig: false };
 	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
 	this.loadSchema = (opts && typeof opts.loadSchema != "undefined" ? opts.loadSchema : false);
 	this.viewers = (opts && typeof opts.viewers != "undefined" ? opts.viewers : false);

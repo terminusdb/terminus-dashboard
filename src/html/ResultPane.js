@@ -1,5 +1,7 @@
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const Datatypes = require("./Datatypes");
+const DatatypeRenderers = require("./DatatypeRenderers");
+
 const SimpleTable = require("./table/SimpleTable");
 const SimpleGraph = require("./graph/SimpleGraph");
 const SimpleStream = require("./stream/SimpleStream");
@@ -37,6 +39,18 @@ ResultPane.prototype.options = function(opts){
     this.viewers =  (opts && typeof opts.viewers != "undefined" ? this.viewers.concat(opts.viewers) : this.viewers);
     this.currentViewer = 0;
     return this;
+}
+
+ResultPane.prototype.getRenderer = function(){
+    if(this.config && this.config.renderer()){
+        return this.config.renderer();
+    }
+    else {
+        if(this.config.type && this.renderers[this.config.type]){
+            return this.renderers[this.config.type];
+        }
+    }
+    return false;
 }
 
 ResultPane.prototype.getAsDOM = function(){
@@ -128,8 +142,13 @@ ResultPane.prototype.getViewTypeIconDOM = function(sp, ipdom){
 ResultPane.prototype.changeViewerType = function(viewer, index){
     this.currentViewer = index;
     this.config = viewer;
-    this.input.setQuery(viewer);
-    this.input.submit(this.input.qObj);
+    if(this.input){
+        this.input.setQuery(viewer);
+        this.input.submit(this.input.qObj);
+    }
+    else {
+        this.updateView(viewer);
+    }    
 }
 
 
@@ -208,14 +227,19 @@ ResultPane.prototype.updateView = function(config){
 ResultPane.prototype.getResultDOM = function(){
 	let span = document.createElement("span");
 	span.setAttribute("class", "terminus-query-results");
-    let viewer = this.config.create(this.client, this.renderers, Datatypes.initialiseDataRenderers);
+    let viewer = this.config.create(this.client);
+    viewer.datatypes = new DatatypeRenderers();
+    Datatypes.initialiseDataRenderers(viewer.datatypes);
     var self = this;
     viewer.notify = function(r){
         self.qp.updateResult(r);
     }
 	this.result.first();
-	viewer.setResult(this.result);
-	span.appendChild(viewer.render());
+    viewer.setResult(this.result);
+    
+    var html_renderer = this.getRenderer();
+
+	span.appendChild(html_renderer.render(viewer));
 	return span;
 }
 
