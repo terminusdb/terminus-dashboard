@@ -13,8 +13,18 @@ function QueryPane(client, query, result){
 	this.container = document.createElement('span');
 	this.messages = document.createElement('div');
 	this.messages.setAttribute('class', 'terminus-query-messages');
+	this.defaultResultView = { showConfig: false, editConfig: false };
+	this.defaultQueryView = { showQuery: false, editQuery: false };
 	this.fireDefaultQueries();
 }
+
+QueryPane.prototype.load = function(repl){
+	return this.query.execute(this.client).then( (result) => {
+			let nresult = new TerminusClient.WOQLResult(result, this.query);
+			this.updateResult(nresult);
+	});
+}
+
 
 QueryPane.prototype.fireDefaultQueries = function(){
 	let WOQL = TerminusClient.WOQL;
@@ -36,7 +46,6 @@ QueryPane.prototype.options = function(opts){
 	this.showHeader = (opts && typeof opts.showHeader != "undefined" ? opts.showHeader : false);
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: false, editConfig: false };
 	var css = (opts && typeof opts.css != "undefined" ? opts.css : 'terminus-query-pane-cont');
     this.container.setAttribute('class', css);
     return this;
@@ -60,7 +69,8 @@ QueryPane.prototype.clearSubMenus = function(btn){
 QueryPane.prototype.getResults = function(query){
 	if(query)
 		this.input.setQuery(query);
-		HTMLHelper.removeChildren(this.sampleQueryDOM);
+	HTMLHelper.removeChildren(this.sampleQueryDOM);
+	this.sampleQueryDOM.appendChild(document.createTextNode(" Saved Queries "))
 	this.input.refreshContents();
 }
 
@@ -269,12 +279,15 @@ QueryPane.prototype.getSampleQueriesDOM = function(){
 	i.setAttribute('class', 'fa fa-ellipsis-v terminus-ellipsis-icon');
 	i.setAttribute('title', 'Click to load sample Queries');
 	i.setAttribute('value', false);
+	i.appendChild(document.createTextNode(" Saved Queries "))
 	this.sampleQueryDOM = i;
 	var self = this;
 	i.addEventListener('click', function(e){
 		if(e.target !== this) return;
-		if(this.children.length)
-		    HTMLHelper.removeChildren(this);
+		if(this.children.length) {
+			HTMLHelper.removeChildren(this);
+			this.appendChild(document.createTextNode(" Saved Queries "))
+		}
 		else{
 			var d = self.getQueryMenuBlock();
 			this.appendChild(d);
@@ -291,7 +304,6 @@ QueryPane.prototype.getAsDOM = function(){
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
 		this.querySnippet = configspan;
-		this.container.appendChild(this.messages);
 		this.container.appendChild(configspan);
 		var mode = (this.editQuery ? "edit" : "view");
 		this.input = this.createInput(mode);
@@ -315,7 +327,10 @@ QueryPane.prototype.getAsDOM = function(){
 				self.container.appendChild(ipdom);
 			}
 			var qicon = self.getSampleQueriesDOM();
-			ipdom.appendChild(qicon);
+			var sqd = document.createElement("span");
+			sqd.setAttribute("class", "sample-queries-pane");
+			sqd.appendChild(qicon);
+			ipdom.appendChild(sqd);
 			self.input.stylizeSnippet();
 		}
 		function hideQueryConfig(){
@@ -331,11 +346,17 @@ QueryPane.prototype.getAsDOM = function(){
 		});
 		showQueryConfig();
 		if(this.showQuery == "icon") hideQueryConfig();
-    }
+	}
 	this.resultDOM = document.createElement("span");
-	this.resultDOM.setAttribute("class", "terminus-query-results");
+	if(this.showQuery){
+		this.resultDOM.setAttribute("class", "terminus-query-results-full");
+	}
+	else {
+		this.resultDOM.setAttribute("class", "terminus-query-results");
+	}
+	this.resultDOM.appendChild(this.messages);
 	if(this.views.length == 0){
-		this.addView(TerminusClient.WOQL.table(), this.defaultResultView);
+		this.addView(TerminusClient.View.table(), this.defaultResultView);
 	}
 	//this is where we want to put in the view headers in the case of the query page
 	for(var i = 0; i<this.views.length; i++){
@@ -450,9 +471,9 @@ QueryPane.prototype.showNoBindings = function(){
 	nor = document.createElement('div');
 	nor.setAttribute('class', 'terminus-no-res-alert');
 	nor.appendChild(document.createTextNode("No results available for this query"));
-	if(this.container)
-		this.container.insertBefore(nor, this.resultDOM);
-}
+	this.clearMessages();
+	this.messages.appendChild(nor);
+}	
 
 QueryPane.prototype.submitQuery = function(qObj){
 	this.clearMessages();
@@ -470,7 +491,7 @@ QueryPane.prototype.submitQuery = function(qObj){
 		this.clearMessages();
 		if(this.result.hasBindings()){
 			var delta = Date.now() - start;
-			this.showMessage("Query returned " + this.result.count() + " results in " + delta + " seconds");
+			this.showMessage("Query returned " + this.result.count() + " results in " + (delta/1000) + " seconds", "info");
 			this.refreshViews();
 		}
 		else this.showNoBindings();
@@ -529,153 +550,5 @@ QueryPane.prototype.getAddViewControl = function(){
 
 
 
-
-/*
-descr: Show results editor on click of Add View
-params: query object, query snippet
-QueryPane.prototype.showRuleEditor = function(woql, vd, qSnippet){
-var cancel = document.createElement('icon');
-//cancel.appendChild(document.createTextNode('cancel'));
-cancel.setAttribute('class', 'fa fa-times terminus-pointer terminus-cancel-rule-editor');
-vd.appendChild(cancel);
-var rSnippet = this.thv.getEditor(1350, 250, 'Enter Rules ...');
-//var rEditor = document.createElement('div');
-vd.setAttribute('class', 'terminus-rule-editor');
-//vd.setAttribute('style', 'border: 1px solid orange');
-this.qpane.addRuleDom = rSnippet.actionButton;
-vd.appendChild(UTILS.getHeaderDom('Rule Editor:'));
-vd.appendChild(rSnippet.dom);
-qSnippet.dom.appendChild(vd);
-var self = this;
-cancel.addEventListener('click', function(){
-    TerminusClient.FrameHelper.removeChildren(vd);
-    self.addView(woql, qSnippet);
-})
-this.qpane.addRuleDom.addEventListener('click', function(){
-    try{
-        self.submitView(woql, qSnippet, rSnippet);
-        self.hideAddViewEditor(vd);
-    }
-    catch(e){
-        self.ui.showError('Error in rule editor: ' + e);
-    }
-})
-return rSnippet;
-}
-*/
-
-
-/*
-
-QueryPane.prototype.getWOQLEditor = function(){
-    var tcs = new TerminusCodeSnippet("woql", "edit");
-	var snippet = tcs.getAsDOM();
-	var dimensions = {};
-	dimensions.width = width;
-	dimensions.height = height;
-	UTILS.stylizeEditor(this.ui, snippet.snippetText, dimensions, 'javascript');
-	return snippet;
-}
-
-QueryPane.prototype.showConfigEditor = function(result, config, span){
-    var cSnippet = this.getEditor(300, 250,
-                        JSON.stringify(config, undefined, 2));
-    var self = this;
-    cSnippet.actionButton.addEventListener('click', function(){
-        try{
-            //self.submitConfigRules(woql, cSnippet, qSnippet, rSnippet);
-			var cObj = UTILS.getqObjFromInput(cSnippet.snippetText.value);
-			TerminusClient.FrameHelper.removeChildren(span);
-			span.appendChild(self.showResult(result, cObj));
-        }
-        catch(e){
-            //self.ui.showError('Error in config editor: ' + e);
-			console.log('Error in config editor: ' + e);
-        }
-    })
-    return cSnippet;
-}
-
-QueryPane.prototype.submitConfig = function(result, config, span, cdom){
-	var cSnippet = this.showConfigEditor(result, config, span);
-	cdom.appendChild(cSnippet.dom);
-}
-
-QueryPane.prototype.showConfig = function(result, config, span, cdom){
-	var cbtn = document.createElement('button');
-    //cbtn.setAttribute('style', 'margin-top: 10px;');
-    cbtn.setAttribute('class', 'terminus-btn terminus-query-config-btn');
-    cbtn.appendChild(document.createTextNode('Config'));
-    //rSnippet.dom.appendChild(cbtn);
-    //qSnippet.dom.appendChild(cbtn);
-    var self = this;
-    cbtn.addEventListener('click', function(){
-		TerminusClient.FrameHelper.removeChildren(cdom);
-        self.submitConfig(result, config, span, cdom);
-    })
-    return cbtn;
-}
-
-
-/*QueryPane.prototype.addResultViewerOLD = function(label, rule, ruleviewer){
-	let rv = new ResultViewer(rule);
-	if(ruleviewer) rv.setRuleViewer(ruleviewer);
-	this.result_viewers[label] = rv;
-	return this;
-}
-
-QueryPane.prototype.addResultViewer = function(rule){
-	alert("rule " + JSON.stringify(rule));
-	this.result_viewers.push(rule);
-	return this;
-}
-
-
-
-QueryPane.prototype.addLibrary = function(lib){
-	this.libraries.push(lib);
-	return this;
-}
-
-QueryPane.prototype.render = function(lib){
-	var qps = document.createElement("span");
-	for(var i = 0; i<this.query_viewers.length; i++){
-		var qv = this.query_viewers[i];
-		if(qv){
-			let v = qv.render();
-			if(v) qps.appendChild(v);
-		}
-	}
-
-	for(var k in this.result_viewers){
-		var rv = this.result_viewers[k];
-		if(rv){
-			var x = rv.render();
-			if(x) qps.appendChild(x);
-		}
-	}
-	return qps;
-}
-
-function ResultViewer(rule){
-	this.rules = [];
-	if(rule) this.rules.push(rule);
-}
-
-ResultViewer.prototype.render = function(){
-	alert("rv");
-	var span = document.createElement("span");
-	if(this.ruleviewer){
-		let r = this.ruleviewer.render();
-		if(r) span.appendChild(r);
-	}
-	return span;
-}
-
-ResultViewer.prototype.setRuleViewer = function(rv){
-	this.ruleviewer = rv;
-}
-
-*/
 
 module.exports = QueryPane;

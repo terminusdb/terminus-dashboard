@@ -641,7 +641,14 @@ GraphResultsViewer.prototype.getNodeIcon = function(node) {
 }
 
 GraphResultsViewer.prototype.getNodeIconUnicode= function(node) {
-	return (node && node.icon && node.icon.unicode ? node.icon.unicode : this.defaults.node.icon.unicode);
+	if(node && typeof node.icon != "undefined"){
+		if(node.icon.unicode){
+			return node.icon.unicode;
+		}
+		if(node.icon.label === true)	return this.getNodeText(node);
+		else if(node.icon.label) return node.icon.label;
+	}
+	return this.defaults.node.icon.unicode;
 }
 
 GraphResultsViewer.prototype.getNodeIconWeight = function(node) {

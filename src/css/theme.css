@@ -501,10 +501,19 @@ button.terminus-new-query-btn{
 	float: right;
     margin-top: 50px;
 }
-span.terminus-query-results{
+span.terminus-query-results-full{
+	width: 100%;
+	display: block;
+	min-height: 50px;
+	margin: 10px 0px 20px 0px;
+}
+
+span.terminus-query-results {
 	width: 100%;
 	margin: 10px 0px 20px 0px;
 }
+
+
 span.terminus-click-to-view-query{
 	margin-top: 10px;
 	z-index: 10;
@@ -1947,9 +1956,54 @@ input.terminus-schema-id-display{
 	margin: 30px 0px 30px 20px;
 	width: 810px;
 }
+
 button.terminus-schema-import_schema, button.terminus-schema-add_new_library{
 	float: right;
 }
+
+span.sample-queries-pane {
+	display: block;
+	margin-top: -50px;
+	margin-bottom: 20px;
+}
+
+div.terminus-load-queries {
+	margin-top: 12px;
+}
+
+.terminus-new-query-pane {
+	display: block;
+	width: 100%;
+	margin-top: 60px;
+	text-align: right;
+}
+
+span.terminus-query-submit-buttons {
+	display: block;
+	text-align: right;
+	padding: 1em 1em;
+}
+
+span.terminus-query-submit-buttons button {
+	font-size: 1em;
+
+}
+
+span.terminus-schema-save-buttons button {
+	font-size: 1.1em;
+}
+
+
+span.terminus-schema-save-buttons {
+	display: block;
+	text-align: right;
+	padding: 0.2em 1em;
+}
+
+span.terminus-schema-save-buttons button {
+	font-size: 1.1em;
+}
+
 select.terminus-frame-selector{
 	margin-left: 4px;
 	width: 120px !important;
