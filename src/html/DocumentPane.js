@@ -3,8 +3,9 @@ const UTILS = require('../Utils');
 const HTMLHelper = require('./HTMLHelper');
 //const TerminusFrame = require("../old/viewer/TerminusFrame");
 const TerminusClient = require('@terminusdb/terminus-client');
-const Datatypes = require("./Datatypes");
 const SimpleFrameViewer = require("./document/SimpleFrameViewer");
+const Datatypes = require("./Datatypes");
+const DatatypeRenderers = require("./DatatypeRenderers");
 
 
 function DocumentPane(client, docid, clsid){
@@ -14,19 +15,26 @@ function DocumentPane(client, docid, clsid){
 	this.defaultPaneView = { showConfig: false, editConfig: false, intro: false, loadSchema: false };
 	this.docid = (docid ? docid : false);
 	this.clsid = (clsid ? clsid : false);
+	this.datatypes = new DatatypeRenderers();
+    Datatypes.initialiseDataRenderers(this.datatypes);
+    
+	
 }
 
 DocumentPane.prototype.load = function(){
 	if(this.docid || this.clsid){
 		this.frame = new TerminusClient.DocumentFrame(this.client, this.view);
 		this.frame.owner = this;
-		//this.frame.setDatatypes(Datatypes.initialiseDataRenderers);		
 	}
 	if(this.docid){
-		return this.frame.load(this.docid, this.clsid);
+		return this.frame.load(this.docid, this.clsid)
+		.then(() => this.filterFrame());
 	}
 	if(this.clsid){
-		return this.frame.load(false, this.clsid).then(() => this.frame.document.fillFromSchema("_:"));	
+		return this.frame.load(false, this.clsid).then(() => {
+			this.frame.document.fillFromSchema("_:");
+			this.filterFrame();
+	});	
 	}
 	return Promise.reject("Either document id or class id must be specified before loading a document");
 }
@@ -42,6 +50,28 @@ DocumentPane.prototype.options = function(opts){
     return this;
 }
 
+DocumentPane.prototype.filterFrame = function(){
+	var self = this;
+	var myfilt = function(frame, rule){
+		if(typeof rule.render() != "undefined"){
+			frame.render = rule.render();
+		}
+		else {
+			if(rule.renderer()){
+				var renderer = self.loadRenderer(rule.renderer(), frame, rule.args);		
+			}
+			if(renderer && renderer.render){
+				frame.render = function(fframe){
+					return renderer.render(fframe);
+				}
+			}
+		}
+		if(rule.compare()){
+			frame.compare = rule.compare();
+		}
+	}
+	this.frame.applyRules(false, false, myfilt);
+}
 
 DocumentPane.prototype.loadDocument = function(docid, config){
 	this.docid = docid;
@@ -169,8 +199,8 @@ DocumentPane.prototype.renderResult = function(){
 		//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
 		this.container.appendChild(this.resultDOM);
 	}
-	if(this.frame && this.frame.render){
-		var fpt = this.frame.render();
+	if(this.frame && this.frame.document.render){
+		var fpt = this.frame.document.render();
 		if(fpt){
 			this.resultDOM.appendChild(fpt);
 		}
@@ -183,7 +213,8 @@ DocumentPane.prototype.loadRenderer = function(rendname, frame, args, termframe)
 	evalstr += ");";
 	try {
 		var nr = eval(evalstr);
-		nr.terminus = termframe;
+		nr.frame = frame;
+		nr.datatypes = this.datatypes;
 		return nr;
 	}
 	catch(e){

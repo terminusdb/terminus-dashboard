@@ -8,6 +8,11 @@ SimpleFrameViewer.prototype.getScope = function(frame){
 	if(frame.isData()) return "data";
 }
 
+SimpleFrameViewer.prototype.setDatatypeViewers = function(datatypes){
+	this.datatypes = datatypes;
+}
+
+
 SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 	var dv = frame.display_options.dataviewer;
 	if(!dv){
@@ -15,10 +20,10 @@ SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 		else if(frame.isDocument()) var t = "document";
 		else t = frame.getType();
 		if(mode && mode == "edit"){
-			var r = this.terminus.datatypes.getEditor(t);
+			var r = this.datatypes.getEditor(t);
 		}
 		else {
-			var r = this.terminus.datatypes.getRenderer(t);
+			var r = this.datatypes.getRenderer(t);
 		}
 		dv = r.name;
 	}
@@ -29,10 +34,13 @@ SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 		if(r && r.args) args = r.args;
 		else args = false;
 	}
-	return this.terminus.datatypes.createRenderer(dv, args);
+	return this.datatypes.createRenderer(dv, args);
 }
 
 SimpleFrameViewer.prototype.render = function(frame){
+	if(!frame) frame = this.frame;
+	if(!frame) return;
+
 	var scope = this.getScope(frame);
 	if(frame.display_options.header_features && frame.display_options.header_features.length){
 		var hfeatures = this.getFeaturesDOM(frame.display_options.header_features, scope, frame, frame.display_options.mode);
@@ -107,7 +115,7 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, scope, frame, mode)
 		}
 		else {
 			if(fid == "id" && mode == "edit" && scope == "object" && frame.isNew()){
-				var rend = this.terminus.datatypes.createRenderer("HTMLStringEditor", args);
+				var rend = this.datatypes.createRenderer("HTMLStringEditor", args);
 				var dom = rend.renderFrame(frame, this);
 			}
 			else var dom = false;
