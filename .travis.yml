@@ -5,9 +5,9 @@ node_js:
 # travis call prepare 
 # create the minify version
 before_install:
-   git clone https://github.com/terminusdb/terminus-client.git
-   cd terminusdb/terminus-client
-   git checkout dev
+   - git clone https://github.com/terminusdb/terminus-client.git
+   - cd terminusdb/terminus-client
+   - git checkout dev
 
 after_script: "npm run build:all"
 
