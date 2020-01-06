@@ -10,7 +10,7 @@ before_install:
    - cd  terminus-client
    - git checkout dev
    - npm install 
-   - cd terminus-dashboard
+   - cd ../terminus-dashboard
 
 after_script: "npm run build:all"
 
