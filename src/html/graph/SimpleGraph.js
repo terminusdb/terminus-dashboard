@@ -1,4 +1,4 @@
-const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLHelper = require('../HTMLHelper');
 const GraphResultsViewer = require('./GraphResultsViewer');
 
 
@@ -12,7 +12,7 @@ SimpleGraph.prototype.setResult = function(result){
 
 SimpleGraph.prototype.render = function(wgraph){
 	this.graph = wgraph;
-	TerminusClient.FrameHelper.removeChildren(this.holder);
+	HTMLHelper.removeChildren(this.holder);
 	//var ctls = this.getControlsDOM(result);
 	var tab = this.getGraphDOM(this.result);
 	//if(ctls) this.holder.appendChild(ctls)

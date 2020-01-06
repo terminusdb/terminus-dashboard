@@ -17,7 +17,7 @@ HTMLNumberViewer.prototype.render = function(value){
 	var input = document.createElement("span");
 	input.setAttribute('class', 'terminus-number-value terminus-literal-value');
 	input.setAttribute('data-value', value);
-	value = (this.commas ? TerminusClient.FrameHelper.numberWithCommas(value) : value);
+	value = (this.commas ? TerminusClient.UTILS.TypeHelper.numberWithCommas(value) : value);
 	input.appendChild(document.createTextNode(value));
 	return input;
 }

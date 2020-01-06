@@ -1,13 +1,17 @@
-const HTMLFrameHelper = require("../HTMLFrameHelper");
+const HTMLHelper = require("../HTMLHelper");
 
-function SimpleFrameViewer(){
-}
+function SimpleFrameViewer(){}
 
 SimpleFrameViewer.prototype.getScope = function(frame){
 	if(frame.isProperty()) return "property";
 	if(frame.isObject()) return "object";
 	if(frame.isData()) return "data";
 }
+
+SimpleFrameViewer.prototype.setDatatypeViewers = function(datatypes){
+	this.datatypes = datatypes;
+}
+
 
 SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 	var dv = frame.display_options.dataviewer;
@@ -16,10 +20,10 @@ SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 		else if(frame.isDocument()) var t = "document";
 		else t = frame.getType();
 		if(mode && mode == "edit"){
-			var r = this.terminus.datatypes.getEditor(t);
+			var r = this.datatypes.getEditor(t);
 		}
 		else {
-			var r = this.terminus.datatypes.getRenderer(t);
+			var r = this.datatypes.getRenderer(t);
 		}
 		dv = r.name;
 	}
@@ -30,78 +34,107 @@ SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 		if(r && r.args) args = r.args;
 		else args = false;
 	}
-	return this.terminus.datatypes.createRenderer(dv, args);
+	return this.datatypes.createRenderer(dv, args);
 }
 
 SimpleFrameViewer.prototype.render = function(frame){
+	if(!frame) frame = this.frame;
+	if(!frame) return;
+
 	var scope = this.getScope(frame);
-	if(frame.display_options.header_features){
-		var hfeatures = this.getFeaturesDOM(frame.display_options.header_features, frame.display_options.feature_renderers, scope, frame, frame.display_options.mode)
+	if(frame.display_options.header_features && frame.display_options.header_features.length){
+		var hfeatures = this.getFeaturesDOM(frame.display_options.header_features, scope, frame, frame.display_options.mode);
 	}
 	else var hfeatures = false;
-	if(frame.display_options.features){
-		var features = this.getFeaturesDOM(frame.display_options.features, frame.display_options.feature_renderers, scope, frame, frame.display_options.mode);
+	if(frame.display_options.features && frame.display_options.features.length){
+		var features = this.getFeaturesDOM(frame.display_options.features, scope, frame, frame.display_options.mode);
 	}
 	else var features = false;
 	var orient = (scope == "object" || scope == "property") ? "page" : "line";
-	var ndom = HTMLFrameHelper.getFrameDOM(scope, frame, orient, hfeatures, features);
+	var ndom = HTMLHelper.getFrameDOM(scope, frame, orient, hfeatures, features);
 	if(!ndom) return false;
 	if(this.framedom){
 		this.framedom.replaceWith(ndom);
 	}
 	this.framedom = ndom;
+	if(frame.display_options.style){
+		this.framedom.setAttribute("style", frame.display_options.style);				
+	}
 	return this.framedom;
 }	
 
-SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, renderers, scope, frame, mode){
+SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, scope, frame, mode){
 	var features = document.createElement("span");
-	features.setAttribute("class", featuresToCSS(flist));
+	features.setAttribute("class", "terminus-features terminus-" + scope + "-features features-" + featuresToCSS(flist));
 	for(var i = 0; i<flist.length; i++){
-		if(typeof flist[i] == "object"){
-			features.appendChild(this.getFeaturesDOM(flist[i], renderers, scope, frame));
+		let render = false;
+		let style = false;
+		let args = false;
+		let fid = flist[i];
+		if(typeof fid == "object"){
+			fid = Object.keys(flist[i])[0];
+			if(flist[i][fid].hidden) continue;
+			if(flist[i][fid].style) style = flist[i][fid].style;
+			if(flist[i][fid].render) render = flist[i][fid].render;
+			if(flist[i][fid].args){
+				args = flist[i][fid].args;
+			} 
 		}
-		else {
-			if(renderers && renderers[flist[i]]){
-				var dom = renderers[flist[i]](frame, flist[i]);
-				if(dom)	features.appendChild(dom);
-			}				
-			else {
-				if(flist[i] == "value" && scope == "data"){
-					var dv = this.getDatatypeViewer(frame, mode);
-					if(dv) {
-						var dom = dv.renderFrame(frame, this);
-					}
-					else {
-						var dom = document.createTextNode(frame.get());			
-					}
-					if(dom)	features.appendChild(dom);
-				}
-				else if(flist[i] == "value"){
-					if(scope == 'object'){
-						var vals = frame.renderProperties();
-					}
-					else {
-						var vals = frame.renderValues();		    
-					}
-				    for(var j = 0; j<vals.length; j++){
-						features.appendChild(vals[j]);
-					}
+		else if(typeof fid != "string") continue;
+		if(render){
+			var dom = render(frame, fid, scope, mode, args);
+			if(style) dom.setAttribute("style", style);
+			if(dom)	features.appendChild(dom);
+		}
+		else if(fid == "value"){
+			if(scope == "data"){
+				var dv = this.getDatatypeViewer(frame, mode, args);
+				if(dv) {
+					var dom = dv.renderFrame(frame, this);
 				}
 				else {
-					var dom = HTMLFrameHelper.getFeatureDOM(flist[i], scope, frame);
-					if(dom)	features.appendChild(dom);
+					var dom = document.createTextNode(frame.get());			
 				}
+				if(dom){
+					if(style) dom.setAttribute("style", style);			
+					features.appendChild(dom);
+				}
+			}
+			else {
+				if(scope == 'object'){
+					var vals = frame.renderProperties();
+				}
+				else {
+					var vals = frame.renderValues();		    
+				}
+				for(var j = 0; j<vals.length; j++){
+					if(style) vals[j].setAttribute("style", style);
+					features.appendChild(vals[j]);
+				}
+			}
+		}
+		else {
+			if(fid == "id" && mode == "edit" && scope == "object" && frame.isNew()){
+				var rend = this.datatypes.createRenderer("HTMLStringEditor", args);
+				var dom = rend.renderFrame(frame, this);
+			}
+			else var dom = false;
+			var dom = HTMLHelper.getFeatureDOM(frame, fid, scope, mode, args, dom);
+			if(dom){
+				if(style) dom.setAttribute("style", style);			
+				features.appendChild(dom);
 			}
 		}
 	}
 	return features;
-}
+}					
+	
 
 function featuresToCSS(flist){
 	var s = "";
 	for(var i = 0; i<flist.length; i++){
 		if(typeof flist[i] == "object"){
-			s += featuresToCSS(flist[i]) + "-";
+			s += Object.keys(flist[i])[0] + "-";
 		}
 		else {
 			s += flist[i] + "-";

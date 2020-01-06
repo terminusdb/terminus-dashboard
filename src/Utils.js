@@ -7,6 +7,8 @@
  */
 const Codemirror= require('./plugins/codemirror.terminus');
 const TerminusClient = require('@terminusdb/terminus-client');
+const HTMLHelper = require('./html/HTMLHelper');
+
 // function to read Files
 function readFile(file){
     if (window.XMLHttpRequest){
@@ -275,7 +277,7 @@ function deleteStylizedEditor(ui, qip){
     if(ui.pluginAvailable("codemirror")){
 		var cm = qip.nextElementSibling;
 		cm.setAttribute('class', 'terminus-hide');
-		TerminusClient.FrameHelper.removeChildren(cm);
+		HTMLHelper.removeChildren(cm);
 	}
 }
 
@@ -285,14 +287,14 @@ function deleteStylizedEditor(ui, qip){
    mode: format to be displayed in
 */
 function stylizeEditor(ui, txt, view, mode){
-    if(ui){
-        var cmConfig = ui.pluginAvailable("codemirror");
-        if(!(cmConfig)) return;
-        var cm = new Codemirror(txt, mode, cmConfig);
-    }
-	else{
-        var cm = new Codemirror(txt, mode, {});
-    }
+  if(ui){
+      var cmConfig = ui.pluginAvailable("codemirror");
+      if(!(cmConfig)) return;
+      var cm = new Codemirror(txt, mode, cmConfig);
+  }
+  else{
+      var cm = new Codemirror(txt, mode, {});
+  }
 	var ar = cm.colorizeTextArea(view);
 	cm.updateTextArea(ar);
 }

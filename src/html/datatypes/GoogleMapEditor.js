@@ -1,5 +1,4 @@
 const GoogleMapHelper = require("./GoogleMapHelper")
-const TerminusClient = require('@terminusdb/terminus-client');
 function GoogleMapEditor(options){}
 
 GoogleMapEditor.prototype.renderFrame = function(frame, dataviewer){

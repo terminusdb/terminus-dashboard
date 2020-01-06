@@ -1,5 +1,3 @@
-const TerminusClient = require('@terminusdb/terminus-client');
-
 function HTMLMarkupEditor(options){}
 
 HTMLMarkupEditor.prototype.renderFrame = function(frame, dataviewer){

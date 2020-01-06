@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rimraf -r dist/*",
     "start:dev": "webpack-dev-server",
-    "build:all": "npm run build:client && npm run build:dash",
+    "build:all": "npm run build:client && npm run build",
     "build":"webpack --mode production",
     "build:client": "cd ./node_modules/@terminusdb/terminus-client && npm install && npm run build",
     "prepare": "npm run clean && npm run build",

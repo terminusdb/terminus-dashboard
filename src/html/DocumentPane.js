@@ -1,36 +1,89 @@
-const TerminusClient = require('@terminusdb/terminus-client');
 const TerminusCodeSnippet = require('./query/TerminusCodeSnippet');
 const UTILS = require('../Utils');
-const HTMLFrameHelper = require('./HTMLFrameHelper');
-const TerminusFrame = require("../viewer/TerminusFrame");
-const Datatypes = require("./Datatypes");
+const HTMLHelper = require('./HTMLHelper');
+//const TerminusFrame = require("../old/viewer/TerminusFrame");
+const TerminusClient = require('@terminusdb/terminus-client');
 const SimpleFrameViewer = require("./document/SimpleFrameViewer");
+const Datatypes = require("./Datatypes");
+const DatatypeRenderers = require("./DatatypeRenderers");
 
 
-function DocumentPane(client){
+function DocumentPane(client, docid, clsid){
 	this.client = client;
 	this.container = document.createElement('span');
-    this.container.setAttribute('class', 'terminus-document-cont');
+	this.container.setAttribute('class', 'terminus-document-cont');
+	this.defaultPaneView = { showConfig: false, editConfig: false, intro: false, loadSchema: false };
+	this.docid = (docid ? docid : false);
+	this.clsid = (clsid ? clsid : false);
+	this.datatypes = new DatatypeRenderers();
+    Datatypes.initialiseDataRenderers(this.datatypes);
+    
+	
+}
+
+DocumentPane.prototype.load = function(){
+	if(this.docid || this.clsid){
+		this.frame = new TerminusClient.DocumentFrame(this.client, this.view);
+		this.frame.owner = this;
+	}
+	if(this.docid){
+		return this.frame.load(this.docid, this.clsid)
+		.then(() => this.filterFrame());
+	}
+	if(this.clsid){
+		return this.frame.load(false, this.clsid).then(() => {
+			this.frame.document.fillFromSchema("_:");
+			this.filterFrame();
+	});	
+	}
+	return Promise.reject("Either document id or class id must be specified before loading a document");
+}
+
+DocumentPane.prototype.options = function(opts){
+	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : false);
+	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : false);
+	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : false);
+	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
+	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
+	this.loadSchema = (opts && typeof opts.loadSchema != "undefined" ? opts.loadSchema : false);
+	this.viewers = (opts && typeof opts.viewers != "undefined" ? opts.viewers : false);
+    return this;
+}
+
+DocumentPane.prototype.filterFrame = function(){
+	var self = this;
+	var myfilt = function(frame, rule){
+		if(typeof rule.render() != "undefined"){
+			frame.render = rule.render();
+		}
+		else {
+			if(rule.renderer()){
+				var renderer = self.loadRenderer(rule.renderer(), frame, rule.args);		
+			}
+			if(renderer && renderer.render){
+				frame.render = function(fframe){
+					return renderer.render(fframe);
+				}
+			}
+		}
+		if(rule.compare()){
+			frame.compare = rule.compare();
+		}
+	}
+	this.frame.applyRules(false, false, myfilt);
 }
 
 DocumentPane.prototype.loadDocument = function(docid, config){
 	this.docid = docid;
-	this.clsid = false;
 	this.view = config;
-	this.frame = new TerminusFrame(this.client).options(this.view);
-	this.frame.owner = this;
-	this.frame.setDatatypes(Datatypes.initialiseDataRenderers);
-	return this.frame.loadDocument(docid);
+	return this.load();
 }
 
 DocumentPane.prototype.loadClass = function(cls, config){
 	this.clsid = cls;
 	this.docid = false;
 	this.view = config;
-	this.frame = new TerminusFrame(this.client).options(this.view);
-	this.frame.owner = this;
-	this.frame.setDatatypes(Datatypes.initialiseDataRenderers);
-	return this.frame.loadDocumentSchema(cls).then(() => this.frame.document.fillFromSchema("_:"));
+	return this.load();
 }
 
 
@@ -41,16 +94,6 @@ DocumentPane.prototype.setClassLoader = function(cloader){
 		this.queryPane.appendChild(this.classLoader);
 	}
 	return this;
-}
-
-DocumentPane.prototype.options = function(opts){
-	this.showQuery = (opts && typeof opts.showQuery != "undefined" ? opts.showQuery : false);
-	this.showConfig = (opts && typeof opts.showConfig != "undefined" ? opts.showConfig : false);
-	this.editConfig = (opts && typeof opts.editConfig != "undefined" ? opts.editConfig : false);
-	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
-	this.defaultResultView = { showConfig: false, editConfig: false };
-	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
-    return this;
 }
 
 DocumentPane.prototype.getQueryPane = function(){
@@ -78,7 +121,7 @@ DocumentPane.prototype.getAsDOM = function(){
 		ispan.setAttribute("class", "document-pane-config");
 		var ic = document.createElement("i");
 		ispan.appendChild(ic);
-		configspan.appendChild(ispan);
+		if(this.showQuery != "always") configspan.appendChild(ispan);
 		var self = this;
 		function showQueryConfig(){
 			ispan.title="Click to Hide Query";
@@ -135,7 +178,7 @@ DocumentPane.prototype.getAsDOM = function(){
         });
         showDocConfig();
 		if(this.showConfig == "icon") hideDocConfig();
-    }
+	}
 	this.resultDOM = document.createElement("span");
 	this.resultDOM.setAttribute("class", "terminus-document-results");
 	//var form = (this.input.format == "js" ? "javascript" : "json");
@@ -146,9 +189,18 @@ DocumentPane.prototype.getAsDOM = function(){
 }
 
 DocumentPane.prototype.renderResult = function(){
-	TerminusClient.FrameHelper.removeChildren(this.resultDOM);
-	if(this.frame && this.frame.render){
-		var fpt = this.frame.render();
+	if(this.resultDOM){
+		HTMLHelper.removeChildren(this.resultDOM);
+	}
+	else {
+		this.resultDOM = document.createElement("span");
+		this.resultDOM.setAttribute("class", "terminus-document-results");
+		//var form = (this.input.format == "js" ? "javascript" : "json");
+		//UTILS.stylizeEditor(ui, this.input.snippet, {width: this.input.width, height: this.input.height}, form);
+		this.container.appendChild(this.resultDOM);
+	}
+	if(this.frame && this.frame.document.render){
+		var fpt = this.frame.document.render();
 		if(fpt){
 			this.resultDOM.appendChild(fpt);
 		}
@@ -161,7 +213,8 @@ DocumentPane.prototype.loadRenderer = function(rendname, frame, args, termframe)
 	evalstr += ");";
 	try {
 		var nr = eval(evalstr);
-		nr.terminus = termframe;
+		nr.frame = frame;
+		nr.datatypes = this.datatypes;
 		return nr;
 	}
 	catch(e){
@@ -213,13 +266,7 @@ DocumentPane.prototype.submitQuery = function(qObj){
 		let dom = tdv.render();
 		if(dom) holder.appendChild(dom);
 	});
-	return holder;
-    this.query = qObj;
-    qObj.execute(this.client).then((results) => {
-		var r = new TerminusClient.WOQLResult(results, qObj);
-		this.result = r;
-		this.refreshViews();
-	})
+	return holder;   
 }
 
 module.exports = DocumentPane;

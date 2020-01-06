@@ -1,5 +1,4 @@
 const GoogleMapHelper = require("./GoogleMapHelper")
-const TerminusClient = require('@terminusdb/terminus-client');
 
 function GoogleMapViewer(options){}
 
