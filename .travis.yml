@@ -13,6 +13,9 @@ before_install:
    - cd ../terminus-dashboard
 
 # after_script: "npm run build:all"
+after_success:
+  - cd ..
+  - ./update.sh
 
 branches:
   only:
