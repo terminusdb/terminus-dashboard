@@ -1,0 +1,17 @@
+language: node_js
+sudo: required
+node_js:
+  - "stable"
+# travis call prepare 
+# create the minify version
+before_install:
+   git clone https://github.com/terminusdb/terminus-client.git
+
+   git checkout dev
+
+after_script: "npm run build:all"
+
+branches:
+  only:
+    - dev
+    - master

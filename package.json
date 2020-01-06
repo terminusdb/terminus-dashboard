@@ -9,7 +9,9 @@
   "scripts": {
     "clean": "rimraf -r dist/*",
     "start:dev": "webpack-dev-server",
-    "build": "webpack --mode production",
+    "build:all": "npm run build:client && npm run build:dash",
+    "build":"webpack --mode production",
+    "build:client": "cd ./node_modules/@terminusdb/terminus-client && npm install && npm run build",
     "prepare": "npm run clean && npm run build",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome"
@@ -45,7 +47,7 @@
   },
   "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
-    "@terminusdb/terminus-client": "^1.0.2",
+    "@terminusdb/terminus-client": "file:../terminus-client",
     "copy-webpack-plugin": "^5.0.4"
   }
 }
