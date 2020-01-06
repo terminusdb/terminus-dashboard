@@ -14,7 +14,6 @@ before_install:
 
 # after_script: "npm run build:all"
 after_success:
-  - cd ..
   - ./update.sh
 
 branches:
