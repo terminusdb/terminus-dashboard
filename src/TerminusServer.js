@@ -183,7 +183,7 @@ TerminusServerViewer.prototype.getServerDetailsDOM = function(){
 	var scd = document.createElement("div");
 	scd.setAttribute("class", "terminus-server-details terminus-welcome-box terminus-no-res-alert");
 	var icon = document.createElement("img");
-	icon.setAttribute("src", "http://localhost:8080/css/img/TerminusDB_Logo_Original.png");
+	icon.setAttribute("src", "css/img/TerminusDB_Logo_Original.png");
 	scd.appendChild(icon);
 	var scl = document.createElement("p");
 	scl.appendChild(document.createTextNode("Terminus Server Running at "))
