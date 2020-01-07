@@ -117,7 +117,17 @@ TerminusDBViewer.prototype.getShowDocumentConfig = function(){
 
 TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
 	var graph = TerminusClient.View.graph();
+	graph.literals(false);
 	graph.height(800).width(1250);
+	graph.edges(["v:doc1", "v:doc2"], ["v:doc1", "v:Enttype"], ["v:doc2", "v:Enttype2"]);
+	graph.node("v:Label", "v:Label2", "v:Predicate").hidden(true);
+	graph.edge("v:doc1", "v:doc2").distance(100).text("v:Predicate");
+	graph.edge("v:doc1", "v:Enttype").distance(100).text("Class");
+	graph.edge("v:doc2", "v:Enttype2").distance(100).text("Class");
+    graph.node("v:Enttype").text("v:Enttype").color([200, 250, 200]).icon({label: true, color: [15, 50, 10]}).collisionRadius(80);
+    graph.node("v:Enttype2").text("v:Enttype2").color([200, 250, 200]).icon({label: true, color: [15, 50, 10]}).collisionRadius(80);
+	graph.node("v:doc1").size(24).text("v:Label1").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
+	graph.node("v:doc2").size(24).text("v:Label2").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
 	return graph;
 }
 
@@ -347,7 +357,7 @@ TerminusDBViewer.prototype.getDocumentsMenu = function(docs, docClasses, target)
 
 TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = TerminusClient.WOQL.from(dburl).limit(100).documentMetadata();
+	var q = TerminusClient.WOQL.from(dburl).limit(100).getAllDocumentConnections();
 	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
 	insertDOM.appendChild(qp.getAsDOM());
 	this.graph_query_pane = qp;
@@ -551,6 +561,8 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 			let deleteConfirm = confirm(`This action is irreversible, it will remove the database from the system permanently. Are you sure you want to delete ${db} Database?`);
 			if (deleteConfirm == true) {
 				self.ui.deleteDatabase();
+				self.ui.client.connectionConfig.dbid = false;
+				self.ui.redrawControls();
 			}
 		});
 	}
@@ -592,7 +604,8 @@ TerminusDBViewer.prototype.getNavigationDOM = function(docClasses, docs){
 	s.appendChild(i);
 	var p =  this.pages[this.pages.length-2];
 	if(p){
-		s.appendChild(document.createTextNode(" back to " + p));
+		var msg = (p == "home" ? "document list" : p)
+		s.appendChild(document.createTextNode(" back to " + msg));
 	}
 	else {
 		this.pages.push("home");

@@ -94,7 +94,6 @@ TerminusSchemaViewer.prototype.getPropertiesPane = function() {
 	graph.edges(["Domain", "Property"], ["Property", "Range"]);
 	graph.edge("Domain", "Property").text("Domain Class").color([20, 200, 20]).distance(120);
 	graph.edge("Property", "Range").text("Property Type").distance(100);
-	graph.edge("Property", "Range");
 	graph.node("Type").hidden(true);
 	graph.node("Range").text("v:Range").size(20).collisionRadius(100).color([220, 250, 180]).icon({label: true, size: 0.8, color: [50, 60, 40]});
 	graph.node("Range").v("Type").in("owl:datatypeProperty").hidden(true);
