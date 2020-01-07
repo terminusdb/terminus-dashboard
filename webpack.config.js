@@ -53,17 +53,14 @@ module.exports = function(env, argv){
 
   config.plugins= [
       new HtmlWebPackPlugin({
+        inject: false,
         template: path.resolve(__dirname, 'src/index.html'),
-        filename: "index.html",
         bundleFileName:"terminus-dashboard.min.js"
       }),
       new CopyWebPackPlugin([
         { from: path.resolve(__dirname, 'src/css'), to: 'css' },
-        { from: path.resolve(__dirname, 'src/UIconfig.json'), to:'./' },
-        { from: path.resolve(__dirname, 'node_modules/@terminusdb/terminus-client/dist/terminus-client.min.js'), to:'./' },
-        { from: path.resolve(__dirname, 'node_modules/@terminusdb/terminus-client/dist/terminus-client.min.js.map'), to:'./' },
+        { from: path.resolve(__dirname, 'src/UIconfig.json'), to:'./' }
       ])
-
     ]
 
   return config;
