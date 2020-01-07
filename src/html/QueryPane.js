@@ -74,7 +74,7 @@ QueryPane.prototype.getResults = function(query){
 	this.input.refreshContents();
 }
 
-QueryPane.prototype.AddEvents = function(btn){
+QueryPane.prototype.AddEvents = function(btn, aval){
 	var self = this;
 	btn.addEventListener('click', function(){
 		let WOQL = TerminusClient.WOQL;
@@ -87,21 +87,24 @@ QueryPane.prototype.AddEvents = function(btn){
 			case 'Show All Classes':
 				query = WOQL.query().classMetadata();
 			break;
-			case 'Show Document Classes':
-				query = WOQL.query().documentMetadata();
-			break;
 			case 'Show All Properties':
 				query = WOQL.query().propertyMetadata();
+			break;
+			case 'Show Document Classes':
+				query = WOQL.query().concreteDocumentClasses();
 			break;
 			case 'Show All Data':
 				query = WOQL.query().getEverything();
 			break;
+			case 'Show Document List':
+				query = WOQL.query().documentMetadata();
+			break;
 			case 'Show data of chosen type':
-				var choosen = 'scm:' + this.innerText;
+				var choosen = aval || 'scm:' + this.innerText;
 				query = WOQL.query().getDataOfClass(choosen);
 			break;
 			case 'Show property of chosen type':
-				var choosen = 'scm:' + this.innerText;
+				var choosen = aval || 'scm:' + this.innerText;
 				query = WOQL.query().getDataOfProperty(choosen);
 			break;
 			case 'Show data of type':
@@ -125,12 +128,12 @@ QueryPane.prototype.getQueryMenu = function(qName){
 	return btn;
 }
 
-QueryPane.prototype.getSubDataMenu = function(qName, val){
+QueryPane.prototype.getSubDataMenu = function(qName, val, aval){
 	var btn = document.createElement('button');
 	btn.setAttribute('class', 'terminus-load-queries');
 	btn.setAttribute('value', qName);
 	btn.appendChild(document.createTextNode(val));
-	this.AddEvents(btn);
+	this.AddEvents(btn, aval);
 	return btn;
 }
 
@@ -175,7 +178,8 @@ QueryPane.prototype.showDataOfTypeEvent = function(btn){
 			if(self.classMetaDataRes && self.classMetaDataRes.hasBindings()){
 				for(var i = 0; i<self.classMetaDataRes.bindings.length; i++){
 					var text = self.classMetaDataRes.bindings[i]['v:Label']['@value'];
-					subPar.appendChild(self.getSubDataMenu('Show data of chosen type', text));
+					var val = self.classMetaDataRes.bindings[i]['v:Element'];
+					subPar.appendChild(self.getSubDataMenu('Show data of chosen type', text, val));
 				}
 			}
 			btn.appendChild(subPar);
@@ -193,7 +197,8 @@ QueryPane.prototype.showPropertyOfTypeEvent = function(btn){
 			if(self.propertyMetaDataRes && self.propertyMetaDataRes.hasBindings()){
 				for(var i = 0; i<self.propertyMetaDataRes.bindings.length; i++){
 					var text = self.propertyMetaDataRes.bindings[i]['v:Label']['@value'];
-					subPar.appendChild(self.getSubDataMenu('Show property of chosen type', text));
+					var val = self.propertyMetaDataRes.bindings[i]['v:Property'];
+					subPar.appendChild(self.getSubDataMenu('Show property of chosen type', text, val));
 				}
 			}
 			btn.appendChild(subPar);
@@ -469,7 +474,7 @@ QueryPane.prototype.showMessage = function(m, type){
 
 QueryPane.prototype.showNoBindings = function(){
 	nor = document.createElement('div');
-	nor.setAttribute('class', 'terminus-no-res-alert');
+	nor.setAttribute('class', 'terminus-show-msg-warning');
 	nor.appendChild(document.createTextNode("No results available for this query"));
 	this.clearMessages();
 	this.messages.appendChild(nor);
@@ -514,7 +519,7 @@ QueryPane.prototype.refreshViews = function(){
 
 QueryPane.prototype.showViolations = function(vios){
     var nvios = new TerminusViolations(vios, this); 
-	this.messages.appendChild(nvios.getAsDOM(cmsg));
+	this.messages.appendChild(nvios.getAsDOM(""));
 }
 
 QueryPane.prototype.getAddViewControl = function(){
@@ -547,8 +552,5 @@ QueryPane.prototype.getAddViewControl = function(){
 	vd.appendChild(sel);
 	return vd;
 }
-
-
-
 
 module.exports = QueryPane;
