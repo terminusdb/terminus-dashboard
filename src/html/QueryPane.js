@@ -15,7 +15,7 @@ function QueryPane(client, query, result){
 	this.messages.setAttribute('class', 'terminus-query-messages');
 	this.defaultResultView = { showConfig: false, editConfig: false };
 	this.defaultQueryView = { showQuery: false, editQuery: false };
-	this.fireDefaultQueries();
+	//this.fireDefaultQueries();
 }
 
 QueryPane.prototype.load = function(repl){
