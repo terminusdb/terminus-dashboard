@@ -126,6 +126,8 @@ function TerminusServerViewer(ui){
 	this.server = this.ui.server();
 	this.max_cell_size = 500;
 	this.max_word_size = 40;
+	this.css_base = "https://terminusdb.github.io/terminus-dashboard/dist/"
+
 }
 
 TerminusServerViewer.prototype.getAsDOM = function(selected){
@@ -183,7 +185,8 @@ TerminusServerViewer.prototype.getServerDetailsDOM = function(){
 	var scd = document.createElement("div");
 	scd.setAttribute("class", "terminus-server-details terminus-welcome-box terminus-no-res-alert");
 	var icon = document.createElement("img");
-	icon.setAttribute("src", "css/img/TerminusDB_Logo_Original.png");
+	var url = this.css_base + "css/img/TerminusDB_Logo_Original.png" 
+	icon.setAttribute("src", url);
 	scd.appendChild(icon);
 	var scl = document.createElement("p");
 	scl.appendChild(document.createTextNode("Terminus Server Running at "))
