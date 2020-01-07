@@ -59,8 +59,8 @@ TerminusViolation.prototype.getPropertyAsDOM = function(prop, val){
 	ldom.appendChild(document.createTextNode(prop));
 	var vdom = document.createElement("span");
 	vdom.setAttribute("class", "terminus-violation-property-value");
-	var mval = val["@value"];
-	if(mval) vdom.appendChild(document.createTextNode(mval));
+	var mval = val["@value"] || val;
+	if(mval && typeof mval != "object") vdom.appendChild(document.createTextNode(mval));
 	pdom.appendChild(ldom);
 	pdom.appendChild(vdom);
 	return pdom;
