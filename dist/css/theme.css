@@ -1118,6 +1118,27 @@ i.terminus-welcome-icons{
     border-color: #ffeeba;
 }
 
+.terminus-show-msg-warning {
+	padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin: 20px 10px 10px 0px;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.terminus-show-msg-info {
+	padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin: 20px 10px 10px 0px;
+    color: #856404;
+	background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+
 .terminus-no-res-alert{
 	color: #004085;
 	background-color: #cce5ff;
@@ -1518,8 +1539,7 @@ span.terminus-db-widget {
     color: darkgrey;
     font-size: 20px;
     font-weight: 400;
-    font-size: 20px;
-    color: #888888;
+	font-size: 20px;
 }
 
 .terminus-table-size{

@@ -19,5 +19,5 @@ let TerminusConfig = {
 			loaded: true
 		}
 	},
-	location: { server: "http://195.201.12.87:6365",  key: "connectors wanna plans compressed"}
+	location: { server: "localhost:6363",  key: "root"}
 };
