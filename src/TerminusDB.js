@@ -237,12 +237,12 @@ TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses, body){
 	else {
 		var dchooser = this.getCreateDataChooser(docClasses, docs);
 		if(docClasses.count() <= 3){
-			this.ui.showError("The database must have a schema before you can add documents to it")
+			this.ui.showWarning("The database must have a schema before you can add documents to it")
 			body.appendChild(this.showHappyBox("empty", "schema"));
 			body.appendChild(this.showHappyBox("empty", "query"));
 		}
 		else {
-			this.ui.showError("No documents have been added to the database");
+			this.ui.showWarning("No documents have been added to the database");
 			body.appendChild(this.showHappyBox("happy", "docs", dchooser));
 			body.appendChild(this.showHappyBox("happy", "query"));
 		}
@@ -335,7 +335,7 @@ TerminusDBViewer.prototype.getDocumentsMenu = function(docs, docClasses, target)
 			if(cls)	self.loadCreateDocumentPage(cls, docClasses, docs);
 		}
 		var dchooser = this.getCreateDataChooser(docClasses, docs, ch);
-		if(docs.count() > 1) span.appendChild(dchooser);
+		//if(docs.count() > 1) span.appendChild(dchooser);
 	}
 	else {
 		this.ui.showError("No document classes found in schema - you must define a document, entity or relationship class before you can create documents");
@@ -544,7 +544,17 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 			self.ui.redrawControls();
 		});
 	};
-	if(type == "intro" || type == "docs"){
+	if(type == "delete"){
+		ispan.addEventListener("click", function(){
+			self.ui.clearMessages();
+			let db = self.ui.db();
+			let deleteConfirm = confirm(`This action is irreversible, it will remove the database from the system permanently. Are you sure you want to delete ${db} Database?`);
+			if (deleteConfirm == true) {
+				self.ui.deleteDatabase();
+			}
+		});
+	}
+	if(type == "intro" || (type == "docs" && false && !chooser)){
 		hbox.addEventListener("click", function(){
 			self.ui.page = "docs";
 			self.ui.showDocumentPage();
@@ -565,7 +575,7 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 			this.style.cursor = "pointer";
 		});
 	}
-	if(type == "docs" && chooser){
+	if(type == "docs" && false && chooser){
 		var sp = document.createElement('span');
 		sp.setAttribute('class', 'terminus-welcome-chooser');
 		sp.appendChild(chooser);
@@ -586,7 +596,7 @@ TerminusDBViewer.prototype.getNavigationDOM = function(docClasses, docs){
 	}
 	else {
 		this.pages.push("home");
-		s.appendChild(document.createTextNode(" back to document list"));
+		s.appendChild(document.createTextNode(" back to document list "));
 	}
 	s.addEventListener("click", () => {
 		var pp = this.pages.pop();

@@ -375,6 +375,11 @@ TerminusUI.prototype.showError = function(response){
 	this.showMessage(response, "error");
 };
 
+TerminusUI.prototype.showWarning = function(response){
+	this.showMessage(response, "warning");
+};
+
+
 TerminusUI.prototype.clearMessages = function(response){
 	if(this.messages) HTMLHelper.removeChildren(this.messages);
 };
@@ -568,6 +573,14 @@ TerminusUI.prototype.showMessage = function(msg, type){
             break;
             case 'error':
                 md.setAttribute('class', 'terminus-show-msg-error');
+                md.appendChild(document.createTextNode(msg));
+            break;
+            case 'info':
+                md.setAttribute('class', 'terminus-show-msg-info');
+                md.appendChild(document.createTextNode(msg));
+            break;
+            case 'warning':
+                md.setAttribute('class', 'terminus-show-msg-warning');
                 md.appendChild(document.createTextNode(msg));
             break;
         }

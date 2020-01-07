@@ -6,6 +6,7 @@ function TerminusPluginManager(){
 	this.loading = [];
 	this.precluded = [];
 	this.plugins = {};
+	this.css_base = "https://terminusdb.github.io/terminus-dashboard/dist/"
 	this.plugins["font-awesome"] = {
 		label: "Font Awesome",
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css"]
@@ -359,7 +360,7 @@ TerminusPluginManager.prototype.loadPageCSS = function(css){
 		cssdom.parentNode.removeChild(cssdom);
 	}
 	if(css){
-		cssurl = "css/" + css + ".css";
+		cssurl = this.css_base + "css/" + css + ".css";
 		HTMLHelper.loadDynamicCSS(cssfid, cssurl);
 	}
 }
