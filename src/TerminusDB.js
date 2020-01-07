@@ -849,7 +849,6 @@ TerminusDBController.prototype.getAsDOM = function(){
 	   var a = document.createElement('a');
 	   a.setAttribute('class', 'terminus-dashboard-info terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer"');
 	   a.appendChild(document.createTextNode(nm));
-	   a.href = "#";
 	   ul.appendChild(a);
 	   var p = this.ui.page ? this.ui.page : "db";
 	   if(this.ui.showControl("db")){
@@ -857,7 +856,8 @@ TerminusDBController.prototype.getAsDOM = function(){
 			   a.classList.add("terminus-selected");
 			   self.ui.page = "db";
 		   }
-		   a.addEventListener("click", function(){
+		   a.addEventListener("click", function(event){
+			   event.stopPropagation();
 			   self.ui.showDBMainPage();
 			   self.ui.page = "db";
 			   self.ui.clearMessages();
@@ -867,7 +867,8 @@ TerminusDBController.prototype.getAsDOM = function(){
 	   if(this.ui.showControl("get_document")){
 		   var item = this.getControlHTML("Documents", "fas fa fa-book");
 		   if(p == "docs") item.classList.add("terminus-selected");
-		   item.addEventListener("click", function(){
+		   item.addEventListener("click", function(event){
+			   event.stopPropagation();
 			   self.ui.showDocumentPage();
 			   self.ui.clearMessages();
 			   self.ui.page = "docs";
@@ -877,7 +878,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 	   }
 	   if(this.ui.showControl("delete_database")){
 		   var item = this.getControlHTML("Delete Database", "fa-trash-alt");
-		   item.addEventListener("click", function(){
+		   item.addEventListener("click", function(event){
 			   UTILS.activateSelectedNav(this, self);
 			   self.ui.clearMessages();
 			   self.ui.deleteDatabase();
@@ -887,8 +888,9 @@ TerminusDBController.prototype.getAsDOM = function(){
 	   if(this.ui.showControl("woql_select")){
 		   var item = this.getControlHTML("Query", "fa-search");
 		   if(p == "query") item.classList.add("terminus-selected");
-		   item.addEventListener("click", function(){
+		   item.addEventListener("click", function(event){
 			   UTILS.activateSelectedNav(this, self);
+			   event.stopPropagation();
 			   self.ui.page = "query";
 			   self.ui.showQueryPage();
 			   self.ui.clearMessages();
@@ -920,7 +922,6 @@ TerminusDBController.prototype.getControlHTML = function(text, ic, css){
    var icon = document.createElement('i');
    icon.setAttribute('class', 'terminus-menu-icon fa ' + ic);
    a.appendChild(icon);
-   a.href = "#";
    var txt = document.createTextNode(text);
    a.appendChild(txt);
    return a;
