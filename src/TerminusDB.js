@@ -47,6 +47,7 @@ TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
 //documents home page table
 TerminusDBViewer.prototype.getDocumentsQueryPane = function(docs, docClasses){
 	var table = TerminusClient.View.table();
+	table.pager(true);
 	table.column('ID').header('Document ID');
 	table.column('Label').header('Name');
 	table.column('Comment').header('Description');
@@ -107,7 +108,7 @@ TerminusDBViewer.prototype.getShowDocumentConfig = function(){
 	config.show_all("SimpleFrameViewer");
 	config.object().depth(0).style("border: 1px solid #aaa; padding-bottom: 1em; background-color: #fafafd").headerStyle("background-color: #002856; color: white; padding: 8px; display: block; margin-bottom: 1em;");
 	config.object().headerFeatures("id", "type").args({headerStyle: "text-align: right; display: inline-block; width: 200px; padding-right: 10px; text-weight: 600px; color: white"});
-	config.object().headerFeatures("mode").style("float: right");
+	//config.object().headerFeatures("mode").style("float: right");
 	config.object().features("value").style(property_style);
 	config.property().features("label", "value");
 	config.property().features("label").style("text-align: right; display: inline-block; width: 200px; padding-right: 10px; font-weight: 600; color: #002856");
@@ -231,18 +232,16 @@ TerminusDBViewer.prototype.getHomeDOM = function(docs, docClasses, body){
 TerminusDBViewer.prototype.getDocumentsDOM = function(docs, docClasses, body){
 	var mactions = this.getDocumentsMenu(docs, docClasses, body);
 	if(mactions) body.appendChild(mactions);
-	this.graphDOM = document.createElement("span");
-	body.appendChild(this.graphDOM);
 	this.tableDOM = document.createElement("span");
 	body.appendChild(this.tableDOM);
+	this.graphDOM = document.createElement("span");
+	this.graphDOM.setAttribute("class", "terminus-documents-graph");
+	this.graphDOM.style.display = "none";
+	body.appendChild(this.graphDOM);
 	if(docs.count() > 0){
-		if(this.docview && this.docview == "graph"){
-			this.showDocumentGraph(this.graphDOM);
-		}
-		else {
-			if(!this.document_table) this.document_table = this.getDocumentsQueryPane(docs, docClasses);
-			this.tableDOM.appendChild(this.document_table.getAsDOM());
-		}
+		if(!this.document_table) this.document_table = this.getDocumentsQueryPane(docs, docClasses);
+		this.tableDOM.appendChild(this.document_table.getAsDOM());
+		this.showDocumentGraph(this.graphDOM);
 	}
 	else {
 		var dchooser = this.getCreateDataChooser(docClasses, docs);
@@ -357,13 +356,22 @@ TerminusDBViewer.prototype.getDocumentsMenu = function(docs, docClasses, target)
 
 TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = TerminusClient.WOQL.from(dburl).limit(100).getAllDocumentConnections();
+	var q = TerminusClient.WOQL.from(dburl).limit(50).getAllDocumentConnections();
 	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
+	var dloader = this.getLoaderDOM("Terminus Server is generating the document graph");
+	insertDOM.appendChild(dloader)
 	insertDOM.appendChild(qp.getAsDOM());
 	this.graph_query_pane = qp;
-	qp.load();
+	qp.load().then(() => insertDOM.removeChild(dloader));
 }
 
+TerminusDBViewer.prototype.getLoaderDOM = function(msg){
+	var cont = document.createElement('div');
+	cont.setAttribute('class', 'terminus-busy-msg')
+	cont.appendChild(document.createTextNode(msg));           
+	this.ui.getBusyLoader(cont, msg);
+	return cont;
+}
 
 
 /**
