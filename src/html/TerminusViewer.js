@@ -1,8 +1,13 @@
 const QueryPane = require("./QueryPane");
 const DocumentPane = require("./DocumentPane");
+const TerminusClient = require('@terminusdb/terminus-client');
 
 function TerminusViewer(client){
     this.client = client;
+}
+
+TerminusViewer.prototype.TerminusClient = function(){
+    return TerminusClient;
 }
 
 TerminusViewer.prototype.getDocumentPane = function(docid, docConfig, docPaneConfig){
