@@ -1030,7 +1030,8 @@ div.terminus-margin-top, table.terminus-margin-top{
     word-wrap: break-word;
     overflow: hidden;
     /*overflow: auto !important;
-    resize: auto;*/
+	resize: auto;*/
+	resize: vertical;	
 }
 
 .cm-s-neo.CodeMirror{
