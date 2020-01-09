@@ -330,7 +330,7 @@ span.terminus-format-button-align{
 .terminus-hover-table td{
 	 height: 10px;
 	 border-left:lightgrey 0.2px solid;
-	 padding: 7px 1em;
+	 padding: 10px;
 	 overflow:hidden;
 	 white-space: normal;
    	 word-wrap: break-word;
@@ -1029,8 +1029,8 @@ div.terminus-margin-top, table.terminus-margin-top{
     word-wrap: break-word;
     word-wrap: break-word;
     overflow: hidden;
-    overflow: auto !important;
-    resize: auto;
+    /*overflow: auto !important;
+    resize: auto;*/
 }
 
 .cm-s-neo.CodeMirror{
