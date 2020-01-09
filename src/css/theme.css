@@ -426,7 +426,7 @@ div.terminus-queries-submenu{
 	display: grid;
 	background-color: #fff;
 	text-align: left;
-	min-height: 300px;
+	/*min-height: 300px;*/
 	max-height: 500px;
 	overflow-y: auto;
 }
@@ -1155,6 +1155,7 @@ div.terminus-violation-property{
 }
 span.terminus-violation-property-value{
 	margin-left: 30px;
+	word-break: break-word;
 }
 span.terminus-violation-property-label{
 	font-weight: 600 !important;
