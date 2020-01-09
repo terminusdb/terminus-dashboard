@@ -330,7 +330,7 @@ span.terminus-format-button-align{
 .terminus-hover-table td{
 	 height: 10px;
 	 border-left:lightgrey 0.2px solid;
-	 padding: 7px 1em;
+	 padding: 10px;
 	 overflow:hidden;
 	 white-space: normal;
    	 word-wrap: break-word;
@@ -426,7 +426,7 @@ div.terminus-queries-submenu{
 	display: grid;
 	background-color: #fff;
 	text-align: left;
-	min-height: 300px;
+	/*min-height: 300px;*/
 	max-height: 500px;
 	overflow-y: auto;
 }
@@ -1027,8 +1027,11 @@ div.terminus-margin-top, table.terminus-margin-top{
     /* margin: 50px; */
     font-size: 16px;
     word-wrap: break-word;
-    /*overflow: hidden; */
-	resize: both;
+    word-wrap: break-word;
+    overflow: hidden;
+    /*overflow: auto !important;
+	resize: auto;*/
+	resize: vertical;	
 }
 
 .cm-s-neo.CodeMirror{
@@ -1120,7 +1123,7 @@ i.terminus-welcome-icons{
 
 .terminus-show-msg-warning {
 	padding: 15px;
-    border: 1px solid transparent;
+    border: 7px solid transparent;
     border-radius: 4px;
     margin: 20px 10px 10px 0px;
     color: #856404;
@@ -1153,6 +1156,7 @@ div.terminus-violation-property{
 }
 span.terminus-violation-property-value{
 	margin-left: 30px;
+	word-break: break-word;
 }
 span.terminus-violation-property-label{
 	font-weight: 600 !important;
