@@ -47,7 +47,7 @@ TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
 //documents home page table
 TerminusDBViewer.prototype.getDocumentsQueryPane = function(docs, docClasses){
 	var table = TerminusClient.View.table();
-	table.pager(true);
+	//table.pager(true);
 	table.column('ID').header('Document ID');
 	table.column('Label').header('Name');
 	table.column('Comment').header('Description');
@@ -131,6 +131,52 @@ TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
 	graph.node("v:doc2").size(24).text("v:Label2").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
 	return graph;
 }
+
+TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
+	var dburl = this.ui.client.connectionConfig.dbURL();
+	var q = TerminusClient.WOQL.from(dburl).limit(50).getAllDocumentConnections();
+	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
+	var dloader = this.getLoaderDOM("Terminus Server is generating the document graph");
+	insertDOM.appendChild(dloader)
+	insertDOM.appendChild(qp.getAsDOM());
+	this.graph_query_pane = qp;
+	qp.load().finally(() => insertDOM.removeChild(dloader));
+}
+
+TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM, docClasses, docs){
+	var q = TerminusClient.WOQL.limit(50).getDocumentConnections(docid);
+	var viewer = TerminusClient.View.table().column_order("Outgoing", "Incoming", "Entid", "Label", "Enttype", "Class_Label" );
+	viewer.column("Entid").hidden(true);
+	viewer.column("Enttype").hidden(true);
+	viewer.column("Label").header("Document Name");
+	viewer.column("Class_Label").header("Type");
+	viewer.column("Incoming").header("Incoming Link");
+	viewer.column("Outgoing").header("Outgoing Link");
+	var self = this;
+	var x = function(row){
+		self.showDocumentPage(row["v:Entid"], docClasses, false, docs);
+	}
+	viewer.row().click(x);
+	var graph = TerminusClient.View.graph();
+	graph.literals(false);
+	graph.height(800).width(1250);
+	graph.edges(["v:Docid", "v:Entid"], ["v:Entid", "v:Docid"]);
+	graph.node("Outgoing", "Incoming", "Label", "Enttype", "Class_Label").hidden(true);
+	graph.edge("v:Docid",  "v:Entid").distance(100).text("v:Predicate");
+	graph.edge("v:Entid", "v:Enttype").distance(100).text("Class");
+	graph.edge("v:doc2", "v:Enttype2").distance(100).text("Class");
+    graph.node("v:Enttype").text("v:Enttype").color([200, 250, 200]).icon({label: true, color: [15, 50, 10]}).collisionRadius(80);
+    graph.node("v:Enttype2").text("v:Enttype2").color([200, 250, 200]).icon({label: true, color: [15, 50, 10]}).collisionRadius(80);
+	graph.node("v:doc1").size(24).text("v:Label1").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
+	graph.node("v:doc2").size(24).text("v:Label2").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
+	
+	var qp = this.tv.getResult(q, viewer);
+	var dloader = this.getLoaderDOM("Fetching document relationship table");
+	targetDOM.appendChild(dloader)
+	targetDOM.appendChild(qp.getAsDOM());
+	qp.load().finally(() => targetDOM.removeChild(dloader));
+}
+
 
 TerminusDBViewer.prototype.createFullDocumentPane = function(docid, result_options, target, docClasses, docs){
 	var WOQL = TerminusClient.WOQL;
@@ -272,6 +318,8 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 	var dp = this.createFullDocumentPane(docid, config, target, docClasses, docs);
 	this.docid = docid; 
 	this.pages.push(docid);
+	var dcDOM = document.createElement("span");
+	var vc = this.showDocumentConnections(docid, dcDOM, docClasses, docs);
 	return dp.load().then(() => {
 		HTMLHelper.removeChildren(this.container);
 		var nav = this.getNavigationDOM(docClasses, docs);
@@ -280,6 +328,7 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 		if(mactions) this.container.appendChild(mactions);
 		var dx = dp.getAsDOM();
 		this.container.appendChild(dx);
+		this.container.appendChild(dcDOM);
 	})
 	.catch((e) => this.ui.showError(e));	
 }
@@ -352,27 +401,6 @@ TerminusDBViewer.prototype.getDocumentsMenu = function(docs, docClasses, target)
 	//if(target){
 	//}
 	return page_actions;
-}
-
-TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
-	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = TerminusClient.WOQL.from(dburl).limit(50).getAllDocumentConnections();
-	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
-	var dloader = this.getLoaderDOM("Terminus Server is generating the document graph");
-	insertDOM.appendChild(dloader)
-	insertDOM.appendChild(qp.getAsDOM());
-	this.graph_query_pane = qp;
-	qp.load().then(() => insertDOM.removeChild(dloader));
-}
-
-TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM){
-	var q = TerminusClient.WOQL.limit(50).getDocumentConnections(docid);
-	var viewer = TerminusClient.View.table();
-	var qp = this.tv.getResult(q, viewer);
-	var dloader = this.getLoaderDOM("Fetching document relationship table");
-	targetDOM.appendChild(dloader)
-	targetDOM.appendChild(qp.getAsDOM());
-	qp.load().then(() => targetDOM.removeChild(dloader));
 }
 
 
