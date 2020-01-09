@@ -17,8 +17,6 @@ function DocumentPane(client, docid, clsid){
 	this.clsid = (clsid ? clsid : false);
 	this.datatypes = new DatatypeRenderers();
     Datatypes.initialiseDataRenderers(this.datatypes);
-    
-	
 }
 
 DocumentPane.prototype.load = function(){
