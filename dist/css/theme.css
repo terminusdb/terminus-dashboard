@@ -319,21 +319,21 @@ span.terminus-format-button-align{
 }
 
 .terminus-hover-table{
-	/*width:100%;*/
 	border-collapse:collapse;
 	display: table;
-    /*table-layout: fixed;*/
 	border-right:lightgrey 0.2px solid;
 	border-bottom:lightgrey 0.2px solid;
+	table-layout: fixed !important;
     width: 100%;
 }
 
 .terminus-hover-table td{
 	 height: 10px;
 	 border-left:lightgrey 0.2px solid;
-
-	 padding: 7px 1em;;
+	 padding: 7px 1em;
 	 overflow:hidden;
+	 white-space: normal;
+   	 word-wrap: break-word;
 }
 
 /* frameviewer styling */
