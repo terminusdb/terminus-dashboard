@@ -365,6 +365,17 @@ TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 	qp.load().then(() => insertDOM.removeChild(dloader));
 }
 
+TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM){
+	var q = TerminusClient.WOQL.limit(50).getDocumentConnections(docid);
+	var viewer = TerminusClient.View.table();
+	var qp = this.tv.getResult(q, viewer);
+	var dloader = this.getLoaderDOM("Fetching document relationship table");
+	targetDOM.appendChild(dloader)
+	targetDOM.appendChild(qp.getAsDOM());
+	qp.load().then(() => targetDOM.removeChild(dloader));
+}
+
+
 TerminusDBViewer.prototype.getLoaderDOM = function(msg){
 	var cont = document.createElement('div');
 	cont.setAttribute('class', 'terminus-busy-msg')

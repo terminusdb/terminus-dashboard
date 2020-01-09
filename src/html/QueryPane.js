@@ -484,6 +484,9 @@ QueryPane.prototype.showNoBindings = function(){
 
 QueryPane.prototype.submitQuery = function(qObj){
 	this.clearMessages();
+	if(!qObj){
+		this.showError("Query could not be extracted from input box - remember that the last element in the query must be a WOQL object")
+	}
 	if(typeof qObj == 'string'){
 		this.showError(qObj);
 		return;
