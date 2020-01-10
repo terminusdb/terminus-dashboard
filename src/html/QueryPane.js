@@ -445,7 +445,6 @@ QueryPane.prototype.clearMessages = function(){
 QueryPane.prototype.getBusyLoader = function(){
      var pbc = document.createElement('div');
      pbc.setAttribute('class', 'term-progress-bar-container');
-
      var pbsa = document.createElement('div');
      pbsa.setAttribute('class', 'term-progress-bar term-stripes animated reverse slower');
      pbc.appendChild(pbsa);

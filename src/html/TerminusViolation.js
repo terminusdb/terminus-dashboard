@@ -3,9 +3,6 @@ function TerminusViolations(vios, ui){
 	this.vios = [];
 	var nvios = [];
 	for(var i = 0; i<vios.length; i++){
-		for(var j = 0; j<nvios.length; j++){
-			if(JSON.stringify(vios[i]) == JSON.stringify(nvios[j])) continue;
-		}
 		nvios.push(vios[i]);
 	}
 	for(var i = 0; i<nvios.length; i++){
