@@ -134,7 +134,7 @@ TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
 
 TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = TerminusClient.WOQL.from(dburl).limit(50).getAllDocumentConnections();
+	var q = TerminusClient.WOQL.from(dburl).limit(200).getAllDocumentConnections();
 	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
 	var dloader = this.getLoaderDOM("Terminus Server is generating the document graph");
 	insertDOM.appendChild(dloader)
