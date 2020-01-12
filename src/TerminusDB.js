@@ -162,16 +162,20 @@ TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM, 
 	graph.height(800).width(1250);
 	graph.edges(["v:Docid", "v:Entid"], ["v:Entid", "v:Docid"]);
 	graph.node("Outgoing", "Incoming", "Label", "Enttype", "Class_Label").hidden(true);
-	graph.edge("v:Docid",  "v:Entid").distance(100).text("v:Predicate");
-	graph.edge("v:Entid", "v:Enttype").distance(100).text("Class");
-	graph.edge("v:doc2", "v:Enttype2").distance(100).text("Class");
-    graph.node("v:Enttype").text("v:Enttype").color([200, 250, 200]).icon({label: true, color: [15, 50, 10]}).collisionRadius(80);
-    graph.node("v:Enttype2").text("v:Enttype2").color([200, 250, 200]).icon({label: true, color: [15, 50, 10]}).collisionRadius(80);
-	graph.node("v:doc1").size(24).text("v:Label1").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
-	graph.node("v:doc2").size(24).text("v:Label2").icon({label: true, color: [15, 50, 10]}).collisionRadius(80)
 	
-	var qp = this.tv.getResult(q, viewer);
-	var dloader = this.getLoaderDOM("Fetching document relationship table");
+	//graph.edge("v:Entid", "v:Docid").distance(200).text("v:Incoming");
+	graph.edge("v:Entid", "v:Docid").v("v:Incoming").in("unknown").hidden(true);
+	graph.edge("v:Entid", "v:Docid").distance(200).text("v:Incoming").color([255, 0, 0]);
+
+	graph.edge("v:Docid", "v:Entid").v("v:Outgoing").in("unknown").hidden(true);
+	graph.edge("v:Docid", "v:Entid").distance(200).text("v:Outgoing").color([0, 0, 255]);
+
+	
+	graph.node("v:Docid").text("v:Docid").icon({label: true});
+	graph.node("v:Entid").text("v:Label");
+	var rpc = { viewers: [graph] }
+    var qp = this.tv.getQueryPane(q, [viewer], false, [rpc]);
+    var dloader = this.getLoaderDOM("Fetching document relationship table");
 	targetDOM.appendChild(dloader)
 	targetDOM.appendChild(qp.getAsDOM());
 	qp.load().finally(() => targetDOM.removeChild(dloader));
