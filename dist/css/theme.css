@@ -638,6 +638,10 @@ div.terminus-form-margin-top{
     margin-left: 4px;
 }
 
+div.terminus-home-actions {
+	margin-top: 12px;
+}
+
 div.terminus-home-actions div {
 	display: inline-block;
 }
@@ -1947,6 +1951,11 @@ div.terminus-object-header .terminus-action-control {
 
 div.terminus-property-frame {
 }
+
+div.terminus-property-frame:nth-child(odd) {
+	background-color: #EBEDEF;
+}
+
 
 span.terminus-property-header-wrapper{
 	/*display: flex;*/
