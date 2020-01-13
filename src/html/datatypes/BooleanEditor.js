@@ -1,4 +1,8 @@
 function HTMLBooleanEditor(options){
+	this.options(options);
+}
+
+HTMLBooleanEditor.prototype.options = function(options){	
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
 }
 

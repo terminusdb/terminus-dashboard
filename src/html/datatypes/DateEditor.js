@@ -2,6 +2,10 @@ const DateHelper = require('./DateHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLDateEditor(options){
+	this.options(options);
+}
+
+HTMLDateEditor.prototype.options = function(options){
 	this.max = (options && options.max ? options.max : false);
 	this.min = (options && options.min ? options.min : false);
 	this.allowbce = (options && options.allowbce ? options.allowbce : false);

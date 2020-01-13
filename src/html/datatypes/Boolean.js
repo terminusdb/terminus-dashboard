@@ -1,4 +1,8 @@
 function HTMLBooleanViewer(options){
+	this.options(options);
+}
+
+HTMLBooleanViewer.prototype.options = function(options){
 	this.css = "terminus-literal-value terminus-literal-value-boolean " + ((options && options.css) ?  options.css : "");
 }
 

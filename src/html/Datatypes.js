@@ -22,7 +22,7 @@ const HTMLMarkupEditor = require('./datatypes/HTMLMarkupEditor');
 const S2EntityEditor = require('./datatypes/S2EntityEditor');
 
 
-function initialiseDataRenderers(RenderingMap, plugins){
+function initialiseDataRenderers(RenderingMap, plugins, options){
 	RenderingMap.registerViewerForTypes("HTMLBooleanViewer", {label: "Checkbox Viewer"}, ["xsd:boolean"]);
 	RenderingMap.registerEditorForTypes("HTMLBooleanEditor", {label: "Checkbox Editor"}, ["xsd:boolean"]);
 	RenderingMap.registerViewerForTypes("HTMLChoiceViewer", {label: "Choice Viewer"}, ["oneOf"]);
@@ -33,7 +33,10 @@ function initialiseDataRenderers(RenderingMap, plugins){
 		"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
 	RenderingMap.registerEditorForTypes("HTMLDateEditor", {label: "Date Editor"}, ["xsd:time", "xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear", 
 		"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
-	RenderingMap.registerViewerForTypes("HTMLEntityViewer", {label: "Document Viewer"}, ["document"]);
+	
+	var hevopts = {label: "Document Viewer"};
+	if (options && options["HTMLEntityViewer"]) hevopts.args = options["HTMLEntityViewer"];
+	RenderingMap.registerViewerForTypes("HTMLEntityViewer", hevopts, ["document"]);
 	RenderingMap.registerEditorForTypes("HTMLEntityEditor", {label: "Document Selector"}, ["document"]);
 	RenderingMap.registerViewerForTypes("HTMLImageViewer", {label: "Image Viewer"}, ["xdd:url", "xsd:anyURI", "xsd:base64Binary"]);
 	RenderingMap.registerEditorForTypes("HTMLImageEditor", {label: "Image Editor"}, ["xsd:base64Binary"]);
@@ -56,7 +59,8 @@ function initialiseDataRenderers(RenderingMap, plugins){
 
 function createDataRenderer(type, options){
 	try {
-		var viewer = eval("new " + type + "." + type + "(" + JSON.stringify(options) + ")");
+		var viewer = eval("new " + type + "." + type + "()");
+		if(viewer.options) viewer.options(options);
 	}
 	catch(e){
 		return false;
