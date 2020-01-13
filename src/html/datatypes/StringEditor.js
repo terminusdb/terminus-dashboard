@@ -1,17 +1,21 @@
 function HTMLStringEditor(options){
+	this.options(options);	
+}
+
+HTMLStringEditor.prototype.options = function(options){	
 	this.css = ((options && options.css) ? "terminus-literal-value " + options.css : "terminus-literal-value");
-	this.options = options; 
+	this.opts = options;
 }
 
 HTMLStringEditor.prototype.renderFrame = function(frame, dataviewer){
 	var value = frame.get();
-	var big = ((this.options && typeof this.options.big != "undefined") ? this.options.big : this.isBigType(this.type, value));
+	var big = ((this.opts && typeof this.opts.big != "undefined") ? this.opts.big : this.isBigType(this.type, value));
 	if(big){
 		var input = document.createElement("textarea");
 		this.css += " terminus-literal-big-value";		
 	}
 	else {
-		var size = ((this.options && typeof this.options.size != "undefined") ? this.options.size : this.getTypeSize(this.type, value));
+		var size = ((this.opts && typeof this.opts.size != "undefined") ? this.opts.size : this.getTypeSize(this.type, value));
 		var input = document.createElement("input");
 		input.setAttribute('type', "text");
 		input.setAttribute('size', size);

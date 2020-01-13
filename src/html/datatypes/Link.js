@@ -1,4 +1,8 @@
 function HTMLLinkViewer(options){
+	this.options(options);
+}
+
+HTMLLinkViewer.prototype.options = function(options){
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
 }
 

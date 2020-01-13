@@ -1,5 +1,8 @@
 function HTMLImageViewer(options){}
 
+HTMLImageViewer.prototype.options = function(options){}
+
+
 HTMLImageViewer.prototype.renderFrame = function(frame, dataviewer){
 	return this.render(frame.get());
 }

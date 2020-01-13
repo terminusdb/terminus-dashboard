@@ -92,35 +92,11 @@ TerminusUI.prototype.createDatabase = function(dbdets){
         return Promise.reject(new Error(self.getBadArguments("createDatabase", "ID and title are mandatory fields")));
 	}
 	var dbid = dbdets.id;
-	var myserver = this.client.connectionConfig.server;
 	self.showBusy("Creating Database " + dbdets.title + " with id " + dbid);
 	var dbdoc = this.generateNewDatabaseDocument(dbdets);
 	return this.client.createDatabase(dbid, dbdoc)
-	.then(function(response){ //import schema into newly created DB
-		if(dbdets.schema){
-			self.showBusy("Fetching imported schema from " + dbdets.schema);
-			var opts = (dbdets.key ?  {"terminus:user_key": dbdets.key } : {});
-			opts['terminus:encoding'] = "terminus:turtle";
-			return self.client.getSchema(dbdets.schema, opts)
-			.then(function(response){
-				self.showBusy("Updating database with new schema");
-				self.client.connectionConfig.server = myserver;
-				self.client.connectionConfig.dbid = dbid;
-				var nopts = {'terminus:encoding':  "terminus:turtle"};
-				return self.client.updateSchema(false, response, nopts);
-			})
-			.then(function(response){
-				self.clearBusy();
-				self.redraw();
-				return response;
-			});
-		}
-		else {
-			self.clearBusy();
-		}
-		return response;
-	})
 	.then(function(response){ //reload list of databases in background..
+		self.clearBusy();
 		return self.refreshDBList()
 		.then(function(response){
 			if(crec = self.client.connection.getDBRecord(dbid)){
@@ -148,13 +124,11 @@ TerminusUI.prototype.deleteDatabase = function(dbid){
 	var lid = (dbid ? dbid : this.db());
 	var dbn = (delrec && delrec['rdfs:label'] && delrec['rdfs:label']["@value"] ? delrec['rdfs:label']["@value"] + " (id: " + lid + ")" : lid);
 	this.showBusy("Deleting database " + dbn);
-	return this.client.deleteDatabase(dbid)
+	return this.client.deleteDatabase(lid)
 	.then(function(response){
 		self.clearBusy();
-		self.client.connectionConfig.dbid = false;
-		self.removeDB(dbid);
 		self.showServerMainPage();
-		self.showMessage("Successfully Deleted Database " + dbn, "success");
+		self.showMessage("Successfully Deleted Database " + dbn, "warning");
 		self.refreshDBList();
 		return response;
 	})
@@ -294,7 +268,7 @@ TerminusUI.prototype.showLoadURLPage = function(val){
 
 TerminusUI.prototype.showDBMainPage = function(){
 	this.viewer = new TerminusDBsdk.TerminusDBViewer(this);
-	this.viewer.page = "db";
+	this.page = "db";
 	this.redraw();
 }
 
