@@ -2,6 +2,7 @@ const HTMLHelper = require('../HTMLHelper');
 
 function SimpleTable(){
 	this.holder = document.createElement("div");
+	this.holder.setAttribute('class', 'terminus-simple-table-holder')
 }
 
 SimpleTable.prototype.options = function(options){
@@ -137,7 +138,7 @@ SimpleTable.prototype.getPaging = function(){
 		if(this.woqltable.config.pagesize()){
 			let psdom = this.getPageSize();
 			if(psdom) pdom.appendChild(psdom);
-		} 
+		}
 		if(this.woqltable.canChangePage()){
 			var pn = this.woqltable.result.query.getPage();
 			if(pn > 2){
