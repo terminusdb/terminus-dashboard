@@ -1035,7 +1035,7 @@ div.terminus-margin-top, table.terminus-margin-top{
     overflow: hidden;
     /*overflow: auto !important;
 	resize: auto;*/
-	resize: vertical;	
+	resize: vertical;
 }
 
 .cm-s-neo.CodeMirror{
@@ -1067,6 +1067,13 @@ div.terminus-margin-top, table.terminus-margin-top{
 	padding-right:10px;
 	font-size: larger;
 	color: #00C08B;
+}
+div.terminus-simple-table-holder{
+	overflow: auto;
+	width: 100%;
+}
+table.terminus-simple-table{
+	margin-top: 30px;
 }
 span.woql-chooser select.woql-chooser{
 	padding: 5px;
