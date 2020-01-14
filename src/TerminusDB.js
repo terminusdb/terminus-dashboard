@@ -332,7 +332,9 @@ TerminusDBViewer.prototype.showDocumentPage = function(docid, docClasses, target
 		this.container.appendChild(dx);
 		this.container.appendChild(dcDOM);
 	})
-	.catch((e) => this.ui.showError(e));	
+	.catch((e) => {
+		this.ui.showError(e)
+	});	
 }
 
 

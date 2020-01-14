@@ -36,7 +36,9 @@ SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 		}
 		else args = false;
 	}
-	return this.datatypes.createRenderer(dv, args);
+	var rend = this.datatypes.createRenderer(dv, args);
+	rend.type = frame.getType();
+	return rend;
 }
 
 SimpleFrameViewer.prototype.render = function(frame){
