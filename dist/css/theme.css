@@ -323,7 +323,7 @@ span.terminus-format-button-align{
 	display: table;
 	border-right:lightgrey 0.2px solid;
 	border-bottom:lightgrey 0.2px solid;
-	table-layout: fixed !important;
+	/*table-layout: fixed !important; */
     width: 100%;
 }
 
@@ -1868,7 +1868,8 @@ div.terminus-margin-left-auto {
     overflow: hidden;
     /*max-width: 1240px;*/
 	max-width: calc(100vw - 420px)!important;
-    overflow-x: overlay;
+    /*overflow-x: overlay; */
+	overflow-x: auto;
 }
 .terminus-client-table-layout{
 	height: 100%;
