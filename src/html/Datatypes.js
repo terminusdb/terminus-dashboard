@@ -32,8 +32,7 @@ function initialiseDataRenderers(RenderingMap, plugins, options){
 	RenderingMap.registerViewerForTypes("HTMLDateViewer", {label: "Date Viewer"}, ["xsd:time", "xsd:date", "xsd:dateTime", "xsd:gYear", 
 		"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
 	RenderingMap.registerEditorForTypes("HTMLDateEditor", {label: "Date Editor"}, ["xsd:time", "xsd:date", "xsd:dateRange" ,"xsd:dateTime", "xsd:gYear", 
-		"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);
-	
+		"xsd:gYearRange", "xsd:gMonth", "xsd:gDay", "xsd:gYearMonth", "xsd:gMonthDay", "xsd:dateTimeStamp"]);	
 	var hevopts = {label: "Document Viewer"};
 	if (options && options["HTMLEntityViewer"]) hevopts.args = options["HTMLEntityViewer"];
 	RenderingMap.registerViewerForTypes("HTMLEntityViewer", hevopts, ["document"]);

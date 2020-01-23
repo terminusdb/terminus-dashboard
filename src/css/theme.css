@@ -330,10 +330,9 @@ span.terminus-format-button-align{
 .terminus-hover-table td{
 	 height: 10px;
 	 border-left:lightgrey 0.2px solid;
-	 padding: 10px;
+
+	 padding: 7px 1em;;
 	 overflow:hidden;
-	 white-space: normal;
-   	 word-wrap: break-word;
 }
 
 /* frameviewer styling */
@@ -426,7 +425,7 @@ div.terminus-queries-submenu{
 	display: grid;
 	background-color: #fff;
 	text-align: left;
-	/*min-height: 300px;*/
+	min-height: 300px;
 	max-height: 500px;
 	overflow-y: auto;
 }
@@ -1030,7 +1029,6 @@ div.terminus-margin-top, table.terminus-margin-top{
 	border: 2px solid #002856;
     /* margin: 50px; */
     font-size: 16px;
-    word-wrap: break-word;
     word-wrap: break-word;
     overflow: hidden;
     /*overflow: auto !important;
@@ -1868,8 +1866,7 @@ div.terminus-margin-left-auto {
     overflow: hidden;
     /*max-width: 1240px;*/
 	max-width: calc(100vw - 420px)!important;
-    /*overflow-x: overlay; */
-	overflow-x: auto;
+    overflow-x: overlay;
 }
 .terminus-client-table-layout{
 	height: 100%;
