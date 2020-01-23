@@ -48,4 +48,14 @@ TerminusViewer.prototype.getResult = function(query, resultConfig, results){
     return this.getQueryPane(query, [resultConfig], results);
 }
 
+TerminusViewer.prototype.connect = function(terminus_server_url, terminus_server_key){
+    var client = new TerminusClient.WOQLClient();
+    return client.connect(terminus_server_url, terminus_server_key)
+    .then(() => {
+        this.client = client;
+    });
+}
+
+TerminusViewer.prototype.loadConsole = function(create_json, import_json, query_json, view_json){}
+
 module.exports = TerminusViewer;

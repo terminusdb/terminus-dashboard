@@ -126,7 +126,7 @@ TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
 
 TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = TerminusClient.WOQL.from(dburl).limit(200).getAllDocumentConnections();
+	var q = TerminusClient.WOQL.limit(200).getAllDocumentConnections();
 	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
 	var dloader = this.getLoaderDOM("Terminus Server is generating the document graph");
 	insertDOM.appendChild(dloader)
@@ -198,11 +198,10 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 	HTMLHelper.removeChildren(this.container);
 	var limit = 20;
 	var WOQL = TerminusClient.WOQL;
-	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = WOQL.from(dburl).limit(limit).documentMetadata();
+	var q = WOQL.limit(limit).documentMetadata();
 	q.execute(this.ui.client).then( (result) => {
 		var docs = new TerminusClient.WOQLResult(result, q);
-		var q2 = WOQL.from(dburl).concreteDocumentClasses();
+		var q2 = WOQL.query().concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			var docClasses = new TerminusClient.WOQLResult(result2, q2);
 			var bdom = this.getBodyAsDOM(docs, docClasses);
@@ -362,7 +361,7 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 		dp.setClassLoader(dchooser);
 	}
 	else {
-		var q2 = WOQL.from(dburl).concreteDocumentClasses();
+		var q2 = WOQL.query().concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			docClasses = (docClasses ? docClasses : new TerminusClient.WOQLResult(result2, q2));
 			var dchooser = this.getCreateDataChooser(docClasses, docs );
