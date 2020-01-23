@@ -11,7 +11,7 @@ context('import schema', () => {
    it('import schema', () => {
        // populate import schema details
        const schurl = 'http://195.201.12.87:6363/myFirstTerminusDB';
-       const key    = '***REMOVED***';
+       const key    = 'nooooooooooooooooooooooo';
 
        cy.get('.terminus-db-controller')
            .find('a')
