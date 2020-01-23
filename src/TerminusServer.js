@@ -165,7 +165,6 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 			})
 		}
 		if(this.ui.showView("db")){
-			//scd.appendChild(this.getNDBListDOM());
 			scd.appendChild(this.getDBListDOM());
 		}
 		pd.appendChild(scd);
