@@ -11,7 +11,7 @@ GoogleMapEditor.prototype.renderFrame = function(frame, dataviewer){
 	    google.maps.event.addListener(map, 'click', function(event) {
 	    	var position = event.latLng;
 	    	var coo = "[" + position.lat() + "," + position.lng() + "]";
-	    	renderer.set(coo);
+	    	dataviewer.set(coo);
 	        ghelper.clearMarkers();
 	        var init = {
 	    		position: position, 

@@ -32,7 +32,7 @@ HTMLRangeViewer.prototype.render = function(value){
 	d.appendChild(rvals);	
 	if(vals.length == 2){
 		d.appendChild(getRangeSymbolDOM());
-		var x2 = (this.useCommas(renderer) ? TerminusClient.UTILS.TypeHelper.numberWithCommas(vals[1]) : vals[1]);
+		var x2 = (this.useCommas() ? TerminusClient.UTILS.TypeHelper.numberWithCommas(vals[1]) : vals[1]);
 		var t2node = document.createTextNode(x2);
 		svals.appendChild(t2node);
 		d.appendChild(svals);	
