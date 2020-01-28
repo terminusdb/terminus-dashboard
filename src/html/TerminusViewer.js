@@ -56,6 +56,11 @@ TerminusViewer.prototype.connect = function(terminus_server_url, terminus_server
     });
 }
 
+TerminusViewer.prototype.tutorial = function(terminus_server_url, terminus_server_key){
+    
+}
+
+
 TerminusViewer.prototype.loadConsole = function(create_json, import_json, query_json, view_json){}
 
 module.exports = TerminusViewer;

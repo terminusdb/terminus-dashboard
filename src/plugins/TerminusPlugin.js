@@ -6,7 +6,7 @@ function TerminusPluginManager(){
 	this.loading = [];
 	this.precluded = [];
 	this.plugins = {};
-	this.css_base = "";//"https://terminusdb.github.io/terminus-dashboard/dist/";
+	this.css_base = "https://terminusdb.github.io/terminus-dashboard/dist/";
 	this.plugins["font-awesome"] = {
 		label: "Font Awesome",
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css"]
@@ -34,9 +34,6 @@ function TerminusPluginManager(){
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/fold/foldcode.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/fold/indent-fold.js",
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/addon/fold/markdown-fold.js"
-
-
-
 	  ],
 		css: [
 			"https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.css",

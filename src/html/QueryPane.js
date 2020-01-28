@@ -17,7 +17,7 @@ function QueryPane(client, query, result){
 	this.defaultQueryView = { showQuery: false, editQuery: false };
 }
 
-QueryPane.prototype.load = function(repl){
+QueryPane.prototype.load = function(){
 	return this.query.execute(this.client).then( (result) => {
 			let nresult = new TerminusClient.WOQLResult(result, this.query);
 			this.updateResult(nresult);
@@ -415,6 +415,11 @@ QueryPane.prototype.createInput = function(mode){
 }
 
 QueryPane.prototype.updateQuery = function(qObj){
+	this.query = qObj;
+	if(this.input) this.input.setQuery(this.query);
+}
+
+QueryPane.prototype.setInput = function(input){
 	this.query = qObj;
 	if(this.input) this.input.setQuery(this.query);
 }
