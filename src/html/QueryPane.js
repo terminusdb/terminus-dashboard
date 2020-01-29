@@ -45,6 +45,7 @@ QueryPane.prototype.options = function(opts){
 	this.showHeader = (opts && typeof opts.showHeader != "undefined" ? opts.showHeader : false);
 	this.addViews = (opts && typeof opts.addViews != "undefined" ? opts.addViews : false);
 	this.intro = (opts && typeof opts.intro != "undefined" ? opts.intro : false);
+	this.saved = (opts && typeof opts.saved != "undefined" ? opts.saved: true);
 	var css = (opts && typeof opts.css != "undefined" ? opts.css : 'terminus-query-pane-cont');
     this.container.setAttribute('class', css);
     return this;
@@ -307,7 +308,7 @@ QueryPane.prototype.getAsDOM = function(){
 		this.container.appendChild(UTILS.getHeaderDom(this.intro));
 	}
 	if(this.showQuery) {
-		this.fireDefaultQueries();
+		if(this.saved) this.fireDefaultQueries();
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
 		this.querySnippet = configspan;
@@ -333,11 +334,13 @@ QueryPane.prototype.getAsDOM = function(){
 			else {
 				self.container.appendChild(ipdom);
 			}
-			var qicon = self.getSampleQueriesDOM();
-			var sqd = document.createElement("span");
-			sqd.setAttribute("class", "sample-queries-pane");
-			sqd.appendChild(qicon);
-			ipdom.appendChild(sqd);
+			if(self.saved){
+				var qicon = self.getSampleQueriesDOM();
+				var sqd = document.createElement("span");
+				sqd.setAttribute("class", "sample-queries-pane");
+				sqd.appendChild(qicon);
+				ipdom.appendChild(sqd);
+			}
 			self.input.stylizeSnippet();
 		}
 		function hideQueryConfig(){
@@ -420,8 +423,11 @@ QueryPane.prototype.updateQuery = function(qObj){
 }
 
 QueryPane.prototype.setInput = function(input){
-	this.query = qObj;
-	if(this.input) this.input.setQuery(this.query);
+	if(this.input) {
+		let qr = this.input.setInput(input);
+		if(qr) this.query = qr;
+	}
+
 }
 
 QueryPane.prototype.updateResult = function(result){
@@ -495,11 +501,12 @@ QueryPane.prototype.submitQuery = function(qObj){
 		this.showError(qObj);
 		return;
 	}
+	this.clearResults();
     this.query = qObj;
 	this.showBusy('Fetching results ...');
 	var self = this;
 	var start = Date.now();
-    qObj.execute(this.client).then((results) => {
+    return qObj.execute(this.client).then((results) => {
 		var r = new TerminusClient.WOQLResult(results, qObj);
 		this.result = r;
 		this.clearMessages();
@@ -519,6 +526,13 @@ QueryPane.prototype.submitQuery = function(qObj){
 		}
 	});
 }
+
+QueryPane.prototype.clearResults = function(){
+	for(var i = 0; i<this.views.length; i++){
+		this.views[i].clearResult(this.result);
+	}
+}
+
 
 QueryPane.prototype.refreshViews = function(){
 	for(var i = 0; i<this.views.length; i++){
