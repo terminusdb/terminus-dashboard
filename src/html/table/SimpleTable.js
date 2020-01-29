@@ -127,7 +127,17 @@ SimpleTable.prototype.getCellData = function(key, row){
 		return this.woqltable.renderValue(renderer, row[key], key, row);
 	}
 	var val = row[key]
-	if(val && val['@value']) val = val['@value'];
+	if(Array.isArray(val)){
+		let nval = "";
+		for(var i = 0; i<val.length; i++){
+			nval += (val[i]["@value"] ? val[i]["@value"] : val[i]);
+			if(i < (val.length -1)) nval += ", ";
+		}
+		val = nval;
+	}
+	else {
+		if(val && val['@value']) val = val['@value'];
+	}
 	return document.createTextNode(val);
 }
 
