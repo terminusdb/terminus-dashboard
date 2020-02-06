@@ -210,6 +210,12 @@ ResultPane.prototype.setResult = function(wres){
 	this.result = wres;
 }
 
+ResultPane.prototype.clearResult = function(){
+    this.result = false;
+    HTMLHelper.removeChildren(this.resultDOM);
+}
+
+
 ResultPane.prototype.updateResult = function(wres){
 	this.result = wres;
 	HTMLHelper.removeChildren(this.resultDOM);

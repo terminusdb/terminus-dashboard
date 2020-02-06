@@ -21,7 +21,6 @@ HTMLEntityViewer.prototype.renderValue = function(dataviewer){
 HTMLEntityViewer.prototype.render = function(value){
 	var holder = document.createElement("span");
 	holder.setAttribute("class", "terminus-literal-value terminus-entity-reference-value");
-	var self = this;
 	if(this.holder){
 		return this.holder;
 	}
@@ -53,6 +52,7 @@ HTMLEntityViewer.prototype.showValue = function(value){
 
 
 HTMLEntityViewer.prototype.getEntityViewHTML = function(value, frame, dataviewer){
+	alert("Nooo");
 	var span = document.createElement("span");
 	var self = this;
 	span.setAttribute("class", "terminus-internal-link");

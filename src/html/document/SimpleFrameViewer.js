@@ -139,7 +139,6 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, scope, frame, mode)
 	return features;
 }					
 	
-
 function featuresToCSS(flist){
 	var s = "";
 	for(var i = 0; i<flist.length; i++){
