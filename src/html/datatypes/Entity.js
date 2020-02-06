@@ -1,7 +1,11 @@
 const HTMLHelper = require('../HTMLHelper');
 
 function HTMLEntityViewer(options){
-	this.onclick = false;
+	this.options(options);
+}
+
+HTMLEntityViewer.prototype.options = function(options){
+	this.onclick = (options && options.onclick ? options.onclick: false);
 }
 
 HTMLEntityViewer.prototype.renderFrame = function(frame, dataviewer){
@@ -29,7 +33,22 @@ HTMLEntityViewer.prototype.render = function(value){
 }
 
 HTMLEntityViewer.prototype.showValue = function(value){
-	return document.createTextNode(value);
+	if(this.onclick){
+		var self = this;
+		var a = document.createElement("a");
+		a.style.color = "#0000aa";
+		a.appendChild(document.createTextNode(value));
+		a.addEventListener("click", function(event){
+			self.onclick(value);
+		});
+		a.addEventListener("mouseover", function(event){
+			a.style.cursor = "pointer";
+		});
+		return a; 	
+	}
+	else {
+		return document.createTextNode(value);
+	}
 }
 
 

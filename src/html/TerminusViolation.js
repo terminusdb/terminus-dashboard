@@ -3,9 +3,6 @@ function TerminusViolations(vios, ui){
 	this.vios = [];
 	var nvios = [];
 	for(var i = 0; i<vios.length; i++){
-		for(var j = 0; j<nvios.length; j++){
-			if(JSON.stringify(vios[i]) == JSON.stringify(nvios[j])) continue;
-		}
 		nvios.push(vios[i]);
 	}
 	for(var i = 0; i<nvios.length; i++){
@@ -59,8 +56,8 @@ TerminusViolation.prototype.getPropertyAsDOM = function(prop, val){
 	ldom.appendChild(document.createTextNode(prop));
 	var vdom = document.createElement("span");
 	vdom.setAttribute("class", "terminus-violation-property-value");
-	var mval = val["@value"];
-	if(mval) vdom.appendChild(document.createTextNode(mval));
+	var mval = val["@value"] || val;
+	if(mval && typeof mval != "object") vdom.appendChild(document.createTextNode(mval));
 	pdom.appendChild(ldom);
 	pdom.appendChild(vdom);
 	return pdom;

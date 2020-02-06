@@ -15,7 +15,6 @@ function QueryPane(client, query, result){
 	this.messages.setAttribute('class', 'terminus-query-messages');
 	this.defaultResultView = { showConfig: false, editConfig: false };
 	this.defaultQueryView = { showQuery: false, editQuery: false };
-	this.fireDefaultQueries();
 }
 
 QueryPane.prototype.load = function(repl){
@@ -96,21 +95,23 @@ QueryPane.prototype.AddEvents = function(btn, aval){
 			case 'Show All Data':
 				query = WOQL.query().getEverything();
 			break;
-			case 'Show Document List':
+			case 'Show all documents':
 				query = WOQL.query().documentMetadata();
 			break;
 			case 'Show data of chosen type':
 				var choosen = aval || 'scm:' + this.innerText;
 				query = WOQL.query().getDataOfClass(choosen);
 			break;
-			case 'Show property of chosen type':
+			case 'Show data of chosen property':
 				var choosen = aval || 'scm:' + this.innerText;
 				query = WOQL.query().getDataOfProperty(choosen);
 			break;
 			case 'Show data of type':
 				return;
-			case 'Show property of type':
+			break;
+			case 'Show data for property':
 				return;
+			break;
 			default:
 				console.log('Invalid Type of query');
 			break;
@@ -183,7 +184,7 @@ QueryPane.prototype.showDataOfTypeEvent = function(btn){
 				}
 			}
 			btn.appendChild(subPar);
-		}
+		}		
 	})
 }
 
@@ -198,7 +199,7 @@ QueryPane.prototype.showPropertyOfTypeEvent = function(btn){
 				for(var i = 0; i<self.propertyMetaDataRes.bindings.length; i++){
 					var text = self.propertyMetaDataRes.bindings[i]['v:Label']['@value'];
 					var val = self.propertyMetaDataRes.bindings[i]['v:Property'];
-					subPar.appendChild(self.getSubDataMenu('Show property of chosen type', text, val));
+					subPar.appendChild(self.getSubDataMenu('Show data of chosen property', text, val));
 				}
 			}
 			btn.appendChild(subPar);
@@ -228,7 +229,7 @@ QueryPane.prototype.getDataSection = function(d){
 	var bd = document.createElement('div');
 	bd.setAttribute('class', 'terminus-query-submenu');
 	d.appendChild(bd);
-	var btn = this.getQueryMenu('Show property of type');
+	var btn = this.getQueryMenu('Show data for property');
 	bd.appendChild(btn);
 	this.showPropertyOfTypeEvent(btn);
 	this.addCheveronIcon(btn);
@@ -264,7 +265,7 @@ QueryPane.prototype.getEnterDocumentIdDOM = function(){
 QueryPane.prototype.getDocumentSection = function(d){
 	var section = this.getSection('Document Queries');
 	d.appendChild(section);
-	var btn = this.getQueryMenu('Show All Documents');
+	var btn = this.getQueryMenu('Show all documents');
 	d.appendChild(btn);
 	d.appendChild(this.getEnterDocumentIdDOM());
 }
@@ -306,6 +307,7 @@ QueryPane.prototype.getAsDOM = function(){
 		this.container.appendChild(UTILS.getHeaderDom(this.intro));
 	}
 	if(this.showQuery) {
+		this.fireDefaultQueries();
 		var configspan = document.createElement("span");
 		configspan.setAttribute("class", "pane-config-icons");
 		this.querySnippet = configspan;
@@ -443,7 +445,6 @@ QueryPane.prototype.clearMessages = function(){
 QueryPane.prototype.getBusyLoader = function(){
      var pbc = document.createElement('div');
      pbc.setAttribute('class', 'term-progress-bar-container');
-
      var pbsa = document.createElement('div');
      pbsa.setAttribute('class', 'term-progress-bar term-stripes animated reverse slower');
      pbc.appendChild(pbsa);
@@ -482,6 +483,9 @@ QueryPane.prototype.showNoBindings = function(){
 
 QueryPane.prototype.submitQuery = function(qObj){
 	this.clearMessages();
+	if(!qObj){
+		this.showError("Query could not be extracted from input box - remember that the last element in the query must be a WOQL object")
+	}
 	if(typeof qObj == 'string'){
 		this.showError(qObj);
 		return;

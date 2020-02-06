@@ -16,9 +16,7 @@ function DocumentPane(client, docid, clsid){
 	this.docid = (docid ? docid : false);
 	this.clsid = (clsid ? clsid : false);
 	this.datatypes = new DatatypeRenderers();
-    Datatypes.initialiseDataRenderers(this.datatypes);
-    
-	
+    //Datatypes.initialiseDataRenderers(this.datatypes);
 }
 
 DocumentPane.prototype.load = function(){
@@ -47,6 +45,7 @@ DocumentPane.prototype.options = function(opts){
 	this.documentLoader = (opts && typeof opts.loadDocument != "undefined" ? opts.loadDocument : false);
 	this.loadSchema = (opts && typeof opts.loadSchema != "undefined" ? opts.loadSchema : false);
 	this.viewers = (opts && typeof opts.viewers != "undefined" ? opts.viewers : false);
+    Datatypes.initialiseDataRenderers(this.datatypes, false, opts);
     return this;
 }
 

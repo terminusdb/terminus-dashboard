@@ -31,10 +31,14 @@ SimpleFrameViewer.prototype.getDatatypeViewer = function(frame, mode){
 		var args = frame.display_options.args ;
 	}
 	else {
-		if(r && r.args) args = r.args;
+		if(r && r.args){
+			 args = r.args;
+		}
 		else args = false;
 	}
-	return this.datatypes.createRenderer(dv, args);
+	var rend = this.datatypes.createRenderer(dv, args);
+	rend.type = frame.getType();
+	return rend;
 }
 
 SimpleFrameViewer.prototype.render = function(frame){
@@ -103,14 +107,20 @@ SimpleFrameViewer.prototype.getFeaturesDOM = function(flist, scope, frame, mode)
 			else {
 				if(scope == 'object'){
 					var vals = frame.renderProperties();
+					for(var j = 0; j<vals.length; j++){
+						if(style) vals[j].setAttribute("style", style);
+						features.appendChild(vals[j]);
+					}
 				}
 				else {
 					var vals = frame.renderValues();		    
-				}
-				for(var j = 0; j<vals.length; j++){
-					if(style) vals[j].setAttribute("style", style);
-					features.appendChild(vals[j]);
-				}
+					var cont = document.createElement("span");
+					if(style) cont.setAttribute("style", style);
+					for(var j = 0; j<vals.length; j++){
+						cont.appendChild(vals[j]);
+					}
+					features.appendChild(cont);
+				}				
 			}
 		}
 		else {

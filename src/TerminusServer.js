@@ -126,6 +126,8 @@ function TerminusServerViewer(ui){
 	this.server = this.ui.server();
 	this.max_cell_size = 500;
 	this.max_word_size = 40;
+	this.css_base = "https://terminusdb.github.io/terminus-dashboard/dist/";
+
 }
 
 TerminusServerViewer.prototype.getAsDOM = function(selected){
@@ -136,7 +138,6 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 		var scd = document.createElement("span");
 		scd.setAttribute("class", "terminus-server-home");
 		if(this.ui.showView("server")){
-
 			scd.appendChild(this.getServerDetailsDOM());
 		}
 		if(this.ui.showView("change-server")){
@@ -147,7 +148,6 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 				if(self.ui.db()){
 					self.ui.clearDB();
 				}
-				//self.ui.clearServer();
 				self.ui.showLoadURLPage();
 			})
 			// 11092019 scd.appendChild(csbut);
@@ -163,18 +163,14 @@ TerminusServerViewer.prototype.getAsDOM = function(selected){
 				self.ui.clearMessages();
 				self.ui.showCreateDBPage();
 			})
-			// 11092019 scd.appendChild(crbut);
 		}
 		if(this.ui.showView("db")){
-			//scd.appendChild(this.getNDBListDOM());
 			scd.appendChild(this.getDBListDOM());
 		}
 		pd.appendChild(scd);
 	}
 	else {
 		self.ui.showLoadURLPage();
-
-		//pd.appendChild(this.getLoadURLPage());
 	}
 	return pd;
 }
@@ -183,10 +179,13 @@ TerminusServerViewer.prototype.getServerDetailsDOM = function(){
 	var scd = document.createElement("div");
 	scd.setAttribute("class", "terminus-server-details terminus-welcome-box terminus-no-res-alert");
 	var icon = document.createElement("img");
-	icon.setAttribute("src", "css/img/TerminusDB_Logo_Original.png");
+	icon.setAttribute("class", "terminus-server-main-logo")
+	var url = this.css_base + "css/img/TerminusDB_Logo_Original.png" 
+	icon.setAttribute("src", url);
 	scd.appendChild(icon);
 	var scl = document.createElement("p");
-	scl.appendChild(document.createTextNode("Terminus Server Running at "))
+	scl.setAttribute("class", "terminus-server-running")
+	scl.appendChild(document.createTextNode("Terminus Server running at "))
 	scl.appendChild(document.createTextNode(this.ui.server()))
 	scd.appendChild(scl);
 	return scd;

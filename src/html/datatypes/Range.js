@@ -1,6 +1,10 @@
 const TerminusClient = require('@terminusdb/terminus-client');
 
 function HTMLRangeViewer(options){
+	this.options(options);
+}
+
+HTMLRangeViewer.prototype.options = function(options){
 	this.commas = (options && options.commas ? options.commas : true);
 	this.css = "terminus-literal-value terminus-literal-value-range " + ((options && options.css) ?  options.css : "");
 	this.delimiter = (options && options.delimiter ? options.delimiter : false);

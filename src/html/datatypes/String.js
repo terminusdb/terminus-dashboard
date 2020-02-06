@@ -1,6 +1,10 @@
 const HTMLHelper = require('../HTMLHelper');
 
 function HTMLStringViewer(options){
+	this.options(options);	
+}
+
+HTMLStringViewer.prototype.options = function(options){
 	this.size = ((options && options.size) ? options.size : false);
 	this.css = ((options && options.css) ? "terminus-literal-value " + options.css : "terminus-literal-value");
 	this.max_word_size = (options && options.max_word_size ? options.max_word_size : false);
