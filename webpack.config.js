@@ -2,6 +2,9 @@ const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebPackPlugin = require("copy-webpack-plugin");
 require("@babel/register");
+var PACKAGE = require('./package.json');
+var version = PACKAGE.version;
+
 // Webpack Configuration
 const config = {
 
@@ -9,7 +12,7 @@ const config = {
   entry: path.resolve(__dirname, 'src/index.js'),
   // Output
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, `public_pages/${version}/dist`),
     filename: 'terminus-dashboard.min.js',
     sourceMapFilename: 'terminus-dashboard.min.js.map',
     libraryTarget: 'var',
