@@ -50,6 +50,7 @@
   "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
     "@terminusdb/terminus-client": "file:../terminus-client",
-    "copy-webpack-plugin": "^5.0.4"
+    "copy-webpack-plugin": "^5.0.4",
+    "dotenv-webpack": "^1.7.0"
   }
 }
