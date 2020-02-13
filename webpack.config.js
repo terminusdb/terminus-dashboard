@@ -2,6 +2,11 @@ const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const CopyWebPackPlugin = require("copy-webpack-plugin");
 require("@babel/register");
+const Dotenv = require('dotenv-webpack');
+var PACKAGE = require('./package.json');
+var version = PACKAGE.version;
+
+
 // Webpack Configuration
 const config = {
 
@@ -9,16 +14,19 @@ const config = {
   entry: path.resolve(__dirname, 'src/index.js'),
   // Output
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, `public_pages/${version}/dist`),
     filename: 'terminus-dashboard.min.js',
     sourceMapFilename: 'terminus-dashboard.min.js.map',
     libraryTarget: 'var',
     library: 'TerminusDashboard',
   },
   node: {
-    process: false
+    //process: false
+    fs: "empty"
   },
   // Loaders
+
+
   module: {
     rules : [
       // JavaScript/JSX Files
@@ -52,6 +60,7 @@ module.exports = function(env, argv){
   }
 
   config.plugins= [
+      new Dotenv(),
       new HtmlWebPackPlugin({
         inject: false,
         template: path.resolve(__dirname, 'src/index.html'),

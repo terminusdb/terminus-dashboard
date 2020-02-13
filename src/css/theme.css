@@ -743,6 +743,7 @@ div.terminus-control-buttons {
 	display: inline-block;
 	text-align: right;
 	margin-top: 1em;
+	text-align: center;
 }
 
 .terminus-control-buttons button {
@@ -1853,7 +1854,7 @@ div.terminus-margin-left-auto {
 }
 .terminus-content-layout{
 	min-height: 900px;
-	max-width: calc(100vw - 420px)!important;
+	/*max-width: calc(100vw - 420px)!important;*/
 }
 
 .terminus-main-content{

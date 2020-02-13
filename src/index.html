@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en">
+=======
+<html lang="en" class="h-100">
+>>>>>>> 3605b5349c9fafb88a5ebb44169aa271d616b02b
 	<head>
 	    <meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,9 +36,10 @@
 		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/theme/eclipse.css">
 		<link rel="stylesheet" href="../temp/fontawesome-free-5.12.0-web/fontawesome-free-5.12.0-web/css/all.css">
 		<script type="text/javascript" src="<%= htmlWebpackPlugin.options.bundleFileName %>"></script> 
+		
 	</script>
 	</head>
-	<BODY>
+	<BODY >
 	<div class="terminus-client-ui">
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr class="main-table-height">
@@ -56,33 +61,7 @@
 				</td>
 			</tr>
 	</table>
-	</div>
-	<script>
-
-		/*let TerminusConfig = {
-			controls: ["collaborate", "server", "db", "import_schema", "create_database",
-						"get_document", "get_schema", "update_schema", "woql_select"],
-			css: "theme",
-			plugins: {
-				"font-awesome": true,
-				gmaps: {
-					key: "GMAPS_DEV_KEY_HERE",
-					loaded: false
-				},
-				jquery: true,
-				jqueryui: false,
-				datatables: false,
-				quill: true,
-				select2: false,
-				codemirror: {
-					darkMode: false, // true for dark theamed text editor
-					loaded: true
-				}
-			}
-		};
-
-		TerminusConfig.location = {server: "~s://~s:~d", key: "~s"};*/
-		
+	<script>	
 		function loadTerminatorWhenReady(){
 			if (typeof TerminusDashboard != "undefined"){
 				initTerminator();

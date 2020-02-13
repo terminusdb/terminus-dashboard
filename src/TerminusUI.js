@@ -17,6 +17,8 @@ const UTILS = require('./Utils');
 const HTMLHelper = require('./html/HTMLHelper');
 const TerminusClient = require('@terminusdb/terminus-client');
 
+//const {endpoint,apiKey} = window.env;
+
 function TerminusUI(opts){
 	this.client = new TerminusClient.WOQLClient();
 	this.controls = [];
@@ -401,8 +403,23 @@ TerminusUI.prototype.draw = function(comps, slocation){
 	}
 	var self = this;
 	var cdrawn = false;
-	if(slocation && slocation.server){
-		if(typeof this.client.connection.connection[slocation.server] == "undefined") {
+	/*
+	use envairoment variable
+	*/
+	const endpoint=process.env.API_URL
+	const apiKey=process.env.API_KEY
+
+	console.log("__TEST__",endpoint,apiKey)
+
+	if(endpoint){
+		if(typeof this.client.connection.connection[endpoint] == "undefined") {
+			return this.connect({server:endpoint,key:apiKey})
+			.catch(function(error){
+				self.showLoadURLPage();
+			});
+		}
+	}else if(slocation && slocation.server){
+		if(typeof this.client.connection.connection[slocation.server] == "undefined") {			
 			return this.connect(slocation)
 			.catch(function(error){
 				self.showLoadURLPage();

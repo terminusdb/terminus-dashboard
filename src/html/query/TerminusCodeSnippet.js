@@ -37,7 +37,7 @@ TerminusCodeSnippet.prototype.setInput = function(q){
 		this.snippet.appendChild(document.createTextNode(q));
 	}
 	this.refreshCodeMirror();
-	return this.readInput();	
+	return this.readInput();
 }
 
 TerminusCodeSnippet.prototype.serialise = function(query, format){
@@ -85,7 +85,7 @@ TerminusCodeSnippet.prototype.getInputElement = function(){
 
 TerminusCodeSnippet.prototype.readInput = function(){
 	if(this.mode == "edit") {
-		this.qObj = this.parseText(this.snippet.value, this.format);		
+		this.qObj = this.parseText(this.snippet.value, this.format);
 	}
 	else {
 		this.qObj = this.parseText(this.snippet.innerText, this.format);
@@ -240,11 +240,23 @@ TerminusCodeSnippet.prototype.refreshContents = function(qObj){
 	var serial = this.serialise(this.qObj, this.format);
 	if(this.mode == "edit"){
 		this.snippet.value = serial;
+<<<<<<< HEAD
 		//this.stylizeSnippet()	
+=======
+		if(this.snippet.nextSibling){
+			this.removeCodeMirror();
+			if(this.format == 'js') var mode = 'javascript';
+			else var mode = 'application/ld+json';
+			UTILS.stylizeEditor(null,
+								this.snippet,
+								{width: this.width, height: this.height},
+								mode);
+		}
+>>>>>>> 3605b5349c9fafb88a5ebb44169aa271d616b02b
 	}
 	else {
 		this.snippet.appendChild(document.createTextNode(serial));
-		this.refreshCodeMirror();
+		UTILS.stylizeCodeDisplay(null, this.snippet, null, mode);
 	}
 }
 
