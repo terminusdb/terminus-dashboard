@@ -233,13 +233,14 @@ TerminusCodeSnippet.prototype.stylizeSnippet = function(){
 }
 
 TerminusCodeSnippet.prototype.refreshContents = function(qObj){
-	qObj = qObj ? qObj : this.qObj;
+	qObj = qObj || this.qObj;
 	HTMLHelper.removeChildren(this.snippet);
 	if(this.mode == "edit") this.snippet.value == "";
 	if(!qObj) return;
 	var serial = this.serialise(this.qObj, this.format);
 	if(this.mode == "edit"){
 		this.snippet.value = serial;
+		//this.stylizeSnippet()	
 	}
 	else {
 		this.snippet.appendChild(document.createTextNode(serial));

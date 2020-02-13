@@ -58,7 +58,7 @@ SimpleTable.prototype.getColumnHeader = function(colid){
 	var th = document.createElement("th");
 	th.setAttribute('class', 'terminus-table-header-full-css');
 	var clab = this.woqltable.getColumnHeaderContents(colid);
-	th.appendChild(clab);
+	if(clab) th.appendChild(clab);
 	return th;
 }
 

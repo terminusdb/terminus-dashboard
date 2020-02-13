@@ -1,3 +1,5 @@
+const HTMLHelper = require('../HTMLHelper');
+
 function GraphResultsViewer(config) {
 	this.svg;
 	this.visid = randomString(8);
@@ -45,7 +47,8 @@ GraphResultsViewer.prototype.setData = function(dqr, show){
 }
 
 GraphResultsViewer.prototype.loadNewData = function(){
-	this.nodes = jQuery.extend(true, [], this.result.getNodes());
+	//this.nodes = jQuery.extend(true, [], this.result.getNodes());
+	this.nodes = this.copyNodes(this.result.getNodes());
 	for(var i = 0 ; i<this.nodes.length; i++){
 		this.loadedNodes[this.nodes[i].id] = this.nodes[i];
 	}
@@ -53,6 +56,18 @@ GraphResultsViewer.prototype.loadNewData = function(){
 	//this.browser.rebuildController();
 }
 
+GraphResultsViewer.prototype.copyNodes = function(arr){
+	var narr = [];
+	for(var i = 0; i<arr.length; i++){
+		var obj = arr[i];
+		var nobj = {};
+		for(k in obj){
+			nobj[k] =obj[k];
+		}
+		narr.push(nobj);
+	}
+	return narr;
+}
 
 /*
  * Called to indicate that the current set of datapoints has been updated
@@ -94,7 +109,8 @@ GraphResultsViewer.prototype.reload = function(show, mode, no_animate) {
 	for(var i = 0 ; i<this.nodes.length; i++){
 		this.loadedNodes[this.nodes[i].id] = this.nodes[i];
 	}
-	var nnodes = jQuery.extend(true, [], this.result.getNodesAndFringes());
+	//var nnodes = jQuery.extend(true, [], this.result.getNodesAndFringes());
+	var nnodes = this.copyNodes(this.result.getNodesAndFringes());	
 	this.nodes = [];
 	var snode = this.loadedNodes[this.selected_id];
 	for(var i = 0 ; i<nnodes.length; i++){
@@ -135,7 +151,7 @@ GraphResultsViewer.prototype.clear = function() {
 	this.loadedNodes = {};
 	this.links = [];
 	this.updateGraph();
-	jQuery(this.d3DOM).empty();
+	HTMLHelper.removeChildren(this.d3DOM);
 	this.scale_factor = 1;
 }
 
@@ -174,9 +190,12 @@ GraphResultsViewer.prototype.setWidth = function() {
 		this.width = this.container.parentNode.clientWidth;
 	}
 	else {
-		var w = jQuery(this.container).width();
-		if(w == 0){
-			w = jQuery(this.container.parentNode).width();
+		var w = 0; 
+		if(typeof jQuery != "undefined"){
+			w = jQuery(this.container).width();
+			if(w == 0){
+				w = jQuery(this.container.parentNode).width();
+			}
 		}
 		if(w == 0) {
 			w = 800;
@@ -194,12 +213,15 @@ GraphResultsViewer.prototype.setHeight = function() {
 		this.height = this.container.parentNode.clientHeight;
 	}
 	else {
-		var w = jQuery(this.container).height();
-		if(w == 0){
-			w = jQuery(this.container.parentNode).height();
+		var w = 0;
+		if(typeof jQuery != "undefined"){
+			jQuery(this.container).height();
+			if(w == 0){
+				w = jQuery(this.container.parentNode).height();
+			}
 		}
 		if(w == 0) {
-			w = 400;
+			w = 800;
 		}
 		this.height = w;
 	}

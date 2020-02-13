@@ -34,8 +34,7 @@ function TerminusSchemaViewer(ui){
 
 TerminusSchemaViewer.prototype.getClassesPane = function() {
 	let WOQL = TerminusClient.WOQL;
-	let query = this.woql.from(this.ui.client.connectionConfig.dbURL())
-		.limit(100)
+	let query = this.woql.limit(100)
 			.start(0)
 			.and(
 				WOQL.quad("v:Class", "rdf:type", "owl:Class", "db:schema"),
