@@ -9,42 +9,11 @@
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
 		<script type="text/javascript" src="<%= htmlWebpackPlugin.options.bundleFileName %>"></script> 
-		 <link
-	      rel="stylesheet"
-	      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	      crossorigin="anonymous"
-    	/>
+		
 	</script>
 	</head>
-	<BODY class="h-100">
-	<div class="container-fluid h-100">
-		<table class="container-fluid h-100">
-			<tr class="row h-100">
-				<td class='col-sm-4 col-md-2 terminus-control-panel-table-layout'>
-					<table class="terminus-application-controls terminus-control-panel-layout" >
-						<tr><th class="terminus-logo">
-							 <img src='css/img/TerminusDB_Logo_Original.png' class='terminus-logo-container'></img></th></tr>
-						<tr><td class="terminus-application-control terminus-client-body"
-								id="terminus-control-panel" ></td></tr>
-						<tr><td class="terminus-application-control terminus-expolrer-body terminus-explorer-hide"
-										id="terminus-explorer"></td></tr>
-					</table>
-				</td>
-				<td class='col-sm-8 col-md-10 terminus-main-window-full-css' style="width: 100%; vertical-align: top;">
-					<div class='terminus-user-messages' id='terminus-user-messages'></div>
-                    <div class='row h-100 margin-2 terminus-content-layout'>
-				   	    <div class='terminus-main-content terminus-print col' id='terminus-content-viewer'></div>
-                    </div>
-				</td>
-			</tr>
-	</table>
-	</div>
-	<script>
-
-		/*
-
-		<div class="terminus-client-ui">
+	<BODY >
+	<div class="terminus-client-ui">
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr class="main-table-height">
 				<td class='terminus-control-panel terminus-control-panel-table-layout'>
@@ -65,29 +34,7 @@
 				</td>
 			</tr>
 	</table>
-	</div>let TerminusConfig = {
-			controls: ["collaborate", "server", "db", "import_schema", "create_database",
-						"get_document", "get_schema", "update_schema", "woql_select"],
-			css: "theme",
-			plugins: {
-				"font-awesome": true,
-				gmaps: {
-					key: "GMAPS_DEV_KEY_HERE",
-					loaded: false
-				},
-				jquery: true,
-				jqueryui: false,
-				datatables: false,
-				quill: true,
-				select2: false,
-				codemirror: {
-					darkMode: false, // true for dark theamed text editor
-					loaded: true
-				}
-			}
-		};
-		TerminusConfig.location = {server: "~s://~s:~d", key: "~s"};*/
-		
+	<script>	
 		function loadTerminatorWhenReady(){
 			if (typeof TerminusDashboard != "undefined"){
 				initTerminator();
