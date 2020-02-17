@@ -16,7 +16,7 @@
     "prepare": "npm run clean && npm run build",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
-    "installClient:local": "npm install ../terminus-client"
+    "installClient:local": "npm install --no-save ../terminus-client"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
-    "@terminusdb/terminus-client": "file:../terminus-client",
+    "@terminusdb/terminus-client": "^1.1.3",
     "copy-webpack-plugin": "^5.0.4",
     "dotenv-webpack": "^1.7.0"
   }
