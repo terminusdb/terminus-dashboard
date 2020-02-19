@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "directories": {
     "src": "src"
+    
   },
   "scripts": {
     "test": "",
