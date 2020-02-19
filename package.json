@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "directories": {
     "src": "src"
-    
+
   },
   "scripts": {
     "test": "",
@@ -50,8 +50,8 @@
   },
   "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
-    "@terminusdb/terminus-client": "^1.1.4",
     "copy-webpack-plugin": "^5.0.4",
-    "dotenv-webpack": "^1.7.0"
+    "dotenv-webpack": "^1.7.0",
+    "@terminusdb/terminus-client": "^1.1.4"
   }
 }
