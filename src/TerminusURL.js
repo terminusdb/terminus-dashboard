@@ -39,7 +39,9 @@ TerminusURLLoader.prototype.getAsDOM = function(){
 	var dht = document.createElement('div');
 	dht.setAttribute('class', 'terminus-form-margin-top');
 	mfd.appendChild(dht);
-	mfd.appendChild(this.getFormFieldDOM(this.url_input, "connect", "URL", "Terminus DB URL"));
+	if(!this.ui.attachedServer()){
+		mfd.appendChild(this.getFormFieldDOM(this.url_input, "connect", "URL", "Terminus DB URL"));
+	}
 	this.key_input = document.createElement("input");
 	this.key_input.setAttribute("class", "terminus-form-value terminus-value terminus-input-text");
 	mfd.appendChild(this.getFormFieldDOM(this.key_input, "connect", "Key", "Server API Key"));
@@ -50,8 +52,10 @@ TerminusURLLoader.prototype.getAsDOM = function(){
 	loadbut.appendChild(document.createTextNode("Connect"));
 	var self = this;
 	loadbut.addEventListener("click", function(){
-		if(self.url_input.value){
-			self.ui.load(self.url_input.value, self.key_input.value);
+		let keyval = self.key_input.value;
+		let url = (self.ui.attachedServer() ? self.ui.attachedServer() : self.url_input.value); 
+		if(url){
+			self.ui.load(url, keyval);
 		}
 	});
 	loadbuts.appendChild(loadbut);

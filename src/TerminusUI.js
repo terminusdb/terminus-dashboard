@@ -355,6 +355,13 @@ TerminusUI.prototype.showWarning = function(response){
 	this.showMessage(response, "warning");
 };
 
+TerminusUI.prototype.setAttachedServer = function(url){
+	this.attached_server = url;
+}
+
+TerminusUI.prototype.attachedServer = function(){
+	return this.attached_server;
+}
 
 TerminusUI.prototype.clearMessages = function(response){
 	if(this.messages) HTMLHelper.removeChildren(this.messages);
@@ -612,6 +619,9 @@ TerminusUI.prototype.setOptions = function(opts){
 	}
 	if(opts.schema){
 		this.schema_options = opts.schema;
+	}
+	if(opts.attach_server){
+		this.setAttachedServer(opts.attach_server)
 	}
 	this.piman = new TerminusPluginManager();
 	var self = this;

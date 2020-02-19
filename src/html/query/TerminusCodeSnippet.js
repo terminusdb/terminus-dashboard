@@ -240,9 +240,6 @@ TerminusCodeSnippet.prototype.refreshContents = function(qObj){
 	var serial = this.serialise(this.qObj, this.format);
 	if(this.mode == "edit"){
 		this.snippet.value = serial;
-<<<<<<< HEAD
-		//this.stylizeSnippet()	
-=======
 		if(this.snippet.nextSibling){
 			this.removeCodeMirror();
 			if(this.format == 'js') var mode = 'javascript';
@@ -252,7 +249,6 @@ TerminusCodeSnippet.prototype.refreshContents = function(qObj){
 								{width: this.width, height: this.height},
 								mode);
 		}
->>>>>>> 3605b5349c9fafb88a5ebb44169aa271d616b02b
 	}
 	else {
 		this.snippet.appendChild(document.createTextNode(serial));
