@@ -16,7 +16,7 @@
     "prepare": "npm run clean && npm run build",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
-    "installClient:local": "npm install ../terminus-client"
+    "installClient:local": "npm install --no-save ../terminus-client"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
