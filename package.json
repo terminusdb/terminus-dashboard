@@ -49,8 +49,7 @@
   },
   "homepage": "https://github.com/terminusdb/terminus-dashboard#readme",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.12.0",
-    "@terminusdb/terminus-client": "file:../terminus-client",
+    "@terminusdb/terminus-client": "^1.1.4",
     "copy-webpack-plugin": "^5.0.4",
     "dotenv-webpack": "^1.7.0"
   }
