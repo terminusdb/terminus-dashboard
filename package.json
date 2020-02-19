@@ -52,6 +52,6 @@
   "dependencies": {
     "copy-webpack-plugin": "^5.0.4",
     "dotenv-webpack": "^1.7.0",
-    "@terminusdb/terminus-client": "^1.1.4"
+    "@terminusdb/terminus-client": "1.1.1"
   }
 }
