@@ -138,7 +138,6 @@ h3.terminus-query-head{
 	float: right;
 }
 div.terminus-document-view{
-	margin-top: 50px;
 }
 .terminus-lat-long,
 .latlong {
@@ -222,7 +221,6 @@ span.terminus-format-button-align{
 }
 
 .terminus-db-list {
-	width: 1000px;
 }
 
 .terminus-form-border {
@@ -745,6 +743,7 @@ div.terminus-control-buttons {
 	display: inline-block;
 	text-align: right;
 	margin-top: 1em;
+	text-align: center;
 }
 
 .terminus-control-buttons button {
@@ -1088,8 +1087,6 @@ span.terminus-welcome-title{
     vertical-align: super;
 }
 div.terminus-welcome-box{
-	width: 900px;
-	margin: 30px;
 	border-radius: 8px;
 }
 i.terminus-welcome-icons{
@@ -1156,7 +1153,7 @@ i.terminus-welcome-icons{
 	color: #004085;
 	background-color: #cce5ff;
 	border-color: #b8daff;
-	margin: 20px 10px 10px 0px;
+	margin: 20px 0px 10px 0px;
 	padding: 15px;
 }
 
@@ -1856,14 +1853,11 @@ div.terminus-margin-left-auto {
   color: blue;
 }
 .terminus-content-layout{
-	background-color: #f8f8ff;
-	box-shadow: 0 1px 15px 0 hsla(0,0%,48%,.05);
 	min-height: 900px;
-	max-width: calc(100vw - 420px)!important;
+	/*max-width: calc(100vw - 420px)!important;*/
 }
 
 .terminus-main-content{
-	padding: 30px;
     overflow: hidden;
     /*max-width: 1240px;*/
 	max-width: calc(100vw - 420px)!important;

@@ -1,18 +1,41 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 	<head>
 	    <meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	    <title>Terminus DB Management Dashboard</title>
 		<link rel="shortcut icon" type="image/png" href="https://terminusdb.com/t/favicon.png"/>
 		<script src="UIconfig.json"></script>
-		<script src="https://d3js.org/d3.v5.min.js"></script>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+		<script src="../temp/d3.v5.min.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/lib/codemirror.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/mode/xml/xml.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/mode/css/css.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/mode//turtle/turtle.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/mode/javascript/javascript.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/hint/anyword-hint.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/hint/show-hint.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/runmode/runmode.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/mode/http/http.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/edit/closebrackets.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/edit/matchbrackets.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/display/placeholder.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/fold/foldgutter.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/fold/foldcode.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/fold/indent-fold.js"></script>
+		<script src="../temp/codemirror/codemirror-5.51.0/addon/fold/markdown-fold.js"></script>
+
+		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/lib/codemirror.css">
+		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/addon/hint/show-hint.css">
+		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/theme/neo.css">
+		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/theme/erlang-dark.css">
+		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/addon/fold/foldgutter.css">
+		<link rel="stylesheet" href="../temp/codemirror/codemirror-5.51.0/theme/eclipse.css">
+		<link rel="stylesheet" href="../temp/fontawesome-free-5.12.0-web/fontawesome-free-5.12.0-web/css/all.css">
 		<script type="text/javascript" src="terminus-dashboard.min.js"></script> 
+		
 	</script>
 	</head>
-	<BODY>
+	<BODY >
 	<div class="terminus-client-ui">
 		<table class="terminus-client-table-layout" style="width: 100%">
 			<tr class="main-table-height">
@@ -34,33 +57,7 @@
 				</td>
 			</tr>
 	</table>
-	</div>
-	<script>
-
-		/*let TerminusConfig = {
-			controls: ["collaborate", "server", "db", "import_schema", "create_database",
-						"get_document", "get_schema", "update_schema", "woql_select"],
-			css: "theme",
-			plugins: {
-				"font-awesome": true,
-				gmaps: {
-					key: "GMAPS_DEV_KEY_HERE",
-					loaded: false
-				},
-				jquery: true,
-				jqueryui: false,
-				datatables: false,
-				quill: true,
-				select2: false,
-				codemirror: {
-					darkMode: false, // true for dark theamed text editor
-					loaded: true
-				}
-			}
-		};
-
-		TerminusConfig.location = {server: "~s://~s:~d", key: "~s"};*/
-		
+	<script>	
 		function loadTerminatorWhenReady(){
 			if (typeof TerminusDashboard != "undefined"){
 				initTerminator();
