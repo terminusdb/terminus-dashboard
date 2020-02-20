@@ -22,7 +22,7 @@ before_install:
       export PACKAGE_VERSION=$(npm version patch)
     fi
 
-# after_script: "npm run build:all"487858c0379147b7f1a6944808e2ab86e8003181
+# after_script: "npm run build:all"
 # after_success:
 
 branches:
@@ -40,8 +40,10 @@ before_deploy:
       git commit --amend -m "[skip travis] version changed $PACKAGE_VERSION"
       git push https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG HEAD:$TRAVIS_BRANCH
       git tag -f -a "$PACKAGE_VERSION" -m "new version $PACKAGE_VERSION"
-      export LAST_HASH=$(git ls-remote https://github.com/$TRAVIS_REPO_SLUG $TRAVIS_BRANCH | awk '{ print $1}')
+      export LAST_HASH=$(git ls-remote https://github.com/$TRAVIS_REPO_SLUG refs/heads/$TRAVIS_BRANCH | awk '{ print $1}')
     fi
+
+#LAST_HASH=$(git ls-remote  https://github.com/terminusdb/terminus-dashboard.git master | awk '{ print $1}')
 #https://blog.travis-ci.com/2018-04-11-how_to_publish_node_js_packages_with_travis_ci_and_packagecloud/
 deploy:
   - provider: releases
