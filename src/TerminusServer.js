@@ -126,7 +126,7 @@ function TerminusServerViewer(ui){
 	this.server = this.ui.server();
 	this.max_cell_size = 500;
 	this.max_word_size = 40;
-	this.css_base = "";//"https://terminusdb.github.io/terminus-dashboard/dist/";
+	this.css_base = window.css_base;//"https://terminusdb.github.io/terminus-dashboard/dist/";
 
 }
 
