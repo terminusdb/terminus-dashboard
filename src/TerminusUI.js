@@ -12,6 +12,7 @@ const TerminusQueryViewer = require('./TerminusQuery');
 const TerminusSchemaViewer = require('./TerminusSchema');
 const TerminusServersdk = require('./TerminusServer');
 const TerminusURLLoader = require('./TerminusURL');
+const TerminusTutorialLoader = require('./TerminusTutorial');
 const TerminusPluginManager = require('./plugins/TerminusPlugin');
 const UTILS = require('./Utils');
 const HTMLHelper = require('./html/HTMLHelper');
@@ -259,6 +260,11 @@ TerminusUI.prototype.showServerMainPage = function(){
 
 TerminusUI.prototype.showCollaboratePage = function(){
 	this.viewer = new TerminusURLLoader(this);
+	this.redrawMainPage();
+}
+
+TerminusUI.prototype.showTutorialPage = function(){
+	this.viewer = new TerminusTutorialLoader(this);
 	this.redrawMainPage();
 }
 

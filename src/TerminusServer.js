@@ -104,6 +104,26 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.appendChild(txt);
             ul.appendChild(a);
 		}
+		if(true || this.ui.showControl("tutorials")){
+            var a = document.createElement('a');
+            a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
+            var self = this;
+            a.addEventListener("click", function(){
+               UTILS.activateSelectedNav(this, self);
+                if(self.ui.db()){
+                    self.ui.clearDB();
+					self.ui.redrawControls();
+				}
+				self.ui.clearMessages();
+                self.ui.showTutorialPage();
+            })
+            var icon = document.createElement('i');
+            icon.setAttribute('class', 'terminus-menu-icon fa fa-university');
+            a.appendChild(icon);
+            var txt = document.createTextNode('Tutorials');
+            a.appendChild(txt);
+            ul.appendChild(a);
+        }
 	}
 	return rsc;
 }

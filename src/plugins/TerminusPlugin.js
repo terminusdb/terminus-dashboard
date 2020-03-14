@@ -6,7 +6,7 @@ function TerminusPluginManager(){
 	this.loading = [];
 	this.precluded = [];
 	this.plugins = {};
-	this.css_base = "";//"https://terminusdb.github.io/terminus-dashboard/dist/";
+	this.css_base = window.css_base;
 	this.plugins["font-awesome"] = {
 		label: "Font Awesome",
 		css: ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css"]
