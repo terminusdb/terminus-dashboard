@@ -13,7 +13,10 @@ function TerminusCodeSnippet(language, mode, format, width, height, placeholder)
 	this.height = (height ? height : 300);
 	this.placeholder = (placeholder ? placeholder : "");
     this.format = (format ? format : "js");
-    this.formats = {'js': "WOQL.js", 'jsonld': "JSON-LD"};
+	this.formats = {'js': "WOQL.js", 'jsonld': "JSON-LD"};
+	if(this.language == "woql"){
+		this.formats['python'] = "WOQL.py"
+	}
     if(this.mode == 'view')
         this.snippet = document.createElement('pre');
     else {
@@ -42,7 +45,10 @@ TerminusCodeSnippet.prototype.setInput = function(q){
 
 TerminusCodeSnippet.prototype.serialise = function(query, format){
 	if(format == "js"){
-		return query.prettyPrint(4);
+		return query.prettyPrint();
+	}
+	else if(format == "python"){
+		return query.prettyPrint("python");
 	}
 	else {
 		return JSON.stringify(query.json(), undefined, 2);

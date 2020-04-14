@@ -39,43 +39,95 @@ function TerminusUI(opts){
  * (note: schema, query, document are mutually exclusive and must also have a dbid set)
  */
 TerminusUI.prototype.connect = function(opts){
-	var self = this;
-	this.client.connectionConfig.server = false;
-	var key = ((opts && opts.key) ? opts.key : false);
-	this.showBusy("Connecting to server at " + opts.server);
-	return this.client.connect(opts.server, key)
-	.then( function(response) {
-		self.clearBusy();
-		if(opts && opts.db && self.getDBRecord(opts.db)){
-			self.connectToDB(opts.db);
-			if(opts.document && self.showView("get_document")){
-				response = self.showDocumentPage(opts.document);
+	return this.client.connect(opts)
+	.then( (response) => {
+		if(this.client.db() && this.getDBRecord(this.client.db())){
+			this.connectToDB(this.client.db());
+			if(opts.document && this.showView("get_document")){
+				response = this.showDocumentPage(opts.document);
 			}
-			else if(opts.schema && self.showView("get_schema")){
-				response = self.showSchemaPage(opts.schema);
+			else if(opts.schema && this.showView("get_schema")){
+				response = this.showSchemaPage(opts.schema);
 			}
-			else if(opts.query && self.showView("woql_select")){
-				self.showQueryPage(opts.query);
+			else if(opts.query && this.showView("woql_select")){
+				this.showQueryPage(opts.query);
 			}
-			else if(opts.explorer && self.showView("api_explorer")){
-				self.showExplorer(opts.explorer);
+			else if(opts.explorer && this.showView("api_explorer")){
+				this.showExplorer(opts.explorer);
 			}
 			else {
-				self.showDBMainPage();
+				this.showDBMainPage();
 			}
 		}
 		else {
-			self.showServerMainPage();
+			this.showServerMainPage();
 		}
-		self.redraw();
+		this.redraw();
+		//this.testNewDB()
 		return response;
 	})
-	.catch(function(err) {
-		self.clearBusy();
-		self.showError(err);
+	.catch((err) => {
+		this.clearBusy();
+		this.showError(err);
 		throw(err);
 	});
 }
+
+TerminusUI.prototype.testNewDB = function(){
+	let WOQL = TerminusClient.WOQL
+	//let doc = dg.database("tester", "testing db", "this is a comment")
+	let nudb = {
+		label: "tester", 
+		comment: "testing comment",
+		base_uri: "http://chekov.is.king"
+	}
+
+	let owl = `@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xdd: <http://terminusdb.com/schema/xdd#> .
+@prefix terminus: <http://terminusdb.com/schema/terminus#> .
+@prefix scm: <http://lumme/yo#> .
+
+scm:Yoke
+  a owl:Class ;
+  rdfs:comment "A Yoke"@en ;
+  rdfs:label "yoke"@en.`
+
+	this.client.createDatabase("xyz", nudb)
+  	.then(() => {
+		this.client.createGraph("schema", "main", "Creating main schema graph")
+		.then(() => {
+			alert("created graph main")
+			//this.client.deleteGraph("schema", "main", cmg)
+			this.client.updateSchema("main", owl, "Creating initial schema for main")
+			this.client.getSchema("main")
+			this.client.getClassFrame("terminus:Document")
+			this.client.query(WOQL.star())
+			/*this.client.deleteDatabase()
+			.then(() => {
+				alert("deleted")
+			})*/
+		}).catch((err) => {
+			alert(JSON.stringify(err))
+			//this.client.branch("newbranch")
+			//this.client.fetch("origin")
+			//this.client.push("origin", "master")
+			//this.client.rebase("origin", "master")
+			
+			//let src = {"terminus:resource": "URI_OF_RESOURCE_ID"}
+			//this.client.clonedb(src, "nuid")
+		})	
+	})
+	.catch((err) => {
+		this.client.deleteDatabase()
+		this.clearBusy()
+		this.showError(err)
+		throw(err)
+	})
+}
+
 
 /**
  * Sends a request to create a new database to the server and interprets the response
@@ -90,33 +142,57 @@ TerminusUI.prototype.connect = function(opts){
  *
  */
 TerminusUI.prototype.createDatabase = function(dbdets){
-	var self = this;
-	if(!dbdets.id || !dbdets.title){
-        return Promise.reject(new Error(self.getBadArguments("createDatabase", "ID and title are mandatory fields")));
+	let doc = {}
+	doc.label = dbdets.label || dbdets.title
+	doc.comment = dbdets.comment || dbdets.description
+	if(!dbdets.id || !doc.label){
+        return Promise.reject(new Error(this.getBadArguments("createDatabase", "ID and label are mandatory fields")))
 	}
 	var dbid = dbdets.id;
-	self.showBusy("Creating Database " + dbdets.title + " with id " + dbid);
-	var dbdoc = this.generateNewDatabaseDocument(dbdets);
-	return this.client.createDatabase(dbid, dbdoc)
-	.then(function(response){ //reload list of databases in background..
-		self.clearBusy();
-		return self.refreshDBList()
-		.then(function(response){
-			if(crec = self.client.connection.getDBRecord(dbid)){
-				self.client.connectionConfig.dbid = dbid;
-				self.showDBMainPage();
-				self.showMessage("Successfully Created Database " + dbid, "success");
-			}
-			else {
-		        return Promise.reject(new Error(self.getCrashString("createDatabase", "Failed to retrieve record of created database " + dbid)));
-			}
+	doc.base_uri = dbdets.base_uri || "http://local.terminusdb.com/" + dbid + "/data"
+	this.showBusy("Creating Database " + doc.label + " with id " + dbid);
+	return this.client.createDatabase(dbid, doc, dbdets.account)
+	.then(() => { 
+		return this.createStarterGraphs(dbdets.schema).then(() => {
+			return this.afterCreate() 
 		})
 	})
-	.catch(function(error){
-		self.clearBusy();
-		self.showError(error);
-	});
+	.catch((error) => {
+		this.clearBusy()
+		this.showError(error)
+	})
 }
+
+TerminusUI.prototype.createStarterGraphs = function(make_schema){
+	//we always make an instance graph and optionalally a schema graph
+	let cmg = "Default Instance Graph Created Automatically with Database Create" 
+	return this.client.createGraph("instance", "main", cmg)
+	.then(() => {
+		if(make_schema){
+			cmg = "Default Schema Graph Created Automatically with Database Create"
+			return this.client.createGraph("schema", "main", cmg)
+		}
+		return true;
+	})
+}
+
+
+TerminusUI.prototype.afterCreate = function(){
+	this.clearBusy();
+	return this.refreshDBList()
+	.then((response) => {
+		if(crec = this.client.connection.getDBRecord()){
+			this.showDBMainPage();
+			this.showMessage("Successfully Created Database " + this.db(), "success");
+			return response
+		}
+		else {
+			return Promise.reject(new Error(this.getCrashString("createDatabase", "Failed to retrieve record of created database " + dbid)));
+		}
+	})
+
+}
+
 
 /**
  * Deletes the database with the passed id from the currently connected server
@@ -127,7 +203,7 @@ TerminusUI.prototype.deleteDatabase = function(dbid){
 	var lid = (dbid ? dbid : this.db());
 	var dbn = (delrec && delrec['rdfs:label'] && delrec['rdfs:label']["@value"] ? delrec['rdfs:label']["@value"] + " (id: " + lid + ")" : lid);
 	this.showBusy("Deleting database " + dbn);
-	return this.client.deleteDatabase(lid)
+	return this.client.deleteDatabase()
 	.then(function(response){
 		self.clearBusy();
 		self.showServerMainPage();
@@ -141,33 +217,6 @@ TerminusUI.prototype.deleteDatabase = function(dbid){
 	});
 }
 
-/*
- * Transforms a details (id, title, description) array into  json-ld document
- */
-TerminusUI.prototype.generateNewDatabaseDocument = function(dets){
-	var doc = {
-		"@context" : {
-			rdfs: "http://www.w3.org/2000/01/rdf-schema#",
-			terminus: "http://terminusdb.com/schema/terminus#"
-		},
-		"@type": "terminus:Database"
-	}
-	if(dets.title){
-		doc['rdfs:label'] = {
-			"@language":  "en",
-			"@value": dets.title
-		};
-	}
-	if(dets.description){
-		doc['rdfs:comment'] = {
-			"@language":  "en",
-			"@value": dets.description
-		};
-	}
-	doc['terminus:allow_origin'] = { "@type" : "xsd:string", "@value" : "*" };
-	return doc;
-}
-
 TerminusUI.prototype.getBadArguments = function(fname, str){
 	return "Bad arguments to " + fname + ": " + str;
 }
@@ -176,76 +225,33 @@ TerminusUI.prototype.getCrashString = function(fname, str){
 	return "Results from " + fname + " indicate the possibility of a system failure " + str;
 }
 
-/*
- * Parses the passed URL and turns it into a call to the connect function - loads the appropriate endpoing
- */
-TerminusUI.prototype.load = function(url, key){
-	var args = {};
-	if(url && url.indexOf("/document/") != -1){
-		url = url.substring(0, url.indexOf("/document/"));
-		args.document = url.substring(url.indexOf("/document/")+10);
-	}
-	else if(url && url.indexOf("/schema") != -1){
-		url = url.substring(0, url.indexOf("/schema"));
-		args.schema = {};
-	}
-	else if(url && url.indexOf("/woql") != -1){
-		url = url.substring(0, url.indexOf("/query"));
-		args.query = url.substring(url.indexOf("/query")+7);
-	}
-	args.server = url;
-	if(key) args.key = key;
-	return this.connect(args);
-}
-
-/**
- * Fetches the DB URL from the url by chopping off the extra bits
- */
-TerminusUI.prototype.getConnectionEndpoint = function(url){
-	if(url && url.lastIndexOf("/schema") != -1){
-		return url.substring(0, url.lastIndexOf("/schema"));
-	}
-	if(url && url.lastIndexOf("/document") != -1){
-		return url.substring(0, url.lastIndexOf("/document"));
-	}
-	if(url && url.lastIndexOf("/frame") != -1){
-		return url.substring(0, url.lastIndexOf("/frame"));
-	}
-	if(url && url.lastIndexOf("/woql") != -1){
-		return url.substring(0, url.lastIndexOf("/woql"));
-	}
-	return url;
-}
 
 TerminusUI.prototype.server = function(){
-	return this.client.connectionConfig.server;
+	return this.client.server()
 }
 
 TerminusUI.prototype.db = function(){
-	return this.client.connectionConfig.dbid;
+	return this.client.db();
 }
 
 TerminusUI.prototype.clearServer = function(){
-	this.client.connectionConfig.server = false;
+	this.client.server(false);
 }
 
-TerminusUI.prototype.connectToDB = function(dbid){
-	this.client.connectionConfig.dbid = dbid;
-	//set standard prefixes for the current db
-	TerminusClient.UTILS.addURLPrefix('doc', this.client.connectionConfig.dbURL() + "/document/");
-	TerminusClient.UTILS.addURLPrefix('scm', this.client.connectionConfig.dbURL() + "/schema#");
+TerminusUI.prototype.connectToDB = function(dbid, account){
+	this.client.db(dbid, account)
 }
 
 TerminusUI.prototype.clearDB = function(){
-	this.client.connectionConfig.dbid = false;
+	this.client.db(false);
 }
 
-TerminusUI.prototype.removeDB = function(db, url){
-	this.client.connection.removeDB(db, url);
+TerminusUI.prototype.removeDB = function(db, account){
+	this.client.connection.removeDB(db, account);
 }
 
-TerminusUI.prototype.getDBRecord = function(db, url){
-	return this.client.connection.getDBRecord(db, url);
+TerminusUI.prototype.getDBRecord = function(db, account){
+	return this.client.connection.getDBRecord(db, account);
 }
 
 TerminusUI.prototype.refreshDBList = function(){
@@ -328,6 +334,7 @@ TerminusUI.prototype.deleteDBPermitted = function(dbid){
 }
 
 TerminusUI.prototype.getDeleteDBButton = function(dbid){
+	dbid = dbid || this.client.db()
 	if(!this.deleteDBPermitted(dbid)) return false;
 	//var delbut = document.createElement('button');
 	var icon = document.createElement('i');

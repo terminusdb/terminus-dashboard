@@ -1,5 +1,5 @@
 let TerminusConfig = {
-	controls: ["collaborate", "server", "db", "import_schema", "create_database",
+	controls: ["collaborate", "server", "db", "import_schema", "create_database", //"delete_database",
 		"get_document", "get_schema", "update_schema", "woql_select"
 	],
 	css: "theme",
@@ -19,5 +19,5 @@ let TerminusConfig = {
 			loaded: true
 		}
 	},
-	location: { server: "http://localhost:6363",  key: "root"}
+	location: { server: "http://localhost:6363/",  key: "root"}
 };

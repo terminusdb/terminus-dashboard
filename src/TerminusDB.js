@@ -20,6 +20,38 @@ function TerminusDBViewer(ui){
 	this.pages = ["home"];
 }
 
+//documents home page table
+TerminusDBViewer.prototype.getBranchNavigator = function(){
+	let using = `${this.ui.client.account()}/${this.ui.client.db()}/${this.ui.client.repo()}/_commits`
+	let WOQL = TerminusClient.WOQL
+	var q = WOQL.using(using, WOQL.lib().getBranchNames())
+	var chooser = TerminusClient.View.chooser().values("BranchName").labels("BranchName");
+	
+	
+	var self = this;
+	chooser.change = function(nub){
+		alert(nub)
+		//if(cls)	self.loadCreateDocumentPage(cls, docClasses, docs);
+	}
+	var dp = this.tv.getResult(q, chooser);
+	var dchooser = dp.getAsDOM();
+	let bn = document.createElement("div")
+	bn.appendChild(dchooser)
+
+	var q2 = WOQL.using(using).and(
+		WOQL.triple("v:Branch", "ref:branch_name", this.ui.client.checkout()),
+		WOQL.triple("v:Branch", "ref:ref_commit", "v:CommitID"), 
+		WOQL.lib().getCommitDetails("v:CommitID")
+	)
+	q2.execute(this.ui.client)
+	.then((results) => {
+		alert("got commit details")
+	}).catch((er) => {
+		console.log("failed q2", er)
+	})
+	return bn;
+}
+
 //Document configuration for DB meta-data listing on DB home page
 TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
 	var property_style = "display: block; padding: 0.3em 1em;"
@@ -38,6 +70,8 @@ TerminusDBViewer.prototype.getDatabaseDocumentConfig = function(){
 	config.data().features("value").style(value_style);
 	return config;
 }
+
+
 
 
 /**
@@ -125,8 +159,7 @@ TerminusDBViewer.prototype.getDocumentsGraphConfig = function(res){
 }
 
 TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
-	var dburl = this.ui.client.connectionConfig.dbURL();
-	var q = TerminusClient.WOQL.limit(200).getAllDocumentConnections();
+	var q = TerminusClient.WOQL.limit(200, WOQL.lib().getAllDocumentConnections())
 	var qp = this.tv.getResult(q, this.getDocumentsGraphConfig());
 	var dloader = this.getLoaderDOM("Terminus Server is generating the document graph");
 	insertDOM.appendChild(dloader)
@@ -136,7 +169,7 @@ TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 }
 
 TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM, docClasses, docs){
-	var q = TerminusClient.WOQL.limit(50).getDocumentConnections(docid);
+	var q = TerminusClient.WOQL.limit(50, WOQL.lib().getDocumentConnections(docid))
 	var viewer = TerminusClient.View.table().column_order("Outgoing", "Incoming", "Entid", "Label", "Enttype", "Class_Label" );
 	viewer.column("Entid").hidden(true);
 	viewer.column("Enttype").hidden(true);
@@ -196,12 +229,15 @@ TerminusDBViewer.prototype.createFullDocumentPane = function(docid, result_optio
  */
 TerminusDBViewer.prototype.getAsDOM = function(){
 	HTMLHelper.removeChildren(this.container);
+	let bndom = this.getBranchNavigator()
+	this.container.appendChild(bndom)
 	var limit = 20;
 	var WOQL = TerminusClient.WOQL;
-	var q = WOQL.limit(limit).documentMetadata();
+	let dmd = WOQL.lib().documentMetadata()
+	var q = WOQL.limit(limit, dmd);
 	q.execute(this.ui.client).then( (result) => {
 		var docs = new TerminusClient.WOQLResult(result, q);
-		var q2 = WOQL.query().concreteDocumentClasses();
+		var q2 = WOQL.lib().concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			var docClasses = new TerminusClient.WOQLResult(result2, q2);
 			var bdom = this.getBodyAsDOM(docs, docClasses);
@@ -344,7 +380,6 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 	this.ui.page = "docs";
 	this.ui.redrawControls();
 	var WOQL = TerminusClient.WOQL;
-	var dburl = this.ui.client.connectionConfig.dbURL();
 	var config = this.getCreateDocumentConfig();
 
 	var dp = this.tv.getNewDocumentPane(cls, config);
@@ -361,7 +396,7 @@ TerminusDBViewer.prototype.loadCreateDocumentPage = function(cls, docClasses, do
 		dp.setClassLoader(dchooser);
 	}
 	else {
-		var q2 = WOQL.query().concreteDocumentClasses();
+		var q2 = WOQL.lib().concreteDocumentClasses();
 		q2.execute(this.ui.client).then( (result2) => {
 			docClasses = (docClasses ? docClasses : new TerminusClient.WOQLResult(result2, q2));
 			var dchooser = this.getCreateDataChooser(docClasses, docs );
@@ -783,6 +818,18 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	descip.setAttribute("placeholder", "A short text describing the database and its purpose");
 	sci.appendChild(descip);
 	mfd.appendChild(sci);
+
+	var nsci = document.createElement("div");
+	nsci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	var nslab = document.createElement("span");
+	nslab.setAttribute("class", "terminus-title-label terminus-form-label terminus-control-label");
+	nslab.appendChild(document.createTextNode("Schema"));
+	var ntitip = document.createElement("input");
+	ntitip.setAttribute("type", "checkbox");
+	nsci.appendChild(nslab);
+	nsci.appendChild(ntitip);
+	mfd.appendChild(nsci);
+
 	var butfield = document.createElement("div");
 	butfield.setAttribute("class", "terminus-control-buttons");
 	var cancbut = document.createElement("button");
@@ -795,11 +842,9 @@ TerminusDBCreator.prototype.getAsDOM = function(selected){
 	var gatherips = function(){
 		var input = {};
 		input.id = idip.value;
-		input.title = titip.value;
-		input.description = descip.value;
-		//input.schema = schem.value;
-		//input.key = kip.value;
-		//input.data = datip.value;
+		input.label = titip.value;
+		input.comment = descip.value;
+		if(ntitip.value) input.schema = true;
 		return input;
 	}
 	var self = this;
@@ -836,8 +881,8 @@ TerminusDBController.prototype.getAsDOM = function(){
    if(this.ui && this.ui.db()){
 	   var scd = document.createElement("div");
 	   scd.setAttribute("class", "terminus-field terminus-db-connection");
-	   var dbrec = this.ui.client.connection.getDBRecord();
-	   var nm = (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
+	   var dbrec = this.ui.client.connection.getDBMetadata();
+	   var nm = dbrec.title// (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 	   //dbc.appendChild(scd);
 	   var nav = document.createElement('div');
 	   nav.setAttribute('class', 'span3');
@@ -885,7 +930,7 @@ TerminusDBController.prototype.getAsDOM = function(){
 		   });
 		   ul.appendChild(item);
 	   }
-	   if(this.ui.showControl("woql_select")){
+	   if(this.ui.showControl("get_document")){
 		   var item = this.getControlHTML("Query", "fa-search");
 		   if(p == "query") item.classList.add("terminus-selected");
 		   item.addEventListener("click", function(event){

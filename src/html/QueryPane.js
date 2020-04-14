@@ -27,12 +27,12 @@ QueryPane.prototype.load = function(){
 
 QueryPane.prototype.fireDefaultQueries = function(){
 	let WOQL = TerminusClient.WOQL;
-	var query = WOQL.query().classMetadata();
+	var query = WOQL.lib().classMetadata();
 	query.execute(this.client).then((results) => {
 		let qcres = new TerminusClient.WOQLResult(results, query);
 		this.classMetaDataRes = qcres;
 	})
-	var query = WOQL.query().propertyMetadata();
+	var query = WOQL.lib().propertyMetadata();
 	query.execute(this.client).then((results) => {
 		let qpres = new TerminusClient.WOQLResult(results, query);
 		this.propertyMetaDataRes = qpres;

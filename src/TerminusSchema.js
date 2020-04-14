@@ -74,10 +74,10 @@ TerminusSchemaViewer.prototype.getClassesPane = function() {
 }
 
 TerminusSchemaViewer.prototype.getPropertiesPane = function() {
-	let query = this.woql.from(this.ui.client.connectionConfig.dbURL())
+	let query = this.woql
 	   .limit(100)
-	   .start(0)
-	   .propertyMetadata();
+	   .start(0, this.woql.lib().propertyMetadata())
+	
 
     var table = TerminusClient.View.table();
 	table.column_order("Property", "Label", "Range", "Domain", "Comment")
