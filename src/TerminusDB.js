@@ -30,26 +30,111 @@ TerminusDBViewer.prototype.getBranchNavigator = function(){
 	
 	var self = this;
 	chooser.change = function(nub){
-		alert(nub)
-		//if(cls)	self.loadCreateDocumentPage(cls, docClasses, docs);
+		self.ui.client.checkout(nub)
 	}
 	var dp = this.tv.getResult(q, chooser);
 	var dchooser = dp.getAsDOM();
+	dp.load()
 	let bn = document.createElement("div")
 	bn.appendChild(dchooser)
 
-	var q2 = WOQL.using(using).and(
-		WOQL.triple("v:Branch", "ref:branch_name", this.ui.client.checkout()),
-		WOQL.triple("v:Branch", "ref:ref_commit", "v:CommitID"), 
-		WOQL.lib().getCommitDetails("v:CommitID")
-	)
-	q2.execute(this.ui.client)
+	let cholder = document.createElement("span")
+	bn.appendChild(cholder)
+	this.showCommit(cholder, this.ui.client.checkout(), true)
+	return bn;
+}
+
+TerminusDBViewer.prototype.showCommit = function(container, bid, is_branch, set){
+	let using = `${this.ui.client.account()}/${this.ui.client.db()}/${this.ui.client.repo()}/_commits`
+	let WOQL = TerminusClient.WOQL
+	var q = WOQL.using(using)
+	if(!is_branch){
+		q.and(WOQL.lib().getCommitDetails(bid))
+	}
+	else {
+		q.and(
+			WOQL.triple("v:Branch", "ref:branch_name", bid),
+			WOQL.triple("v:Branch", "ref:ref_commit", "v:Commit"),
+			WOQL.lib().getCommitDetails("v:CommitName", "v:Commit")	
+		)
+	}	
+	q.execute(this.ui.client)
 	.then((results) => {
-		alert("got commit details")
+		let wr = new TerminusClient.WOQLResult(results, q)
+		HTMLHelper.removeChildren(container);
+		let dm = this.getCommitControl(container, bid, wr)
+		if(set){
+			let target = wr.first()['BranchName']["@value"] || bid
+			//this.ui.client.checkout(target) 
+		}
+		container.appendChild(dm)
+
 	}).catch((er) => {
 		console.log("failed q2", er)
 	})
-	return bn;
+}
+
+TerminusDBViewer.prototype.setCommit = function(container, bid){
+	this.showCommit(container, bid, false, true)
+}
+
+
+TerminusDBViewer.prototype.getCommitControl = function(container, cid, wr){
+	let results = wr.first();
+	let box = document.createElement("span")
+	if(results){
+		let t = results['Time']["@value"]
+		let author = results['Author']["@value"]
+		let message = results['Message']["@value"]
+		let parent = results['Parent']["@value"]
+		let child = results['Child']["@value"]
+		
+		var date = timeConverter(t)
+		let str = " (" + cid + ") Updated by " + author + " on " + date
+		let i = document.createElement("i")
+		i.appendChild(document.createTextNode(str))
+		box.appendChild(i)
+		let p = document.createElement("tt")
+		p.appendChild(document.createTextNode(" - " + message))
+		box.appendChild(p)
+		if(child){
+			let self = this
+			let target = child
+			let next = document.createElement("button")
+			next.addEventListener("click", function(){
+				self.setCommit(container, target)
+			})
+			next.appendChild(document.createTextNode("Next Commit"))
+			box.appendChild(next)
+			//newer
+		} 
+		if(parent){
+			let self = this
+			let prev = document.createElement("button")
+			prev.addEventListener("click", function(){
+				self.setCommit(container, parent, true)
+			})
+			prev.appendChild(document.createTextNode("Previous Commit"))
+			box.appendChild(prev)	
+		}
+	}
+	else {
+		box.appendChild(document.createTextNode(" - No commits have been made to this DB"))
+	}
+	return box
+}
+
+function timeConverter(UNIX_timestamp){
+	var a = new Date(UNIX_timestamp * 1000);
+	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	var year = a.getFullYear();
+	var month = months[a.getMonth()];
+	var date = a.getDate();
+	var hour = a.getHours();
+	var min = a.getMinutes();
+	var sec = a.getSeconds();
+	var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+	return time;
 }
 
 //Document configuration for DB meta-data listing on DB home page
@@ -229,8 +314,7 @@ TerminusDBViewer.prototype.createFullDocumentPane = function(docid, result_optio
  */
 TerminusDBViewer.prototype.getAsDOM = function(){
 	HTMLHelper.removeChildren(this.container);
-	let bndom = this.getBranchNavigator()
-	this.container.appendChild(bndom)
+	//this.container.appendChild(bndom)
 	var limit = 20;
 	var WOQL = TerminusClient.WOQL;
 	let dmd = WOQL.lib().documentMetadata()
@@ -280,10 +364,14 @@ TerminusDBViewer.prototype.getHomeDOM = function(docs, docClasses, body){
 	var config = this.getDatabaseDocumentConfig();
 	var cont = document.createElement("span");
 	intro.appendChild(cont);
-	var mydb = this.ui.db();
-	this.ui.connectToDB("terminus");
-	this.insertDocument("doc:" + mydb, cont, config);
-	this.ui.connectToDB(mydb); 
+	if(this.ui.client.db() != "terminus"){
+		let bndom = this.getBranchNavigator()
+		if(bndom) cont.appendChild(bndom)
+	}
+	//var mydb = this.ui.db();
+	//this.ui.connectToDB("terminus");
+	//this.insertDocument("doc:" + mydb, cont, config);
+	//this.ui.connectToDB(mydb); 
 	if(docs.count() > 0){
 		body.appendChild(this.showHappyBox("dbhome", "intro"));
 		body.appendChild(this.showHappyBox("happy", "query"));
@@ -607,12 +695,9 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	}
 	else if(type == "demo"){
 		sets.css = "fa fa-database fa-2x terminus-welcome-icons";
-		var dbrec = this.ui.getDBRecord();
-		if(dbrec)
-			var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
-		else var nm = this.ui.db();
-		sets.title = nm ;
-		sets.text = "";
+		var dbrec = this.ui.client.connection.getDBMetadata();
+		sets.title = dbrec.title || this.ui.client.db() ;
+		sets.text = dbrec.description;
 	}
 	else if(type == "delete"){
 		sets.css = "fa fa-trash fa-2x terminus-welcome-icons terminus-db-list-del-icon";
