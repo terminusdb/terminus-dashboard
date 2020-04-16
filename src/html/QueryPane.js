@@ -82,30 +82,30 @@ QueryPane.prototype.AddEvents = function(btn, aval){
 		var query;
 		switch(this.value){
 			case 'Show All Schema Elements':
-				query = WOQL.query().elementMetadata();
+				query = WOQL.lib().elementMetadata();
 			break;
 			case 'Show All Classes':
-				query = WOQL.query().classMetadata();
+				query = WOQL.lib().classMetadata();
 			break;
 			case 'Show All Properties':
-				query = WOQL.query().propertyMetadata();
+				query = WOQL.lib().propertyMetadata();
 			break;
 			case 'Show Document Classes':
-				query = WOQL.query().concreteDocumentClasses();
+				query = WOQL.lib().concreteDocumentClasses();
 			break;
 			case 'Show All Data':
-				query = WOQL.query().getEverything();
+				query = WOQL.star();
 			break;
 			case 'Show all documents':
-				query = WOQL.query().documentMetadata();
+				query = WOQL.lib().documentMetadata();
 			break;
 			case 'Show data of chosen type':
 				var choosen = aval || 'scm:' + this.innerText;
-				query = WOQL.query().getDataOfClass(choosen);
+				query = WOQL.lib().getDataOfClass(choosen);
 			break;
 			case 'Show data of chosen property':
 				var choosen = aval || 'scm:' + this.innerText;
-				query = WOQL.query().getDataOfProperty(choosen);
+				query = WOQL.lib().getDataOfProperty(choosen);
 			break;
 			case 'Show data of type':
 				return;
@@ -179,8 +179,8 @@ QueryPane.prototype.showDataOfTypeEvent = function(btn){
 			subPar.setAttribute('class', 'terminus-queries-submenu');
 			if(self.classMetaDataRes && self.classMetaDataRes.hasBindings()){
 				for(var i = 0; i<self.classMetaDataRes.bindings.length; i++){
-					var text = self.classMetaDataRes.bindings[i]['v:Label']['@value'];
-					var val = self.classMetaDataRes.bindings[i]['v:Element'];
+					var text = self.classMetaDataRes.bindings[i]['Label']['@value'];
+					var val = self.classMetaDataRes.bindings[i]['Element'];
 					subPar.appendChild(self.getSubDataMenu('Show data of chosen type', text, val));
 				}
 			}
@@ -198,8 +198,8 @@ QueryPane.prototype.showPropertyOfTypeEvent = function(btn){
 			subPar.setAttribute('class', 'terminus-queries-submenu');
 			if(self.propertyMetaDataRes && self.propertyMetaDataRes.hasBindings()){
 				for(var i = 0; i<self.propertyMetaDataRes.bindings.length; i++){
-					var text = self.propertyMetaDataRes.bindings[i]['v:Label']['@value'];
-					var val = self.propertyMetaDataRes.bindings[i]['v:Property'];
+					var text = self.propertyMetaDataRes.bindings[i]['Label']['@value'];
+					var val = self.propertyMetaDataRes.bindings[i]['Property'];
 					subPar.appendChild(self.getSubDataMenu('Show data of chosen property', text, val));
 				}
 			}
@@ -503,23 +503,79 @@ QueryPane.prototype.submitQuery = function(qObj){
 	}
 	this.clearResults();
     this.query = qObj;
+	if(this.query.containsUpdate()){
+		this.showCommitMessageBox()
+		//show the commit message box
+	}
+	else {
+		this.sendQueryToServer()
+	}
+}
+
+QueryPane.prototype.showCommitMessageBox = function(){
+	let bground = document.createElement("div")
+	bground.style = "position: fixed; z-index: 99999999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.7);" 
+	let cbox = document.createElement("div")
+	cbox.style = "text-align: center; background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888;width: 80%;"
+	bground.appendChild(cbox)
+	let body = document.createElement("p")
+	body.appendChild(document.createTextNode("As this query contains an update, you must provide a commit message, to explain the reason for the change"))
+	let ipbox = document.createElement("div")
+	let ip = document.createElement("textarea")
+	ip.setAttribute("placeholder", "Enter the reason for the update here")
+	ip.setAttribute("class", "terminus-textarea terminus-db-description terminus-textarea ");
+	ipbox.appendChild(ip)
+	let buttons = document.createElement("div")
+	buttons.setAttribute("class", "terminus-control-buttons");
+	let cancel = document.createElement("button")
+	cancel.setAttribute("class", "terminus-control-button terminus-cancel-db-button terminus-btn terminus-btn-float-right");
+	cancel.appendChild(document.createTextNode("Cancel"))
+	let self = this
+	cancel.addEventListener('click', function(){
+		self.container.removeChild(bground)	
+	})
+	let confirm = document.createElement("button")
+	confirm.setAttribute("class", "terminus-control-button terminus-confirm-button terminus-btn terminus-btn-float-right");
+	confirm.appendChild(document.createTextNode("Confirm"))
+	confirm.addEventListener('click', function(){
+		let txt = ip.value
+		if(txt){
+			self.sendQueryToServer(txt)
+			self.container.removeChild(bground)
+		}	
+	})
+	buttons.appendChild(cancel)
+	buttons.appendChild(confirm)
+	cbox.appendChild(body)
+	cbox.appendChild(ipbox)
+	cbox.appendChild(buttons)
+	this.container.appendChild(bground)
+} 
+
+
+QueryPane.prototype.sendQueryToServer = function(commit_msg){ 
 	this.showBusy('Fetching results ...');
-	var self = this;
 	var start = Date.now();
-    return qObj.execute(this.client).then((results) => {
-		var r = new TerminusClient.WOQLResult(results, qObj);
+    return this.query.execute(this.client, commit_msg).then((results) => {
+		var r = new TerminusClient.WOQLResult(results, this.query);
+		var delta = Date.now() - start;
 		this.result = r;
 		this.clearMessages();
 		if(this.result.hasBindings()){
-			var delta = Date.now() - start;
 			this.showMessage("Query returned " + this.result.count() + " results in " + (delta/1000) + " seconds", "info");
 			this.refreshViews();
+		}
+		else if(this.result.hasUpdates()){
+			this.showMessage(this.result.inserts() + " triples inserted, " + this.result.deletes() + " triples deleted in " + (delta/1000) + " seconds", "info");
 		}
 		else this.showNoBindings();
 	}).catch((error) => {
 		this.clearMessages();
 		if(error.data && error.data['terminus:witnesses']){
 			this.showViolations(error.data['terminus:witnesses']);
+		}
+		else if(error.data && Array.isArray(error.data)){
+			this.showViolations(error.data);
 		}
 		else {
 			this.showError(error);

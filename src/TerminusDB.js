@@ -27,7 +27,6 @@ TerminusDBViewer.prototype.getBranchNavigator = function(){
 	var q = WOQL.using(using, WOQL.lib().getBranchNames())
 	var chooser = TerminusClient.View.chooser().values("BranchName").labels("BranchName");
 	
-	
 	var self = this;
 	chooser.change = function(nub){
 		self.ui.client.checkout(nub)
@@ -40,7 +39,8 @@ TerminusDBViewer.prototype.getBranchNavigator = function(){
 
 	let cholder = document.createElement("span")
 	bn.appendChild(cholder)
-	this.showCommit(cholder, this.ui.client.checkout(), true)
+	if(this.ui.client.ref()) this.showCommit(cholder, this.ui.client.ref())
+	else this.showCommit(cholder, this.ui.client.checkout(), true)
 	return bn;
 }
 
@@ -64,8 +64,14 @@ TerminusDBViewer.prototype.showCommit = function(container, bid, is_branch, set)
 		HTMLHelper.removeChildren(container);
 		let dm = this.getCommitControl(container, bid, wr)
 		if(set){
-			let target = wr.first()['BranchName']["@value"] || bid
-			//this.ui.client.checkout(target) 
+			let bhead = wr.first()['BranchName']["@value"] 
+			if(bhead){
+				this.ui.client.ref(false)
+				this.ui.client.checkout(bhead)
+			}
+			else {
+				this.ui.client.ref(bid)
+			}
 		}
 		container.appendChild(dm)
 
@@ -296,7 +302,7 @@ TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM, 
 
 TerminusDBViewer.prototype.createFullDocumentPane = function(docid, result_options, target, docClasses, docs){
 	var self = this;
-	var func = function(v){
+	var func = function(v){5
 		self.showDocumentPage(v, docClasses, false, docs);
 	};
 	var dpoptions = {"HTMLEntityViewer": { "onclick": func}};
@@ -329,6 +335,9 @@ TerminusDBViewer.prototype.getAsDOM = function(){
 		});
 	}).catch((e) => {
 		this.ui.showError(e);
+		var bdom = this.getBodyAsDOM();
+		if(bdom) this.container.appendChild(bdom);
+
 	});
 	return this.container;
 }
@@ -372,11 +381,11 @@ TerminusDBViewer.prototype.getHomeDOM = function(docs, docClasses, body){
 	//this.ui.connectToDB("terminus");
 	//this.insertDocument("doc:" + mydb, cont, config);
 	//this.ui.connectToDB(mydb); 
-	if(docs.count() > 0){
+	if(docs && docs.count() > 0){
 		body.appendChild(this.showHappyBox("dbhome", "intro"));
 		body.appendChild(this.showHappyBox("happy", "query"));
 	}
-	else if(docClasses.count() > 0) {
+	else if(docClasses && docClasses.count() > 0) {
 		var dchooser = this.getCreateDataChooser(docClasses, docs);
 		if(docClasses.count() <= 3){
 			body.appendChild(this.showHappyBox("empty", "schema"));

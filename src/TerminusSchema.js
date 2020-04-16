@@ -27,22 +27,96 @@ function TerminusSchemaViewer(ui){
 			title: "OWL"	
 		}
 	}
+
+	this.graphs = {
+		schema: [],
+		instance: [],
+		inference: []
+	}
+
+	this.graph_filter = "schema"
 	this.views_dom = document.createElement("div");
+	this.holder = document.createElement("div");
+
 	this.current_view = "classes";
 	this.retrieveViews();
 }
 
+TerminusSchemaViewer.prototype.getGraphFilterSelector = function(){
+	let opts = []
+	if(this.graphs.schema.length == 1){
+		opts.push({label: "Schema", value: "schema/" + this.graphs.schema[0]})
+	}
+	else if(this.graphs.schema.length > 1){
+		opts.push({title: "All Schema Graphs", value: "schema/*"})
+		for(var i = 0; i<this.graphs.schema.length; i++){
+			opts.push({label: "Schema " + this.graphs.schema[i], value: "schema/" + this.graphs.schema[i]})
+		}		
+	}
+	if(this.graphs.inference.length == 1){
+		opts.push({label: "Inference", value: "inference/" + this.graphs.inference[0]})
+	}
+	else if(this.graphs.inference.length > 1){
+		opts.push({label: "All Inference Graphs", value: "inference/*"})
+		for(var i = 0; i<this.graphs.inference.length; i++){
+			opts.push({label: "Inference " + this.graphs.inference[i], value: "inference/" + this.graphs.inference[i]})
+		}		
+	}
+	let self = this
+	let callback = function(val){
+		self.graph_filter = val
+		self.redraw()
+	}
+	return HTMLHelper.getSelectionControl("graph-filter", opts, this.graph_filter, callback)
+}
+
+
+TerminusSchemaViewer.prototype.getGraphNavigator = function(){
+	let d = document.createElement("span")
+	let self = this
+	this.loadCurrentGraphs().then(() => {
+		d.appendChild(this.getGraphFilterSelector())
+		let but = document.createElement("button")
+		but.appendChild(document.createTextNode("New Graph"))
+		but.addEventListener('click', function(){
+			self.showNewGraphForm()
+		})
+		d.appendChild(but)
+	})
+	return d
+}
+
+TerminusSchemaViewer.prototype.loadCurrentGraphs = function() {
+	this.graphs = {schema: [], instance: [], inference: []}
+	let WOQL = TerminusClient.WOQL;
+	let using = `${this.ui.client.account()}/${this.ui.client.db()}/${this.ui.client.repo()}/_commits`
+	let q = WOQL.using(using, WOQL.lib().getBranchGraphNames(this.ui.client.checkout()))
+	return q.execute(this.ui.client)
+	.then((results) => {
+		let wr = new TerminusClient.WOQLResult(results, q)
+		while(row = wr.next()){
+			let sc = row['SchemaName']["@value"]
+			if(sc) this.graphs.schema.push(sc)
+			let ic = row['InstanceName']["@value"]
+			if(ic) this.graphs.instance.push(ic)
+			let fc = row['InferenceName']["@value"]
+			if(fc) this.graphs.inference.push(fc)
+		}
+	})
+}
+
+
 TerminusSchemaViewer.prototype.getClassesPane = function() {
 	let WOQL = TerminusClient.WOQL;
-	let query = this.woql.limit(100)
-			.start(0)
-			.and(
-				WOQL.quad("v:Class", "rdf:type", "owl:Class", "db:schema"),
-				WOQL.opt().quad("v:Class", "rdfs:label", "v:Label", "db:schema"),
-				WOQL.opt().quad("v:Class", "rdfs:subClassOf", "v:Parent", "db:schema"),
-				WOQL.opt().quad("v:Child", "rdfs:subClassOf", "v:Class", "db:schema"),
-				WOQL.opt().quad("v:Class", "rdfs:comment", "v:Comment", "db:schema"),
-				WOQL.opt().quad("v:Class", "tcs:tag", "v:Abstract", "db:schema")
+	let query = WOQL.limit(100)
+		.start(0)
+		.and(
+			WOQL.quad("v:Class", "rdf:type", "owl:Class", this.graph_filter),
+			WOQL.opt().quad("v:Class", "rdfs:label", "v:Label", this.graph_filter),
+			WOQL.opt().quad("v:Class", "rdfs:subClassOf", "v:Parent", this.graph_filter),
+			WOQL.opt().quad("v:Child", "rdfs:subClassOf", "v:Class", this.graph_filter),
+			WOQL.opt().quad("v:Class", "rdfs:comment", "v:Comment", this.graph_filter),
+			WOQL.opt().quad("v:Class", "tcs:tag", "v:Abstract", this.graph_filter)
 	);	
 	
 	var table = TerminusClient.View.table();
@@ -68,15 +142,13 @@ TerminusSchemaViewer.prototype.getClassesPane = function() {
 
 	var rpc = { viewers: [graph] }
     var qp = this.tv.getQueryPane(query, [table], false, [rpc]);
-	//var qp = this.tv.getQueryPane(query, [graph, table]);
-
 	return qp;
 }
 
 TerminusSchemaViewer.prototype.getPropertiesPane = function() {
 	let query = this.woql
 	   .limit(100)
-	   .start(0, this.woql.lib().propertyMetadata())
+	   .start(0, this.woql.lib().propertyMetadata(this.graph_filter))
 	
 
     var table = TerminusClient.View.table();
@@ -135,13 +207,18 @@ TerminusSchemaViewer.prototype.retrieveViews = function(){
 	}
 }
 
+TerminusSchemaViewer.prototype.redraw = function(){
+	HTMLHelper.removeChildren(this.holder)
+	this.getAsDOM()
+}
+
 
 /*
  * Retrieves schema from API and writes the response into the page
  */
 TerminusSchemaViewer.prototype.getAsDOM = function(){
+	this.holder.appendChild(this.getGraphNavigator())
 
-	this.holder = document.createElement("div");
 	this.controldom = document.createElement("div");
 	this.controldom.setAttribute("class", "terminus-schema-controls");
 	this.controldom.appendChild(this.getTabsDOM());
@@ -361,6 +438,106 @@ TerminusSchemaViewer.prototype.getSchemaButton = function(label, action, func){
 	opt.setAttribute("class", "terminus-btn terminus-control-button terminus-schema-" + action);
 	opt.addEventListener("click", func);
 	return opt;
+}
+
+TerminusSchemaViewer.prototype.showNewGraphForm = function(){
+	let bground = document.createElement("div")
+	bground.style = "position: fixed; z-index: 99999999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.7);" 
+	let cbox = document.createElement("div")
+	cbox.style = "background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888;width: 60%;"
+
+	var mfd = document.createElement('div');
+	mfd.setAttribute('class', 'terminus-form-border ');
+	cbox.appendChild(mfd)
+
+	var sci = document.createElement("div");
+	sci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	var slab = document.createElement("span");
+	slab.setAttribute("class", "terminus-id-label terminus-form-label terminus-control-label");
+	slab.appendChild(document.createTextNode("ID"));
+	sci.appendChild(slab);
+	var idip = document.createElement("input");
+	idip.setAttribute("type", "text");
+	idip.setAttribute("class", "terminus-form-value terminus-input-text");
+	idip.setAttribute("placeholder", "No spaces or special characters allowed in IDs");
+	sci.appendChild(idip);
+
+	mfd.appendChild(sci)
+
+	var tci = document.createElement("div");
+	tci.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	
+	var tlab = document.createElement("span");
+	tlab.setAttribute("class", "terminus-type-label terminus-form-label terminus-control-label");
+	tlab.appendChild(document.createTextNode("Type"));
+	tci.appendChild(tlab);
+	var selh = document.createElement("span");
+	selh.style = "display: inline-block; clear: right"
+	var sel = document.createElement("select");
+	selh.appendChild(sel)
+	let sopt = document.createElement("option")
+	sopt.value = "schema"
+	sopt.appendChild(document.createTextNode("Schema"))
+	sel.appendChild(sopt)
+	let iopt = document.createElement("option")
+	iopt.value = "inference"
+	iopt.appendChild(document.createTextNode("Inference"))
+	sel.appendChild(iopt)
+	let fpt = document.createElement("option")
+	fpt.value = "instance"
+	fpt.appendChild(document.createTextNode("Instance"))
+	sel.appendChild(fpt)
+	tci.appendChild(selh);
+
+	mfd.appendChild(tci)
+
+	var com = document.createElement("div");
+	com.setAttribute("class", "terminus-form-field terminus-form-field-spacing terminus-form-horizontal terminus-control-group");
+	var clab = document.createElement("span");
+	clab.setAttribute("class", "terminus-title-label terminus-form-label terminus-control-label");
+	clab.appendChild(document.createTextNode("Commit Message"));
+	com.appendChild(clab);
+	var descip = document.createElement("textarea");
+	descip.setAttribute("class", "terminus-textarea terminus-db-description terminus-textarea ");
+	descip.setAttribute("placeholder", "A short text describing the database and its purpose");
+	com.appendChild(descip);
+	
+	mfd.appendChild(com)
+
+	let buttons = document.createElement("div")
+	buttons.setAttribute("class", "terminus-control-buttons");
+	let cancel = document.createElement("button")
+	cancel.setAttribute("class", "terminus-control-button terminus-cancel-db-button terminus-btn terminus-btn-float-right");
+	cancel.appendChild(document.createTextNode("Cancel"))
+	let self = this
+	cancel.addEventListener('click', function(){
+		self.holder.removeChild(bground)	
+	})
+	let confirm = document.createElement("button")
+	confirm.setAttribute("class", "terminus-control-button terminus-confirm-button terminus-btn terminus-btn-float-right");
+	confirm.appendChild(document.createTextNode("Create Graph"))
+	confirm.addEventListener('click', function(){
+		let id = idip.value
+		let type = sel.value
+		let commit_msg = descip.value
+		if(id && type && commit_msg){
+			self.createGraph(id, type, commit_msg)
+			self.holder.removeChild(bground)
+		}	
+	})
+	buttons.appendChild(cancel)
+	buttons.appendChild(confirm)
+	mfd.appendChild(buttons)
+	bground.appendChild(cbox)
+	self.holder.appendChild(bground)	
+}
+
+TerminusSchemaViewer.prototype.createGraph = function(id, type, msg){
+	this.ui.client.createGraph(type, id, msg)
+	.then(() => {
+		if(type != "instance") this.graph_filter = type + "/" + id
+		this.redraw()
+	})
 }
 
 
