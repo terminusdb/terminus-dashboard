@@ -239,7 +239,8 @@ TerminusUI.prototype.clearServer = function(){
 }
 
 TerminusUI.prototype.connectToDB = function(dbid, account){
-	this.client.db(dbid, account)
+	this.client.db(dbid)
+	if(account) this.client.account()
 }
 
 TerminusUI.prototype.clearDB = function(){
@@ -325,17 +326,18 @@ TerminusUI.prototype.redrawMainPage = function(){
 	}
 }
 
-TerminusUI.prototype.deleteDBPermitted = function(dbid){
+TerminusUI.prototype.deleteDBPermitted = function(dbid, account){
 	if(dbid == "terminus") return false;
-	if(this.client.connection.capabilitiesPermit("delete_database", dbid)){
+	if(this.client.connection.capabilitiesPermit("delete_database", dbid, account)){
 		return true;
 	}
 	return false;
 }
 
-TerminusUI.prototype.getDeleteDBButton = function(dbid){
+TerminusUI.prototype.getDeleteDBButton = function(dbid, account){
 	dbid = dbid || this.client.db()
-	if(!this.deleteDBPermitted(dbid)) return false;
+	account = account || this.client.account()
+	if(!this.deleteDBPermitted(dbid, account)) return false;
 	//var delbut = document.createElement('button');
 	var icon = document.createElement('i');
 	icon.setAttribute("class", "terminus-db-list-del-icon fa fa-trash");
@@ -530,7 +532,7 @@ TerminusUI.prototype.loadControls = function(){
 TerminusUI.prototype.showControl = function(el){
 	if(this.show_controls.indexOf(el) == -1) return false;
 	if(this.pseudoCapability(el)) return true;
-	if(this.client.connection.capabilitiesPermit(el)) {
+	if(this.client.connection.capabilitiesPermit(el, this.client.db(), this.client.account())) {
 		return true;
 	}
 	return false;
@@ -539,7 +541,7 @@ TerminusUI.prototype.showControl = function(el){
 TerminusUI.prototype.showView = function(el){
 	if(this.show_views.indexOf(el) == -1) return false;
 	if(this.pseudoCapability(el)) return true;
-	if(this.client.connection.capabilitiesPermit(el)) {
+	if(this.client.connection.capabilitiesPermit(el, this.client.db(), this.client.account())) {
 		return true;
 	}
 	return false;

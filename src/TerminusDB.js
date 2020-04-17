@@ -636,7 +636,8 @@ TerminusDBViewer.prototype.getDeleteDatabaseWidget = function(css){
 	var icss = "fa fa-trash fa-2x terminus-icon-padding" + (css ? " " + css : "");
 	di.setAttribute("class", icss);
 	del.appendChild(di);
-	var dbrec = this.ui.getDBRecord();
+	var dbrec = this.ui.getDBRecord(this.ui.client.db(), this.ui.client.account());
+
 	if(dbrec)
 		var nm = (dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 	else var nm = this.ui.db();
@@ -704,7 +705,7 @@ TerminusDBViewer.prototype.showHappyBox = function(happy, type, chooser){
 	}
 	else if(type == "demo"){
 		sets.css = "fa fa-database fa-2x terminus-welcome-icons";
-		var dbrec = this.ui.client.connection.getDBMetadata();
+		var dbrec = this.ui.client.connection.getDBMetadata(this.ui.client.db(), this.ui.client.account());
 		sets.title = dbrec.title || this.ui.client.db() ;
 		sets.text = dbrec.description;
 	}
@@ -975,7 +976,8 @@ TerminusDBController.prototype.getAsDOM = function(){
    if(this.ui && this.ui.db()){
 	   var scd = document.createElement("div");
 	   scd.setAttribute("class", "terminus-field terminus-db-connection");
-	   var dbrec = this.ui.client.connection.getDBMetadata();
+	   var dbrec = this.ui.client.connection.getDBMetadata(this.ui.client.db(), this.ui.client.account());
+
 	   var nm = dbrec.title// (dbrec && dbrec["rdfs:label"] && dbrec["rdfs:label"]["@value"] ? dbrec["rdfs:label"]["@value"] : this.ui.db());
 	   //dbc.appendChild(scd);
 	   var nav = document.createElement('div');
