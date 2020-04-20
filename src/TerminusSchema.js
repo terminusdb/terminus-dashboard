@@ -96,11 +96,11 @@ TerminusSchemaViewer.prototype.loadCurrentGraphs = function() {
 		let wr = new TerminusClient.WOQLResult(results, q)
 		while(row = wr.next()){
 			let sc = row['SchemaName']["@value"]
-			if(sc) this.graphs.schema.push(sc)
+			if(sc && this.graphs.schema.indexOf(sc) == -1) this.graphs.schema.push(sc)
 			let ic = row['InstanceName']["@value"]
-			if(ic) this.graphs.instance.push(ic)
+			if(ic && this.graphs.instance.indexOf(ic) == -1) this.graphs.instance.push(ic)
 			let fc = row['InferenceName']["@value"]
-			if(fc) this.graphs.inference.push(fc)
+			if(fc && this.graphs.inference.indexOf(fc) == -1) this.graphs.inference.push(fc)
 		}
 	})
 }
