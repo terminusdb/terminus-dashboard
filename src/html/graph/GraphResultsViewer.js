@@ -225,6 +225,7 @@ GraphResultsViewer.prototype.setHeight = function() {
 		}
 		this.height = w;
 	}
+	if(this.height < 800) this.height = 800
 	return this.height;
 }
 

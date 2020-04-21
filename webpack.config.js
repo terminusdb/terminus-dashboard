@@ -4,7 +4,7 @@ const CopyWebPackPlugin = require("copy-webpack-plugin");
 require("@babel/register");
 const Dotenv = require('dotenv-webpack');
 var PACKAGE = require('./package.json');
-var version = PACKAGE.version;
+var version = `v${PACKAGE.version}`;
 
 
 // Webpack Configuration

@@ -13,13 +13,14 @@ git clone --branch=$PUBLICATION_BRANCH  "https://${GITHUB_TOKEN}@github.com/$TRA
 cd tmp_pages || exit
 
 
-rm -rf ./1.1.5
-
 echo 'package=$PACKAGE_VERSION'
 # Update pages
 cp -r $REPO_PATH/public_pages/.  .
+
 rm -rf ./dist/*
-cp -r $REPO_PATH/public_pages/1.1.5/dist/. ./dist
+
+cp -r $REPO_PATH/public_pages/$PACKAGE_VERSION/dist/* ./dist
+
 # Commit and push latest version
 git add .
 git config user.name  "Travis"
