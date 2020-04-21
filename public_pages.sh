@@ -12,6 +12,7 @@ pushd "$HOME" || exit
 git clone --branch=$PUBLICATION_BRANCH  "https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG" tmp_pages 2>&1 > /dev/null
 cd tmp_pages || exit
 
+rm -rf ./1.1.10
 
 echo 'package=$PACKAGE_VERSION'
 # Update pages
