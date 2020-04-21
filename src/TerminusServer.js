@@ -104,7 +104,7 @@ TerminusServerController.prototype.getAsDOM = function(){
             a.appendChild(txt);
             ul.appendChild(a);
 		}
-		if(true || this.ui.showControl("tutorials")){
+		if(this.ui.showControl("tutorials")){
             var a = document.createElement('a');
             a.setAttribute('class', 'terminus-a terminus-list-group-a terminus-list-group-a-action terminus-nav-width terminus-pointer');
             var self = this;
