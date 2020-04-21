@@ -42,6 +42,13 @@ function TerminusSchemaViewer(ui){
 	this.retrieveViews();
 }
 
+TerminusSchemaViewer.prototype.clearPanes = function(){
+	if(this.views.classes.pane) delete (this.views.classes["pane"])
+	if(this.views.properties.pane) delete (this.views.properties["pane"])
+	if(this.views.owl.pane) delete (this.views.owl["pane"])
+}
+
+
 TerminusSchemaViewer.prototype.getGraphFilterSelector = function(){
 	let opts = []
 	if(this.graphs.schema.length == 1){
@@ -209,7 +216,9 @@ TerminusSchemaViewer.prototype.retrieveViews = function(){
 
 TerminusSchemaViewer.prototype.redraw = function(){
 	HTMLHelper.removeChildren(this.holder)
+	this.clearPanes()
 	this.getAsDOM()
+	//this.refreshPanes()
 }
 
 
@@ -294,7 +303,7 @@ TerminusSchemaViewer.prototype.toggleTabs = function(){
 TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 	var self = this;
 	this.ui.showBusy("Fetching Database Schema");
-	return this.ui.client.getSchema(false, {"terminus:encoding": "terminus:" + this.format})
+	return this.ui.client.getSchema("main")
 	.then(function(response){
 		self.ui.clearBusy();
 		self.schema = response;

@@ -179,7 +179,7 @@ TerminusDBViewer.prototype.getDocumentsQueryPane = function(docs, docClasses){
 	table.column_order("ID", "Label", "Type", "Comment");
 	var self = this;
 	var x = function(row){
-		self.showDocumentPage(row["v:ID"], docClasses, false, docs);
+		self.showDocumentPage(row["ID"], docClasses, false, docs);
 	}
 	table.row().click(x);
 	var qp = this.tv.getResult(docs.query, table, docs);
@@ -260,7 +260,7 @@ TerminusDBViewer.prototype.showDocumentGraph = function(insertDOM){
 }
 
 TerminusDBViewer.prototype.showDocumentConnections = function(docid, targetDOM, docClasses, docs){
-	var q = TerminusClient.WOQL.limit(50, WOQL.lib().getDocumentConnections(docid))
+	var q = TerminusClient.WOQL.limit(50, TerminusClient.WOQL.lib().getDocumentConnections(docid))
 	var viewer = TerminusClient.View.table().column_order("Outgoing", "Incoming", "Entid", "Label", "Enttype", "Class_Label" );
 	viewer.column("Entid").hidden(true);
 	viewer.column("Enttype").hidden(true);
