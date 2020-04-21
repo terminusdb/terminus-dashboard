@@ -1,6 +1,6 @@
 {
   "name": "@terminusdb/terminus-dashboard",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Terminus DB Management Dashboard",
   "main": "src/index.js",
   "directories": {
