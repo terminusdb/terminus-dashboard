@@ -17,7 +17,7 @@ echo $PACKAGE_VERSION
 # Update pages
 cp -r $REPO_PATH/public_pages/.  .
 rm -rf ./dist/*
-cp -r $REPO_PATH/public_pages/$PACKAGE_VERSION/dist/. ./dist
+cp -r $REPO_PATH/public_pages/$PACKAGE_VERSION/dist/. $REPO_PATH/dist
 # Commit and push latest version
 git add .
 git config user.name  "Travis"
