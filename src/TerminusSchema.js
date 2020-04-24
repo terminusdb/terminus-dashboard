@@ -303,7 +303,7 @@ TerminusSchemaViewer.prototype.toggleTabs = function(){
 TerminusSchemaViewer.prototype.loadSchema = function(msg, msgtype){
 	var self = this;
 	this.ui.showBusy("Fetching Database Schema");
-	return this.ui.client.getSchema("main")
+	return this.ui.client.getTriples("schema", "main")
 	.then(function(response){
 		self.ui.clearBusy();
 		self.schema = response;
@@ -367,7 +367,7 @@ TerminusSchemaViewer.prototype.getSchemaEditButton = function(){
 /*
  * Updates schema, then fetches updated version and updates the page with it
  */
-TerminusSchemaViewer.prototype.updateSchema  = function(text, opts) {
+TerminusSchemaViewer.prototype.updateSchema  = function() {
 	this.ui.showBusy("Updating Database Schema");
 	var self = this;
 	return this.ui.client.updateSchema(false, text, opts)
